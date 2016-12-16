@@ -1,0 +1,8 @@
+body {
+    color: var(--normal-font-color);
+    background: var(--page-background);
+    font-family: var(--font-stack);
+    padding: var(--page-padding);
+    font-size: 100%;
+}
+
