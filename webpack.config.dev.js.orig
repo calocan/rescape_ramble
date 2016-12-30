@@ -28,41 +28,34 @@ const postcssCalc = require("postcss-calc")
 
 var path = require('path');
 var mainPath = path.resolve(__dirname, 'app', 'index.js');
-// Note that the hex code here is the version of Sketchup's js code. It might need to be replaced
-// with an updated version at some point by requested a model from 3d warehouse and copying the
-// startup_*.js and compiled_*.js code that is returned
-var sketchupStartupPath = path.resolve(__dirname, 'app', 'startup_b56fb52.js');
 const precss = require('precss');
 const autoprefixer = require('autoprefixer');
 
 module.exports = {
+    watch: true,
     node: {fs: "empty"},
-    entry: {
-        main: [
-            // For hot style updates
-            'webpack/hot/dev-server',
-
-            // The script refreshing the browser on none hot updates
-            'webpack-dev-server/client?http://localhost:8080',
-
-            mainPath
-        ],
-        style: STYLE,
-    },
-    output: {
-        path: BUILD,
-        filename: '[name].bundle.js'
-    },
+    entry: [
+        mainPath
+    ],
     resolve: {
-        extensions: ['', '.js', '.jsx']
+        extensions: ['.js', '.jsx'],
+        alias: {
+            'react-mapbox-gl': path.join(__dirname, '../lib/index.js')
+        }
+
     },
     module: {
         loaders: [
             {
                 test: /\.jsx?$/,
-                loaders: ['babel?cacheDirectory'],
-                include: APP
+                loader: 'babel-loader',
+                include: path.join(__dirname, 'src'),
+                exclude: /node_modules/
             }, {
+                test: /\.json$/,
+                loader: 'json-loader'
+            },
+            {
                 test: /\.css$/,
                 loaders: ['style', 'css', 'postcss'],
                 include: APP
@@ -81,33 +74,16 @@ module.exports = {
                 test: /\.(otf|eot|woff|woff2|ttf)$/,
                 loader: 'file-loader?limit=30000&name=[name]-[hash].[ext]'
             },
-            {
-                test: /\.yaml$/,
-                loader: 'file-loader?limit=30000&name=[name]-[hash].[ext]'
-            }
         ]
     },
-    postcss: function processPostcss(webpack) {
-        return [
-            postcssImport({
-                addDependencyTo: webpack
-            }),
-            postcssCustomMedia(),
-            postcssCssVariables(),
-            postcssCalc(),
-            precss,
-            autoprefixer({ browsers: ['last 2 versions'] })
-        ];
-    },
+
     devtool: 'inline-source-map',
     devServer: {
         contentBase: './dist',
         hot: true,
         historyApiFallback: true,
         inline: true,
-        progress: true,
         //stats: 'errors-only',
-        'display-modules': true,
         host: HOST,
         port: PORT
     },
@@ -127,5 +103,25 @@ module.exports = {
                 '.DS_Store'
             ]
         }),
+        new webpack.LoaderOptionsPlugin({
+            options: {
+                postcss: function processPostcss(webpack) {
+                    return [
+                        postcssImport({
+                            addDependencyTo: webpack
+                        }),
+                        postcssCustomMedia(),
+                        postcssCssVariables(),
+                        postcssCalc(),
+                        precss,
+                        autoprefixer({browsers: ['last 2 versions']})
+                    ];
+                },
+            }
+        })
     ],
+    output: {
+        path: BUILD,
+        filename: '[name].bundle.js'
+    },
 };

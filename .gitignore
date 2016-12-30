@@ -1,4 +1,4 @@
 .idea/
 node_modules/
 dist/
-app/images_dist
+source/images_dist

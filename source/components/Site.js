@@ -19,13 +19,13 @@
 import {connect} from 'react-redux';
 import React, {Component, PropTypes} from 'react'
 import ImmutablePropTypes from 'react-immutable-proptypes'
-import Map from './Map'
+import Main from './main'
 
 export class Site extends Component {
 
     render() {
         return <div className='site'>
-            <Map/>
+            <Main/>
         </div>
     }
 };
