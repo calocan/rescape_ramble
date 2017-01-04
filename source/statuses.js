@@ -13,7 +13,7 @@
  * The following status indicate the load state of the app
  * @type {{INITIALIZED: number, LOADING: number, READY: number, ERROR: number}}
  */
-export default  {
+export default {
     // Unloaded state
     INITIALIZED: 0x0100,
     // Loading state

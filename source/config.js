@@ -12,7 +12,6 @@
 /***
  * Configuration values for the app
 */
-
-export default  {
+export default {
     PRODUCTION_DOMAIN: 'rescapes.net'
 }

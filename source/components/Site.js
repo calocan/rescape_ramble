@@ -17,7 +17,7 @@
  */
 
 import {connect} from 'react-redux';
-import React, {Component, PropTypes} from 'react'
+import React, {Component} from 'react'
 import ImmutablePropTypes from 'react-immutable-proptypes'
 import Main from './main'
 
@@ -28,7 +28,7 @@ export class Site extends Component {
             <Main/>
         </div>
     }
-};
+}
 
 Site.propTypes = {
     settings: ImmutablePropTypes.map,

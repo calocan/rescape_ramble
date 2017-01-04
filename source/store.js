@@ -16,17 +16,15 @@
 // Do this once before any other code in your app (http://redux.js.org/docs/advanced/AsyncActions.html)
 import 'babel-polyfill'
 import thunkMiddleware from 'redux-thunk'
-import createLogger from 'redux-logger'
 import { createStore, applyMiddleware, compose } from 'redux'
-import React from 'react'
 import rootReducer from './reducers/reducer'
 import {Map} from 'immutable';
 
 // Create a logger
-const loggerMiddleware = createLogger()
+// const loggerMiddleware = createLogger()
 
 // Create the store applying our reducer and the thunk and logger middleware
-export default function makeStore(initialState=Map()) {
+export default function makeStore(initialState = Map()) {
     return createStore(
         rootReducer,
         initialState,

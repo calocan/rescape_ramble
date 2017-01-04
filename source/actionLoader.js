@@ -1,5 +1,5 @@
 import Statuses from './statuses';
-import fetch from 'isomorphic-fetch'
+import fetch from 'isomorphic-fetch';
 
 /**
  * Created by Andy Likuski on 2016.06.01
@@ -17,16 +17,25 @@ import fetch from 'isomorphic-fetch'
  * Performs the common sequence of actions of loading something from a remote source.
  * The class is given the following action functions: register, load, receive, erred for
  * the object being handled. It is also given a key into the state to find the substate
- * for the object instances. It's assumed that the state is in the form: 
+ * for the object instances. It's assumed that the state is in the form:
  * {key: { entries: [{status:load status}] }
  */
 export default class ActionLoader {
 
     // Abstract actions. Implement in subclass
-    loadIt(state, key, url) {}
-    receive(url, json) {}
-    erred(url) {}
-    showIt(key) {}
+    /*
+    loadIt(state, key, url) {
+    }
+
+    receive(url, json) {
+    }
+
+    erred(url) {
+    }
+
+    showIt(key) {
+    }
+    */
 
     /***
      * Describes how to make the url with the given entry
@@ -35,7 +44,7 @@ export default class ActionLoader {
      */
     makeLoadUrl(settings, state, entry) {
         // This will normally need overriding
-        return state.get('baseUrl')+entry.get('key')
+        return state.get('baseUrl') + entry.get('key')
     }
 
     /***
@@ -46,17 +55,17 @@ export default class ActionLoader {
      */
     constructor(props) {
     }
-    
+
     /***
      * Returns the substate representing the container of the thing we are loading.
-     * For instance, for a model this is the document that holds that model. By 
+     * For instance, for a model this is the document that holds that model. By
      * default this returns the entire state
      * @param state
      */
     resolveSubstate(state) {
         return state
     }
-    
+
     /***
      * Checks to see if model, medium, etc of the given key needs to be fetched from the server
      * @param state
@@ -79,10 +88,10 @@ export default class ActionLoader {
 
         // Note that the function also receives getState()
         // which lets you choose what to dispatch next.
-    
+
         // This is useful for avoiding a network request if
         // a cached value is already available.
-    
+
         var self = this;
         return (dispatch, getState) => {
             self.dispatchFetchIfNeeded(dispatch, getState(), entryKey)
@@ -114,7 +123,7 @@ export default class ActionLoader {
      * @param entryKey
      * @returns {*}
      */
-    dispatchFetchIfNeeded(dispatch, state, entryKey, options) {
+    dispatchFetchIfNeeded(dispatch, state, entryKey) {
         // Get the substate containing the thing we are fetching.
         // This defaults to the entire state but might be overridden in a subclass
         var substate = this.resolveSubstate(state)
@@ -124,7 +133,7 @@ export default class ActionLoader {
         } else {
             // Let the calling code know there's nothing to wait for.
             return Promise.resolve()
-        } 
+        }
     }
 
     /***
@@ -141,11 +150,11 @@ export default class ActionLoader {
             // This is not required by thunk middleware, but it is convenient for us.
             const entry = state.getIn([self.key, 'entries', entryKey]);
             const url = self.makeLoadUrl(state.get('settings'), state.get(self.key), entry)
-            
+
             // First dispatch: the app state is updated to inform
             // that the API call is starting.
             dispatch(self.loadIt(state, entryKey, url));
-            
+
             // Make the actual AJAX call. This can be overridden in the subclass
             return self.fetchIt(dispatch, entryKey, url)
         }
@@ -176,7 +185,7 @@ export default class ActionLoader {
                 // Here, we update the app state with the results of the API call.
                 dispatch(self.receive(entryKey, json))
             )
-            .catch(error => console.log('request failed', error)) 
+            .catch(error => console.log('request failed', error))
     }
 
 }

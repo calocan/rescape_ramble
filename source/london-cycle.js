@@ -1,19 +1,19 @@
-import React, { Component } from "react";
-import ReactMapboxGl, { Layer, Feature, Popup, ZoomControl } from "react-mapbox-gl";
+import React, { Component } from 'react';
+import ReactMapboxGl, { Layer, Feature, Popup, ZoomControl } from 'react-mapbox-gl';
 import styles from './london-cycle.style';
-import { parseString } from "xml2js";
-import { Map } from "immutable";
-import config from "./config.json";
+import { parseString } from 'xml2js';
+import { Map } from 'immutable';
+import config from './config.json';
 
 const { accessToken, style } = config;
 
 function getCycleStations() {
-  return fetch("https://tfl.gov.uk/tfl/syndication/feeds/cycle-hire/livecyclehireupdates.xml")
+  return fetch('https://tfl.gov.uk/tfl/syndication/feeds/cycle-hire/livecyclehireupdates.xml')
     .then(res => res.text())
     .then(data => {
       return new Promise((resolve, reject) => {
         parseString(data, (err, res) => {
-          if(!err) {
+          if (!err) {
             resolve(res.stations.station);
           } else {
             reject(err);
@@ -24,8 +24,8 @@ function getCycleStations() {
 }
 
 const maxBounds = [
-  [-0.481747846041145,51.3233379650232], // South West
-  [0.23441119994140536,51.654967740310525], // North East
+  [-0.481747846041145, 51.3233379650232], // South West
+  [0.23441119994140536, 51.654967740310525], // North East
 ];
 
 export default class LondonCycle extends Component {
@@ -52,7 +52,7 @@ export default class LondonCycle extends Component {
         }, new Map()))
       }));
     });
-  };
+  }
 
   _markerClick = (station, { feature }) => {
     this.setState({
@@ -86,8 +86,6 @@ export default class LondonCycle extends Component {
   toggle = true;
 
   _onFitBoundsClick = () => {
-    const { stations } = this.state;
-
     if (this.toggle) {
       this.setState({
         fitBounds: [[-0.122555629777, 51.4734862092], [-0.114842, 51.50621]]
@@ -102,7 +100,7 @@ export default class LondonCycle extends Component {
   };
 
   render() {
-    const { stations, station, skip, end, popupShowLabel, fitBounds } = this.state;
+    const { stations, station, popupShowLabel, fitBounds } = this.state
 
     return (
       <div>
@@ -123,18 +121,18 @@ export default class LondonCycle extends Component {
             onControlClick={this._onControlClick}/>
 
           <Layer
-            type="symbol"
-            id="marker"
-            layout={{ "icon-image": "marker-15" }}>
+            type='symbol'
+            id='marker'
+            layout={{ 'icon-image': 'marker-15' }}>
             {
               stations
-                .map((station, index) => (
+                .map((aStation) => (
                   <Feature
-                    key={station.get("id")}
-                    onHover={this._onToggleHover.bind(this, "pointer")}
-                    onEndHover={this._onToggleHover.bind(this, "")}
-                    onClick={this._markerClick.bind(this, station)}
-                    coordinates={station.get("position")}/>
+                    key={aStation.get('id')}
+                    onHover={this._onToggleHover.bind(this, 'pointer')}
+                    onEndHover={this._onToggleHover.bind(this, '')}
+                    onClick={this._markerClick.bind(this, aStation)}
+                    coordinates={aStation.get('position')}/>
                 )).toArray()
             }
           </Layer>
@@ -142,18 +140,18 @@ export default class LondonCycle extends Component {
           {
             station && (
               <Popup
-                key={station.get("id")}
-                coordinates={station.get("position")}>
+                key={station.get('id')}
+                coordinates={station.get('position')}>
                 <div>
                   <span style={{
                     ...styles.popup,
-                    display: popupShowLabel ? "block" : "none"
+                    display: popupShowLabel ? 'block' : 'none'
                   }}>
-                    {station.get("name")}
+                    {station.get('name')}
                   </span>
                   <div onClick={this._popupChange.bind(this, !popupShowLabel)}>
                     {
-                      popupShowLabel ? "Hide" : "Show"
+                      popupShowLabel ? 'Hide' : 'Show'
                     }
                   </div>
                 </div>
@@ -164,8 +162,8 @@ export default class LondonCycle extends Component {
         {
           station && (
             <div style={styles.stationDescription}>
-              <p>{ station.get("name") }</p>
-              <p>{ station.get("bikes") } bikes / { station.get("slots") } slots</p>
+              <p>{ station.get('name') }</p>
+              <p>{ station.get('bikes') } bikes / { station.get('slots') } slots</p>
             </div>
           )
         }
