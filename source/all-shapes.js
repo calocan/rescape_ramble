@@ -1,14 +1,14 @@
-import React, { Component } from "react";
-import ReactMapboxGl, { Layer, Feature, ScaleControl, ZoomControl, Marker } from "react-mapbox-gl";
-import route from "./route.json";
-import config from "./config.json";
-import style from "./style.json";
+import React, { Component } from 'react';
+import ReactMapboxGl, { Layer, Feature, ScaleControl, ZoomControl, Marker } from 'react-mapbox-gl';
+import route from './route.json';
+import config from './config.json';
+import style from './style.json';
 
 const { accessToken } = config;
 
 const containerStyle = {
-  height: "100vh",
-  width: "100%"
+  height: '100vh',
+  width: '100%'
 };
 
 const polygonCoords = [[
@@ -47,8 +47,8 @@ const markerCoord = [
 const mappedRoute = route.points.map(point => [ point.lat, point.lng ]);
 
 const markerContainer = document.createElement('div');
-markerContainer.style.width = "400px";
-markerContainer.style.position = "absolute";
+markerContainer.style.width = '400px';
+markerContainer.style.position = 'absolute';
 
 export default class AllShapes extends Component {
 
@@ -81,23 +81,23 @@ export default class AllShapes extends Component {
   };
 
   _onClickMap(map) {
-    console.log("Clicked on the map : ", map);
+    console.log('Clicked on the map : ', map);
   }
 
   _onStyleLoad(map) {
-    console.log("Style loaded: ", map);
+    console.log('Style loaded: ', map);
   }
 
   _onHover({ map }) {
-    map.getCanvas().style.cursor = "pointer";
+    map.getCanvas().style.cursor = 'pointer';
   }
 
   _onZoom(map) {
-    console.log("Zoom level changed to ", map.getZoom());
+    console.log('Zoom level changed to ', map.getZoom());
   }
 
   _onEndHover({ map }) {
-    map.getCanvas().style.cursor = "";
+    map.getCanvas().style.cursor = '';
   }
 
   _markerClick() {
@@ -113,7 +113,7 @@ export default class AllShapes extends Component {
   }
 
   _polygonClicked = ({ feature }) => {
-    console.log("Polygon clicked", feature.geometry.coordinates);
+    console.log('Polygon clicked', feature.geometry.coordinates);
   };
 
   render() {
@@ -125,13 +125,13 @@ export default class AllShapes extends Component {
         onStyleLoad={this._onStyleLoad}
         accessToken={accessToken}
         center={this.state.center}
-        movingMethod="jumpTo"
+        movingMethod='jumpTo'
         containerStyle={containerStyle}>
         <ScaleControl/>
         <ZoomControl/>
         <Layer
-          type="symbol"
-          layout={{ "icon-image": "harbor-15" }}>
+          type='symbol'
+          layout={{ 'icon-image': 'harbor-15' }}>
           <Feature
             coordinates={markerCoord}
             onHover={this._onHover}
@@ -140,28 +140,28 @@ export default class AllShapes extends Component {
         </Layer>
 
         <Layer
-          id="mapbox-route-example"
-          type="line"
-          sourceId="route"
+          id='mapbox-route-example'
+          type='line'
+          sourceId='route'
           layout={{
-            "line-join": "round",
-            "line-cap": "round"
+            'line-join': 'round',
+            'line-cap': 'round'
           }}
           paint={{
-            "line-color": "#888",
-            "line-width": 8
+            'line-color': '#888',
+            'line-width': 8
           }}/>
 
         <Layer
-          type="line"
-          layout={{ "line-cap": "round", "line-join": "round" }}
-          paint={{ "line-color": "#4790E5", "line-width": 12 }}>
+          type='line'
+          layout={{ 'line-cap': 'round', 'line-join': 'round' }}
+          paint={{ 'line-color': '#4790E5', 'line-width': 12 }}>
           <Feature coordinates={mappedRoute}/>
         </Layer>
 
         <Layer
-          type="circle"
-          paint={{ "circle-radius": this.state.circleRadius, "circle-color": "#E54E52", "circle-opacity": .8 }}>
+          type='circle'
+          paint={{ 'circle-radius': this.state.circleRadius, 'circle-color': '#E54E52', 'circle-opacity': .8 }}>
           <Feature coordinates={mappedRoute[this.state.routeIndex]}/>
         </Layer>
 
@@ -175,16 +175,16 @@ export default class AllShapes extends Component {
         </Marker>
 
         <Layer
-          type="fill"
-          paint={{ "fill-color": "#6F788A", "fill-opacity": .7 }}>
+          type='fill'
+          paint={{ 'fill-color': '#6F788A', 'fill-opacity': .7 }}>
           <Feature
             onClick={this._polygonClicked}
             coordinates={polygonCoords}/>
         </Layer>
 
         <Layer
-          type="fill"
-          paint={{ "fill-color": "#3bb2d0", "fill-opacity": .5 }}>
+          type='fill'
+          paint={{ 'fill-color': '#3bb2d0', 'fill-opacity': .5 }}>
           <Feature
             onClick={this._polygonClicked}
             coordinates={multiPolygonCoords}/>

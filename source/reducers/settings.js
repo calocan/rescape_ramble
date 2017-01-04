@@ -23,12 +23,15 @@ import * as settingsActions from '../actions/settings'
  */
 export default function(state = Map({}), action) {
     // If setting state
-    if (action.type==SET_STATE)
+    if (action.type === SET_STATE) {
         return state.merge(action.state.get('settings'));
+    }
     // Handle any other setting
-    else if (action.type && action.type in settingsActions)
+    else if (action.type && action.type in settingsActions) {
         return state.set(action.type, action.value);
-    else
+    }
+    else {
         return state
+    }
 
 }

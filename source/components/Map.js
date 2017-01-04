@@ -2,29 +2,25 @@
  * Created by Andy Likuski on 2016.12.15
  * Copyright (c) 2016 Andy Likuski
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the 'Software'), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
  *
  * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import {connect} from 'react-redux';
-import React, {Component, PropTypes} from 'react'
-import ImmutablePropTypes from 'react-immutable-proptypes'
-import ReactMapboxGl, { Layer, Feature, Marker } from "react-mapbox-gl";
-import styles from './london-cycle.style';
-import { parseString } from "xml2js";
-import { Map } from "immutable";
-import config from "./config.json";
+import React, {Component} from 'react'
+import ReactMapboxGl, { Layer, Feature } from 'react-mapbox-gl'
+import styles from './london-cycle.style'
+import {parseString} from 'xml2js'
 
 function getCycleStations() {
-    return fetch("https://tfl.gov.uk/tfl/syndication/feeds/cycle-hire/livecyclehireupdates.xml")
+    return fetch('https://tfl.gov.uk/tfl/syndication/feeds/cycle-hire/livecyclehireupdates.xml')
         .then(res => res.text())
         .then(data => {
             return new Promise((resolve, reject) => {
                 parseString(data, (err, res) => {
-                    if(!err) {
+                    if (!err) {
                         resolve(res.stations.station);
                     } else {
                         reject(err);
@@ -35,8 +31,8 @@ function getCycleStations() {
 }
 
 const maxBounds = [
-    [-0.481747846041145,51.3233379650232], // South West
-    [0.23441119994140536,51.654967740310525], // North East
+    [-0.481747846041145, 51.3233379650232],  // South West
+    [0.23441119994140536, 51.654967740310525],  // North East
 ];
 
 export default class Map extends Component {
@@ -63,7 +59,7 @@ export default class Map extends Component {
                 }, new Map()))
             }));
         });
-    };
+    }
 
     _markerClick = (station, { feature }) => {
         this.setState({
@@ -97,8 +93,6 @@ export default class Map extends Component {
     toggle = true;
 
     _onFitBoundsClick = () => {
-        const { stations } = this.state;
-
         if (this.toggle) {
             this.setState({
                 fitBounds: [[-0.122555629777, 51.4734862092], [-0.114842, 51.50621]]
@@ -113,7 +107,10 @@ export default class Map extends Component {
     };
 
     render() {
-        const { stations, station, skip, end, popupShowLabel, fitBounds } = this.state;
+        const { stations, station, popupShowLabel, fitBounds } = this.state;
+        // TODO These are not defined
+        const style = null,
+            accessToken = null
 
         return (
             <div>
@@ -134,18 +131,18 @@ export default class Map extends Component {
                         onControlClick={this._onControlClick}/>
 
                     <Layer
-                        type="symbol"
-                        id="marker"
-                        layout={{ "icon-image": "marker-15" }}>
+                        type='symbol'
+                        id='marker'
+                        layout={{ 'icon-image': 'marker-15' }}>
                         {
                             stations
-                                .map((station, index) => (
+                                .map((aStation) => (
                                     <Feature
-                                        key={station.get("id")}
-                                        onHover={this._onToggleHover.bind(this, "pointer")}
-                                        onEndHover={this._onToggleHover.bind(this, "")}
-                                        onClick={this._markerClick.bind(this, station)}
-                                        coordinates={station.get("position")}/>
+                                        key={aStation.get('id')}
+                                        onHover={this._onToggleHover.bind(this, 'pointer')}
+                                        onEndHover={this._onToggleHover.bind(this, '')}
+                                        onClick={this._markerClick.bind(this, aStation)}
+                                        coordinates={aStation.get('position')}/>
                                 )).toArray()
                         }
                     </Layer>
@@ -153,18 +150,18 @@ export default class Map extends Component {
                     {
                         station && (
                             <Popup
-                                key={station.get("id")}
-                                coordinates={station.get("position")}>
+                                key={station.get('id')}
+                                coordinates={station.get('position')}>
                                 <div>
                   <span style={{
                       ...styles.popup,
-                      display: popupShowLabel ? "block" : "none"
+                      display: popupShowLabel ? 'block' : 'none'
                   }}>
-                    {station.get("name")}
+                    {station.get('name')}
                   </span>
                                     <div onClick={this._popupChange.bind(this, !popupShowLabel)}>
                                         {
-                                            popupShowLabel ? "Hide" : "Show"
+                                            popupShowLabel ? 'Hide' : 'Show'
                                         }
                                     </div>
                                 </div>
@@ -175,8 +172,8 @@ export default class Map extends Component {
                 {
                     station && (
                         <div style={styles.stationDescription}>
-                            <p>{ station.get("name") }</p>
-                            <p>{ station.get("bikes") } bikes / { station.get("slots") } slots</p>
+                            <p>{ station.get('name') }</p>
+                            <p>{ station.get('bikes') } bikes / { station.get('slots') } slots</p>
                         </div>
                     )
                 }
@@ -190,4 +187,4 @@ export default class Map extends Component {
         )
     }
 }
-export default Map
+

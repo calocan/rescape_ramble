@@ -38,7 +38,7 @@ ReactDOM.render(
     <Provider store={store}>
         <Router history={appHistory}>{routes}</Router>
     </Provider>,
-    document.getElementById('app')
+    document.getElementById('root')
 );
 
 store.dispatch(setState(initialState))

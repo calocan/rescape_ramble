@@ -19,7 +19,7 @@
 
 // sets the full state to a stored value (e.g. from a cookie)
 export const SET_STATE = 'SET_STATE'
-export function setState(state=null) {
+export function setState(state = null) {
     return { type: SET_STATE, state: state }
 }
 

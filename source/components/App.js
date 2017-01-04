@@ -14,26 +14,21 @@
  */
 // Do this once before any other code in your app (http://redux.js.org/docs/advanced/AsyncActions.html)
 import 'babel-polyfill'
-import React, { Component, PropTypes } from 'react'
-import { render } from 'react-dom';
+import React, { Component } from 'react'
 import {connect} from 'react-redux';
 
 // The children are the components of the chosen route
 class App extends Component {
 
-    componentDidMount() {
-    }
-    componentWillReceiveProps(nextProps){
-    }
     render() {
         return React.cloneElement(this.props.children, {})
     }
-};
+}
 
 App.PropTypes = {
 }
 
-function mapStateToProps(state, props) {
+function mapStateToProps(state) {
     return state.toObject()
 }
 

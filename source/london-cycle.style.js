@@ -1,24 +1,24 @@
 export default {
   container: {
-    height: "100vh",
-    width: "100vw"
+    height: '100vh',
+    width: '100vw'
   },
   button: {
-    cursor: "pointer"
+    cursor: 'pointer'
   },
   stationDescription: {
-    position: "absolute",
+    position: 'absolute',
     bottom: 0,
     left: 0,
     right: 0,
-    padding: "16px 0px",
-    textAlign: "center",
-    backgroundColor: "white"
+    padding: '16px 0px',
+    textAlign: 'center',
+    backgroundColor: 'white'
   },
   popup: {
-    background: "#fff",
-    padding: "5px",
-    borderRadius: "2px"
+    background: '#fff',
+    padding: '5px',
+    borderRadius: '2px'
   },
   btnWrapper: {
     position: 'absolute',
