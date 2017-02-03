@@ -1,4 +1,4 @@
-import './components/title';
-import './components/hello';
+import './components/map';
+import './components/site';
 import './App.js';
-import './store/reducers/hello';
+import './store/reducers/settings';

@@ -19,7 +19,7 @@
 import {connect} from 'react-redux';
 import React, {Component} from 'react'
 import ImmutablePropTypes from 'react-immutable-proptypes'
-import Main from './main'
+import Main from '../main'
 
 export class Site extends Component {
 

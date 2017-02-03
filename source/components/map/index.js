@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import ReactMapboxGl, { Layer, Feature, Popup, ZoomControl } from 'react-mapbox-gl';
-import styles from './london-cycle.style';
+import styles from './index.style';
 import { parseString } from 'xml2js';
 import { Map } from 'immutable';
-import config from './config.json';
+import config from '../../config.json';
 
 const { accessToken, style } = config;
 
@@ -23,16 +23,17 @@ function getCycleStations() {
     })
 }
 
+
 const maxBounds = [
-  [-0.481747846041145, 51.3233379650232], // South West
-  [0.23441119994140536, 51.654967740310525], // North East
+    [-125, 31],  // South West
+    [-113, 43],  // North East
 ];
 
 export default class LondonCycle extends Component {
 
   state = {
-    center: [-0.109970527, 51.52916347],
-    zoom: [11],
+    center: [-119, 37],
+    zoom: [3],
     skip: 0,
     stations: new Map(),
     popupShowLabel: true
@@ -88,11 +89,11 @@ export default class LondonCycle extends Component {
   _onFitBoundsClick = () => {
     if (this.toggle) {
       this.setState({
-        fitBounds: [[-0.122555629777, 51.4734862092], [-0.114842, 51.50621]]
+        fitBounds: [[-124, 32], [-114, 42]]
       });
     } else {
       this.setState({
-        fitBounds: [[32.958984, -5.353521], [43.50585, 5.615985]] // this won't focus on the area as there is a maxBounds
+        fitBounds: [[-124, 32], [-114, 42]]
       });
     }
 
@@ -109,7 +110,7 @@ export default class LondonCycle extends Component {
           fitBounds={fitBounds}
           center={this.state.center}
           zoom={this.state.zoom}
-          minZoom={8}
+          minZoom={1}
           maxZoom={15}
           maxBounds={maxBounds}
           accessToken={accessToken}

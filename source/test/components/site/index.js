@@ -3,12 +3,12 @@ import reactDom from 'react-dom/server';
 import test from 'tape';
 import dom from 'cheerio';
 
-import createTitle from 'components/title';
+import createSite from 'components/site';
 
-const Title = createTitle(React);
+const Site = createSite(React);
 const render = reactDom.renderToStaticMarkup;
 
-test('Title', assert => {
+test('Site', assert => {
   const titleText = 'Hello!';
   const props = {
     title: titleText,
@@ -16,7 +16,7 @@ test('Title', assert => {
   };
   const re = new RegExp(titleText, 'g');
 
-  const el = <Title { ...props } />;
+  const el = <Site { ...props } />;
   const $ = dom.load(render(el));
   const output = $('.title').html();
   const actual = re.test(output);
