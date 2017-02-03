@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import AllShapes from '../all-shapes';
-import LondonCycle from '../london-cycle';
+import LondonCycle from './map/index';
 import GeoJSONExample from '../geojson-example';
 
 const examples = [

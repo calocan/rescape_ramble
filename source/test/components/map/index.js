@@ -3,13 +3,13 @@ import reactDom from 'react-dom/server';
 import test from 'tape';
 import dom from 'cheerio';
 
-import hello from 'components/hello';
+import map from 'components/map';
 import createActions from 'test-fixtures/components/hello/create-actions';
 
-const Hello = hello(React);
+const Map = map(React);
 const render = reactDom.renderToStaticMarkup;
 
-test('Hello', nest => {
+test('Map', nest => {
   nest.test('...with no parameters', assert => {
     const msg = 'should render our hello greeting!';
 
