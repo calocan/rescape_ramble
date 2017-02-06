@@ -11,8 +11,9 @@
 
 import { combineReducers } from 'redux-immutable';
 import settings from './settings'
-
+import {createViewportReducer} from 'redux-map-gl';
 
 export default combineReducers({
-    settings
+    settings,
+    map: createViewportReducer()
 })

@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import ReactMapboxGl, { Layer, Feature, Popup, ZoomControl } from 'react-mapbox-gl';
+import MapGl, { Layer, Feature, Popup, ZoomControl } from 'react-mapbox-gl';
 import styles from './index.style';
 import { parseString } from 'xml2js';
 import { Map } from 'immutable';
-import config from '../../config.json';
+import config from '../../config.json'
 
 const { accessToken, style } = config;
 
@@ -23,17 +23,18 @@ function getCycleStations() {
     })
 }
 
-
 const maxBounds = [
     [-125, 31],  // South West
     [-113, 43],  // North East
 ];
 
-export default class LondonCycle extends Component {
+export default class MapBox extends Component {
 
   state = {
     center: [-119, 37],
-    zoom: [3],
+    zoom: [4],
+    // i.e. initial tilt of the map
+    pitch: 40,
     skip: 0,
     stations: new Map(),
     popupShowLabel: true
@@ -105,15 +106,17 @@ export default class LondonCycle extends Component {
 
     return (
       <div>
-        <ReactMapboxGl
+        <MapGl
           style={style}
           fitBounds={fitBounds}
           center={this.state.center}
           zoom={this.state.zoom}
+          pitch={this.state.pitch}
           minZoom={1}
           maxZoom={15}
           maxBounds={maxBounds}
           accessToken={accessToken}
+          onChangeViewport={this.props.onChangeViewport}
           onDrag={this._onDrag}
           containerStyle={styles.container}>
 
@@ -159,7 +162,7 @@ export default class LondonCycle extends Component {
               </Popup>
             )
           }
-        </ReactMapboxGl>
+        </MapGl>
         {
           station && (
             <div style={styles.stationDescription}>

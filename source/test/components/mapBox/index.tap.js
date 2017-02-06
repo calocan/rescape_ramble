@@ -3,13 +3,13 @@ import reactDom from 'react-dom/server';
 import test from 'tape';
 import dom from 'cheerio';
 
-import map from 'components/map';
+import slippyMap from 'components/slippyMap/index';
 import createActions from 'test-fixtures/components/hello/create-actions';
 
-const Map = map(React);
+const SlippyMap = slippyMap(React);
 const render = reactDom.renderToStaticMarkup;
 
-test('Map', nest => {
+test('MapBox', nest => {
   nest.test('...with no parameters', assert => {
     const msg = 'should render our hello greeting!';
 
@@ -20,7 +20,7 @@ test('Map', nest => {
       actions: createActions()
     };
 
-    const el = <Hello { ...props } />;
+    const el = <SlippyMap { ...props } />;
     const $ = dom.load(render(el));
     const output = $.html();
 

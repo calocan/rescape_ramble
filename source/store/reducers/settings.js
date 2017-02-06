@@ -10,8 +10,8 @@
  */
 
 import {Map} from 'immutable';
-import {SET_STATE} from '../actions/site'
-import * as settingsActions from '../actions/settings'
+import {SET_STATE} from '../../actions/site'
+import * as settingsActions from '../../actions/settings'
 
 /***
  * Reduces the state of the settings
