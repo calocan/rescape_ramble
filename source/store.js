@@ -15,25 +15,30 @@
 
 // Do this once before any other code in your app (http://redux.js.org/docs/advanced/AsyncActions.html)
 import 'babel-polyfill'
-import thunkMiddleware from 'redux-thunk'
+import thunk from 'redux-thunk'
 import { createStore, applyMiddleware, compose } from 'redux'
-import rootReducer from './reducers/reducer'
+import reducer from './store/reducers/reducer'
 import {Map} from 'immutable';
 
-// Create a logger
-// const loggerMiddleware = createLogger()
+const middlewares = [
+    thunk
+];
+if (process.env.NODE_ENV === `development`) {
+    const createLogger = require(`redux-logger`);
+    const logger = createLogger();
+    middlewares.push(logger);
+}
 
 // Create the store applying our reducer and the thunk and logger middleware
 export default function makeStore(initialState = Map()) {
     return createStore(
-        rootReducer,
+        reducer,
         initialState,
         compose(
             applyMiddleware(
-                thunkMiddleware, // lets us dispatch() functions
-                //loggerMiddleware // neat middleware that logs actions
+                ...middlewares
             ),
-            // Use the Chrom devToolsExtension
+            // Use the Chrome devToolsExtension
             window.devToolsExtension ? window.devToolsExtension() : f => f
         )
     )

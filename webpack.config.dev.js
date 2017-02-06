@@ -1,4 +1,5 @@
 var path = require('path');
+var webpack = require('webpack')
 
 module.exports = {
   devtool: 'inline-source-map',
@@ -27,5 +28,12 @@ module.exports = {
        test: /\.json$/,
        loader: 'json-loader'
     }]
-  }
+  },
+   plugins: [
+     new webpack.DefinePlugin({
+       'process.env': {
+         'NODE_ENV': JSON.stringify('development'),
+       }
+     })
+   ]
 };
