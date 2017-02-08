@@ -12,16 +12,15 @@
 import {connect} from 'react-redux';
 import {onChangeViewport} from 'redux-map-gl';
 
-import SlippyMap from '../components/mapBox/index';
-import {getMapStyle} from '../selectors/map-style';
+import MapBox from '../components/mapBox/index';
 
 function mapStateToProps(state) {
     const mapState = state.map.viewport.toJS();
-    const mapStyle = getMapStyle(state);
+    //const mapStyle = getMapStyle(state);
 
     return {
         mapState,
-        mapStyle
+        //mapStyle
     };
 }
 
@@ -29,4 +28,4 @@ const actions = {
     onChangeViewport
 };
 
-export default connect(mapStateToProps, actions)(SlippyMap);
+export default connect(mapStateToProps, actions)(MapBox);
