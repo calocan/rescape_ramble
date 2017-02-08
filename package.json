@@ -1,10 +1,10 @@
 {
-  "name": "rescape-railbed",
+  "name": "rescape-ramble",
   "version": "1.0.0",
-  "description": "",
+  "description": "Reimagine our passenger rail system",
   "engines": {
-    "node": ">=v6.2.2",
-    "npm": "~3.9.5"
+    "node": ">=v7.3.0",
+    "npm": ">=4.1.2"
   },
   "main": "index.js",
   "scripts": {
@@ -15,7 +15,8 @@
     "debug": "cross-env NODE_PATH='source' echo 'Nothing? `npm install -g iron-node`' && iron-node source/debug.js",
     "lint": "eslint source",
     "pretest": "npm run lint",
-    "test": "cross-env NODE_PATH='source' babel-node source/test/index.js",
+    "xest": "cross-env $NODE_DEBUG_OPTION NODE_PATH='source' babel-node source/test/index.js",
+    "test": "cross-env NODE_PATH='source' babel-tape-runner source/test/index.js",
     "watch": "watch 'clear && npm run test -s' source",
     "update": "updtr",
     "deploy": "firebase deploy",
@@ -35,6 +36,7 @@
     "babel-preset-philpl": "^0.5.0",
     "babel-preset-react": "^6.11.1",
     "babel-preset-stage-0": "^6.16.0",
+    "babel-tape-runner": "^2.0.1",
     "cheerio": "^0.22.0",
     "clean-webpack-plugin": "^0.1.10",
     "concurrently": "^3.1.0",
@@ -46,12 +48,12 @@
     "eslint-plugin-react": "^6.8.0",
     "exports-loader": "^0.6.3",
     "extract-text-webpack-plugin": "^1.0.1",
-    "file-loader": "^0.9.0",
+    "file-loader": "^0.10.0",
     "grunt-responsive-images": "^1.10.1",
     "json-loader": "^0.5.4",
     "normalize-css": "^2.3.1",
     "postcss-css-variables": "^0.6.0",
-    "postcss-easy-import": "^1.0.1",
+    "postcss-easy-import": "^2.0.0",
     "postcss-loader": "^1.2.1",
     "postcss-media-variables": "^2.0.0",
     "precss": "^1.4.0",
@@ -61,12 +63,13 @@
     "tape": "^4.6.3",
     "updtr": "^0.2.3",
     "watch": "^1.0.1",
-    "webpack": "^1.14.0",
+    "webpack": "^2.2.1",
     "webpack-dev-middleware": "^1.9.0"
   },
   "dependencies": {
     "express": "^4.14.0",
-    "mapbox-gl": "^0.29.0",
+    "history": "^4.5.1",
+    "immutable": "^3.8.1",
     "postcss-calc": "^5.3.1",
     "postcss-custom-media": "^5.0.1",
     "react": "^15.3.1",
@@ -76,10 +79,9 @@
     "react-document-meta": "^2.0.3",
     "react-dom": "^15.3.1",
     "react-immutable-proptypes": "^2.1.0",
-    "react-leaflet": "^1.0.2",
-    "react-mapbox-gl": "^0.22.0",
+    "react-map-gl": "^2.0.1",
     "react-redux": "^5.0.1",
-    "react-router": "^3.0.0",
+    "react-router": "^3.0.2",
     "react-share": "^1.9.3",
     "redux": "^3.6.0",
     "redux-immutable": "^3.0.8",
@@ -87,6 +89,7 @@
     "redux-map-gl": "^0.1.0",
     "redux-router": "^2.1.2",
     "redux-thunk": "^2.1.0",
+    "tape-catch": "^1.0.6",
     "xml2js": "^0.4.17"
   }
 }

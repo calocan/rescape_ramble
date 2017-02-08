@@ -1,6 +1,6 @@
 import React from 'react';
 import reactDom from 'react-dom/server';
-import test from 'tape';
+import test from 'tape-catch';
 import dom from 'cheerio';
 
 import createSite from 'components/site';

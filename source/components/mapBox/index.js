@@ -1,5 +1,6 @@
+
 import React, { Component } from 'react';
-import MapGl, { Layer, Feature, Popup, ZoomControl } from 'react-mapbox-gl';
+import MapGl from 'react-map-gl';
 import styles from './index.style';
 import { parseString } from 'xml2js';
 import { Map } from 'immutable';
@@ -181,3 +182,4 @@ export default class MapBox extends Component {
     )
   }
 }
+
