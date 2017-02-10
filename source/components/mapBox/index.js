@@ -1,185 +1,95 @@
-
-import React, { Component } from 'react';
-import MapGl from 'react-map-gl';
+import React, {PropTypes, Component} from 'react';
+import MapGL from 'react-map-gl';
+import autobind from 'react-autobind'
+import Immutable from 'immutable';
+import window from 'global/window';
 import styles from './index.style';
-import { parseString } from 'xml2js';
-import { Map } from 'immutable';
-import config from '../../config.json'
 
-const { accessToken, style } = config;
+import config from "../../config.json";
+const { accessToken, style, maxBounds, center, zoom, pitch, bearing } = config;
 
-function getCycleStations() {
-  return fetch('https://tfl.gov.uk/tfl/syndication/feeds/cycle-hire/livecyclehireupdates.xml')
-    .then(res => res.text())
-    .then(data => {
-      return new Promise((resolve, reject) => {
-        parseString(data, (err, res) => {
-          if (!err) {
-            resolve(res.stations.station);
-          } else {
-            reject(err);
-          }
-        });
-      });
-    })
+
+function buildStyle({fill = 'red', stroke = 'blue'}) {
+    return Immutable.fromJS({
+        version: 8,
+        name: 'Example raster tile source',
+        sources: {
+            'my-geojson-polygon-source': {
+                type: 'geojson',
+                data: SF_FEATURE
+            }
+        },
+        layers: [
+            {
+                id: 'geojson-polygon-fill',
+                source: 'my-geojson-polygon-source',
+                type: 'fill',
+                paint: {'fill-color': fill, 'fill-opacity': 0.4},
+                interactive: true
+            }, {
+                id: 'geojson-polygon-stroke',
+                source: 'my-geojson-polygon-source',
+                type: 'line',
+                paint: {'line-color': stroke, 'line-width': 4},
+                interactive: false
+            }
+        ]
+    });
 }
 
-const maxBounds = [
-    [-125, 31],  // South West
-    [-113, 43],  // North East
-];
+const propTypes = {
+    width: PropTypes.number.isRequired,
+    height: PropTypes.number.isRequired
+};
 
 export default class MapBox extends Component {
 
-  state = {
-    center: [-119, 37],
-    zoom: [4],
-    // i.e. initial tilt of the map
-    pitch: 40,
-    skip: 0,
-    stations: new Map(),
-    popupShowLabel: true
-  };
-
-  componentWillMount() {
-    getCycleStations().then(res => {
-      this.setState(({ stations }) => ({
-        stations: stations.merge(res.reduce((acc, station) => {
-          return acc.set(station.id[0], new Map({
-            id: station.id[0],
-            name: station.name[0],
-            position: [ parseFloat(station.long[0]), parseFloat(station.lat[0]) ],
-            bikes: parseInt(station.nbBikes[0]),
-            slots: parseInt(station.nbDocks[0])
-          }))
-        }, new Map()))
-      }));
-    });
-  }
-
-  _markerClick = (station, { feature }) => {
-    this.setState({
-      center: feature.geometry.coordinates,
-      zoom: [14],
-      station
-    });
-  };
-
-  _onDrag = () => {
-    if (this.state.station) {
-      this.setState({
-        station: null
-      });
-    }
-  };
-
-  _onToggleHover(cursor, { map }) {
-    map.getCanvas().style.cursor = cursor;
-  }
-
-  _onControlClick = (map, zoomDiff) => {
-    const zoom = map.getZoom() + zoomDiff;
-    this.setState({ zoom: [zoom] });
-  };
-
-  _popupChange(popupShowLabel) {
-    this.setState({ popupShowLabel });
-  }
-
-  toggle = true;
-
-  _onFitBoundsClick = () => {
-    if (this.toggle) {
-      this.setState({
-        fitBounds: [[-124, 32], [-114, 42]]
-      });
-    } else {
-      this.setState({
-        fitBounds: [[-124, 32], [-114, 42]]
-      });
+    constructor(props) {
+        super(props);
+        this.state = {
+            viewport: {
+                latitude: center.latitude,
+                longitude: center.longitude,
+                zoom: zoom,
+                bearing: bearing,
+                pitch: pitch,
+                startDragLngLat: null,
+                isDragging: false
+            },
+            mapStyle: style //buildStyle({stroke: '#FF00FF', fill: 'green'})
+        };
+        autobind(this);
     }
 
-    this.toggle = !this.toggle;
-  };
+    _onChangeViewport(opt) {
+        this.setState({viewport: opt});
+    }
 
-  render() {
-    const { stations, station, popupShowLabel, fitBounds } = this.state
+    _onClickFeatures(features) {
+        window.console.log(features);
+    }
 
-    return (
-      <div>
-        <MapGl
-          style={style}
-          fitBounds={fitBounds}
-          center={this.state.center}
-          zoom={this.state.zoom}
-          pitch={this.state.pitch}
-          minZoom={1}
-          maxZoom={15}
-          maxBounds={maxBounds}
-          accessToken={accessToken}
-          onChangeViewport={this.props.onChangeViewport}
-          onDrag={this._onDrag}
-          containerStyle={styles.container}>
-
-          <ZoomControl
-            zoomDiff={1}
-            onControlClick={this._onControlClick}/>
-
-          <Layer
-            type='symbol'
-            id='marker'
-            layout={{ 'icon-image': 'marker-15' }}>
-            {
-              stations
-                .map((aStation) => (
-                  <Feature
-                    key={aStation.get('id')}
-                    onHover={this._onToggleHover.bind(this, 'pointer')}
-                    onEndHover={this._onToggleHover.bind(this, '')}
-                    onClick={this._markerClick.bind(this, aStation)}
-                    coordinates={aStation.get('position')}/>
-                )).toArray()
-            }
-          </Layer>
-
-          {
-            station && (
-              <Popup
-                key={station.get('id')}
-                coordinates={station.get('position')}>
-                <div>
-                  <span style={{
-                    ...styles.popup,
-                    display: popupShowLabel ? 'block' : 'none'
-                  }}>
-                    {station.get('name')}
-                  </span>
-                  <div onClick={this._popupChange.bind(this, !popupShowLabel)}>
-                    {
-                      popupShowLabel ? 'Hide' : 'Show'
-                    }
-                  </div>
-                </div>
-              </Popup>
-            )
-          }
-        </MapGl>
-        {
-          station && (
-            <div style={styles.stationDescription}>
-              <p>{ station.get('name') }</p>
-              <p>{ station.get('bikes') } bikes / { station.get('slots') } slots</p>
-            </div>
-          )
-        }
-        <div style={{
-        ...styles.btnWrapper,
-        ...(station && styles.btnStationOpen)
-      }}>
-          <button style={styles.btn} onClick={this._onFitBoundsClick}>Fit to bounds</button>
-        </div>
-      </div>
-    )
-  }
+    render() {
+        const viewport = {
+            mapStyle: this.state.mapStyle,
+            ...this.state.viewport,
+            // The props can override the styles, but why would they
+            ...styles.container,
+            ...this.props
+        };
+        return (
+            <MapGL
+                { ...viewport }
+                onChangeViewport={ this._onChangeViewport }
+                onClickFeatures={ this._onClickFeatures }
+                perspectiveEnabled={ true }
+                // setting to `true` should cause the map to flicker because all sources
+                // and layers need to be reloaded without diffing enabled.
+                preventStyleDiffing={ false }
+                mapboxApiAccessToken={accessToken}
+            />
+        );
+    }
 }
 
+MapBox.propTypes = propTypes;
