@@ -6,10 +6,8 @@ module.exports = {
   devtool: 'inline-source-map',
 
   resolve: {
-    root: __dirname + '/source',
+    modules: [__dirname + '/source', 'node_modules'],
     alias: {
-      // Work against the latest base library in this repo
-      'react-map-gl': resolve('../..'),
       // Ensure only one copy of react
       react: resolve('./node_modules/react'),
       // Per mapbox-gl-js README for non-browserify bundlers

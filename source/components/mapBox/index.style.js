@@ -1,7 +1,8 @@
 export default {
   container: {
-    height: '100vh',
-    width: '50vw'
+    width: '100%',
+    height: '100%',
+    style: {float: 'left'}
   },
   button: {
     cursor: 'pointer'
