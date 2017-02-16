@@ -8,10 +8,9 @@ module.exports = {
   resolve: {
     modules: [__dirname + '/source', 'node_modules'],
     alias: {
+      'mapbox-gl$': path.join(__dirname, "/node_modules/mapbox-gl/dist/mapbox-gl.js"),
       // Ensure only one copy of react
       react: resolve('./node_modules/react'),
-      // Per mapbox-gl-js README for non-browserify bundlers
-      'mapbox-gl$': resolve('./node_modules/mapbox-gl/dist/mapbox-gl.js')
     }
   },
   entry: [
@@ -30,7 +29,8 @@ module.exports = {
       include: path.join(__dirname, 'source'),
       query: {
         presets: ['es2015', 'stage-0', 'react']
-      }
+      },
+      exclude: /node_modules\/(?!mapbox-gl\/js)/,
     },
     {
        test: /\.json$/,

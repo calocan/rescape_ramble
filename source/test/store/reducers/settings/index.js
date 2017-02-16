@@ -1,7 +1,7 @@
 import test from 'tape-catch';
 import deepFreeze from 'deep-freeze';
 
-import hello from 'store/reducers/settings';
+import settings from 'store/reducers/settings';
 
 test('SET_MODE', nest => {
   nest.test('...initial', assert => {
@@ -12,7 +12,7 @@ test('SET_MODE', nest => {
       subject: 'World'
     };
 
-    const actual = hello();
+    const actual = settings
 
     assert.deepEqual(actual, expected, message);
     assert.end();
@@ -38,7 +38,7 @@ test('SET_MODE', nest => {
     deepFreeze(stateBefore);
     deepFreeze(action);
 
-    const actual = hello(stateBefore, action);
+    const actual = settings(stateBefore, action);
 
     assert.deepEqual(actual, expected, message);
     assert.end();
@@ -63,7 +63,7 @@ test('SET_MODE', nest => {
     deepFreeze(stateBefore);
     deepFreeze(action);
 
-    const actual = hello(stateBefore, action);
+    const actual = settings(stateBefore, action);
 
     assert.deepEqual(actual, expected, message);
     assert.end();

@@ -8,7 +8,7 @@ import createSite from 'components/site';
 const Site = createSite(React);
 const render = reactDom.renderToStaticMarkup;
 
-test('Site', assert => {
+test('Site', t => {
   const titleText = 'Hello!';
   const props = {
     title: titleText,
@@ -22,8 +22,8 @@ test('Site', assert => {
   const actual = re.test(output);
   const expected = true;
 
-  assert.equal(actual, expected,
+  t.equal(actual, expected,
     'should output the correct title text');
 
-  assert.end();
+  t.end();
 });

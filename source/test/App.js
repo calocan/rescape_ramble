@@ -3,19 +3,19 @@ import reactDom from 'react-dom/server';
 import test from 'tape';
 import dom from 'cheerio';
 
-import createApp from 'App.js';
-import createActions from 'test-fixtures/components/hello/create-actions';
+import createApp from 'components/App.js';
+import createActions from 'test-fixtures/components/map/create-actions';
 
 const render = reactDom.renderToStaticMarkup;
 const App = createApp(React);
 
-test('Hello', assert => {
+test('Map', t => {
   const msg = 'Should render all sections.';
 
   const props = {
     foo: 'foo',
-    helloClass: 'hello',
-    titleClass: 'title',
+    siteClass: 'site',
+    mapClass: 'map',
     title: 'Yay!',
     actions: createActions()
   };
@@ -24,16 +24,16 @@ test('Hello', assert => {
   const $ = dom.load(render(el));
 
   const actual = {
-    Hello: Boolean($(`.${ props.helloClass }`).html()),
-    Title: Boolean($(`.${ props.titleClass }`).html())
+    Site: Boolean($(`.${ props.siteClass }`).html()),
+    Map: Boolean($(`.${ props.mapClass }`).html())
   };
 
   const expected = {
-    Hello: true,
-    Title: true
+    Site: true,
+    Map: true
   };
 
-  assert.deepEqual(actual, expected, msg);
+  t.deepEqual(actual, expected, msg);
 
-  assert.end();
+  t.end();
 });

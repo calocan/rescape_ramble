@@ -10,7 +10,7 @@
  */
 export default {
     container: {
-        height: '90vh',
-        width: '50vw'
+        height: '.9',
+        width: '.5'
     },
 }
