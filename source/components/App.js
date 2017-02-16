@@ -19,7 +19,6 @@ import {connect} from 'react-redux';
 
 // The children are the components of the chosen route
 class App extends Component {
-
     render() {
         return React.cloneElement(this.props.children, {})
     }

@@ -1,5 +1,5 @@
 {
-  "accessToken": "pk.eyJ1IjoiY2Fsb2NhbiIsImEiOiJjaXl1aXkxZjkwMG15MndxbmkxMHczNG50In0.07Zu3XXYijL6GJMuxFtvQg",
+  "mapboxApiAccessToken": "pk.eyJ1IjoiY2Fsb2NhbiIsImEiOiJjaXl1aXkxZjkwMG15MndxbmkxMHczNG50In0.07Zu3XXYijL6GJMuxFtvQg",
   "style": "mapbox://styles/mapbox/streets-v8",
   "PRODUCTION_DOMAIN": "rescapes.net",
   "bounds": {

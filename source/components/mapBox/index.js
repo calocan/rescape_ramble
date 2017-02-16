@@ -5,9 +5,10 @@ import Immutable from 'immutable';
 import window from 'global/window';
 import styles from './index.style';
 
-import config from "../../config.json";
-const { accessToken, style, maxBounds, center, zoom, pitch, bearing } = config;
-
+import config from 'config.json';
+// Hoping to use maxBounds like in the react-mapbox-gl lib
+const { mapboxApiAccessToken, style, maxBounds, center, zoom, pitch, bearing } = config;
+import SF_FEATURE from '../../data/feature-example-sf.json';
 
 function buildStyle({fill = 'red', stroke = 'blue'}) {
     return Immutable.fromJS({
@@ -72,8 +73,9 @@ export default class MapBox extends Component {
     render() {
         const viewport = {
             mapStyle: this.state.mapStyle,
+            // The map's viewport properties as mirrored in the Component state
             ...this.state.viewport,
-            // The props can override the styles, but why would they
+            // Width, height, float. The passed in props from the parent take priority over Component's default style
             ...styles.container,
             ...this.props
         };
@@ -86,7 +88,7 @@ export default class MapBox extends Component {
                 // setting to `true` should cause the map to flicker because all sources
                 // and layers need to be reloaded without diffing enabled.
                 preventStyleDiffing={ false }
-                mapboxApiAccessToken={accessToken}
+                mapboxApiAccessToken={mapboxApiAccessToken}
             />
         );
     }
