@@ -11,35 +11,4 @@
 
 // Do this once before any other code in your app (http://redux.js.org/docs/advanced/AsyncActions.html)
 import 'babel-polyfill'
-import React from 'react'
-import ReactDOM from 'react-dom';
-import {Router, Route, useRouterHistory} from 'react-router';
-import App from './components/App'
-import Site from './components/site'
-import makeStore from './store'
-import {Provider} from 'react-redux';
-import {setState} from './actions/site'
-import initialState from './initialState'
-import { createHistory } from 'history'
-// useRouterHistory creates a composable higher-order function
-const appHistory = useRouterHistory(createHistory)({ queryKey: false })
-
-const store = makeStore()
-window.store = store;
-
-/***
- * App is the common component for all of our routes
- */
-const routes = <Route component={App}>
-    <Route path="/*" component={Site} />
-</Route>;
-
-ReactDOM.render(
-    <Provider store={store}>
-        <Router history={appHistory}>{routes}</Router>
-    </Provider>,
-    document.getElementById('root')
-);
-
-store.dispatch(setState(initialState))
-
+import './route'
