@@ -10,7 +10,7 @@
  */
 
 /***
- * Site is the top-level container component for displaying a document and its models and media
+ * Application is the top-level container component for displaying a document and its models and media
  * An site consists of documents from a source (e.g. Google Docs), the
  * schowcase for multimedia that accompanies the documents (3D models, images, etc),
  * and a header and footer
@@ -21,7 +21,7 @@ import React, {Component} from 'react'
 import ImmutablePropTypes from 'react-immutable-proptypes'
 import California from 'views/california/California'
 
-export class Site extends Component {
+export class Application extends Component {
 
     render() {
         return <div className='current'>
@@ -30,7 +30,7 @@ export class Site extends Component {
     }
 }
 
-Site.propTypes = {
+Application.propTypes = {
     settings: ImmutablePropTypes.map,
 }
 
@@ -48,4 +48,4 @@ function mapStateToProps(state) {
     }
 }
 
-export default connect(mapStateToProps)(Site)
+export default connect(mapStateToProps)(Application)

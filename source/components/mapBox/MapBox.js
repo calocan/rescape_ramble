@@ -19,7 +19,7 @@ import styles from './MapBox.style';
 import config from 'config.json';
 // Hoping to use maxBounds like in the react-mapbox-gl lib
 const { mapboxApiAccessToken, style, maxBounds, center, zoom, pitch, bearing } = config;
-import SF_FEATURE from '../../data/feature-example-sf.json';
+import SF_FEATURE from 'store/data/feature-example-sf.json';
 
 function buildStyle({fill = 'red', stroke = 'blue'}) {
     return Immutable.fromJS({

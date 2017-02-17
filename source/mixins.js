@@ -1,6 +1,6 @@
 /**
- * Created by Andy Likuski on 2016.05.24
- * Copyright (c) 2016 Andy Likuski
+ * Created by Andy Likuski on 2017.02.17
+ * Copyright (c) 2017 Andy Likuski
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
  *
@@ -9,33 +9,26 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import {Map} from 'immutable';
-import {SET_STATE} from './fullState'
-const SET_FOO = '/settings/SET_FOO';
-const actions = [SET_FOO]
-
-/***
- * Reduces the state of the settings
- * @param state:
- *  {} (default): Use default value for each setting
- *  {aSetting: true|false, ...}: Pass desired value of setting
- * @param action: actions.set3d, actions.setRelatedImages, etc
- * @returns {*}
- */
-export default function(state = Map({}), action) {
-    // If setting state
-    if (action.type === SET_STATE) {
-        return state.merge(action.state.get('settings'));
-    }
-    // Handle any other setting
-    else if (action.type && action.type in actions) {
-        return state.set(action.type, action.value);
-    }
-    else {
-        return state
+var globalMixins = {
+    /* noSelect is a static mixin  */
+    noSelect: {
+        '-webkit-touch-callout': 'none',
+        '-webkit-user-select': 'none',
+        '-khtml-user-select': 'none',
+        '-moz-user-select': 'none',
+        '-ms-user-select': 'none',
+        'user-select': 'none'
+    },
+    /* OpenSans is a dynamic mixin  */
+    OpenSans: function (obj, value) {
+        return {
+            'font-family': 'Open Sans, sans-serif',
+            'font-style': 'normal',
+            'font-size': value,
+            'font-weight': 200,
+            '-webkit-font-smoothing': 'antialiased',
+            '-moz-osx-font-smoothing': 'grayscale'
+        }
     }
 }
-
-export function setFoo(value) {
-    return { type: SET_FOO, value }
-}
+module.exports = globalMixins
