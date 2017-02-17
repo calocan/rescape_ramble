@@ -2,7 +2,6 @@ export default {
   container: {
     width: '100%',
     height: '100%',
-    style: {float: 'left'}
   },
   button: {
     cursor: 'pointer'

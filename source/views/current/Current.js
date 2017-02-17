@@ -21,7 +21,7 @@ import React, {Component} from 'react'
 import ImmutablePropTypes from 'react-immutable-proptypes'
 import California from 'views/california/California'
 
-export class Site extends Component {
+export class Current extends Component {
 
     render() {
         return <div className='current'>
@@ -30,7 +30,7 @@ export class Site extends Component {
     }
 }
 
-Site.propTypes = {
+Current.propTypes = {
     settings: ImmutablePropTypes.map,
 }
 
@@ -48,4 +48,4 @@ function mapStateToProps(state) {
     }
 }
 
-export default connect(mapStateToProps)(Site)
+export default connect(mapStateToProps)(Current)
