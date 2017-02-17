@@ -11,16 +11,19 @@
 
 const assign = Object.assign;
 
+const SET_MODE = 'mapBox/SET_MODE'
+const SET_SUBJECT = 'mapBox/SET_SUBJECT'
+
 export default (
     state = { mode: 'display', subject: 'World' }, { mode, subject, type } = {}
 ) => {
 
     switch (type) {
-        case 'SET_MODE':
+        case SET_MODE:
             return assign({}, state, {
                 mode
             });
-        case 'SET_SUBJECT':
+        case SET_SUBJECT:
             return assign({}, state, {
                 subject
             });

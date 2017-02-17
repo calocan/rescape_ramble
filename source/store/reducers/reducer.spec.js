@@ -1,6 +1,6 @@
 /**
- * Created by Andy Likuski on 2017.02.06
- * Copyright (c) 2017 Andy Likuski
+ * Created by Andy Likuski on 2016.05.23
+ * Copyright (c) 2016 Andy Likuski
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
  *
@@ -9,23 +9,12 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import {connect} from 'react-redux';
-import {onChangeViewport} from 'redux-map-gl';
+import { combineReducers } from 'redux-immutable';
+import settings from './settings.js'
+import mapBox from './mapBox.js'
+import {createViewportReducer} from 'redux-map-gl';
 
-import MapBox from '../components/mapBox/index';
-
-function mapStateToProps(state) {
-    const mapState = state.map.viewport.toJS();
-    //const mapStyle = getMapStyle(state);
-
-    return {
-        mapState,
-        //mapStyle
-    };
-}
-
-const actions = {
-    onChangeViewport
-};
-
-export default connect(mapStateToProps, actions)(MapBox);
+export default combineReducers({
+    settings,
+    mapBox: Object.assign(mapBox, createViewportReducer())
+})

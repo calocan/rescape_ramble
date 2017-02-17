@@ -11,7 +11,7 @@ module.exports = {
       'mapbox-gl$': path.join(__dirname, "/node_modules/mapbox-gl/dist/mapbox-gl.js"),
       // Ensure only one copy of react
       react: resolve('./node_modules/react'),
-    }
+    },
   },
   entry: [
     './source/index'

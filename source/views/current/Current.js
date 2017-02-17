@@ -19,13 +19,13 @@
 import {connect} from 'react-redux';
 import React, {Component} from 'react'
 import ImmutablePropTypes from 'react-immutable-proptypes'
-import Main from '../main'
+import California from 'views/california/California'
 
 export class Site extends Component {
 
     render() {
-        return <div className='site'>
-            <Main/>
+        return <div className='current'>
+            <California />
         </div>
     }
 }
