@@ -8,24 +8,44 @@
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-
-import React, { Component } from 'react';
 import MapBox from 'components/mapBox/MapBox'
-import styles from './California.style.js';
+import styles from './Region.style.js';
 
-export default class California extends Component {
+/***
+ * The View for a Region, such as California. Theoretically we could display multiple regions at once
+ * if we had more than one, or we could have a zoomed in region of California like the Bay Area.
+ */
+export default React => {
 
-    render() {
+    /*
+     const {
+     string, shape, func
+     } = React.PropTypes;
+     */
+
+    const region = ({}) => {
         // Convert percent to pixel.
         const size = {
             width: styles.container.width * document.documentElement.clientWidth,
             height: styles.container.height * document.documentElement.clientHeight
         }
         return (
-            <div style={Object.assign(styles.container, size)} >
-                {/* We pass the container width and height so the map can track changes to these */}
+            <div className='region' style={Object.assign(styles.container, size)} >
+                {/* We additionally give Mapbox the container width and height so the map can track changes to these */}
                 <MapBox {...size}/>
             </div>
         );
     }
+
+    /*
+     region.propTypes = {
+     helloClass: string.isRequired,
+     subject: string,
+     actions: shape({
+     setMode: func.isRequired
+     })
+     };
+     */
+
+    return region;
 }

@@ -8,36 +8,3 @@
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-
-import {connect} from 'react-redux';
-import {onChangeViewport} from 'redux-map-gl';
-
-import MapBox from './/index';
-
-function mapStateToProps(state) {
-    const mapState = state.map.viewport.toJS();
-    //const mapStyle = getMapStyle(state);
-
-    return {
-        mapState,
-        //mapStyle
-    };
-}
-
-// This is just an example of what mapDispatchToProps does.
-const mapDispatchToProps = (dispatch, ownProps) => {
-    return {
-        /*
-        doFooThingInComponent: () => {
-            dispatch(someImportedAction(
-                ownProps.somePropertyOfContainerOrParent,
-                ownProps.someOtherPropertyOfContainerOrParent
-            ));
-        },
-        */
-        // Pass this straight through
-        onChangeViewport
-    };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(MapBox);
