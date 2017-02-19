@@ -1,4 +1,4 @@
-import MapGL from 'mapbox-gl';
+import MapGL from 'react-map-gl'
 
 import React from 'react';
 import ReactDOM from 'react-dom';

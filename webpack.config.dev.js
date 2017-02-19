@@ -7,7 +7,10 @@ module.exports = {
     devtool: 'inline-source-map',
 
     resolve: {
-        modules: [resolve('source'), resolve('node_modules')],
+        modules: [
+            resolve('./source'),
+            resolve('./node_modules')
+        ],
         alias: {
             'mapbox-gl$': resolve('node_modules/mapbox-gl/dist/mapbox-gl.js'),
             // Ensure only one copy of react

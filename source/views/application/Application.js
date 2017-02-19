@@ -8,44 +8,35 @@
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+import Current from 'views/current/CurrentContainer'
 
 /***
- * Application is the top-level container component for displaying a document and its models and media
- * An site consists of documents from a source (e.g. Google Docs), the
- * schowcase for multimedia that accompanies the documents (3D models, images, etc),
- * and a header and footer
+ * Application is our highest-level React component. It embeds the Current View, which based on time or props
+ * displays whatever View we're interested in
  */
+export default React => {
 
-import {connect} from 'react-redux';
-import React, {Component} from 'react'
-import ImmutablePropTypes from 'react-immutable-proptypes'
-import California from 'views/california/California'
+    /*
+    const {
+        string, shape, func
+    } = React.PropTypes;
+    */
 
-export class Application extends Component {
-
-    render() {
-        return <div className='current'>
-            <California />
+    const application = ({}) => {
+        return <div className='application'>
+            <Current />
         </div>
     }
+
+    /*
+    application.propTypes = {
+        helloClass: string.isRequired,
+        subject: string,
+        actions: shape({
+            setMode: func.isRequired
+        })
+    };
+    */
+
+    return application;
 }
-
-Application.propTypes = {
-    settings: ImmutablePropTypes.map,
-}
-
-/***
- * Maps the entire state to the site so that it can distribute it to its child components
- * @param state
- * @returns {Map<K, V>|*|Map<string, V>}
- */
-function mapStateToProps(state) {
-
-    const settings = state.get('settings')
-
-    return {
-        settings,
-    }
-}
-
-export default connect(mapStateToProps)(Application)
