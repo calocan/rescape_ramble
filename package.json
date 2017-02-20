@@ -16,7 +16,7 @@
     "debug": "cross-env NODE_PATH='source' echo 'Nothing? `npm install -g iron-node`' && iron-node source/debug.js",
     "lint": "eslint source",
     "pretest": "npm run lint",
-    "test": "cross-env NODE_PATH='source' browserify --debug  -t babelify ./source/**/**/*.spec.js | tape-run -b chrome -p 2222",
+    "test": "cross-env NODE_PATH='source' browserify --debug -x react/addons -x react/lib/ExecutionEnvironment -x react/lib/ReactContext -t babelify ./source/**/**/*.spec.js | tape-run -b chrome -p 2222",
     "watch": "watch 'clear && npm run test -s' source",
     "update": "updtr",
     "deploy": "firebase deploy",
