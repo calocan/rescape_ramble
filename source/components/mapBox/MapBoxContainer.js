@@ -11,8 +11,8 @@
 
 import {connect} from 'react-redux';
 import {onChangeViewport} from 'redux-map-gl';
-
-import MapBox from './/index';
+import MapBox from './MapBox';
+import { mount } from 'enzyme';
 
 function mapStateToProps(state) {
     const mapState = state.map.viewport.toJS();
