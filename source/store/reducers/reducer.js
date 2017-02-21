@@ -11,10 +11,9 @@
 
 import { combineReducers } from 'redux-immutable';
 import settings from './settings.js'
-import mapBox from './mapBox.js'
-import {createViewportReducer} from 'redux-map-gl';
+import mapBoxReducer from './mapBox.js'
 
 export default combineReducers({
     settings,
-    mapBox: Object.assign(mapBox, createViewportReducer())
+    mapBox: mapBoxReducer
 })

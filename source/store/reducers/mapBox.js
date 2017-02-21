@@ -10,11 +10,33 @@
  */
 
 const assign = Object.assign;
+import {enhanceMapReducer} from 'redux-map-gl'
 
-const SET_MODE = 'mapBox/SET_MODE'
-const SET_SUBJECT = 'mapBox/SET_SUBJECT'
+import config from 'config.json';
+// Hoping to use maxBounds like in the react-mapbox-gl lib
+const { mapboxApiAccessToken, style, maxBounds, center, zoom, pitch, bearing } = config;
 
-export default (
+/***
+ * This reducer is combines the mapBox viewport state with any other state that MapBox needs
+ * @param state
+ * @returns {{mapState: (any|*)}}
+ */
+function mapStateToProps(state) {
+    const mapState = state.mapBox.viewport.toJS()
+
+    return {
+        mapState
+    };
+}
+
+const actions = {
+    onChangeViewport
+};
+
+export default connect(mapStateToProps, actions)(Map);
+
+
+const mapBoxReducer = (
     state = { mode: 'display', subject: 'World' }, { mode, subject, type } = {}
 ) => {
 
@@ -31,3 +53,15 @@ export default (
             return state;
     }
 };
+
+export default enhanceMapReducer(mapBoxReducer,
+    {
+        latitude: center.latitude,
+        longitude: center.longitude,
+        zoom: zoom,
+        bearing: bearing,
+        pitch: pitch,
+        startDragLngLat: null,
+        isDragging: false
+    }
+)
