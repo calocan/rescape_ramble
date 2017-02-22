@@ -9,106 +9,87 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import {OrderedMap, Map, List, Set} from 'immutable'
+import {OrderedMap, Map, List, Set, fromJS} from 'immutable'
+import routeTypes from './routeTypes.json'
+import journeys from './journeys.json'
+import locations from './locations.json'
 
 export default OrderedMap({
 
-    travel: OrderedMap({
-        current: '1487635143780',
-        history: List([
-            '1487635143780'
-        ])
-    }),
-    trips: Map({
-        entries: Map({
-            trips: Map({
-                // Trip from Oakland To Truckee via Stockton
-                '1487635143780': Map({
-                    id: '1487635143780',
-                    locations: Map({
-                        localStart: '1487636046449',
-                        stationStart: '1487636365510',
-                        wayPoints: List([
-                            '1487636173160'
-                        ]),
-                        stationEnd: '1487636659567',
-                        localEnd: '1487636978561'
-                    }),
-                    route: '1487637354681',
-                }),
-                // Trip from San Francisco to Los Angeles
-                '1487638899977': Map({
-                    id: '1487638899977',
-                    locations: Map({
-                        stationStart: '1487638573082',
-                        stationEnd: '1487639102048',
-                    }),
-                    route: '1487637354681',
-                })
-            }),
+    // User journeys. not GTFS. This should always be seeded with an initial journey for demonstration purposes
+    journeys: fromJS(journeys),
+    // User locations, not GTSF. This should be seeded with whatever the journeys point to
+    locations: fromJS(locations),
+
+    // Defines service type. id is service_id in the GTFS specification
+    // days are separate fields marked with 1 or 0
+    calendar: Map({
+        daily: Map({
+            id: 'daily',
+            startDate: '20160101',
+            endDate: '21000101',
+            days:['monday','tuesday','wednesday','thursday','friday','saturday','sunday']
+        }),
+        weekend: Map({
+            id: 'weekend',
+            startDate: '20160101',
+            endDate: '21000101',
+            days:['saturday','sunday']
         })
     }),
-    // Defines the combinations of service that make a trip from stationStart to stationEnd
+
+    // Mode/vehicle/service type
+    routeTypes: fromJS(routeTypes),
+
+    // Bidirectional transit routes
     routes: Map({
-        // Route through Stockton
-        '1487637354681': Map({
-            id: '1487637354681',
-            services: OrderedMap({
-                // Service from San Francisco to Sacramento, but only the Oakland Sacramento portion
-                '1487637588201': Map({
-                    id: '1487637588201',
-                    stationStart: '1487637354681',
-                    stationEnd: '1487637917789',
-                }),
-                // Service from Sacramento to Reno, but only as far as Truckee
-                '1487638047992': Map({
-                    id: '1487638047992',
-                    stationStart: '1487637917789',
-                    stationEnd: '1487636659567',
-                }),
-            })
+        'SF_Reno_via_North_Bay': Map({
+            id: '1487725963417',
+            routeShortName: 'CC1',
+            routeLongName: 'San Francisco/Reno via North Bay',
+            routeType: '103'
         }),
-        // Route without Stockton
-        '1487638173974': Map({
-            id: '1487638173974',
-            services: OrderedMap({
-                // Service from San Francisco to Sacramento (via Fairfield), but only the Oakland Sacramento portion
-                '1487638239735': Map({
-                    id: '1487638239735',
-                    stationStart: '1487637354681',
-                    stationEnd: '1487637917789',
-                }),
-                // Service from Sacramento to Reno, but only as far as Truckee
-                '1487638047992': Map({
-                    id: '1487638047992',
-                    stationStart: '1487637917789',
-                    stationEnd: '1487636659567',
-                }),
-            })
+        'SF_Reno_via_Altamont_Pass': Map({
+            id: '1487725974937',
+            routeShortName: 'ACE1',
+            routeLongName: 'San Francisco/Reno via Altamont Pass',
+            routeType: '103'
         })
     }),
-    locations: Map({
-        '1487636046449': Map({
-            searchTerm: '245 Montecito Ave, Oakland, CA',
-            resolvedAddress: '245 Montecito Ave Oakland, CA 94610',
-            label: 'Home',
-            point: Map({
-                lon: -122.258071,
-                lat: 37.812885
-            })
+
+    trips: Map({
+        '1487725901304': Map({
+            id: '1487725901304',
+            routeId: '1487725963417',
+            serviceId: 'daily',
+            directionId: '0',
+            tripHeadsign: 'Reno via North Bay'
         }),
-        '1487636978561': Map({
-            searchTerm: 'Northstar Resort',
-            resolvedAddress: 'Northstar California Resort, Northstar Drive, Truckee, CA',
-            label: 'Skiing',
-            point: Map({
-                lon: -120.120605,
-                lat: 39.274839
-            })
-        })
+        '1487726056618': Map({
+            id: '1487726056618',
+            routeId: '1487725963417',
+            serviceId: 'daily',
+            directionId: '1',
+            tripHeadsign: 'San Francisco via North Bay'
+        }),
+        '1487726084276': Map({
+            id: '1487726084276',
+            routeId: '1487725963417',
+            serviceId: 'daily',
+            directionId: '0',
+            tripHeadsign: 'Reno via Altamont Pass'
+        }),
+        '1487726089940': Map({
+            id: '1487726089940',
+            routeId: '1487725963417',
+            serviceId: 'daily',
+            directionId: '1',
+            tripHeadsign: 'San Francisco via Altamont Pass'
+        }),
     }),
-    // The stations of fixed guideway transit service. These are the nodes of the graph
-    stations: Map({
+
+    // The stops of fixed guideway transit service. These are the nodes of the graph
+    stops: Map({
         '1487636365510': Map({
             id: '1487636365510',
             label: 'Oakland Central Station',
@@ -174,14 +155,14 @@ export default OrderedMap({
             })
         }),
     }),
-    // The transit lines connecting each station. These are the line segments of the graph
+    // The transit lines connecting each stop. These are the line segments of the graph
     lines: Map({
         // San Francisco to Oakland
         '1487639656930': Map({
             id:'1487639656930',
             mode: '1487639691538',
             tracks: 2,
-            stationPair: Set([
+            stopPair: Set([
                 '1487638573082',
                 '1487636365510'
             ]),
@@ -191,7 +172,7 @@ export default OrderedMap({
             id:'1487640291761',
             mode: '1487639691538',
             tracks: 3,
-            stationPair: Set([
+            stopPair: Set([
                 '1487636365510',
                 '1487640034432'
             ]),
@@ -201,7 +182,7 @@ export default OrderedMap({
             id:'1487640299074',
             mode: '1487639691538',
             tracks: 3,
-            stationPair: Set([
+            stopPair: Set([
                 '1487640034432',
                 '1487636173160'
             ]),
@@ -211,7 +192,7 @@ export default OrderedMap({
             id:'1487640304649',
             mode: '1487639656930',
             tracks: 4,
-            stationPair: Set([
+            stopPair: Set([
                 '1487636173160',
                 '1487637917789'
             ]),
@@ -221,7 +202,7 @@ export default OrderedMap({
             id:'1487640311580',
             mode: '1487639691538',
             tracks: 3,
-            stationPair: Set([
+            stopPair: Set([
                 '1487636365510',
                 '1487640163858'
             ]),
@@ -231,7 +212,7 @@ export default OrderedMap({
             id:'1487640317554',
             mode: '1487639691538',
             tracks: 3,
-            stationPair: Set([
+            stopPair: Set([
                 '1487640163858',
                 '1487637917789'
             ]),
@@ -241,7 +222,7 @@ export default OrderedMap({
             id:'1487640323386',
             mode: '1487639691538',
             tracks: 3,
-            stationPair: Set([
+            stopPair: Set([
                 '1487637917789',
                 '1487636659567'
             ]),
@@ -270,50 +251,31 @@ export default OrderedMap({
             label: 'Indian gauge heavy rail (metro)'
         })
     }),
-    // Defines the start and end stations of transit service. Only enough waypoints are specified
+
+
+    // Defines the start and end stops of transit service. Only enough waypoints are specified
     // to guarantee that the service matches the correct lines via minimum distance algorithm.
     services: Map({
         // Service from San Francisco to Sacramento (via Stockton)
         '1487637588201': Map({
             id: '1487637588201',
-            stationStart: '1487637354681',
+            stopStart: '1487637354681',
             wayPoints: List(['1487636173160']),
-            stationEnd: '1487637917789',
+            stopEnd: '1487637917789',
         }),
         // Service from San Francisco to Sacramento (via Fairfield)
         '1487638239735': Map({
             id: '1487638239735',
-            stationStart: '1487637354681',
+            stopStart: '1487637354681',
             wayPoints: List(['1487640163858']),
-            stationEnd: '1487637917789',
+            stopEnd: '1487637917789',
         }),
         // Service from Sacramento to Reno, but only as far as Truckee
         '1487638047992': Map({
             id: '1487638047992',
-            stationStart: '1487637917789',
-            stationEnd: '1487636659567',
+            stopStart: '1487637917789',
+            stopEnd: '1487636659567',
         }),
-    }),
-    // Days and times of a unique sets of service, start station, end station, and intermediate stations.
-    // Only the time of the start and end station need to be specified. intermediate station times are
-    // calculated.
-    schedule: Map({
-        '': Map({
-            id: '',
-            service: '',
-            // Daily
-            days: null,
-            stationStartInfo: Map({
-
-            }),
-            stationEndInfo: Map({
-
-            }),
-            intermediateStationInfo: Map({
-
-            })
-        })
-
     }),
     mapBox: {
         viewport: {
