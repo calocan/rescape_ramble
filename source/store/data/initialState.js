@@ -43,13 +43,13 @@ export default OrderedMap({
 
     // Bidirectional transit routes
     routes: Map({
-        'SF_Reno_via_North_Bay': Map({
+        '1487725963417': Map({
             id: '1487725963417',
             routeShortName: 'CC1',
             routeLongName: 'San Francisco/Reno via North Bay',
             routeType: '103'
         }),
-        'SF_Reno_via_Altamont_Pass': Map({
+        '1487725974937': Map({
             id: '1487725974937',
             routeShortName: 'ACE1',
             routeLongName: 'San Francisco/Reno via Altamont Pass',
@@ -92,7 +92,7 @@ export default OrderedMap({
     stops: Map({
         '1487636365510': Map({
             id: '1487636365510',
-            label: 'Oakland Central Station',
+            stopName: 'Oakland Central Station',
             point: Map({
                 lon: -122.277158,
                 lat: 37.806624
@@ -100,7 +100,7 @@ export default OrderedMap({
         }),
         '1487636173160': Map({
             id: '1487636173160',
-            label: 'Stockton AMTRAK Station',
+            stopName: 'Stockton AMTRAK Station',
             point: Map({
                 lon: -122.277158,
                 lat: 37.806624
@@ -109,14 +109,14 @@ export default OrderedMap({
         '1487636659567': Map({
             id: '1487636659567',
             label: 'Truckee AMTRAK Depot',
-            point: Map({
+            stopName: Map({
                 lon: -120.185620,
                 lat: 39.327493
             })
         }),
         '1487637917789': Map({
             id: '1487637917789',
-            label: 'Sacramento AMTRAK Station',
+            stopName: 'Sacramento AMTRAK Station',
             point: Map({
                 lon: -121.500675,
                 lat: 38.584162
@@ -124,7 +124,7 @@ export default OrderedMap({
         }),
         '1487638573082': Map({
             id: '1487638573082',
-            label: 'San Francisco Transbay Terminal',
+            stopName: 'San Francisco Transbay Terminal',
             point: Map({
                 lon: -122.392481,
                 lat: 37.789339
@@ -132,7 +132,7 @@ export default OrderedMap({
         }),
         '1487639102048': Map({
             id: '1487639102048',
-            label: 'Los Angeles Union Station',
+            stopName: 'Los Angeles Union Station',
             point: Map({
                 lon: -118.236502,
                 lat: 34.056219
@@ -140,7 +140,7 @@ export default OrderedMap({
         }),
         '1487640034432': Map({
             id: '1487640034432',
-            label: 'Pleasanton Station',
+            stopName: 'Pleasanton Station',
             point: Map({
                 lon: -121.899181,
                 lat: 37.701650
@@ -148,12 +148,22 @@ export default OrderedMap({
         }),
         '1487640163858': Map({
             id: '1487640163858',
-            label: 'Fairfield AMTRAK Station',
+            stopName: 'Fairfield AMTRAK Station',
             point: Map({
                 lon: -122.041192,
                 lat: 38.243449
             })
         }),
+    }),
+
+    stopTimes: Map({
+        '1487733882833': Map({
+            tripId: '1487725901304',
+            stopSequence: '1',
+            stopId: '1487638573082',
+            arrivalTime: '9:00:00',
+            departureTime: '9:00:00',
+        })
     }),
     // The transit lines connecting each stop. These are the line segments of the graph
     lines: Map({
