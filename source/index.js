@@ -18,7 +18,7 @@ import Application from 'views/application/Application'
 import makeStore from './store'
 import {Provider} from 'react-redux'
 import {setState} from './store/reducers/fullState'
-import initialState from './initialState'
+import initialState from './store/data/initialState'
 import { createHistory } from 'history'
 
 // useRouterHistory creates a composable higher-order function
