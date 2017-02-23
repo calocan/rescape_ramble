@@ -13,6 +13,7 @@ import {OrderedMap, Map, List, Set, fromJS} from 'immutable'
 import routeTypes from './routeTypes.json'
 import journeys from './journeys.json'
 import locations from './locations.json'
+import {createTripPair} from './dataCreationHelpers'
 
 export default OrderedMap({
 
@@ -57,114 +58,52 @@ export default OrderedMap({
         })
     }),
 
-    trips: Map({
-        '1487725901304': Map({
-            id: '1487725901304',
+    trips: Map(Object.assign(
+        TripPair(SFC, RNO, {via: NORTH_BAY, routeId:, serviceId: , directionId:, tripHeadsign})
+
+        [SFC_RNO_NORTH_BAY]: Map({
+            id: SFC_RNO_NORTH_BAY
             routeId: '1487725963417',
             serviceId: 'daily',
             directionId: '0',
             tripHeadsign: 'Reno via North Bay'
         }),
-        '1487726056618': Map({
-            id: '1487726056618',
+        [RNO_SFC_NORTH_BAY]: Map({
+            id: RNO_SFC_ALTAMONT
             routeId: '1487725963417',
             serviceId: 'daily',
             directionId: '1',
             tripHeadsign: 'San Francisco via North Bay'
         }),
-        '1487726084276': Map({
-            id: '1487726084276',
+        [RNO-SFC-ALTAMONT]: Map({
+            id: RNO_SFC_ALTAMONT
             routeId: '1487725963417',
             serviceId: 'daily',
             directionId: '0',
             tripHeadsign: 'Reno via Altamont Pass'
         }),
-        '1487726089940': Map({
-            id: '1487726089940',
+        [SFC_RNO_ALTAMONT]: Map({
+            id: SFC_RNO_ALTAMONT,
             routeId: '1487725963417',
             serviceId: 'daily',
             directionId: '1',
             tripHeadsign: 'San Francisco via Altamont Pass'
         }),
-    }),
+    )),
 
     // The stops of fixed guideway transit service. These are the nodes of the graph
-    stops: Map({
-        '1487636365510': Map({
-            id: '1487636365510',
-            stopName: 'Oakland Central Station',
-            point: Map({
-                lon: -122.277158,
-                lat: 37.806624
-            })
-        }),
-        '1487636173160': Map({
-            id: '1487636173160',
-            stopName: 'Stockton AMTRAK Station',
-            point: Map({
-                lon: -122.277158,
-                lat: 37.806624
-            })
-        }),
-        '1487636659567': Map({
-            id: '1487636659567',
-            label: 'Truckee AMTRAK Depot',
-            stopName: Map({
-                lon: -120.185620,
-                lat: 39.327493
-            })
-        }),
-        '1487637917789': Map({
-            id: '1487637917789',
-            stopName: 'Sacramento AMTRAK Station',
-            point: Map({
-                lon: -121.500675,
-                lat: 38.584162
-            })
-        }),
-        '1487638573082': Map({
-            id: '1487638573082',
-            stopName: 'San Francisco Transbay Terminal',
-            point: Map({
-                lon: -122.392481,
-                lat: 37.789339
-            })
-        }),
-        '1487639102048': Map({
-            id: '1487639102048',
-            stopName: 'Los Angeles Union Station',
-            point: Map({
-                lon: -118.236502,
-                lat: 34.056219
-            })
-        }),
-        '1487640034432': Map({
-            id: '1487640034432',
-            stopName: 'Pleasanton Station',
-            point: Map({
-                lon: -121.899181,
-                lat: 37.701650
-            })
-        }),
-        '1487640163858': Map({
-            id: '1487640163858',
-            stopName: 'Fairfield AMTRAK Station',
-            point: Map({
-                lon: -122.041192,
-                lat: 38.243449
-            })
-        }),
-    }),
+    stops: fromJS(stops)),
 
     stopTimes: Map({
         '1487733882833': Map({
-            tripId: '1487725901304',
+            tripId: 'SFC-RNO-North-Bay',
             stopSequence: '1',
-            stopId: '1487638573082',
+            stopId: 'SFC-Central',
             arrivalTime: '9:00:00',
             departureTime: '9:00:00',
         })
     }),
+
     // The transit lines connecting each stop. These are the line segments of the graph
     lines: Map({
         // San Francisco to Oakland
@@ -173,8 +112,8 @@ export default OrderedMap({
             mode: '1487639691538',
             tracks: 2,
             stopPair: Set([
-                '1487638573082',
-                '1487636365510'
+                'SFC-Central',
+                'OAK-Central'
             ]),
         }),
         // Oakland to Pleasanton
@@ -183,8 +122,8 @@ export default OrderedMap({
             mode: '1487639691538',
             tracks: 3,
             stopPair: Set([
-                '1487636365510',
-                '1487640034432'
+                'OAK-Central',
+                'PLS-Central'
             ]),
         }),
         // Pleasonton to Stockton
@@ -193,8 +132,8 @@ export default OrderedMap({
             mode: '1487639691538',
             tracks: 3,
             stopPair: Set([
-                '1487640034432',
-                '1487636173160'
+                'PLS-Central',
+                'SKN-Central'
             ]),
         }),
         // Stockton to Sacramento
@@ -203,8 +142,8 @@ export default OrderedMap({
             mode: '1487639656930',
             tracks: 4,
             stopPair: Set([
-                '1487636173160',
-                '1487637917789'
+                'SKN-Central',
+                'SAC-Central'
             ]),
         }),
         // Oakland to Fairfield
@@ -213,8 +152,8 @@ export default OrderedMap({
             mode: '1487639691538',
             tracks: 3,
             stopPair: Set([
-                '1487636365510',
-                '1487640163858'
+                'OAK-Central',
+                'SUI-Central'
             ]),
         }),
         // Fairfield to Sacramento
@@ -223,8 +162,8 @@ export default OrderedMap({
             mode: '1487639691538',
             tracks: 3,
             stopPair: Set([
-                '1487640163858',
-                '1487637917789'
+                'SUI-Central',
+                'SAC-Central'
             ]),
         }),
         // Sacramento to Truckee
@@ -233,8 +172,8 @@ export default OrderedMap({
             mode: '1487639691538',
             tracks: 3,
             stopPair: Set([
-                '1487637917789',
-                '1487636659567'
+                'SAC-Central',
+                'TRU-Central'
             ]),
         }),
     }),
@@ -270,21 +209,21 @@ export default OrderedMap({
         '1487637588201': Map({
             id: '1487637588201',
             stopStart: '1487637354681',
-            wayPoints: List(['1487636173160']),
-            stopEnd: '1487637917789',
+            wayPoints: List(['SKN-Central']),
+            stopEnd: 'SAC-Central',
         }),
         // Service from San Francisco to Sacramento (via Fairfield)
         '1487638239735': Map({
             id: '1487638239735',
             stopStart: '1487637354681',
-            wayPoints: List(['1487640163858']),
-            stopEnd: '1487637917789',
+            wayPoints: List(['SUI-Central']),
+            stopEnd: 'SAC-Central',
         }),
         // Service from Sacramento to Reno, but only as far as Truckee
         '1487638047992': Map({
             id: '1487638047992',
-            stopStart: '1487637917789',
-            stopEnd: '1487636659567',
+            stopStart: 'SAC-Central',
+            stopEnd: 'TRU-Central',
         }),
     }),
     mapBox: {
