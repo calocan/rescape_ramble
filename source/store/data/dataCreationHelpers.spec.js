@@ -9,21 +9,46 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 import test from 'tape-catch';
-import { createStop, createTripPair } from './dataCreationHelpers'
-import { SFC, RNO } from './stops'
+import { createStop, createRoute, createTripPair, resolveStop } from './dataCreationHelpers'
+import { SAN_FRANCISCO, RENO, NORTH_BAY } from './places'
+import * as routeTypes from './routeTypes.js'
 
 test('dataCreationHelpers', t => {
-    const fromStop = createStop(SFC, {
-            lon: -122.277158,
-            lat: 37.806624
-        },
-        {where: 'Transbay'})
-    const toStop = createStop({
+    const fromStop = createStop(
+        SAN_FRANCISCO,
+        { lon: -122.277158, lat: 37.806624 },
+        { where: 'Transbay' }
+    );
+    const toStop = createStop(
+        RENO,
+        { lon: -122.277158, lat: 37.806624 }
+    );
+    const stops = Object.assign(fromStop, toStop);
+    t.equals(stops.keys().length, 4, "Four stops were created");
+    expect(stops).toMatchSnapshot();
 
-    })
-    t.deepEqual(tripPair, expected, "It creates a stop
-    const tripPair = createTripPair({
+    const route = createRoute(
+        SAN_FRANCISCO,
+        RENO,
+        { via: NORTH_BAY, routeType: routeTypes.INTER_REGIONAL_RAIL_SERVICE}
+    );
+    expect(route).toMatchSnapshot();
+    const serviceId = createService();
 
-    })
-    t.deepEqual(tripPair, expected, "It creates two trips"
+
+    const tripPair = createTripPair(
+        SAN_FRANCISCO,
+        RENO,
+        { via: NORTH_BAY, routeId: route.id, serviceId: service.id }
+    );
+
+    t.deepEqual(tripPair, expected, "It creates two trips");
+    t.deepEqual(
+        resolveStop(
+            Object.assign(fromStop, toStop), fromStop),
+            SAN_FRANCISCO
+        ),
+        fromStop,
+        "resolveStop resolves the stop"
+    );
 }
