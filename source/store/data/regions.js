@@ -9,36 +9,6 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import {createRoute, stopResolver} from './dataCreationHelpers'
-import * as places from './places'
-import * as regions from './regions'
-import stops from './stops'
-import * as routeTypes from './routeTypes'
-
-const resolveStop = stopResolver(stops);
-const routeType = routeTypes.INTER_REGIONAL_RAIL_SERVICE.id;
-
-const sanFranciscoStop = resolveStop(places.SAN_FRANCISCO, 'Transbay');
-const renoStop = resolveStop(places.RENO);
-const losAngelesStop = resolveStop(places.LOS_ANGELES, 'Union');
-
-export default routes = [
-    createRoute(
-        sanFranciscoStop,
-        renoStop,
-        {via: regions.NORTH_BAY,
-        routeType}
-    ),
-    createRoute(
-        sanFranciscoStop,
-        renoStop,
-        {via: regions.ALTAMONT,
-        routeType}
-    ),
-    createRoute(
-        sanFranciscoStop,
-        losAngelesStop,
-        {routeType}
-    ),
-];
+export const NORTH_BAY = 'North-Bay';
+export const ALTAMONT = 'Altamont';
 

@@ -30,15 +30,14 @@ test('dataCreationHelpers', t => {
     const route = createRoute(
         SAN_FRANCISCO,
         RENO,
-        { via: NORTH_BAY, routeType: routeTypes.INTER_REGIONAL_RAIL_SERVICE}
+        { via: NORTH_BAY, routeType: routeTypes.INTER_REGIONAL_RAIL_SERVICE.id}
     );
     expect(route).toMatchSnapshot();
     const serviceId = createService();
 
 
     const tripPair = createTripPair(
-        SAN_FRANCISCO,
-        RENO,
+        route,
         { via: NORTH_BAY, routeId: route.id, serviceId: service.id }
     );
 

@@ -1,8 +1,4 @@
 
-// Regions
-export const NORTH_BAY = 'North-Bay';
-export const ALTAMONT = 'Altamont';
-
 /**
  * @typedef {Object} Place
  * @property {string} id primary station code for the Place. This is used to id stops uniquely in conjunction

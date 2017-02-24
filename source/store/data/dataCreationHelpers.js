@@ -70,9 +70,33 @@ export const createStop = (place, location, options={}) => {
  * @param {string|null} [which] which station of a place (e.g. Amtrak, Union, Airport)
  * @returns {*}
  */
-export const resolveStop = (stops, place, which=null) => {
+const resolveStop = (stops, place, which=null) => {
     return fromJS(stops).get(createStopId(place.id, which));
 };
+
+/***
+ * Stop resolver for the given stops
+ * @param stops
+ * @returns {curriedResolveStop} - Returns resolveStop call with stops set
+ */
+export const stopResolver = stops => (place, which=null) => resolveStop(stops, place, which)
+
+/**
+ * resolveStop with curried stops
+ * @callback curriedResolveStop
+ * @param {Object|Map} place Object defining the id
+ * @param {string} place.id id of the place
+ * @param {string|null} [which] which station of a place (e.g. Amtrak, Union, Airport)
+ */
+
+/**
+ * @typedef {Object} Route
+ * @property {string} id The id of the Route
+ * @property {[Stop]} stops The two end stops of the Route
+ * @property {string} routeLongName The full name of the Route
+ * @property {string} routeShortName The short name of the Route
+ * @property {string} The id of the RouteType
+ */
 
 /***
  * Generates a non-directional Route between two stops. specs.via allows a distinguishing label for routes
@@ -84,7 +108,7 @@ export const resolveStop = (stops, place, which=null) => {
  * @param {Object} specs - Mostly required additional values
  * @param {string} [specs.via] - Optional label of via region or city of the Route.
  * @param {string} specs.routeType - GTFS extended RouteType (see routes.json)
- * @returns {{}} An object representing the Route
+ * @returns {Route} An object representing the Route
  */
 export const createRoute = (from, to, specs) => {
     const id = compact([from, to, orEmpty(specs.via)]).join('-');
@@ -95,6 +119,7 @@ export const createRoute = (from, to, specs) => {
         id: id,
         stops: {from, to},
         routeLongName,
+        routeShortName,
         routeType: specs.routeType,
     }
 };
@@ -110,7 +135,6 @@ export const createRoute = (from, to, specs) => {
  * @param {string} route.stops.to.label - used for tripHeadSign
  * @param {Object} specs - Mostly required additional values
  * @param {string} [specs.via] - Optional label of via region or city of the trip.
- * @param {string} specs.routeId - Id of the Route of the Trip
  * @param {string} specs.serviceId - Id of the Service of the Trip
  * @returns [] A two-item array containing each of the Trips
  */
@@ -124,7 +148,7 @@ export const createTripPair = (route, specs) => {
 
         return {
             id: id,
-            routeId: specs.routeId,
+            routeId: route.id,
             serviceId: specs.serviceId,
             directionId: directionId,
             tripHeadsign: tripHeadSign(to, specs.via)
