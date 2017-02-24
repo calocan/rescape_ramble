@@ -13,6 +13,7 @@ import {OrderedMap, Map, List, Set, fromJS} from 'immutable'
 import routeTypes from './routeTypes.json'
 import journeys from './journeys.json'
 import locations from './locations.json'
+import routes from './routes.js'
 import {createTripPair} from './dataCreationHelpers'
 
 export default OrderedMap({
@@ -43,23 +44,10 @@ export default OrderedMap({
     routeTypes: fromJS(routeTypes),
 
     // Bidirectional transit routes
-    routes: Map({
-        '1487725963417': Map({
-            id: '1487725963417',
-            routeShortName: 'CC1',
-            routeLongName: 'San Francisco/Reno via North Bay',
-            routeType: '103'
-        }),
-        '1487725974937': Map({
-            id: '1487725974937',
-            routeShortName: 'ACE1',
-            routeLongName: 'San Francisco/Reno via Altamont Pass',
-            routeType: '103'
-        })
-    }),
+    routes: routes,
 
     trips: Map(Object.assign(
-        TripPair(SFC, RNO, {via: NORTH_BAY, routeId:, serviceId: , directionId:, tripHeadsign})
+        TripPair(SAN_FRANCISCO, RNO, {via: NORTH_BAY, routeId:, serviceId: , directionId:, tripHeadsign})
 
         [SFC_RNO_NORTH_BAY]: Map({
             id: SFC_RNO_NORTH_BAY
@@ -75,7 +63,7 @@ export default OrderedMap({
             directionId: '1',
             tripHeadsign: 'San Francisco via North Bay'
         }),
-        [RNO-SFC-ALTAMONT]: Map({
+        [RNO-SAN_FRANCISCO-ALTAMONT]: Map({
             id: RNO_SFC_ALTAMONT
             routeId: '1487725963417',
             serviceId: 'daily',
@@ -96,9 +84,9 @@ export default OrderedMap({
 
     stopTimes: Map({
         '1487733882833': Map({
-            tripId: 'SFC-RNO-North-Bay',
+            tripId: 'SAN_FRANCISCO-RNO-North-Bay',
             stopSequence: '1',
-            stopId: 'SFC-Central',
+            stopId: 'SAN_FRANCISCO-Central',
             arrivalTime: '9:00:00',
             departureTime: '9:00:00',
         })
@@ -112,8 +100,8 @@ export default OrderedMap({
             mode: '1487639691538',
             tracks: 2,
             stopPair: Set([
-                'SFC-Central',
-                'OAK-Central'
+                'SAN_FRANCISCO-Central',
+                'OAKLAND-Central'
             ]),
         }),
         // Oakland to Pleasanton
@@ -122,7 +110,7 @@ export default OrderedMap({
             mode: '1487639691538',
             tracks: 3,
             stopPair: Set([
-                'OAK-Central',
+                'OAKLAND-Central',
                 'PLS-Central'
             ]),
         }),
@@ -133,7 +121,7 @@ export default OrderedMap({
             tracks: 3,
             stopPair: Set([
                 'PLS-Central',
-                'SKN-Central'
+                'STOCKTON-Central'
             ]),
         }),
         // Stockton to Sacramento
@@ -142,7 +130,7 @@ export default OrderedMap({
             mode: '1487639656930',
             tracks: 4,
             stopPair: Set([
-                'SKN-Central',
+                'STOCKTON-Central',
                 'SAC-Central'
             ]),
         }),
@@ -152,7 +140,7 @@ export default OrderedMap({
             mode: '1487639691538',
             tracks: 3,
             stopPair: Set([
-                'OAK-Central',
+                'OAKLAND-Central',
                 'SUI-Central'
             ]),
         }),
@@ -173,7 +161,7 @@ export default OrderedMap({
             tracks: 3,
             stopPair: Set([
                 'SAC-Central',
-                'TRU-Central'
+                'TRUCKEE-Central'
             ]),
         }),
     }),
@@ -209,7 +197,7 @@ export default OrderedMap({
         '1487637588201': Map({
             id: '1487637588201',
             stopStart: '1487637354681',
-            wayPoints: List(['SKN-Central']),
+            wayPoints: List(['STOCKTON-Central']),
             stopEnd: 'SAC-Central',
         }),
         // Service from San Francisco to Sacramento (via Fairfield)
@@ -223,7 +211,7 @@ export default OrderedMap({
         '1487638047992': Map({
             id: '1487638047992',
             stopStart: 'SAC-Central',
-            stopEnd: 'TRU-Central',
+            stopEnd: 'TRUCKEE-Central',
         }),
     }),
     mapBox: {
