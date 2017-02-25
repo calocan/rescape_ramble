@@ -9,9 +9,10 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 import test from 'tape-catch';
-import { createStop, createRoute, createTripPair, resolveStop } from './dataCreationHelpers'
-import { SAN_FRANCISCO, RENO, NORTH_BAY } from './places'
-import * as routeTypes from './routeTypes.js'
+import { createStop, createRoute, createTripPair, stopResolver } from './dataCreationHelpers';
+import { SAN_FRANCISCO, RENO } from './places';
+import { NORTH_BAY } from './regions';
+import * as routeTypes from './routeTypes.js';
 
 test('dataCreationHelpers', t => {
     const fromStop = createStop(
