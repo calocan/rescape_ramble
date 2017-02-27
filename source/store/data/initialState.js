@@ -10,11 +10,11 @@
  */
 
 import {OrderedMap, Map, List, Set, fromJS} from 'immutable'
-import routeTypes from './routeTypes.json'
+import * as routeTypes from './routeTypes.js'
 import journeys from './journeys.json'
 import locations from './locations.json'
 import routes from './routes.js'
-import {createTripPair} from './dataCreationHelpers'
+import {createService, createRoute, stopResolver, stopTimeGenerator, createTripPair} from './dataCreationHelpers'
 
 export default OrderedMap({
 
@@ -25,28 +25,19 @@ export default OrderedMap({
 
     // Defines service type. id is service_id in the GTFS specification
     // days are separate fields marked with 1 or 0
-    calendar: Map({
-        daily: Map({
-            id: 'daily',
-            startDate: '20160101',
-            endDate: '21000101',
-            days:['monday','tuesday','wednesday','thursday','friday','saturday','sunday']
-        }),
-        weekend: Map({
-            id: 'weekend',
-            startDate: '20160101',
-            endDate: '21000101',
-            days:['saturday','sunday']
-        })
+    calendar: fromJS({
+        daily: createService('20000101', '20991231'),
+        weekend: createService('20000101', '20991231', ['weekend'])
     }),
 
     // Mode/vehicle/service type
     routeTypes: fromJS(routeTypes),
 
-    // Bidirectional transit routes
+    // Nondirectional transit routes
     routes: routes,
 
     trips: Map(Object.assign(
+        createTripPair()
         TripPair(SAN_FRANCISCO, RNO, {via: NORTH_BAY, routeId:, serviceId: , directionId:, tripHeadsign})
 
         [SFC_RNO_NORTH_BAY]: Map({

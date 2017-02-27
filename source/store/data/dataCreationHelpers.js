@@ -9,17 +9,44 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+import {fromJS, Map, List} from 'immutable'
 const orEmpty = ( entity ) => entity || "";
-const compact = ( iter ) => filter(iter, item=>item);
-const tripHeadSign = ( to, via ) => compact(to.label, via).join(' via ');
-import {fromJS} from 'immutable'
+const filterWith = function * (fn, iterable) {
+    for (const element of iterable) {
+        if (!!fn(element)) yield element;
+    }
+}
+/***
+ * Removed non-truthy items from an iterable
+ * @param {Iterable} iterable that might have non truthy values to remove
+ * @returns {Iterable} an iterable that filters out non truthy items
+ */
+const compact = filterWith(item => item);
+
+/***
+ * Convert the obj to an Immutable if it is not.
+ * @param obj
+ */
+const toImmutable = ( obj ) => Iterable.isIterable(obj) ? obj : fromJS(obj);
+/***
+ * If listOrObj is not an object, this converts it to an array to an object keyed by each array items id.
+ * @param listOrObj
+ * @returns {*|Map<K, V>|Map<string, V>}
+ */
+export const keyById = listOrObj => {
+    const resolved = toImmutable(listOrObj);
+    return Map.isMap(resolved) ? resolved : Map(resolved.map(item => [item.key, item]));
+}
+
+const tripHeadSign = ( to, via ) => compact([to.label, via]).join(' via ');
 
 /***
  * Forms a unique stop id based on the place id and which station/stop of that place it is
  * @param {string} id Place id
  * @param {string|null} [which] Which station/stop (e.g. Union, Airport)
+ * @returns {string} A stop id
  */
-const createStopId = (id, which=null) => [compact([place, which]).join('-')];
+const createStopId = (id, which=null) => compact([place, which]).join('-');
 
 /**
  * @typedef {Object} Location
@@ -42,36 +69,39 @@ const createStopId = (id, which=null) => [compact([place, which]).join('-')];
  * @param {Place} place An object representing a city or town
  * @param {string} place.id The 3 letter code of the city or town main station, based on train station codes
  * @param {string} place.label Label describing the place
+ * @param {string} which Label representing the specific stop, such as 'Amtrak', 'Central', 'Arena', or 'Airport'.
  * @param {Location} location: lon/lat pair
  * @param {number} location.lon
  * @param {number} location.lat
  * @param {Object} [options]
- * @param {string|null} [options.which] Label representing the specific stop, such as 'Central', 'Arena', or 'Airport'
  * @param {string|null} [options.stopName] label describing the stop. Defaults to `${place}[ ${where}] ${stopType}`
  * @param {string|null} [options.stopType] label describing the stop type if stopName is not used, defaults to 'Station'
- * @returns {{}} A Stop object
+ * @returns {Map} A Stop object
  */
-export const createStop = (place, location, options={}) => {
-    const id = createStopId(place.id, options.which);
-    return {
+export const createStop = (place, which, location, options={}) => {
+    const id = createStopId(place.id, which);
+    return fromJS({
         id: id,
         place: place,
-        which: options.which,
-        stopName: options.stopName || `${place} ${options.which} ${options.stopType || 'Station'}`,
+        which: which,
+        stopName: options.stopName || `${place} ${which} ${options.stopType || 'Station'}`,
         location
-    }
+    })
 };
+
+
 
 /***
  * Resolves the stop based on the given place name
- * @param {Object|Map} stops Object of Objects keyed by Stop id and valued by Stop
- * @param {Object|Map} place Object defining the id
+ * @param {List|Object} stops List of Stops or Object of Objects keyed by Stop id and valued by Stop
+ * @param {Object} place Object defining the id
  * @param {string} place.id id of the place
  * @param {string|null} [which] which station of a place (e.g. Amtrak, Union, Airport)
  * @returns {*}
  */
 const resolveStop = (stops, place, which=null) => {
-    return fromJS(stops).get(createStopId(place.id, which));
+    const stopLookup = keyById(stops)
+    return toImmutable(stops).get(createStopId(place.id, which));
 };
 
 /***
@@ -142,6 +172,10 @@ export const createRoute = (from, to, specs) => {
     }
 };
 
+export const resolveRoute = (routes, from, to, via=null) => {
+
+}
+
 /**
  * @typedef {Object} Service
  * @property {string} id The id of the Service
@@ -150,16 +184,20 @@ export const createRoute = (from, to, specs) => {
  */
 
 /***
- * Creates a Service is based on the given days and season
- * @param {[string]} days Days of the week, 'weekday', 'weekend', 'blue moons', etc
- * @param {[string]} [seasons] Seasons of the year: 'Winter', 'School Year', 'Tourist Season'
+ * Creates a Service is based on the given days and season. In the GTSF spec this file is calendar
+ * @param {string} startDate. The startDate of the service in the form YYYYMMDD
+ * @param {string} endDate. The endDate of the service in the form YYYYMMDD
+ * @param {[string]} [days]. Default ['everyday'] Days of the week, 'everyday', 'weekday', 'weekend', 'blue moons', etc
+ * @param {[string]} [seasons]. Default ['yearlong'] Seasons of the year: 'Winter', 'School Year', 'Tourist Season'
  * @returns {Service} A Service object with an id based on days and seasons
  */
-export const createService = (days, seasons=[]) => {
+export const createService = (startDate, endDate, days=['everyday'], seasons=['yearlong']) => {
     return {
         id: [...seasons, ...days].join('_'),
         days,
-        seasons
+        seasons,
+        startDate,
+        endDate
     }
 };
 
@@ -232,7 +270,7 @@ export const createStopTime = (tripId, stopSequence, stopId, arrivalTime, depart
 };
 
 /***
- * Creates a StopTimeGenerator. The Generator uses the startTime and EndTime to
+ * Creates a StopTime generator. The generator uses the startTime and EndTime to
  * estimate where each Stop is based on the location of each Stop
  * @param {[Stop]} stops: A Stop object, optionally augmented with an arrivalTime and/or dwellTime
  * Adding the arrivalTime causes all stations up to that Stop to be estimated based on that time
@@ -244,7 +282,7 @@ export const createStopTime = (tripId, stopSequence, stopId, arrivalTime, depart
  * (According to https://developers.google.com/transit/gtfs/reference/stop_times-file)
  * @param {number} dwellTime Number of seconds of dwell time
  */
-export const stopTimeGenerator = (tripId, stops, startTime, endTime, dwellTime) => {
+export const stopTimeGenerator = function * (tripId, stops, startTime, endTime, dwellTime) => {
     const date = new Date()
 
     const parseTimeToGenericDate = (time, dwellTime=0) => {
