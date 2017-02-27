@@ -9,34 +9,9 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import {fromJS, Map, List} from 'immutable'
-const orEmpty = ( entity ) => entity || "";
-const filterWith = function * (fn, iterable) {
-    for (const element of iterable) {
-        if (!!fn(element)) yield element;
-    }
-}
-/***
- * Removed non-truthy items from an iterable
- * @param {Iterable} iterable that might have non truthy values to remove
- * @returns {Iterable} an iterable that filters out non truthy items
- */
-const compact = filterWith(item => item);
+import {fromJS} from 'immutable';
+import {compact, toImmutableKeyedByProp, orEmpty} from 'helpers/functions';
 
-/***
- * Convert the obj to an Immutable if it is not.
- * @param obj
- */
-const toImmutable = ( obj ) => Iterable.isIterable(obj) ? obj : fromJS(obj);
-/***
- * If listOrObj is not an object, this converts it to an array to an object keyed by each array items id.
- * @param listOrObj
- * @returns {*|Map<K, V>|Map<string, V>}
- */
-export const keyById = listOrObj => {
-    const resolved = toImmutable(listOrObj);
-    return Map.isMap(resolved) ? resolved : Map(resolved.map(item => [item.key, item]));
-}
 
 const tripHeadSign = ( to, via ) => compact([to.label, via]).join(' via ');
 
@@ -91,26 +66,6 @@ export const createStop = (place, which, location, options={}) => {
 
 
 
-/***
- * Resolves the stop based on the given place name
- * @param {List|Object} stops List of Stops or Object of Objects keyed by Stop id and valued by Stop
- * @param {Object} place Object defining the id
- * @param {string} place.id id of the place
- * @param {string|null} [which] which station of a place (e.g. Amtrak, Union, Airport)
- * @returns {*}
- */
-const resolveStop = (stops, place, which=null) => {
-    const stopLookup = keyById(stops)
-    return toImmutable(stops).get(createStopId(place.id, which));
-};
-
-/***
- * Stop resolver for the given stops
- * @param stops
- * @returns {curriedResolveStop} - Returns resolveStop call with stops set
- */
-export const stopResolver = stops => (place, which=null) => resolveStop(stops, place, which);
-
 /**
  * resolveStop with curried stops
  * @callback curriedResolveStop
@@ -122,23 +77,38 @@ export const stopResolver = stops => (place, which=null) => resolveStop(stops, p
 /**
  * @typedef {Object} Route
  * @property {string} id The id of the Route
- * @property {Object} stops The two end stops of the Route
+ * @property {[Place]} places The two end Places of the Route
  * @property {string} routeLongName The full name of the Route
  * @property {string} routeShortName The short name of the Route
  * @property {string} routeType The id of the RouteType
  */
 
 /***
+ * Forms a unique Routte id based on the place id and which station/stop of that place it is
+ * @param {Place} from The start/end Place
+ * @param {Place} to The other start/end Place
+ * @param {string} [via] Optional pass through Region to distinguish the route
+ * @returns {string} A Route id
+ */
+export const createRouteId = (from, to, via) => {
+    return compact([
+        [
+            from.place.id,
+            to.place.id
+        ].join('-'),
+        orEmpty(specs.via)
+    ]).join(' via ');
+};
+
+/***
  * Generates a non-directional Route between two stops. specs.via allows a distinguishing label for routes
  * that have the same two stops but use different tracks
- * @param {Stop} from - 'From' Stop
- * @param {Place} from.place - the general place of the Stop
- * @param {string} from.place.id - used for route id
- * @param {string} from.place.label - used for route long name
- * @param {Stop} to - 'To' Stop
- * @param {Place} to.place - the general place of the Stop
- * @param {string} to.place.id - used for route id
- * @param {string} to.place.label - used for route long name
+ * @param {Place} from - the general Place of one end of the Route
+ * @param {string} from.id - used for route id
+ * @param {string} from.label - used for route long name
+ * @param {Place} to - the general Place of one end of the Route
+ * @param {string} to.id - used for route id
+ * @param {string} to.label - used for route long name
  * @param {Object} specs - Mostly required additional values
  * @param {string} [specs.via] - Optional label of via region or city of the Route.
  * @param {string} specs.routeType - GTFS extended RouteType (see routes.json)
@@ -147,34 +117,26 @@ export const stopResolver = stops => (place, which=null) => resolveStop(stops, p
 export const createRoute = (from, to, specs) => {
     // The id is from the place ids with an optional via
     // (e.g. 'SFC-REN via Altamont')
-    const id = compact([
-        [
-            from.place.id,
-            to.place.id
-        ].join('-'),
-        orEmpty(specs.via)
-    ]).join(' via ');
+    const id = createRouteId(from, to, specs.via);
 
     // Made from the from and to stop names and the optional specs.via
     // (e.g. 'San Francisco/Reno via Altamont
     const routeLongName = compact([
-        [from.place.label, to.place.label].join('/'),
+        [from.label, to.label].join('/'),
         orEmpty(specs['via'])]).join(' via ');
     // Made from the route type and id
     // (e.g. 'IRRS SFC-REN via Altamont' for inter regional rail service between SFC and RENO via Altamont
     const routeShortName = compact([id, orEmpty(specs['via'])]).join(' via ');
     return {
         id: id,
-        stops: {from, to},
+        places: {from, to},
         routeLongName,
         routeShortName,
         routeType: specs.routeType,
     }
 };
 
-export const resolveRoute = (routes, from, to, via=null) => {
 
-}
 
 /**
  * @typedef {Object} Service
@@ -205,16 +167,13 @@ export const createService = (startDate, endDate, days=['everyday'], seasons=['y
  * Generates a to and from trip definition for the given trip ids and other required specs
  * @param {Route} route - the Route used by the trip
  * @param {Object} route.stops - object with Stops used for naming the tripHeadsigns
- * @param {Stop} route.stops.from - used as the from Stop and the to stop for the reverse direction
- * @param {Place} route.stops.from.place - the general place of the Stop
- * @param {string} route.stops.from.place.id - used for trip id
- * @param {string} route.stops.from.place.label - used for the tripHeadSign
- * @param {Stop} route.stops.to - used as the to Stop and the from stop for the reverse direction
- * @param {Place} route.stops.to.place - the general place of the Stop
- * @param {string} route.stops.to.place.id - used for trip id
- * @param {string} route.stops.to.place.label - used for the tripHeadSign
+ * @param {Place} route.places.from - The Place at one end of the Route
+ * @param {string} route.places.from.label - used for the tripHeadSign
+ * @param {Place} route.places.to - The Place at the other end of the Route
+ * @param {string} route.places.to.id - used for trip id
+ * @param {string} route.places.to.label - used for the tripHeadSign
+ * @param {string} [route.via] Optional label of via region or city of the trip
  * @param {Object} specs - Mostly required additional values
- * @param {string} [specs.via] - Optional label of via region or city of the trip.
  * @param {string} specs.serviceId - Id of the Service of the Trip
  * @returns [] A two-item array containing each of the Trips
  */
@@ -222,8 +181,8 @@ export const createTripPair = (route, specs) => {
     const createTrip = (from, to, directionId) => {
         const id = compact([
             [
-                route.stops.from.place.id,
-                route.stops.to.place.id
+                route.places.from.id,
+                route.places.to.id
             ].join('-'),
             orEmpty(specs.via)]).join(' via ');
 
@@ -266,7 +225,7 @@ export const createStopTime = (tripId, stopSequence, stopId, arrivalTime, depart
         stopId,
         arrivalTime,
         departureTime
-    }
+    };
 };
 
 /***
@@ -283,7 +242,7 @@ export const createStopTime = (tripId, stopSequence, stopId, arrivalTime, depart
  * @param {number} dwellTime Number of seconds of dwell time
  */
 export const stopTimeGenerator = function * (tripId, stops, startTime, endTime, dwellTime) => {
-    const date = new Date()
+    const date = new Date();
 
     const parseTimeToGenericDate = (time, dwellTime=0) => {
         const timeSegments = time.split(':').map(t => parseInt(t));
@@ -361,16 +320,16 @@ export const stopTimeGenerator = function * (tripId, stops, startTime, endTime, 
         return toTimeString(departureDate, arrivalDate)
     }
 
-    return stops.reduce((previousStopTime, stop, index) => {
+    yield* stops.reduce((previousStopTime, stop, index) => {
         // Calculate the arrivalTime of the next stop based on distance or stop.arrivalTime.
         // If there is no previousStopTime it returns startTime
         const arrivalTime = calculateArrivalTime(stop, previousStopTime);
-        yield(createStopTime(
+        return createStopTime(
             tripId,
             index + 1,
             stop.id,
             arrivalTime,
             calculateDepartureTime(arrivalTime, stop.dwellTime || dwellTime)
-        ));
-    })
+        );
+    });
 };

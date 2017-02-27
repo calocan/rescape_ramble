@@ -14,7 +14,8 @@ import * as routeTypes from './routeTypes.js'
 import journeys from './journeys.json'
 import locations from './locations.json'
 import routes from './routes.js'
-import {createService, createRoute, stopResolver, stopTimeGenerator, createTripPair} from './dataCreationHelpers'
+import {createService, createRoute, stopTimeGenerator, createTripPair} from './dataCreationHelpers'
+import {stopResolver, routeResolver} from './dataQueryHelpers'
 
 export default OrderedMap({
 
@@ -36,39 +37,8 @@ export default OrderedMap({
     // Nondirectional transit routes
     routes: routes,
 
-    trips: Map(Object.assign(
-        createTripPair()
-        TripPair(SAN_FRANCISCO, RNO, {via: NORTH_BAY, routeId:, serviceId: , directionId:, tripHeadsign})
+    trips: trips,
 
-        [SFC_RNO_NORTH_BAY]: Map({
-            id: SFC_RNO_NORTH_BAY
-            routeId: '1487725963417',
-            serviceId: 'daily',
-            directionId: '0',
-            tripHeadsign: 'Reno via North Bay'
-        }),
-        [RNO_SFC_NORTH_BAY]: Map({
-            id: RNO_SFC_ALTAMONT
-            routeId: '1487725963417',
-            serviceId: 'daily',
-            directionId: '1',
-            tripHeadsign: 'San Francisco via North Bay'
-        }),
-        [RNO-SAN_FRANCISCO-ALTAMONT]: Map({
-            id: RNO_SFC_ALTAMONT
-            routeId: '1487725963417',
-            serviceId: 'daily',
-            directionId: '0',
-            tripHeadsign: 'Reno via Altamont Pass'
-        }),
-        [SFC_RNO_ALTAMONT]: Map({
-            id: SFC_RNO_ALTAMONT,
-            routeId: '1487725963417',
-            serviceId: 'daily',
-            directionId: '1',
-            tripHeadsign: 'San Francisco via Altamont Pass'
-        }),
-    )),
 
     // The stops of fixed guideway transit service. These are the nodes of the graph
     stops: fromJS(stops)),
