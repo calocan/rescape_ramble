@@ -67,14 +67,6 @@ export const createStop = (place, which, location, options={}) => {
 
 
 /**
- * resolveStop with curried stops
- * @callback curriedResolveStop
- * @param {Object|Map} place Object defining the id
- * @param {string} place.id id of the place
- * @param {string|null} [which] which station of a place (e.g. Amtrak, Union, Airport)
- */
-
-/**
  * @typedef {Object} Route
  * @property {string} id The id of the Route
  * @property {[Place]} places The two end Places of the Route
@@ -164,6 +156,42 @@ export const createService = (startDate, endDate, days=['everyday'], seasons=['y
 };
 
 /***
+ * Creates a Trip id
+ * @param {Route} route The Route of the Trip
+ * @param {int} directionId The direction id for the Trip (from -> to vs to -> from)
+ * @param {Service} service The Service of the Trip
+ */
+export const createTripId = (route, directionId, service ) => {
+    return [
+        route.id,
+        directionId,
+        service.id
+    ].join('-');
+};
+
+/**
+ * @typedef {Object} Trip
+ * @property {Route} route The Route of the Trip
+ * @property {Stop} from The from Stop
+ * @property {Place} from.place The Place of the Stop, used for the Route id
+ * @property {Stop} to The to Stop
+ * @property {Place} to.place The Place of the Stop, used for the Route id
+ * @property {number} directionId The directionId of the Trip
+ * @property {Service} service The Service of the Trip
+ */
+const createTrip = (route, from, to, directionId, service) => {
+    const id = createTripId(route, from.place, to.place);
+
+    return {
+        id: id,
+        route: route,
+        service: service,
+        directionId: directionId,
+        tripHeadsign: tripHeadSign(to, route.via)
+    }
+};
+
+/***
  * Generates a to and from trip definition for the given trip ids and other required specs
  * @param {Route} route - the Route used by the trip
  * @param {Object} route.stops - object with Stops used for naming the tripHeadsigns
@@ -178,26 +206,11 @@ export const createService = (startDate, endDate, days=['everyday'], seasons=['y
  * @returns [] A two-item array containing each of the Trips
  */
 export const createTripPair = (route, specs) => {
-    const createTrip = (from, to, directionId) => {
-        const id = compact([
-            [
-                route.places.from.id,
-                route.places.to.id
-            ].join('-'),
-            orEmpty(specs.via)]).join(' via ');
 
-        return {
-            id: id,
-            routeId: route.id,
-            serviceId: specs.serviceId,
-            directionId: directionId,
-            tripHeadsign: tripHeadSign(to, specs.via)
-        }
-    };
     // Create a trip for each direction
     return [
-        createTrip(route.stops.from, route.stops.to, '0'),
-        createTrip(route.stops.to, route.stops.from, '1'),
+        createTrip(route, route.stops.from, route.stops.to, '0'),
+        createTrip(route, route.stops.to, route.stops.from, '1'),
     ];
 };
 
@@ -211,18 +224,18 @@ export const createTripPair = (route, specs) => {
 
 /***
  * Creates A StopTime
- * @param {string} tripId The Trip id
+ * @param {Trip} trip The Trip
  * @param {number} stopSequence The stop number, 1 based
- * @param {string} stopId The Stop id
+ * @param {Stop} stop The Stop
  * @param {string} arrivalTime The arrival time in format 23:59:59
  * @param {string} departureTime The departure time in format 23:59:59
  * @returns {StopTime}
  */
-export const createStopTime = (tripId, stopSequence, stopId, arrivalTime, departureTime) => {
+export const createStopTime = (trip, stopSequence, stop, arrivalTime, departureTime) => {
     return {
-        tripId,
+        trip,
         stopSequence,
-        stopId,
+        stop,
         arrivalTime,
         departureTime
     };
@@ -231,7 +244,9 @@ export const createStopTime = (tripId, stopSequence, stopId, arrivalTime, depart
 /***
  * Creates a StopTime generator. The generator uses the startTime and EndTime to
  * estimate where each Stop is based on the location of each Stop
- * @param {[Stop]} stops: A Stop object, optionally augmented with an arrivalTime and/or dwellTime
+ * @param {Trip} trip: A Trip to which the stopTimes apply
+ * @param {string} trip.id: The id of the Trip
+ * @param {[Stop]} stops: A Stop, optionally augmented with an arrivalTime and/or dwellTime
  * Adding the arrivalTime causes all stations up to that Stop to be estimated based on that time
  * and that of the startTime or last explicit arrivalTime+dwellTime. Adding the dwellTime adjusts
  * the dwellTime of just that Stop
@@ -241,7 +256,7 @@ export const createStopTime = (tripId, stopSequence, stopId, arrivalTime, depart
  * (According to https://developers.google.com/transit/gtfs/reference/stop_times-file)
  * @param {number} dwellTime Number of seconds of dwell time
  */
-export const stopTimeGenerator = function * (tripId, stops, startTime, endTime, dwellTime) => {
+export const stopTimeGenerator = function * (trip, stops, startTime, endTime, dwellTime) => {
     const date = new Date();
 
     const parseTimeToGenericDate = (time, dwellTime=0) => {
@@ -325,9 +340,9 @@ export const stopTimeGenerator = function * (tripId, stops, startTime, endTime, 
         // If there is no previousStopTime it returns startTime
         const arrivalTime = calculateArrivalTime(stop, previousStopTime);
         return createStopTime(
-            tripId,
+            trip,
             index + 1,
-            stop.id,
+            stop,
             arrivalTime,
             calculateDepartureTime(arrivalTime, stop.dwellTime || dwellTime)
         );

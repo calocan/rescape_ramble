@@ -9,8 +9,16 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import {createStopId, createRouteId} from 'dataCreationHelpers'
+import {createStopId, createRouteId, createTripId} from 'dataCreationHelpers'
 import {toImmutableKeyedByProp} from 'helpers/functions'
+
+
+/**
+ * @callback stopResolverCallback
+ * @param {Object} place Object defining the id
+ * @param {string} place.id id of the place
+ * @param {string} which which station of a place (e.g. Amtrak, Union, Airport)
+ */
 
 /***
  * Stop resolver for the given stops
@@ -23,27 +31,44 @@ export const stopResolver = stops => {
 };
 
 /**
- * This callback is displayed as part of the Requester class.
- * @callback stopResolverCallback
- * @param {Object} place Object defining the id
- * @param {string} place.id id of the place
- * @param {string} which which station of a place (e.g. Amtrak, Union, Airport)
+ * @callback routeResolverCallback
+ * @param {Stop} fromStop Either end of the Route
+ * @param {Stop} toStop The other end of the Route
+ * @param {string} [via] Optional Region string for Routes that distinguish by an intermediate Region
  */
 
 /***
  * Route resolver for the given stops
  * @param {[Route]} routes list of Routes
- * @returns {routeResolverCallback} - A function that takes a place.id and which
+ * @returns {routeResolverCallback} - See callback
  */
 export const routeResolver = routes => {
     const routeLookup = toImmutableKeyedByProp('id')(routes);
     return (from, to, via=null) => routeLookup.get(createRouteId(from, to, via))
 };
 
+
 /**
- * This callback is displayed as part of the Requester class.
- * @callback routeResolverCallback
- * @param {Stop} fromStop Either end of the Route
- * @param {Stop} toStop The other end of the Route
- * @param {string} [via] Optional Region string for Routes that distinguish by an intermediate Region
+ * @callback tripResolverCallback
+ * @param {Route} route The Route of the Trip
+ * @param {Object} [options]
+ * @param {number} [options.directionId] The directionId to filter for
+ * @param {Service} [options.service] The Service to filter for
+ * @returns {[Trip]} One or more matchingTrips in an array
  */
+
+/***
+ * Route resolver for the given stops
+ * @param {[Trip]} trips list of Trips
+ * @returns {tripResolverCallback} - See callback
+ */
+export const tripResolver = trips => {
+    return (route, options=null) => {
+        // Return trips matching the route and the options
+        return trips.filter(trip =>
+            route.id == trip.route.id &&
+            (!options.directionId || options.directionId == trip.directionId) &&
+            (!options.service || options.service == trip.service)
+        );
+    };
+};

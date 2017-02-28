@@ -9,13 +9,18 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import {OrderedMap, Map, List, Set, fromJS} from 'immutable'
-import * as routeTypes from './routeTypes.js'
-import journeys from './journeys.json'
-import locations from './locations.json'
-import routes from './routes.js'
-import {createService, createRoute, stopTimeGenerator, createTripPair} from './dataCreationHelpers'
-import {stopResolver, routeResolver} from './dataQueryHelpers'
+import {OrderedMap, Map, List, Set, fromJS} from 'immutable';
+import * as routeTypes from './routeTypes';
+import journeys from './journeys.json';
+import locations from './locations.json';
+import routes from './routes';
+import trips from './trips';
+import stops from './stops';
+import stopTimes from './stopTimes'
+import {DEFAULT_SERVICE} from './services';
+import {createService, stopTimeGenerator} from './dataCreationHelpers';
+import {toImmutableKeyedByProp} from 'helpers/functions';
+const toImmutableKeyedById = toImmutableKeyedByProp('id');
 
 export default OrderedMap({
 
@@ -26,106 +31,25 @@ export default OrderedMap({
 
     // Defines service type. id is service_id in the GTFS specification
     // days are separate fields marked with 1 or 0
-    calendar: fromJS({
-        daily: createService('20000101', '20991231'),
+    calendar: toImmutableKeyedById({
+        daily: DEFAULT_SERVICE,
         weekend: createService('20000101', '20991231', ['weekend'])
     }),
 
-    // Mode/vehicle/service type
-    routeTypes: fromJS(routeTypes),
+    // Mode/vehicle/service type keyed by id
+    routeTypes: toImmutableKeyedById(routeTypes),
 
-    // Nondirectional transit routes
-    routes: routes,
+    // Nondirectional transit routes keyed by id
+    routes: toImmutableKeyedById(routes),
 
-    trips: trips,
-
+    // Directional trips keyed by id
+    trips: toImmutableKeyedById(trips),
 
     // The stops of fixed guideway transit service. These are the nodes of the graph
-    stops: fromJS(stops)),
+    stops: toImmutableKeyedById(stops),
 
-    stopTimes: Map({
-        '1487733882833': Map({
-            tripId: 'SAN_FRANCISCO-RNO-North-Bay',
-            stopSequence: '1',
-            stopId: 'SAN_FRANCISCO-Central',
-            arrivalTime: '9:00:00',
-            departureTime: '9:00:00',
-        })
-    }),
+    stopTimes: toImmutableKeyedById(stopTimes),
 
-    // The transit lines connecting each stop. These are the line segments of the graph
-    lines: Map({
-        // San Francisco to Oakland
-        '1487639656930': Map({
-            id:'1487639656930',
-            mode: '1487639691538',
-            tracks: 2,
-            stopPair: Set([
-                'SAN_FRANCISCO-Central',
-                'OAKLAND-Central'
-            ]),
-        }),
-        // Oakland to Pleasanton
-        '1487640291761': Map({
-            id:'1487640291761',
-            mode: '1487639691538',
-            tracks: 3,
-            stopPair: Set([
-                'OAKLAND-Central',
-                'PLS-Central'
-            ]),
-        }),
-        // Pleasonton to Stockton
-        '1487640299074': Map({
-            id:'1487640299074',
-            mode: '1487639691538',
-            tracks: 3,
-            stopPair: Set([
-                'PLS-Central',
-                'STOCKTON-Central'
-            ]),
-        }),
-        // Stockton to Sacramento
-        '1487640304649': Map({
-            id:'1487640304649',
-            mode: '1487639656930',
-            tracks: 4,
-            stopPair: Set([
-                'STOCKTON-Central',
-                'SAC-Central'
-            ]),
-        }),
-        // Oakland to Fairfield
-        '1487640311580': Map({
-            id:'1487640311580',
-            mode: '1487639691538',
-            tracks: 3,
-            stopPair: Set([
-                'OAKLAND-Central',
-                'SUI-Central'
-            ]),
-        }),
-        // Fairfield to Sacramento
-        '1487640317554': Map({
-            id:'1487640317554',
-            mode: '1487639691538',
-            tracks: 3,
-            stopPair: Set([
-                'SUI-Central',
-                'SAC-Central'
-            ]),
-        }),
-        // Sacramento to Truckee
-        '1487640323386': Map({
-            id:'1487640323386',
-            mode: '1487639691538',
-            tracks: 3,
-            stopPair: Set([
-                'SAC-Central',
-                'TRUCKEE-Central'
-            ]),
-        }),
-    }),
     // The mode is for vehicle compatibility
     modes: Map({
         '1487639656930': Map({
