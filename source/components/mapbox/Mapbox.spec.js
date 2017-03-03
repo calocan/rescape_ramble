@@ -1,12 +1,11 @@
 import MapGL from 'react-map-gl'
-
 import React from 'react';
 import ReactDOM from 'react-dom';
 import document from 'global/document';
 import test from 'tape-catch';
 import { shallow } from 'enzyme';
-
 import config from 'config.json';
+
 // Hoping to use maxBounds like in the react-mapbox-gl lib
 const { mapboxApiAccessToken, style, maxBounds, center, zoom, pitch, bearing } = config;
 const defaultProps = {
@@ -18,14 +17,11 @@ const defaultProps = {
     mapboxApiAccessToken
 };
 
-test('MapGL can mount', t => {
-    t.ok(MapGL);
+it('MapGL can mount', () => {
     const reactContainer = document.createElement('div');
     document.body.appendChild(reactContainer);
-    const wrapper = shallow(<MapGL {...defaultProps} />)
-    //t.equal(wrapper.contains(<span>Foo</span>), true)
-    t.ok(true);
-    t.end();
+    const wrapper = shallow(<MapGL {...defaultProps} />);
+    expect(wrapper).toMatchSnapshot();
 });
 
 test('MapGL call onLoad when provided', t => {

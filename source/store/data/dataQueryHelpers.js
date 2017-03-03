@@ -9,7 +9,7 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import {createStopId, createRouteId, createTripId} from 'dataCreationHelpers'
+import {createRouteId, createStopId} from './dataCreationHelpers'
 import {toImmutableKeyedByProp} from 'helpers/functions'
 
 
@@ -32,8 +32,8 @@ export const stopResolver = stops => {
 
 /**
  * @callback routeResolverCallback
- * @param {Stop} fromStop Either end of the Route
- * @param {Stop} toStop The other end of the Route
+ * @param {Place} from Place of either end of the Route
+ * @param {Place} to Place of other end of the Route
  * @param {string} [via] Optional Region string for Routes that distinguish by an intermediate Region
  */
 
@@ -44,7 +44,7 @@ export const stopResolver = stops => {
  */
 export const routeResolver = routes => {
     const routeLookup = toImmutableKeyedByProp('id')(routes);
-    return (from, to, via=null) => routeLookup.get(createRouteId(from, to, via))
+    return (from, to, via = null) => routeLookup.get(createRouteId(from, to, via))
 };
 
 
@@ -63,12 +63,12 @@ export const routeResolver = routes => {
  * @returns {tripResolverCallback} - See callback
  */
 export const tripResolver = trips => {
-    return (route, options=null) => {
+    return (route, options = null) => {
         // Return trips matching the route and the options
         return trips.filter(trip =>
-            route.id == trip.route.id &&
-            (!options.directionId || options.directionId == trip.directionId) &&
-            (!options.service || options.service == trip.service)
+            route.id === trip.route.id &&
+            (!options.directionId || options.directionId === trip.directionId) &&
+            (!options.service || options.service === trip.service)
         );
     };
 };

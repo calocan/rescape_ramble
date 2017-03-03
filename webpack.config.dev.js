@@ -4,7 +4,7 @@ const webpack = require('webpack');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 module.exports = {
-    devtool: 'inline-source-map',
+    devtool: 'source-map',
 
     resolve: {
         modules: [
@@ -33,8 +33,9 @@ module.exports = {
                 test: /\.js$/,
                 use: [{
                     loader: 'babel-loader',
-                    options: {presets: ['es2015', 'stage-0', 'react']}
-                }]
+                    options: {presets: ['es2015', 'stage-0', 'react']},
+                }],
+                exclude: /node_modules\/(?!mapbox-gl\/js)/
             },
             {
                 test: /\.json$/,

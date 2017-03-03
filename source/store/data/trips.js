@@ -13,15 +13,53 @@
  * Creates default TripPair objects
  */
 
+import stops, * as w from './stops'
 import * as routes from './routes';
-import {createTripPair} from './dataCreationHelpers';
-import {routeResolver} from './dataQueryHelpers'
-import {SAN_FRANCISCO, RENO} from './places'
+import {createTripWithStopTimesPair, orderStops, stopTimeGenerator} from './dataCreationHelpers';
+import {stopResolver, routeResolver} from './dataQueryHelpers';
+import * as places from './places'
 import * as regions from './regions'
 import {DEFAULT_SERVICE} from './services'
+
+const resolveStop = stopResolver(stops);
 const resolveRoute = routeResolver(routes);
 
-return [
-    ...createTripPair(resolveRoute(SAN_FRANCISCO, RENO, regions.ALTAMONT), {serviceId: DEFAULT_SERVICE.id}),
-    ...createTripPair(resolveRoute(SAN_FRANCISCO, RENO, regions.ALTAMONT), {serviceId: DEFAULT_SERVICE.id}),
+/***
+ * Creates a TripPair and then augments each trip with the StopTimes
+ */
+export default [
+    ...createTripWithStopTimesPair(
+        resolveRoute(places.SAN_FRANCISCO, places.RENO, regions.NORTH_BAY),
+        DEFAULT_SERVICE,
+        trip => {
+            return stopTimeGenerator(
+                trip,
+                orderStops(trip, [
+                    resolveStop(places.SAN_FRANCISCO, w.TRANSBAY),
+                    resolveStop(places.OAKLAND, w.CENTRAL),
+                    resolveStop(places.SUISON_FAIRFIELD, w.AMTRAK),
+                    resolveStop(places.SACRAMENTO, w.AMTRAK),
+                    resolveStop(places.TRUCKEE, w.AMTRAK),
+                    resolveStop(places.RENO, w.AMTRAK)
+                ]),
+                '09:00', '12:00', 60);
+        }
+    ),
+    ...createTripWithStopTimesPair(
+        resolveRoute(places.SAN_FRANCISCO, places.RENO, regions.ALTAMONT),
+        DEFAULT_SERVICE,
+        trip => {
+            return stopTimeGenerator(
+                trip,
+                orderStops(trip, [
+                    resolveStop(places.SAN_FRANCISCO, w.TRANSBAY),
+                    resolveStop(places.OAKLAND, w.CENTRAL),
+                    resolveStop(places.STOCKTON, w.AMTRAK),
+                    resolveStop(places.SACRAMENTO, w.AMTRAK),
+                    resolveStop(places.TRUCKEE, w.AMTRAK),
+                    resolveStop(places.RENO, w.AMTRAK)
+                ]),
+                '09:10', '12:20', 60);
+        }
+    )
 ];

@@ -8,7 +8,7 @@ export default connect(
      * @param props
      * @returns {{}}
      */
-    (state, props)=>{
+    (state)=>{
         return {
             ...state.get('settings')
         };

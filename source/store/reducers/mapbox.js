@@ -12,11 +12,13 @@
 import {enhanceMapReducer} from 'redux-map-gl'
 import config from 'config.json';
 
+const SET_MODE = '/settings/SET_MODE';
+const SET_SUBJECT = '/settings/SET_SUBJECT';
 const assign = Object.assign;
 // Hoping to use maxBounds like in the react-mapbox-gl lib
 const { mapboxApiAccessToken, style, maxBounds, center, zoom, pitch, bearing } = config;
 
-const mapBoxReducer = (
+const mapboxReducer = (
     state = { mode: 'display', subject: 'World' }, { mode, subject, type } = {}
 ) => {
 
@@ -34,7 +36,7 @@ const mapBoxReducer = (
     }
 };
 
-export default enhanceMapReducer(mapBoxReducer,
+export default enhanceMapReducer(mapboxReducer,
     {
         latitude: center.latitude,
         longitude: center.longitude,
@@ -42,6 +44,9 @@ export default enhanceMapReducer(mapBoxReducer,
         bearing: bearing,
         pitch: pitch,
         startDragLngLat: null,
-        isDragging: false
+        isDragging: false,
+
+        style: style,
+        mapboxApiAccessToken: mapboxApiAccessToken
     }
 )

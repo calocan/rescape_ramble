@@ -10,18 +10,21 @@
  */
 
 import {fromJS} from 'immutable';
-import {compact, toImmutableKeyedByProp, orEmpty} from 'helpers/functions';
+import {compact, orEmpty} from 'helpers/functions';
 
+// Direction ids for typical Trip pairs
+const FROM_TO_DIRECTION = '0';
+const TO_FROM_DIRECTION = '1';
 
 const tripHeadSign = ( to, via ) => compact([to.label, via]).join(' via ');
 
 /***
  * Forms a unique stop id based on the place id and which station/stop of that place it is
- * @param {string} id Place id
+ * @param {string} placeId Place id
  * @param {string|null} [which] Which station/stop (e.g. Union, Airport)
  * @returns {string} A stop id
  */
-const createStopId = (id, which=null) => compact([place, which]).join('-');
+export const createStopId = (placeId, which = null) => compact([placeId, which]).join('-');
 
 /**
  * @typedef {Object} Location
@@ -53,7 +56,7 @@ const createStopId = (id, which=null) => compact([place, which]).join('-');
  * @param {string|null} [options.stopType] label describing the stop type if stopName is not used, defaults to 'Station'
  * @returns {Map} A Stop object
  */
-export const createStop = (place, which, location, options={}) => {
+export const createStop = (place, which, location, options = {}) => {
     const id = createStopId(place.id, which);
     return fromJS({
         id: id,
@@ -63,8 +66,6 @@ export const createStop = (place, which, location, options={}) => {
         location
     })
 };
-
-
 
 /**
  * @typedef {Object} Route
@@ -76,7 +77,7 @@ export const createStop = (place, which, location, options={}) => {
  */
 
 /***
- * Forms a unique Routte id based on the place id and which station/stop of that place it is
+ * Forms a unique Route id based on the place id and which station/stop of that place it is.
  * @param {Place} from The start/end Place
  * @param {Place} to The other start/end Place
  * @param {string} [via] Optional pass through Region to distinguish the route
@@ -88,7 +89,7 @@ export const createRouteId = (from, to, via) => {
             from.place.id,
             to.place.id
         ].join('-'),
-        orEmpty(specs.via)
+        orEmpty(via)
     ]).join(' via ');
 };
 
@@ -115,10 +116,10 @@ export const createRoute = (from, to, specs) => {
     // (e.g. 'San Francisco/Reno via Altamont
     const routeLongName = compact([
         [from.label, to.label].join('/'),
-        orEmpty(specs['via'])]).join(' via ');
+        orEmpty(specs.via)]).join(' via ');
     // Made from the route type and id
     // (e.g. 'IRRS SFC-REN via Altamont' for inter regional rail service between SFC and RENO via Altamont
-    const routeShortName = compact([id, orEmpty(specs['via'])]).join(' via ');
+    const routeShortName = compact([id, orEmpty(specs.via)]).join(' via ');
     return {
         id: id,
         places: {from, to},
@@ -127,8 +128,6 @@ export const createRoute = (from, to, specs) => {
         routeType: specs.routeType,
     }
 };
-
-
 
 /**
  * @typedef {Object} Service
@@ -145,7 +144,7 @@ export const createRoute = (from, to, specs) => {
  * @param {[string]} [seasons]. Default ['yearlong'] Seasons of the year: 'Winter', 'School Year', 'Tourist Season'
  * @returns {Service} A Service object with an id based on days and seasons
  */
-export const createService = (startDate, endDate, days=['everyday'], seasons=['yearlong']) => {
+export const createService = (startDate, endDate, days = ['everyday'], seasons = ['yearlong']) => {
     return {
         id: [...seasons, ...days].join('_'),
         days,
@@ -179,6 +178,29 @@ export const createTripId = (route, directionId, service ) => {
  * @property {number} directionId The directionId of the Trip
  * @property {Service} service The Service of the Trip
  */
+
+/**
+ * @typedef {Object} TripWithStopTimes
+ * @property {Route} route The Route of the Trip
+ * @property {Stop} from The from Stop
+ * @property {Place} from.place The Place of the Stop, used for the Route id
+ * @property {Stop} to The to Stop
+ * @property {Place} to.place The Place of the Stop, used for the Route id
+ * @property {number} directionId The directionId of the Trip
+ * @property {Service} service The Service of the Trip
+ * @property {[StopTime]} StopTimes for the Trip
+ */
+
+/***
+ * @property {Route} route The Route of the Trip
+ * @property {Stop} from The from Stop
+ * @property {Place} from.place The Place of the Stop, used for the Route id
+ * @property {Stop} to The to Stop
+ * @property {Place} to.place The Place of the Stop, used for the Route id
+ * @property {number} directionId The directionId of the Trip
+ * @property {Service} service The Service of the Trip
+ * @returns {{id, route: *, service: *, directionId: *, tripHeadsign}}
+ */
 const createTrip = (route, from, to, directionId, service) => {
     const id = createTripId(route, from.place, to.place);
 
@@ -191,6 +213,12 @@ const createTrip = (route, from, to, directionId, service) => {
     }
 };
 
+/**
+ * @callback stopTimeCallback
+ * @param {Trip} trip The Trip
+ * @returns {[Trip]} The Trip augmented with StopTimes
+ */
+
 /***
  * Generates a to and from trip definition for the given trip ids and other required specs
  * @param {Route} route - the Route used by the trip
@@ -201,18 +229,16 @@ const createTrip = (route, from, to, directionId, service) => {
  * @param {string} route.places.to.id - used for trip id
  * @param {string} route.places.to.label - used for the tripHeadSign
  * @param {string} [route.via] Optional label of via region or city of the trip
- * @param {Object} specs - Mostly required additional values
- * @param {string} specs.serviceId - Id of the Service of the Trip
- * @returns [] A two-item array containing each of the Trips
+ * @param {Service} service - The Service of the Trip
+ * @param {stopTimeCallback} stopTimeCallback - Called with each trip to generate StopTimes.
+ * This is
+ * @returns [TripWithStopTimes] A two-item array containing with each result of stopTimeCallback.
  */
-export const createTripPair = (route, specs) => {
-
-    // Create a trip for each direction
-    return [
-        createTrip(route, route.stops.from, route.stops.to, '0'),
-        createTrip(route, route.stops.to, route.stops.from, '1'),
-    ];
-};
+export const createTripWithStopTimesPair = (route, service, stopTimeCallback) =>
+    [
+        createTrip(route, route.stops.from, route.stops.to, FROM_TO_DIRECTION, service),
+        createTrip(route, route.stops.to, route.stops.from, TO_FROM_DIRECTION, service)
+    ].map(trip => Object.assign(trip, {stopTimes: stopTimeCallback(trip)}));
 
 /**
  * @typedef {Object} StopTime
@@ -242,6 +268,24 @@ export const createStopTime = (trip, stopSequence, stop, arrivalTime, departureT
 };
 
 /***
+ * Returns the standard ordering for stops. If the trip directionId == '0', stops are returned in order.
+ * If the trip directionId == TO_FROM_DIRECTION, stops are returned in reverse. A different function could be used
+ * if the stops were not consistent for both directions of the trip
+ * @param trip
+ * @param stops
+ */
+export const orderStops = (trip, stops) => {
+    switch (trip.directionId) {
+        case FROM_TO_DIRECTION:
+            return stops
+        case TO_FROM_DIRECTION:
+            return stops.reverse();
+        default:
+            throw new Error(`Unknown direction id ${trip.directionId}`);
+    }
+};
+
+/***
  * Creates a StopTime generator. The generator uses the startTime and EndTime to
  * estimate where each Stop is based on the location of each Stop
  * @param {Trip} trip: A Trip to which the stopTimes apply
@@ -256,12 +300,12 @@ export const createStopTime = (trip, stopSequence, stop, arrivalTime, departureT
  * (According to https://developers.google.com/transit/gtfs/reference/stop_times-file)
  * @param {number} dwellTime Number of seconds of dwell time
  */
-export const stopTimeGenerator = function * (trip, stops, startTime, endTime, dwellTime) => {
+export const stopTimeGenerator = function* (trip, stops, startTime, endTime, dwellTime) {
     const date = new Date();
 
-    const parseTimeToGenericDate = (time, dwellTime=0) => {
+    const parseTimeToGenericDate = (time, customDwellTime = dwellTime) => {
         const timeSegments = time.split(':').map(t => parseInt(t));
-        new Date(2000,1,1, ...timeSegments.slice(2), timeSegments[3] + dwellTime);
+        return new Date(2000, 1, 1, ...timeSegments.slice(2), timeSegments[3] + customDwellTime);
     };
     const toTimeString = (departureDate, arrivalDate) => {
         return [
@@ -270,6 +314,7 @@ export const stopTimeGenerator = function * (trip, stops, startTime, endTime, dw
             date.getSeconds()
         ].join(':');
     };
+
     // http://stackoverflow.com/questions/27928/calculate-distance-between-two-latitude-longitude-points-haversine-formula
     /***
      * Returns kilometers between location
@@ -280,9 +325,9 @@ export const stopTimeGenerator = function * (trip, stops, startTime, endTime, dw
     function calculateDistance(fromLocation, toLocation) {
         const pi = Math.PI / 180,
             cos = Math.cos,
-            a = 0.5 - cos((toLocation.lat - fromLocation.lat) * pi)/2 +
+            a = 0.5 - cos((toLocation.lat - fromLocation.lat) * pi) / 2 +
             cos(fromLocation.lat * pi) * cos(toLocation.lat * pi) *
-            (1 - cos((toLocation.lon - fromLocation.lon) * pi))/2;
+            (1 - cos((toLocation.lon - fromLocation.lon) * pi)) / 2;
 
         return 12742 * Math.asin(Math.sqrt(a)); // 2 * R; Earth Radius = 6371 km
     }
@@ -301,15 +346,16 @@ export const stopTimeGenerator = function * (trip, stops, startTime, endTime, dw
      * returned immediately if it exists
      * @returns {string} The calculated arrival time or that given in stop.arrivalTime
      */
-    const calculateArrivalTime = (stop, previousStopTime=null) => {
-        if (stop.arrivalTime)
+    const calculateArrivalTime = (stop, previousStopTime = null) => {
+        if (stop.arrivalTime) {
             return stop.arrivalTime;
+        }
         const remainingStops = stops.slice(stops.indexOf(stop));
         const distanceFromPreviousStop = calculateDistance(previousStopTime.stop.location, stop.location);
         // Starting with the disntance from previousStop, calcuate the total distance to the end
         const totalRemainingDistance = remainingStops.reduce((distance, currentStop) => {
             return distance + calculateDistance(
-                stops[stops.indexOf(currentStop) -1].location,
+                stops[stops.indexOf(currentStop) - 1].location,
                 currentStop.location)
         }, distanceFromPreviousStop);
         // Calculate the fraction of distance to stop over the totalRemainingDistance
@@ -327,9 +373,9 @@ export const stopTimeGenerator = function * (trip, stops, startTime, endTime, dw
      * @param {number} dwellTime Number of seconds of dwellTime
      * @returns {string}
      */
-    const calculateDepartureTime = (arrivalTime, dwellTime) => {
-        const arrivalDate =  parseTimeToGenericDate(time);
-        const departureDate = parseTimeToGenericDate(time, dwellTime);
+    const calculateDepartureTime = (arrivalTime, customDwellTime = dwellTime) => {
+        const arrivalDate = parseTimeToGenericDate(arrivalTime);
+        const departureDate = parseTimeToGenericDate(arrivalTime, customDwellTime);
         // Returns the departureDate time, possibly adding multiples of 24 to the hours if the
         // departureDate is the next day (hopefully never more than that!)
         return toTimeString(departureDate, arrivalDate)

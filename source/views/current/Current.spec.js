@@ -12,8 +12,6 @@ test('Current', t => {
         title: titleText,
         titleClass: 'title'
     };
-    const re = new RegExp(titleText, 'g');
-
     const choice = 'Choice 1'
     const Component = shallow(<Current {...props} />)
     t.ok(Component.length)

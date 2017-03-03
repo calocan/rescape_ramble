@@ -17,18 +17,17 @@
           "stopEnd": "1487636659567",
           "localEnd": "1487636978561"
         },
-        "route": "1487637354681",
+        "route": "1487637354681"
       },
       "1487638899977": {
         "id": "1487638899977",
         "label": "Trip from San Francisco to Los Angeles",
         "locations": {
           "stopStart": "1487638573082",
-          "stopEnd": "1487639102048",
+          "stopEnd": "1487639102048"
         },
-        "route": "1487637354681",
+        "route": "1487637354681"
       }
     }
   }
 }
-

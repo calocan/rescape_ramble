@@ -9,17 +9,17 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import {OrderedMap, Map, List, Set, fromJS} from 'immutable';
+import {OrderedMap, fromJS} from 'immutable';
 import * as routeTypes from './routeTypes';
 import journeys from './journeys.json';
 import locations from './locations.json';
 import routes from './routes';
 import trips from './trips';
 import stops from './stops';
-import stopTimes from './stopTimes'
 import {DEFAULT_SERVICE} from './services';
-import {createService, stopTimeGenerator} from './dataCreationHelpers';
+import {createService} from './dataCreationHelpers';
 import {toImmutableKeyedByProp} from 'helpers/functions';
+import config from 'config.json';
 const toImmutableKeyedById = toImmutableKeyedByProp('id');
 
 export default OrderedMap({
@@ -45,67 +45,15 @@ export default OrderedMap({
     // Directional trips keyed by id
     trips: toImmutableKeyedById(trips),
 
-    // The stops of fixed guideway transit service. These are the nodes of the graph
     stops: toImmutableKeyedById(stops),
 
-    stopTimes: toImmutableKeyedById(stopTimes),
-
-    // The mode is for vehicle compatibility
-    modes: Map({
-        '1487639656930': Map({
-            id:'1487639656930',
-            label: 'high speed rail'
-        }),
-        '1487639664291': Map({
-            id:'1487639664291',
-            label: 'standard rail'
-        }),
-        '1487639673634': Map({
-            id:'1487639673634',
-            label: 'light rail'
-        }),
-        '1487639682173': Map({
-            id:'1487639682173',
-            label: 'standard gauge heavy rail (metro)'
-        }),
-        '1487639691538': Map({
-            id:'1487639691538',
-            label: 'Indian gauge heavy rail (metro)'
-        })
-    }),
-
-
-    // Defines the start and end stops of transit service. Only enough waypoints are specified
-    // to guarantee that the service matches the correct lines via minimum distance algorithm.
-    services: Map({
-        // Service from San Francisco to Sacramento (via Stockton)
-        '1487637588201': Map({
-            id: '1487637588201',
-            stopStart: '1487637354681',
-            wayPoints: List(['STOCKTON-Central']),
-            stopEnd: 'SAC-Central',
-        }),
-        // Service from San Francisco to Sacramento (via Fairfield)
-        '1487638239735': Map({
-            id: '1487638239735',
-            stopStart: '1487637354681',
-            wayPoints: List(['SUI-Central']),
-            stopEnd: 'SAC-Central',
-        }),
-        // Service from Sacramento to Reno, but only as far as Truckee
-        '1487638047992': Map({
-            id: '1487638047992',
-            stopStart: 'SAC-Central',
-            stopEnd: 'TRUCKEE-Central',
-        }),
-    }),
     mapBox: {
         viewport: {
-            latitude: center.latitude,
-            longitude: center.longitude,
-            zoom: zoom,
-            bearing: bearing,
-            pitch: pitch,
+            latitude: config.center.latitude,
+            longitude: config.center.longitude,
+            zoom: config.zoom,
+            bearing: config.bearing,
+            pitch: config.pitch,
             startDragLngLat: null,
             isDragging: false
         }

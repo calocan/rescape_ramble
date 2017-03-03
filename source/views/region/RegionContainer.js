@@ -5,10 +5,9 @@ export default connect(
     /***
      * The wrapped component needs access to the settings and a r
      * @param state
-     * @param props
      * @returns {{}}
      */
-    (state, props)=>{
+    (state)=>{
         return {
             ...state.get('settings')
         };

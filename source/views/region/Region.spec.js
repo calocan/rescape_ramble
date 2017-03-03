@@ -1,12 +1,10 @@
 import React from 'react';
-import reactDom from 'react-dom/server';
 import test from 'tape-catch';
 import {shallow} from 'enzyme'
 
 import createRegion from './Region';
 
 const Region = createRegion(React);
-const render = reactDom.renderToStaticMarkup;
 
 test('Region', t => {
     const titleText = 'Hello!';
@@ -14,8 +12,6 @@ test('Region', t => {
         title: titleText,
         titleClass: 'title'
     };
-    const re = new RegExp(titleText, 'g');
-
     const choice = 'Choice 1'
     const Component = shallow(<Region {...props} />)
     t.ok(Component.length)

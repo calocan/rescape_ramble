@@ -1,7 +1,7 @@
 
-import {createStop} from 'dataCreationHelpers'
-import * as places from 'places'
-import * as stopTypes from 'stopTypes'
+import {createStop} from './dataCreationHelpers'
+import * as places from './places'
+import * as stopTypes from './stopTypes'
 
 export const UNION = 'Union';
 export const CENTRAL = 'Central';
@@ -17,7 +17,7 @@ export default [
     createStop(places.OAKLAND, CENTRAL,
         { lon: -122.277158, lat: 37.806624 },
     ),
-    createStop(places.OAKLAND, JACK_LONDON_SQUARE ,
+    createStop(places.OAKLAND, JACK_LONDON_SQUARE,
         { lon: -122.271522, lat: 37.793814 },
     ),
     createStop(places.PLEASANTON, ACE,
