@@ -1,9 +1,8 @@
-const path = require('path');
-const {resolve} = require('path');
-const webpack = require('webpack');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
+import {resolve} from 'path';
+import webpack from 'webpack';
+import ExtractTextPlugin from 'extract-text-webpack-plugin';
 
-module.exports = {
+export default {
     devtool: 'source-map',
 
     resolve: {
@@ -33,7 +32,17 @@ module.exports = {
                 test: /\.js$/,
                 use: [{
                     loader: 'babel-loader',
-                    options: {presets: ['es2015', 'stage-0', 'react']},
+                    options: {
+                        babelrc: false,
+                        presets: [
+                            "react",
+                            ["es2015", {"modules": false}]
+                        ],
+                        plugins: [
+                            "transform-flow-strip-types"
+                        ],
+
+                    }
                 }],
                 exclude: /node_modules\/(?!mapbox-gl\/js)/
             },

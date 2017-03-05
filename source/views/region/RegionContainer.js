@@ -8,8 +8,8 @@ export default connect(
      * @returns {{}}
      */
     (state)=>{
-        return {
-            ...state.get('settings')
-        };
+        return Object.assign(
+            state.get('settings')
+        );
     }
 )(Region);

@@ -8,6 +8,7 @@ import config from 'config.json';
 
 // Hoping to use maxBounds like in the react-mapbox-gl lib
 const { mapboxApiAccessToken, style, maxBounds, center, zoom, pitch, bearing } = config;
+
 const defaultProps = {
     width: 500,
     height: 500,
@@ -17,7 +18,7 @@ const defaultProps = {
     mapboxApiAccessToken
 };
 
-it('MapGL can mount', () => {
+test('MapGL can mount', () => {
     const reactContainer = document.createElement('div');
     document.body.appendChild(reactContainer);
     const wrapper = shallow(<MapGL {...defaultProps} />);
@@ -33,7 +34,7 @@ test('MapGL call onLoad when provided', t => {
         t.end();
     }
 
-    const props = {...defaultProps, onLoad};
+    const props = {onLoad, ...defaultProps};
     ReactDOM.render(<MapGL {...props} />, reactContainer);
 
     if (!MapGL.supported()) {

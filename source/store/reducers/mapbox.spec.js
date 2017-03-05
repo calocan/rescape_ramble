@@ -3,6 +3,7 @@ import deepFreeze from 'deep-freeze';
 
 import settings from 'store/reducers/settings';
 
+test('mapbox', () => {})
 test('SET_MODE', nest => {
   nest.test('...initial', assert => {
     const message = `should set { mode: 'display', subject: 'world' }`;
