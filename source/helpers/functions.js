@@ -8,7 +8,8 @@
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import {fromJS, Iterable} from 'immutable';
+import {fromJS, Iterable, Map} from 'immutable';
+import R from 'ramda';
 
 /***
  * Return an empty string if the given entity is falsy
@@ -35,7 +36,7 @@ export const filterWith = fn => {
  * @param {Iterable} iterable that might have null or undefined values to remove
  * @returns {Iterable} an iterable that filters out null or undefined items
  */
-export const compact = filterWith(item => item !== null && item !== undefined);
+export const compact = R.reject(R.isNil)
 
 /***
  * Convert the obj to an Immutable if it is not.

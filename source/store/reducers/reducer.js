@@ -11,9 +11,11 @@
 
 import { combineReducers } from 'redux-immutable';
 import settings from './settings.js'
-import mapBoxReducer from './mapBox.js'
+import mapBoxReducer from './mapbox.js'
+import { routerReducer } from 'react-router-redux'
 
 export default combineReducers({
     settings,
-    mapBox: mapBoxReducer
+    mapBox: mapBoxReducer,
+    routing: routerReducer
 })

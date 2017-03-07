@@ -9,7 +9,6 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import {fromJS} from 'immutable';
 import {compact, orEmpty} from 'helpers/functions';
 
 // Direction ids for typical Trip pairs
@@ -58,13 +57,13 @@ export const createStopId = (placeId, which = null) => compact([placeId, which])
  */
 export const createStop = (place, which, location, options = {}) => {
     const id = createStopId(place.id, which);
-    return fromJS({
+    return {
         id: id,
         place: place,
         which: which,
         stopName: options.stopName || `${place} ${which} ${options.stopType || 'Station'}`,
         location
-    })
+    };
 };
 
 /**

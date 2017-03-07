@@ -3,9 +3,9 @@ import deepFreeze from 'deep-freeze';
 
 import settings from 'store/reducers/settings';
 
-test('mapbox', () => {})
-test('SET_MODE', nest => {
-  nest.test('...initial', assert => {
+test('placeholder', () => {});
+test('SET_MODE', () => {
+  expect('...initial', assert => {
     const message = `should set { mode: 'display', subject: 'world' }`;
 
     const expected = {
@@ -20,7 +20,7 @@ test('SET_MODE', nest => {
   });
 
 
-  nest.test(`...with { mode: 'edit' }`, assert => {
+  expect(`...with { mode: 'edit' }`, assert => {
     const message = 'should set mode to edit mode';
 
     const stateBefore = {
@@ -45,7 +45,7 @@ test('SET_MODE', nest => {
     assert.end();
   });
 
-  nest.test(`...with { subject: 'foo'}`, assert => {
+  expect(`...with { subject: 'foo'}`, assert => {
     const message = 'should set subject to "foo"';
 
     const stateBefore = {

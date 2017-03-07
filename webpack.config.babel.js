@@ -3,7 +3,7 @@ import webpack from 'webpack';
 import ExtractTextPlugin from 'extract-text-webpack-plugin';
 
 export default {
-    devtool: 'source-map',
+    devtool: '#inline-source-map',
 
     resolve: {
         modules: [
@@ -12,6 +12,7 @@ export default {
         ],
         alias: {
             'mapbox-gl$': resolve('node_modules/mapbox-gl/dist/mapbox-gl.js'),
+            //'webworkify': 'webworkify-webpack',
             // Ensure only one copy of react
             react: resolve('node_modules/react'),
         },
@@ -31,18 +32,7 @@ export default {
             {
                 test: /\.js$/,
                 use: [{
-                    loader: 'babel-loader',
-                    options: {
-                        babelrc: false,
-                        presets: [
-                            "react",
-                            ["es2015", {"modules": false}]
-                        ],
-                        plugins: [
-                            "transform-flow-strip-types"
-                        ],
-
-                    }
+                    loader: 'babel-loader'
                 }],
                 exclude: /node_modules\/(?!mapbox-gl\/js)/
             },
@@ -59,6 +49,9 @@ export default {
             },
 
         ]
+    },
+    node: {
+        fs: 'empty',
     },
     plugins: [
         new webpack.DefinePlugin({

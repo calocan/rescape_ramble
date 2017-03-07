@@ -11,11 +11,14 @@
 import {Map as ImMap, Immutable} from 'immutable';
 import * as functions from './functions';
 
-test('functions', () => {});
-/*
-test('helperFunctions', t => {
-        t.equals(functions.orEmpty(null), '', 'Should be empty');
-        t.deepEquals(functions.filterWith(x => x % 2)([1, 2, 3, 4]), [1, 3], 'Should filter out even numbers');
+description('helperFunctions', () => {
+        test('Should be empty', () => {
+            expect(functions.orEmpty(null)).toEqual('');
+        });
+        test('Should filter out even numbers', () => {
+
+            expect(functions.filterWith(x => x % 2)([1, 2, 3, 4]).toEqual([1, 3]);
+        }
         t.deepEquals(functions.compact([1, null, 2], [1, 2]), 'Should filter out null and undef values');
         t.ok(ImMap.isMap(functions.toImmutable({foo: 1})), 'Should be an Immutable Map');
         t.deepEquals(functions.mapWith(() => 1)([1, 2, 3, 4]), [1, 1, 1, 1], 'Should be an array of 1s');
@@ -26,4 +29,3 @@ test('helperFunctions', t => {
             ImMap([[1, {bar: 1}], [2, {bar: 2}]]))
         );
 });
-*/
