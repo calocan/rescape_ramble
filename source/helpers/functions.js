@@ -19,17 +19,9 @@ export const orEmpty = entity => entity || '';
 
 /***
  * Use the given function to create a filter partial that takes an iterable and creates a generator to apply the filter
- * @param fn
+ * @returns A function that expects a filter function
  */
-export const filterWith = fn => {
-    return function* (iterable) {
-        for (let element in iterable) {
-            if (fn(element)) {
-                yield element;
-            }
-        }
-    }
-};
+export const filterWith = R.filter;
 
 /***
  * Removed null or undefined items from an iterable
@@ -43,23 +35,27 @@ export const compact = R.reject(R.isNil)
  * @param obj
  */
 export const toImmutable = obj => Iterable.isIterable(obj) ? obj : fromJS(obj);
-/***
- * Use the given function to create a partial mapping function that expects an iterable
- * @param fn
- */
-export const mapWith = fn => iter => iter.map(fn);
-/***
- * Creates a partial mapping function that expects an iterable and maps each item of the iterable to the given property
- * @param prop
- */
-export const mapProp = prop => mapWith(item => item[prop]);
 
 /***
- * Creates a partial function that maps an array to an object keyed by the given prop, valued by the item
+ * Use the given function to create a partial mapping function that expects an iterable
+ * @returns A function that expects a mapping function
+ */
+export const mapWith = R.map;
+
+/***
+ * Creates a partial mapping function that expects an iterable and maps each item of the iterable to the given property
+ * @returns A function that expects a prop
+ */
+export const mapProp = R.compose(R.map, R.prop);
+
+/***
+ * Creates a partial function that maps an array of objects to an object keyed by the given prop of the objects
+ * of the array, valued by the item
  * @param prop
  * @returns {function} Accepts an iterable and returns an objected key by the given prop, valued by the item
  */
-export const mapPropAsKey = prop => new Map( mapWith(item => [item[prop], item]) );
+//export const mapPropAsKey = prop => R.map(R.mapObjectIndexed(R.prop(prop)));
+export const mapPropAsKey = prop => R.compose(R.map, R.mapObjectIndexed, R.prop)(prop);
 
 /***
  * Creates a partial function that expects a property of an object which in turn returns a function that
@@ -67,9 +63,7 @@ export const mapPropAsKey = prop => new Map( mapWith(item => [item[prop], item])
  * If listOrObj is not already object, the function converts an array to an Immutable keyed by each array items id.
  * If alreay an object, it just makes it immutable
  * @param listOrObj
- * @returns {*|Map<K, V>|Map<string, V>}
+ * @returns A function that expects a listOrObj
  */
-export const toImmutableKeyedByProp = prop => listOrObj => {
-    const resolved = toImmutable(listOrObj);
-    return Map.isMap(resolved) ? resolved : mapPropAsKey(prop);
-};
+export const toImmutableKeyedByProp = prop =>
+    R.compose(R.unless(Map.isMap(R._), mapPropAsKey(prop)), toImmutable);

@@ -11,21 +11,32 @@
 import {Map as ImMap, Immutable} from 'immutable';
 import * as functions from './functions';
 
-description('helperFunctions', () => {
+describe('helperFunctions', () => {
         test('Should be empty', () => {
             expect(functions.orEmpty(null)).toEqual('');
         });
         test('Should filter out even numbers', () => {
-
-            expect(functions.filterWith(x => x % 2)([1, 2, 3, 4]).toEqual([1, 3]);
-        }
-        t.deepEquals(functions.compact([1, null, 2], [1, 2]), 'Should filter out null and undef values');
-        t.ok(ImMap.isMap(functions.toImmutable({foo: 1})), 'Should be an Immutable Map');
-        t.deepEquals(functions.mapWith(() => 1)([1, 2, 3, 4]), [1, 1, 1, 1], 'Should be an array of 1s');
-        t.deepEquals(functions.mapProp('bar')([{bar: 1}, {bar: 2}]), [1, 2], 'Should map bars');
-        t.deepEquals(functions.mapPropAsKey('bar')([{bar: 1}, {bar: 2}]), Map([[1, {bar: 1}], [2, {bar: 2}]]));
-        t.ok(Immutable.is(
-            functions.toImmutableKeyedByProp('bar')([{bar: 1}, {bar: 2}]),
-            ImMap([[1, {bar: 1}], [2, {bar: 2}]]))
-        );
+            expect(functions.filterWith(x => x % 2)([1, 2, 3, 4])).toEqual([1, 3]);
+        });
+        test('Should filter out null and undef values', () => {
+            expect(functions.compact([1, null, 2])).toEqual([1, 2]);
+        });
+        test('Should be an Immutable Map', () => {
+            expect(ImMap.isMap(functions.toImmutable({foo: 1}))).toBeTruthy();
+        });
+        test('Should be an array of 1s', () => {
+            expect(functions.mapWith(() => 1)([1, 2, 3, 4])).toEqual([1, 1, 1, 1]);
+        });
+        test('Should map bars', () => {
+            expect(functions.mapProp('bar')([{bar: 1}, {bar: 2}])).toEqual([1, 2]);
+        });
+        test('Should map prop as key', () => {
+            expect(functions.mapPropAsKey('bar')([{bar: 1}, {bar: 2}])).toEqual(
+                Map([[1, {bar: 1}], [2, {bar: 2}]]));
+        });
+        test('Should be immutable and keyed by prop', () => {
+            expect(Immutable.is(
+                functions.toImmutableKeyedByProp('bar')([{bar: 1}, {bar: 2}]),
+                ImMap([[1, {bar: 1}], [2, {bar: 2}]]))).toBeTruthy();
+        });
 });
