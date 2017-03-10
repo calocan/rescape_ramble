@@ -8,35 +8,32 @@
  *
  * THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import {Map as ImMap, Immutable} from 'immutable';
-import * as functions from './functions';
+import {Map as ImMap, is, fromJS} from 'immutable';
+import R from 'ramda';
+import * as Rx from './functions';
 
 describe('helperFunctions', () => {
-        test('Should be empty', () => {
-            expect(functions.orEmpty(null)).toEqual('');
-        });
-        test('Should filter out even numbers', () => {
-            expect(functions.filterWith(x => x % 2)([1, 2, 3, 4])).toEqual([1, 3]);
-        });
-        test('Should filter out null and undef values', () => {
-            expect(functions.compact([1, null, 2])).toEqual([1, 2]);
-        });
-        test('Should be an Immutable Map', () => {
-            expect(ImMap.isMap(functions.toImmutable({foo: 1}))).toBeTruthy();
-        });
-        test('Should be an array of 1s', () => {
-            expect(functions.mapWith(() => 1)([1, 2, 3, 4])).toEqual([1, 1, 1, 1]);
-        });
-        test('Should map bars', () => {
-            expect(functions.mapProp('bar')([{bar: 1}, {bar: 2}])).toEqual([1, 2]);
-        });
-        test('Should map prop as key', () => {
-            expect(functions.mapPropAsKey('bar')([{bar: 1}, {bar: 2}])).toEqual(
-                Map([[1, {bar: 1}], [2, {bar: 2}]]));
-        });
-        test('Should be immutable and keyed by prop', () => {
-            expect(Immutable.is(
-                functions.toImmutableKeyedByProp('bar')([{bar: 1}, {bar: 2}]),
-                ImMap([[1, {bar: 1}], [2, {bar: 2}]]))).toBeTruthy();
-        });
+    test('Should be empty', () => {
+        expect(Rx.orEmpty(null)).toEqual('');
+    });
+    test('Should filter out null and undef values', () => {
+        expect(Rx.compact([1, null, 2])).
+        toEqual([1, 2]);
+    });
+    test('Should be an Immutable Map', () => {
+        expect(ImMap.isMap(Rx.toImmutable({foo: 1}))).
+        toBeTruthy();
+    });
+    test('Should map bars', () => {
+        expect(Rx.mapProp('bar')([{bar: 1}, {bar: 2}])).
+        toEqual([1, 2]);
+    });
+    test('Should map prop as key', () => {
+        expect(Rx.mapPropValueAsIndex('bar')([{bar: 1}, {bar: 2}])).
+        toEqual(R.indexBy(R.prop('bar'), [{bar: 1}, {bar: 2}]))
+    });
+    test('Should be immutable and keyed by prop', () => {
+        expect(Rx.toImmutableKeyedByProp('bar')([{bar: 1}, {bar: 2}]).toJS()).
+        toEqual(ImMap([[1, {bar: 1}], [2, {bar: 2}]]).toJS())
+    });
 });

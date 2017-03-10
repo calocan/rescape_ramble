@@ -14,56 +14,55 @@ import R from 'ramda';
 /***
  * Return an empty string if the given entity is falsy
  * @param entity
+ * orEmpty:: a -> a
+ *        :: a -> String
  */
 export const orEmpty = entity => entity || '';
 
 /***
- * Use the given function to create a filter partial that takes an iterable and creates a generator to apply the filter
- * @returns A function that expects a filter function
- */
-export const filterWith = R.filter;
-
-/***
  * Removed null or undefined items from an iterable
- * @param {Iterable} iterable that might have null or undefined values to remove
- * @returns {Iterable} an iterable that filters out null or undefined items
+ * @param [a] items Items that might have falsy values to remove
+ * compact:: [a] -> [a]
  */
 export const compact = R.reject(R.isNil)
 
 /***
  * Convert the obj to an Immutable if it is not.
- * @param obj
+ * @param {a} a An Immutable or anything else
+ * toImmutable:: Immutable b = a -> b
+ *            :: Immutable b = b -> b
  */
 export const toImmutable = obj => Iterable.isIterable(obj) ? obj : fromJS(obj);
 
 /***
- * Use the given function to create a partial mapping function that expects an iterable
- * @returns A function that expects a mapping function
- */
-export const mapWith = R.map;
-
-/***
  * Creates a partial mapping function that expects an iterable and maps each item of the iterable to the given property
- * @returns A function that expects a prop
+ * @param {String} prop The prop of each object to map
+ * @param {[Object]} items The objects to map
+ * mapProp :: String -> [{k, v}] -> [a]
  */
-export const mapProp = R.compose(R.map, R.prop);
+export const mapProp = R.curry((prop, objs) => R.pipe(R.prop, R.map)(prop)(objs));
 
 /***
  * Creates a partial function that maps an array of objects to an object keyed by the given prop of the objects
  * of the array, valued by the item
- * @param prop
- * @returns {function} Accepts an iterable and returns an objected key by the given prop, valued by the item
+ * @param {String} prop The prop of each object to use as the key
+ * @param {[Object]} items The items to map
+ * mapPropValueAsIndex:: String -> [{k, v}] -> {j, {k, v}}
  */
-//export const mapPropAsKey = prop => R.map(R.mapObjectIndexed(R.prop(prop)));
-export const mapPropAsKey = prop => R.compose(R.map, R.mapObjectIndexed, R.prop)(prop);
+export const mapPropValueAsIndex = R.compose(R.indexBy, R.prop);
 
 /***
  * Creates a partial function that expects a property of an object which in turn returns a function that
  * expects a listOrObj
  * If listOrObj is not already object, the function converts an array to an Immutable keyed by each array items id.
- * If alreay an object, it just makes it immutable
+ * If already an object, it just makes it immutable
  * @param listOrObj
- * @returns A function that expects a listOrObj
+ * mapPropValueAsIndex:: Immutable m = {j, {k, v}} -> m {j, {k, v}}
+ *                    :: Immutable m = [{k, v}] -> m {j, {k, v}}
  */
-export const toImmutableKeyedByProp = prop =>
-    R.compose(R.unless(Map.isMap(R._), mapPropAsKey(prop)), toImmutable);
+export const toImmutableKeyedByProp = R.curry((prop, objs) =>
+    R.pipe(
+        R.when(Array.isArray, mapPropValueAsIndex(prop)),
+        toImmutable
+    )(objs)
+);
