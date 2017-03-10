@@ -16,7 +16,7 @@ import locations from './locations.json';
 import routes from './routes';
 import trips from './trips';
 import stops from './stops';
-import {DEFAULT_SERVICE} from './services';
+import {DEFAULT_SERVICE, WEEKEND_SERVICE} from './services';
 import {createService} from './dataCreationHelpers';
 import {toImmutableKeyedByProp} from 'helpers/functions';
 import config from 'config.json';
@@ -33,7 +33,7 @@ export default OrderedMap({
     // days are separate fields marked with 1 or 0
     calendar: toImmutableKeyedById({
         daily: DEFAULT_SERVICE,
-        weekend: createService('20000101', '20991231', ['weekend'])
+        weekend: WEEKEND_SERVICE
     }),
 
     // Mode/vehicle/service type keyed by id

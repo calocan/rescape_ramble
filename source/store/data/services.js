@@ -12,3 +12,4 @@
 import {createService} from './dataCreationHelpers'
 
 export const DEFAULT_SERVICE = createService('20000101', '20991231');
+export const WEEKEND_SERVICE = createService('20000101', '20991231', ['weekend']);

@@ -11,4 +11,5 @@
 
 export const NORTH_BAY = 'North-Bay';
 export const ALTAMONT = 'Altamont';
+export const EAST_BAY = 'East-Bay';
 

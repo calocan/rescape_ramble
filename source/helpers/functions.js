@@ -66,3 +66,15 @@ export const toImmutableKeyedByProp = R.curry((prop, objs) =>
         toImmutable
     )(objs)
 );
+
+/***
+ * Returns the id of the given value if it is an object or the value itself if it is not.
+ * @param {Object|String|Number} objOrId
+ * @param {String|Number}
+ * idOrIdFromObj:: a -> a
+ *              :: {k, v} -> a
+ */
+export const idOrIdFromObj = R.when(
+    objOrId => (typeof objOrId === 'object') && objOrId != null,
+    R.prop('id')
+);

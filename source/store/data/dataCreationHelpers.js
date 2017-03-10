@@ -9,21 +9,22 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import {compact, orEmpty} from 'helpers/functions';
+import {compact, orEmpty, idOrIdFromObj} from 'helpers/functions';
 
 // Direction ids for typical Trip pairs
-const FROM_TO_DIRECTION = '0';
-const TO_FROM_DIRECTION = '1';
+export const FROM_TO_DIRECTION = '0';
+export const TO_FROM_DIRECTION = '1';
 
 const tripHeadSign = ( to, via ) => compact([to.label, via]).join(' via ');
 
 /***
  * Forms a unique stop id based on the place id and which station/stop of that place it is
- * @param {string} placeId Place id
+ * @param {Place|id} place The Place object or its id
+ * @param {string} place.id The id of the Place used to create the Stop id
  * @param {string|null} [which] Which station/stop (e.g. Union, Airport)
  * @returns {string} A stop id
  */
-export const createStopId = (placeId, which = null) => compact([placeId, which]).join('-');
+export const createStopId = (place, which = null) => compact([idOrIdFromObj(place), which]).join('-');
 
 /**
  * @typedef {Object} Location
@@ -43,7 +44,7 @@ export const createStopId = (placeId, which = null) => compact([placeId, which])
 
 /***
  * Creates a GTFS compatible stop definition
- * @param {Place} place An object representing a city or town
+ * @param {Place} place Place object representing a city or town
  * @param {string} place.id The 3 letter code of the city or town main station, based on train station codes
  * @param {string} place.label Label describing the place
  * @param {string} which Label representing the specific stop, such as 'Amtrak', 'Central', 'Arena', or 'Airport'.
@@ -56,12 +57,12 @@ export const createStopId = (placeId, which = null) => compact([placeId, which])
  * @returns {Map} A Stop object
  */
 export const createStop = (place, which, location, options = {}) => {
-    const id = createStopId(place.id, which);
+    const id = createStopId(place, which);
     return {
         id: id,
         place: place,
         which: which,
-        stopName: options.stopName || `${place} ${which} ${options.stopType || 'Station'}`,
+        stopName: options.stopName || `${place.label} ${which} ${options.stopType || 'Station'}`,
         location
     };
 };
@@ -77,18 +78,18 @@ export const createStop = (place, which, location, options = {}) => {
 
 /***
  * Forms a unique Route id based on the place id and which station/stop of that place it is.
- * @param {Place} from The start/end Place
- * @param {Place} to The other start/end Place
+ * @param {Place|id} from The start/end Place or its id
+ * @param {Place|id} to The other start/end Place or its id
  * @param {string} [via] Optional pass through Region to distinguish the route
  * @returns {string} A Route id
  */
 export const createRouteId = (from, to, via) => {
     return compact([
         [
-            from.place.id,
-            to.place.id
+            idOrIdFromObj(from),
+            idOrIdFromObj(to)
         ].join('-'),
-        orEmpty(via)
+        via
     ]).join(' via ');
 };
 
@@ -106,7 +107,7 @@ export const createRouteId = (from, to, via) => {
  * @param {string} specs.routeType - GTFS extended RouteType (see routes.json)
  * @returns {Route} An object representing the Route
  */
-export const createRoute = (from, to, specs) => {
+export const createRoute = (from, to, specs={}) => {
     // The id is from the place ids with an optional via
     // (e.g. 'SFC-REN via Altamont')
     const id = createRouteId(from, to, specs.via);
@@ -115,10 +116,10 @@ export const createRoute = (from, to, specs) => {
     // (e.g. 'San Francisco/Reno via Altamont
     const routeLongName = compact([
         [from.label, to.label].join('/'),
-        orEmpty(specs.via)]).join(' via ');
+        specs.via]).join(' via ');
     // Made from the route type and id
     // (e.g. 'IRRS SFC-REN via Altamont' for inter regional rail service between SFC and RENO via Altamont
-    const routeShortName = compact([id, orEmpty(specs.via)]).join(' via ');
+    const routeShortName = compact([id, specs.via]).join(' via ');
     return {
         id: id,
         places: {from, to},
@@ -155,15 +156,15 @@ export const createService = (startDate, endDate, days = ['everyday'], seasons =
 
 /***
  * Creates a Trip id
- * @param {Route} route The Route of the Trip
+ * @param {Route|String} route The Route or Route id of the Trip
  * @param {int} directionId The direction id for the Trip (from -> to vs to -> from)
- * @param {Service} service The Service of the Trip
+ * @param {Service|String} service The Service or Service id of the Trip
  */
 export const createTripId = (route, directionId, service ) => {
     return [
-        route.id,
+        idOrIdFromObj(route),
         directionId,
-        service.id
+        idOrIdFromObj(service)
     ].join('-');
 };
 
@@ -201,7 +202,7 @@ export const createTripId = (route, directionId, service ) => {
  * @returns {{id, route: *, service: *, directionId: *, tripHeadsign}}
  */
 const createTrip = (route, from, to, directionId, service) => {
-    const id = createTripId(route, from.place, to.place);
+    const id = createTripId(route, directionId, service);
 
     return {
         id: id,

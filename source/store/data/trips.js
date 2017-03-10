@@ -24,6 +24,7 @@ import {DEFAULT_SERVICE} from './services'
 const resolveStop = stopResolver(stops);
 const resolveRoute = routeResolver(routes);
 
+
 /***
  * Creates a TripPair and then augments each trip with the StopTimes
  */
