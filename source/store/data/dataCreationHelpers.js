@@ -9,13 +9,14 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import {compact, orEmpty, idOrIdFromObj} from 'helpers/functions';
+import {compact, orEmpty, idOrIdFromObj, fromImmutable} from 'helpers/functions';
 
 // Direction ids for typical Trip pairs
-export const FROM_TO_DIRECTION = '0';
-export const TO_FROM_DIRECTION = '1';
+export const FROM_TO_DIRECTION = {id: '0', resolveToStop: route => route.places.to};
+export const TO_FROM_DIRECTION = {id: '1', resolveToStop: route => route.places.from};
 
-const tripHeadSign = ( to, via ) => compact([to.label, via]).join(' via ');
+const tripHeadSign = ( to, via ) =>
+    compact([to.label, via]).join(' via ');
 
 /***
  * Forms a unique stop id based on the place id and which station/stop of that place it is
@@ -157,13 +158,13 @@ export const createService = (startDate, endDate, days = ['everyday'], seasons =
 /***
  * Creates a Trip id
  * @param {Route|String} route The Route or Route id of the Trip
- * @param {int} directionId The direction id for the Trip (from -> to vs to -> from)
+ * @param {Direction} direction Direction or Direction id for the Trip (from -> to vs to -> from)
  * @param {Service|String} service The Service or Service id of the Trip
  */
-export const createTripId = (route, directionId, service ) => {
+export const createTripId = (route, direction, service ) => {
     return [
         idOrIdFromObj(route),
-        directionId,
+        idOrIdFromObj(direction),
         idOrIdFromObj(service)
     ].join('-');
 };
@@ -175,7 +176,7 @@ export const createTripId = (route, directionId, service ) => {
  * @property {Place} from.place The Place of the Stop, used for the Route id
  * @property {Stop} to The to Stop
  * @property {Place} to.place The Place of the Stop, used for the Route id
- * @property {number} directionId The directionId of the Trip
+ * @property {Direction} Direction or Direction id of the Trip
  * @property {Service} service The Service of the Trip
  */
 
@@ -186,30 +187,38 @@ export const createTripId = (route, directionId, service ) => {
  * @property {Place} from.place The Place of the Stop, used for the Route id
  * @property {Stop} to The to Stop
  * @property {Place} to.place The Place of the Stop, used for the Route id
- * @property {number} directionId The directionId of the Trip
+ * @property {Trip} directionId The Direction or Direction id of the Trip
  * @property {Service} service The Service of the Trip
  * @property {[StopTime]} StopTimes for the Trip
  */
 
+/**
+ * @callback resolveToStop
+ * @param {Route} Route to resolve a Stop from
+ * @returns {Stop} The to Stop of the Trip
+ */
+
+/**
+ * @typedef {Object} Direction
+ * @property {Number} id The Direction id
+ * @property {resolveToStop} resolve Resolve the Route to the to Stop of the Trip
+ */
+
 /***
  * @property {Route} route The Route of the Trip
- * @property {Stop} from The from Stop
- * @property {Place} from.place The Place of the Stop, used for the Route id
- * @property {Stop} to The to Stop
- * @property {Place} to.place The Place of the Stop, used for the Route id
- * @property {number} directionId The directionId of the Trip
+ * @property {Direction} The Direction of the Trip
  * @property {Service} service The Service of the Trip
  * @returns {{id, route: *, service: *, directionId: *, tripHeadsign}}
  */
-const createTrip = (route, from, to, directionId, service) => {
-    const id = createTripId(route, directionId, service);
+export const createTrip = (route, direction, service) => {
+    const id = createTripId(route, direction, service);
 
     return {
         id: id,
         route: route,
         service: service,
-        directionId: directionId,
-        tripHeadsign: tripHeadSign(to, route.via)
+        direction: direction,
+        tripHeadsign: tripHeadSign(direction.resolveToStop(route), route.via)
     }
 };
 
@@ -236,14 +245,15 @@ const createTrip = (route, from, to, directionId, service) => {
  */
 export const createTripWithStopTimesPair = (route, service, stopTimeCallback) =>
     [
-        createTrip(route, route.stops.from, route.stops.to, FROM_TO_DIRECTION, service),
-        createTrip(route, route.stops.to, route.stops.from, TO_FROM_DIRECTION, service)
+        createTrip(route, FROM_TO_DIRECTION, service),
+        createTrip(route, TO_FROM_DIRECTION, service)
     ].map(trip => Object.assign(trip, {stopTimes: stopTimeCallback(trip)}));
 
 /**
  * @typedef {Object} StopTime
  * @property {string} tripId The id of the Trip
  * @property {string} stopSequence The stop number in sequence (e.g. 1 is the first stop, 2 the second stop)
+ * @property {Stop} stop The Stop
  * @property {string} arrivalTime The arrival time in format 23:59:59
  * @property {string} departureTime The departure time in format 23:59:59
  */
@@ -275,7 +285,7 @@ export const createStopTime = (trip, stopSequence, stop, arrivalTime, departureT
  * @param stops
  */
 export const orderStops = (trip, stops) => {
-    switch (trip.directionId) {
+    switch (trip.direction) {
         case FROM_TO_DIRECTION:
             return stops
         case TO_FROM_DIRECTION:
@@ -302,6 +312,7 @@ export const orderStops = (trip, stops) => {
  */
 export const stopTimeGenerator = function* (trip, stops, startTime, endTime, dwellTime) {
     const date = new Date();
+    stops = fromImmutable(stops);
 
     const parseTimeToGenericDate = (time, customDwellTime = dwellTime) => {
         const timeSegments = time.split(':').map(t => parseInt(t));
@@ -336,7 +347,6 @@ export const stopTimeGenerator = function* (trip, stops, startTime, endTime, dwe
      * Given the previous StopTime, use its departureTime, the endTime, and the
      * percent distance of Stop between the previous Stop and the final Stop
      *
-     * @param {Location} previousStopTime.stop.location
      * @param {Stop} stop
      * @param {string} stop.arrivalTime Optional augmentation to Stop which is
      * @param {Location} stop.location Used with previousStopTime.stop.location and endTime
@@ -344,6 +354,8 @@ export const stopTimeGenerator = function* (trip, stops, startTime, endTime, dwe
      * @param {StopTime|null} [previousStopTime] The previous StopTime. If there is none then
      * then we return the startTime, meaning it's the start of the line
      * returned immediately if it exists
+     * @param {Stop} previousStopTime.stop
+     * @param {Location} previousStopTime.stop.location
      * @returns {string} The calculated arrival time or that given in stop.arrivalTime
      */
     const calculateArrivalTime = (stop, previousStopTime = null) => {
@@ -351,11 +363,13 @@ export const stopTimeGenerator = function* (trip, stops, startTime, endTime, dwe
             return stop.arrivalTime;
         }
         const remainingStops = stops.slice(stops.indexOf(stop));
-        const distanceFromPreviousStop = calculateDistance(previousStopTime.stop.location, stop.location);
-        // Starting with the disntance from previousStop, calcuate the total distance to the end
+        const distanceFromPreviousStop = previousStopTime ?
+            calculateDistance(previousStopTime.stop.location, stop.location):
+            0;
+        // Starting with the distance from previousStop, calculate the total distance to the end
         const totalRemainingDistance = remainingStops.reduce((distance, currentStop) => {
             return distance + calculateDistance(
-                stops[stops.indexOf(currentStop) - 1].location,
+                stops[stops.indexOf(currentStop)].location,
                 currentStop.location)
         }, distanceFromPreviousStop);
         // Calculate the fraction of distance to stop over the totalRemainingDistance
@@ -392,5 +406,11 @@ export const stopTimeGenerator = function* (trip, stops, startTime, endTime, dwe
             arrivalTime,
             calculateDepartureTime(arrivalTime, stop.dwellTime || dwellTime)
         );
-    });
+    }, null);
 };
+
+/***
+ * Inovkes the stopTimeGenerator to get all Stops
+ * @param args See stopTimeGenerator
+ */
+export const createStopTimes = (...args) => Array.from(stopTimeGenerator(...args));

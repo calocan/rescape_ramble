@@ -35,6 +35,19 @@ export const compact = R.reject(R.isNil)
 export const toImmutable = obj => Iterable.isIterable(obj) ? obj : fromJS(obj);
 
 /***
+ * Convert the Immutable to plain JS if it is not
+ * @param obj
+ * fromImmutable:: Immutable b = b -> a
+ *              :: a-> a
+ */
+export const fromImmutable = obj =>
+    R.ifElse(
+        obj => Iterable.isIterable(obj),
+        obj => obj.toJS(),
+        R.when(obj => Array.isArray(obj), R.map(fromImmutable))
+    )(obj);
+
+/***
  * Creates a partial mapping function that expects an iterable and maps each item of the iterable to the given property
  * @param {String} prop The prop of each object to map
  * @param {[Object]} items The objects to map

@@ -24,6 +24,11 @@ describe('helperFunctions', () => {
         expect(ImMap.isMap(Rx.toImmutable({foo: 1}))).
         toBeTruthy();
     });
+    test('Should be a plain old javascript object', () => {
+        expect(!ImMap.isMap(Rx.fromImmutable(Rx.toImmutable({foo: 1})))).
+        toBeTruthy();
+        expect(Rx.fromImmutable([Rx.toImmutable({foo: 1})])).toMatchSnapshot();
+    });
     test('Should map bars', () => {
         expect(Rx.mapProp('bar')([{bar: 1}, {bar: 2}])).
         toEqual([1, 2]);
