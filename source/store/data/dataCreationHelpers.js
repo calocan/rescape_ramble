@@ -9,7 +9,11 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import {compact, orEmpty, idOrIdFromObj, fromImmutable} from 'helpers/functions';
+import R from 'ramda';
+import moment from 'moment'
+import {compact, idOrIdFromObj, fromImmutable, reduceWithNext} from 'helpers/functions';
+import {parseTimeToGenericDate, toTimeString} from "helpers/timeHelpers";
+import {calculateDistance} from "helpers/geospatialHelpers";
 
 // Direction ids for typical Trip pairs
 export const FROM_TO_DIRECTION = {id: '0', resolveToStop: route => route.places.to};
@@ -254,8 +258,8 @@ export const createTripWithStopTimesPair = (route, service, stopTimeCallback) =>
  * @property {string} tripId The id of the Trip
  * @property {string} stopSequence The stop number in sequence (e.g. 1 is the first stop, 2 the second stop)
  * @property {Stop} stop The Stop
- * @property {string} arrivalTime The arrival time in format 23:59:59
- * @property {string} departureTime The departure time in format 23:59:59
+ * @property {string} arrivalTime The arrival time in format 23:59[:59]
+ * @property {string} departureTime The departure time in format 23:59[:59]
  */
 
 /***
@@ -311,74 +315,42 @@ export const orderStops = (trip, stops) => {
  * @param {number} dwellTime Number of seconds of dwell time
  */
 export const stopTimeGenerator = function* (trip, stops, startTime, endTime, dwellTime) {
-    const date = new Date();
     stops = fromImmutable(stops);
-
-    const parseTimeToGenericDate = (time, customDwellTime = dwellTime) => {
-        const timeSegments = time.split(':').map(t => parseInt(t));
-        return new Date(2000, 1, 1, ...timeSegments.slice(2), timeSegments[3] + customDwellTime);
-    };
-    const toTimeString = (departureDate, arrivalDate) => {
-        return [
-            (departureDate.getDate() - arrivalDate.getDate()) * 24 + date.getHours(),
-            date.getMinutes(),
-            date.getSeconds()
-        ].join(':');
-    };
-
-    // http://stackoverflow.com/questions/27928/calculate-distance-between-two-latitude-longitude-points-haversine-formula
-    /***
-     * Returns kilometers between location
-     * @param fromLocation
-     * @param toLocation
-     * @returns {number}
-     */
-    function calculateDistance(fromLocation, toLocation) {
-        const pi = Math.PI / 180,
-            cos = Math.cos,
-            a = 0.5 - cos((toLocation.lat - fromLocation.lat) * pi) / 2 +
-            cos(fromLocation.lat * pi) * cos(toLocation.lat * pi) *
-            (1 - cos((toLocation.lon - fromLocation.lon) * pi)) / 2;
-
-        return 12742 * Math.asin(Math.sqrt(a)); // 2 * R; Earth Radius = 6371 km
-    }
+    // The duration of the endTime
+    const endDuration = moment.duration(endTime)
+    // The total distance between stops
+    const totalDistance = reduceWithNext(
+        (total, current, next) => total + calculateDistance(current.location, next.location),
+        stops,
+        0
+    );
 
     /***
      * Given the previous StopTime, use its departureTime, the endTime, and the
      * percent distance of Stop between the previous Stop and the final Stop
      *
      * @param {Stop} stop
-     * @param {string} stop.arrivalTime Optional augmentation to Stop which is
+     * @param {string} [stop.arrivalTime] Optional augmentation to Stop to give an explicit arrival time
+     * Otherwise the arrivalTime is calculated
      * @param {Location} stop.location Used with previousStopTime.stop.location and endTime
      * to calculate what percentage to the end this location is
-     * @param {StopTime|null} [previousStopTime] The previous StopTime. If there is none then
-     * then we return the startTime, meaning it's the start of the line
-     * returned immediately if it exists
-     * @param {Stop} previousStopTime.stop
+     * @param {StopTime} previousStopTime The previous StopTime.
+     * @param {StopTime} previousStopTime.stop
      * @param {Location} previousStopTime.stop.location
+     * @param {string} previousStopTime.departureTime The timeString of the previous departure
+     * @param {Number} distanceFromPreviousStop The distance in km from the previous stop or 0 at the start
      * @returns {string} The calculated arrival time or that given in stop.arrivalTime
      */
-    const calculateArrivalTime = (stop, previousStopTime = null) => {
+    const calculateArrivalTime = (stop, previousStopTime, distanceFromPreviousStop) => {
         if (stop.arrivalTime) {
             return stop.arrivalTime;
         }
-        const remainingStops = stops.slice(stops.indexOf(stop));
-        const distanceFromPreviousStop = previousStopTime ?
-            calculateDistance(previousStopTime.stop.location, stop.location):
-            0;
-        // Starting with the distance from previousStop, calculate the total distance to the end
-        const totalRemainingDistance = remainingStops.reduce((distance, currentStop) => {
-            return distance + calculateDistance(
-                stops[stops.indexOf(currentStop)].location,
-                currentStop.location)
-        }, distanceFromPreviousStop);
+
         // Calculate the fraction of distance to stop over the totalRemainingDistance
-        const distanceFraction = distanceFromPreviousStop / totalRemainingDistance;
-        const totalRemainingTime =
-            parseTimeToGenericDate(endTime).getTime() -
-            parseTimeToGenericDate(previousStopTime).getTime();
+        const distanceFraction = distanceFromPreviousStop / totalDistance;
+        const remainingDuration = endDuration.clone().subtract(moment.duration(previousStopTime.departureTime));
         // Take the fraction of total remaining time to calculate the arrivalTime
-        return toTimeString(new Date(totalRemainingTime * distanceFraction))
+        return toTimeString(remainingDuration.asMilliseconds() * distanceFraction);
     };
 
     /***
@@ -395,18 +367,30 @@ export const stopTimeGenerator = function* (trip, stops, startTime, endTime, dwe
         return toTimeString(departureDate, arrivalDate)
     }
 
-    yield* stops.reduce((previousStopTime, stop, index) => {
+
+    // Reduce the stops in order to combine the previousStopTime with the current Stop.
+    // In the initial case the previousStopTime will be the first Stop, so it must be augmented
+    // with the startTime
+    yield* [
+        {stop: R.head(stops), totalDistance: 0, departureTime: startTime}, ...R.tail(stops)
+    ].reduce((previousStopTime, stop, index) => {
+
+        const previousStop = previousStopTime.stop;
+        const distanceFromPreviousStop = calculateDistance(previousStop.location, stop.location);
+
         // Calculate the arrivalTime of the next stop based on distance or stop.arrivalTime.
-        // If there is no previousStopTime it returns startTime
-        const arrivalTime = calculateArrivalTime(stop, previousStopTime);
-        return createStopTime(
-            trip,
-            index + 1,
-            stop,
-            arrivalTime,
-            calculateDepartureTime(arrivalTime, stop.dwellTime || dwellTime)
+        const arrivalTime = calculateArrivalTime(stop, previousStopTime, distanceFromPreviousStop);
+        return Object.assign(
+            createStopTime(
+                trip,
+                index + 1,
+                stop,
+                arrivalTime,
+                calculateDepartureTime(arrivalTime, stop.dwellTime || dwellTime)
+            ),
+            { totalDistance: previousStopTime.totalDistance + distanceFromPreviousStop }
         );
-    }, null);
+    });
 };
 
 /***

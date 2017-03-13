@@ -91,3 +91,26 @@ export const idOrIdFromObj = R.when(
     objOrId => (typeof objOrId === 'object') && objOrId != null,
     R.prop('id')
 );
+
+
+
+/***
+ * Reduces with the current and next value of a list. The reducer is called n-1 times for a list of n length
+ * @param {callWithNext} fn reducer
+ * @param {Object} head first item of the list
+ * @param {Object} next remaining items
+ * @param {Object} previous initial reduction value
+ * @return {Object} the reduction
+ */
+export const reduceWithNext = (fn, [head, next, ...tail], previous) =>
+    next == undefined ?
+        previous :
+        reduceWithNext(fn, [next, ...tail], fn(previous, head, next));
+
+/**
+ * @callback callWithNext
+ * @param {Object} total the reduction
+ * @param {Object} current the current item
+ * @param {Object} next the next item
+ * @returns {Object} the next reduction
+ */

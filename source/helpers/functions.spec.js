@@ -41,8 +41,20 @@ describe('helperFunctions', () => {
         expect(Rx.toImmutableKeyedByProp('bar')([{bar: 1}, {bar: 2}]).toJS()).
         toEqual(ImMap([[1, {bar: 1}], [2, {bar: 2}]]).toJS())
     });
-    test('Should return an id from an object or the identify from a value', () =>{
+    test('Should return an id from an object or the identify from a value', () => {
         expect(Rx.idOrIdFromObj('foo')).toEqual('foo');
         expect(Rx.idOrIdFromObj({id: 'foo'})).toEqual('foo');
+    });
+    test('Should sum up distance between', () => {
+        expect(Rx.reduceWithNext(
+            (previous, current, next) => previous + (next - current),
+            [1, 4, 9, 16],
+            0)).toEqual((4 - 1) + (9 - 4) + (16 - 9));
+    });
+    test('Should concat with sums of distance between', () => {
+        expect(Rx.reduceWithNext(
+            (previous, current, next) => previous.concat([next - current]),
+            [1, 4, 9, 16],
+            [])).toEqual([4 - 1, 9 - 4, 16 - 9]);
     });
 });
