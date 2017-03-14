@@ -8,3 +8,18 @@
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+import {toTimeString} from './timeHelpers';
+import moment from 'moment'
+
+describe("Time helper functions", () =>{
+    test("toTimeString rounds durations to a mm:hh:ss string", () => {
+        expect(toTimeString(moment.duration("22:22:22.222"))).
+        toEqual("22:22:22");
+        expect(toTimeString(moment.duration("22:22:22.522"))).
+        toEqual("22:22:23");
+    })
+    test("toTimeString handles greater than 24 hours", () => {
+        expect(toTimeString(moment.duration("55:22:22.222"))).
+        toEqual("55:22:22");
+    })
+})

@@ -9,6 +9,7 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 import moment from 'moment'
+require("moment-duration-format");
 
 /***
  * Converts the time string in the format HH:MM:[SS] into a Date
@@ -21,11 +22,12 @@ export const parseTimeToGenericDate = (timeString, dwellTime=0) => {
     return moment.utc(2000, 0, 1, ...timeSegments.slice(2)).add((timeSegments[3] || 0) + dwellTime, 's');
 };
 
-export const toTimeString = (departureDate, arrivalDate) => {
-    const date = new Date(2000, 1, 1);
-    return [
-        (departureDate.getDate() - arrivalDate.getDate()) * 24 + date.getHours(),
-        date.getMinutes(),
-        date.getSeconds()
-    ].join(':');
-};
+/***
+ * Converts the Moment Duration to a time string, rounding to the nearest second
+ * @param {Duration} duration
+ * @return {string} HH:MM:SS where HH can be over 23 if the duration spans more than a day
+ */
+export const toTimeString = (duration) =>
+    (duration.milliseconds() >= 500 ?
+        moment.duration(duration).add(1, 's') :
+        duration).format("hh:mm:ss", {trim: false});

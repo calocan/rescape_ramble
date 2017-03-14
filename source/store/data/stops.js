@@ -34,7 +34,7 @@ export default [
         { stopType: stopTypes.TERMINAL }
     ),
     createStop(places.STOCKTON, AMTRAK,
-        { lon: -122.277158, lat: 37.806624 }
+        { lon: -121.285602, lat: 37.945332 }
     ),
     createStop(places.SUISON_FAIRFIELD, AMTRAK,
         { lon: -122.041192, lat: 38.243449 },

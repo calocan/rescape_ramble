@@ -79,7 +79,7 @@ describe('Trips with Stops', () => {
             { stopType: stopTypes.TERMINAL }
         ),
         helper.createStop(places.STOCKTON, w.AMTRAK,
-            { lon: -122.277158, lat: 37.806624 }
+            { lon: -121.285602, lat: 37.945332 }
         ),
         helper.createStop(places.TRUCKEE, w.AMTRAK,
             { lon: -120.185620, lat: 39.327493 },

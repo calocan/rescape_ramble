@@ -267,18 +267,20 @@ export const createTripWithStopTimesPair = (route, service, stopTimeCallback) =>
  * @param {Trip} trip The Trip
  * @param {number} stopSequence The stop number, 1 based
  * @param {Stop} stop The Stop
- * @param {string} arrivalTime The arrival time in format 23:59:59
- * @param {string} departureTime The departure time in format 23:59:59
+ * @param {string|null} [arrivalTime] The optional arrival time in format 23:59:59
+ * @param {string|null} [departureTime] The optional departure time in format 23:59:59
  * @returns {StopTime}
  */
-export const createStopTime = (trip, stopSequence, stop, arrivalTime, departureTime) => {
-    return {
-        trip,
-        stopSequence,
-        stop,
-        arrivalTime,
-        departureTime
-    };
+export const createStopTime = (trip, stopSequence, stop, arrivalTime = null, departureTime = null) => {
+    return Object.assign(
+        {
+            trip,
+            stopSequence,
+            stop,
+        },
+        arrivalTime ? {arrivalTime} : null,
+        departureTime ? {departureTime} : null
+    )
 };
 
 /***
@@ -338,33 +340,37 @@ export const stopTimeGenerator = function* (trip, stops, startTime, endTime, dwe
      * @param {StopTime} previousStopTime.stop
      * @param {Location} previousStopTime.stop.location
      * @param {string} previousStopTime.departureTime The timeString of the previous departure
+     * @param {Number} previousStopTime.totalDistance The distance in km since the start of the trip
      * @param {Number} distanceFromPreviousStop The distance in km from the previous stop or 0 at the start
-     * @returns {string} The calculated arrival time or that given in stop.arrivalTime
+     * @returns {Duration} The calculated arrival Duration relative to 00:00:00
      */
-    const calculateArrivalTime = (stop, previousStopTime, distanceFromPreviousStop) => {
+    const calculateArrivalDuration = (stop, previousStopTime, distanceFromPreviousStop) => {
         if (stop.arrivalTime) {
             return stop.arrivalTime;
         }
 
-        // Calculate the fraction of distance to stop over the totalRemainingDistance
-        const distanceFraction = distanceFromPreviousStop / totalDistance;
-        const remainingDuration = endDuration.clone().subtract(moment.duration(previousStopTime.departureTime));
-        // Take the fraction of total remaining time to calculate the arrivalTime
-        return toTimeString(remainingDuration.asMilliseconds() * distanceFraction);
+        const totalRemainingDistance = totalDistance - (previousStopTime.totalDistance + distanceFromPreviousStop);
+        // If there is no remaining distance we are at the last stop
+        if (totalRemainingDistance === 0)
+            return moment.duration(endDuration);
+
+        // Calculate the fraction of distance to stop over the total remainingDistance
+        const distanceFraction = distanceFromPreviousStop / totalRemainingDistance
+        const remainingDuration = moment.duration(endDuration).subtract(moment.duration(previousStopTime.departureTime));
+        // Calculate the elapsed time as a percentage of the total distance and add it to the last departure time
+        return moment.duration(previousStopTime.departureTime).add(
+            moment.duration(remainingDuration.asMilliseconds() * distanceFraction)
+        );
     };
 
     /***
      * Calculates the departure time based on the arrivalTime and dwellTime
-     * @param {string} arrivalTime Stop arrival time in format 23:59:59
-     * @param {number} dwellTime Number of seconds of dwellTime
-     * @returns {string}
+     * @param {Duration} arrivalDuration Duration of the arrival time (relative to 00:00:00)
+     * @param {number} [dwellTime] Number of seconds of dwellTime. Defaults to dwellTime
+     * @returns {Duration} The Duration of the departure time (relatvie to 00:00:00)
      */
-    const calculateDepartureTime = (arrivalTime, customDwellTime = dwellTime) => {
-        const arrivalDate = parseTimeToGenericDate(arrivalTime);
-        const departureDate = parseTimeToGenericDate(arrivalTime, customDwellTime);
-        // Returns the departureDate time, possibly adding multiples of 24 to the hours if the
-        // departureDate is the next day (hopefully never more than that!)
-        return toTimeString(departureDate, arrivalDate)
+    const calculateDepartureDuration = (arrivalDuration, customDwellTime = dwellTime) => {
+        return moment.duration(arrivalDuration).add(customDwellTime, 's');
     }
 
 
@@ -372,29 +378,32 @@ export const stopTimeGenerator = function* (trip, stops, startTime, endTime, dwe
     // In the initial case the previousStopTime will be the first Stop, so it must be augmented
     // with the startTime
     yield* [
-        {stop: R.head(stops), totalDistance: 0, departureTime: startTime}, ...R.tail(stops)
-    ].reduce((previousStopTime, stop, index) => {
+        [{stop: R.head(stops), totalDistance: 0, departureTime: startTime}], ...R.tail(stops)
+    ].reduce((previousStopTimes, stop, index) => {
 
+        const previousStopTime = R.last(previousStopTimes);
         const previousStop = previousStopTime.stop;
         const distanceFromPreviousStop = calculateDistance(previousStop.location, stop.location);
 
         // Calculate the arrivalTime of the next stop based on distance or stop.arrivalTime.
-        const arrivalTime = calculateArrivalTime(stop, previousStopTime, distanceFromPreviousStop);
-        return Object.assign(
+        const arrivalDuration = calculateArrivalDuration(stop, previousStopTime, distanceFromPreviousStop);
+        return previousStopTimes.concat(Object.assign(
             createStopTime(
                 trip,
                 index + 1,
                 stop,
-                arrivalTime,
-                calculateDepartureTime(arrivalTime, stop.dwellTime || dwellTime)
+                toTimeString(arrivalDuration),
+                toTimeString(arrivalDuration) === toTimeString(endDuration) ?
+                    null :
+                    toTimeString(calculateDepartureDuration(arrivalDuration, stop.dwellTime || dwellTime))
             ),
             { totalDistance: previousStopTime.totalDistance + distanceFromPreviousStop }
-        );
+        ));
     });
 };
 
 /***
- * Inovkes the stopTimeGenerator to get all Stops
+ * Invokes the stopTimeGenerator to get all Stops
  * @param args See stopTimeGenerator
  */
 export const createStopTimes = (...args) => Array.from(stopTimeGenerator(...args));
