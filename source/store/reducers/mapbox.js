@@ -36,8 +36,9 @@ const mapboxReducer = (
     }
 };
 
-export default enhanceMapReducer(mapboxReducer,
-    {
+export default enhanceMapReducer(mapboxReducer, {
+    viewPort: {
+        // Defaults
         latitude: center.latitude,
         longitude: center.longitude,
         zoom: zoom,
@@ -45,8 +46,7 @@ export default enhanceMapReducer(mapboxReducer,
         pitch: pitch,
         startDragLngLat: null,
         isDragging: false,
-
         style: style,
-        mapboxApiAccessToken: mapboxApiAccessToken
-    }
-)
+    },
+    mapboxApiAccessToken: mapboxApiAccessToken
+});

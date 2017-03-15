@@ -1,5 +1,5 @@
-{
-  "1487636046449": {
+[
+  {
     "searchTerm": "Children's Fairyland",
     "resolvedAddress": "699 Bellevue Ave, Oakland, CA 94610",
     "label": "Near Home",
@@ -8,7 +8,7 @@
       "lat": 37.808706
     }
   },
-  "1487636978561": {
+  {
     "searchTerm": "Northstar Resort",
     "resolvedAddress": "Northstar California Resort, Northstar Drive, Truckee, CA",
     "label": "Skiing",
@@ -17,4 +17,4 @@
       "lat": 39.274839
     }
   }
-}
+]

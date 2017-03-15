@@ -119,3 +119,15 @@ export const reduceWithNext = (fn, [head, next, ...tail], previous) =>
  * @param {Object} next the next item
  * @returns {Object} the next reduction
  */
+
+/***
+ * Deep merge values that are objects but not arrays
+ * based on https://github.com/ramda/ramda/pull/1088
+ * @type {Immutable.Map<string, V>|__Cursor.Cursor|List<T>|Map<K, V>|*}
+ * mergeDeep:: (<k, v>, <k, v>) -> <k, v>
+ */
+export const mergeDeep = R.mergeWith((l, r) =>
+    (l.concat || r.concat) || !(R.is(Object, l) && R.is(Object, r)) ?
+        r:
+        mergeDeep(l, r) // tail recursive
+)

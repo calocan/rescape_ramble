@@ -4,9 +4,8 @@
     "1487635143780"
   ],
   "entries": {
-    "journeys": {
-      "1487635143780": {
-        "id": "1487635143780",
+    "journeys": [
+      {
         "label": "Trip from Oakland To Truckee via Stockton",
         "locations": {
           "localStart": "1487636046449",
@@ -19,8 +18,7 @@
         },
         "route": "1487637354681"
       },
-      "1487638899977": {
-        "id": "1487638899977",
+      {
         "label": "Trip from San Francisco to Los Angeles",
         "locations": {
           "stopStart": "1487638573082",
@@ -28,6 +26,6 @@
         },
         "route": "1487637354681"
       }
-    }
+    ]
   }
 }

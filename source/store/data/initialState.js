@@ -10,41 +10,45 @@
  */
 
 import {OrderedMap, fromJS} from 'immutable';
-import * as routeTypes from './default/routeTypes';
-import journeys from './california/journeys.json';
-import locations from './california/locations.json';
-import routes from './california/routes';
-import trips from './california/trips';
-import stops from './california/stops';
-import {DEFAULT_SERVICE, WEEKEND_SERVICE} from './default/services';
-import {toImmutableKeyedByProp} from 'helpers/functions';
-import config from 'config.json';
+import R from 'ramda';
+
+import {toImmutableKeyedByProp} from '../../helpers/functions';
 const toImmutableKeyedById = toImmutableKeyedByProp('id');
+export const toImmutableKeyedByGeneratedId = generator => R.pipe(
+    R.map(item => R.merge(item, {id: generator.next().value})), // Add a generated id
+    toImmutableKeyedByProp('id') // make the id the key
+);
 
-export default OrderedMap({
+export const createInitialState = (config) => OrderedMap({
 
-    // User journeys. not GTFS. This should always be seeded with an initial journey for demonstration purposes
-    journeys: fromJS(journeys),
-    // User locations, not GTSF. This should be seeded with whatever the journeys point to
-    locations: fromJS(locations),
+    settings: fromJS(config.settings),
 
-    // Defines service type. id is service_id in the GTFS specification
-    // days are separate fields marked with 1 or 0
-    calendar: toImmutableKeyedById({
-        daily: DEFAULT_SERVICE,
-        weekend: WEEKEND_SERVICE
+    travel: Map({
+        // User journeys. not GTFS. This should always be seeded with an initial journey for demonstration purposes
+        journeys: toImmutableKeyedByGeneratedId(config.travel.journeys),
+        // User locations, not GTSF. This should be seeded with whatever the journeys point to
+        locations: toImmutableKeyedByGeneratedId(config.travel.locations),
     }),
 
-    // Mode/vehicle/service type keyed by id
-    routeTypes: toImmutableKeyedById(routeTypes),
+    gtfs: {
+        // Defines service type. id is service_id in the GTFS specification
+        // days are separate fields marked with 1 or 0
+        calendar: toImmutableKeyedById({
+            daily: DEFAULT_SERVICE,
+            weekend: WEEKEND_SERVICE
+        }),
 
-    // Nondirectional transit routes keyed by id
-    routes: toImmutableKeyedById(routes),
+        // Mode/vehicle/service type keyed by id
+        routeTypes: toImmutableKeyedById(routeTypes),
 
-    // Directional trips keyed by id
-    trips: toImmutableKeyedById(trips),
+        // Nondirectional transit routes keyed by id
+        routes: toImmutableKeyedById(routes),
 
-    stops: toImmutableKeyedById(stops),
+        // Directional trips keyed by id
+        trips: toImmutableKeyedById(trips),
+
+        stops: toImmutableKeyedById(stops),
+    },
 
     mapBox: {
         viewport: {
@@ -57,4 +61,4 @@ export default OrderedMap({
             isDragging: false
         }
     }
-})
+});

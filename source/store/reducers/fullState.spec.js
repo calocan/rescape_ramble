@@ -12,13 +12,28 @@
 import configureMockStore from 'redux-mock-store'
 import thunk from 'redux-thunk'
 import {SET_STATE, FETCH_FULL_STATE_REQUEST, FETCH_FULL_STATE_SUCCESS, setState, fetchFullState} from './fullState'
-import fetchMock from 'fetch-mock'
 import nock from 'nock'
 
 const middlewares = [ thunk ]
 const mockStore = configureMockStore(middlewares)
 
-describe('async full state actions', () => {
+describe('full state actions', () => {
+
+    it('SET_STATE sets the full state', () => {
+        const state = {
+            settings: {
+                foo: 1
+            },
+            map: {
+                bar: 1
+            },
+        };
+        expect(setState(state)).toEqual({
+            type: SET_STATE,
+            state
+        });
+    });
+
     it('creates FETCH_FULL_STATE_SUCCESS when fetching full state has been done', () => {
 
         const fakeHost = 'http://cloudycloud.co'

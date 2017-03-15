@@ -57,4 +57,10 @@ describe('helperFunctions', () => {
             [1, 4, 9, 16],
             [])).toEqual([4 - 1, 9 - 4, 16 - 9]);
     });
+    test("Should deep merge objects", () => {
+        expect(Rx.mergeDeep(
+            {foo: 1, bar: {bizz: [2, 3], buzz: 7}},
+            {foo: 4, bar: {bizz: [5, 6]}}
+        )).toEqual({foo: 4, bar: {bizz: [5, 6], buzz: 7}});
+    })
 });
