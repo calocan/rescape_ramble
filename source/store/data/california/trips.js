@@ -15,11 +15,11 @@
 
 import stops, * as w from './stops'
 import * as routes from './routes';
-import {createTripWithStopTimesPair, orderStops, stopTimeGenerator} from './dataCreationHelpers';
-import {stopResolver, routeResolver} from './dataQueryHelpers';
+import {createTripWithStopTimesPair, orderStops, stopTimeGenerator} from '../dataCreationHelpers';
+import {stopResolver, routeResolver} from '../dataQueryHelpers';
 import * as places from './places'
 import * as regions from './regions'
-import {DEFAULT_SERVICE} from './services'
+import {DEFAULT_SERVICE} from '../default/services'
 
 const resolveStop = stopResolver(stops);
 const resolveRoute = routeResolver(routes);

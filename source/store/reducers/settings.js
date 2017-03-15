@@ -11,15 +11,14 @@
 
 import {Map} from 'immutable';
 import {SET_STATE} from './fullState'
-const SET_FOO = '/settings/SET_FOO';
-const actions = [SET_FOO]
+export const SET_FOO = '/settings/SET_FOO';
 
 /***
  * Reduces the state of the settings
  * @param state:
  *  {} (default): Use default value for each setting
  *  {aSetting: true|false, ...}: Pass desired value of setting
- * @param action: actions.set3d, actions.setRelatedImages, etc
+ * @param action: SET_STATE, SET_FOO, etc
  * @returns {*}
  */
 export default function(state = Map({}), action) {
@@ -34,6 +33,10 @@ export default function(state = Map({}), action) {
     else {
         return state
     }
+}
+
+export function setState(state) {
+    return { type: SET_STATE, state }
 }
 
 export function setFoo(value) {

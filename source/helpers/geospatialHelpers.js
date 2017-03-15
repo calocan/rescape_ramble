@@ -25,3 +25,4 @@ export function calculateDistance(fromLocation, toLocation) {
 
     return 12742 * Math.asin(Math.sqrt(a)); // 2 * R; Earth Radius = 6371 km
 }
+

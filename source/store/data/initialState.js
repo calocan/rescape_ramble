@@ -10,14 +10,13 @@
  */
 
 import {OrderedMap, fromJS} from 'immutable';
-import * as routeTypes from './routeTypes';
-import journeys from './journeys.json';
-import locations from './locations.json';
-import routes from './routes';
-import trips from './trips';
-import stops from './stops';
-import {DEFAULT_SERVICE, WEEKEND_SERVICE} from './services';
-import {createService} from './dataCreationHelpers';
+import * as routeTypes from './default/routeTypes';
+import journeys from './california/journeys.json';
+import locations from './california/locations.json';
+import routes from './california/routes';
+import trips from './california/trips';
+import stops from './california/stops';
+import {DEFAULT_SERVICE, WEEKEND_SERVICE} from './default/services';
 import {toImmutableKeyedByProp} from 'helpers/functions';
 import config from 'config.json';
 const toImmutableKeyedById = toImmutableKeyedByProp('id');

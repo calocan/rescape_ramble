@@ -9,15 +9,47 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-/***
- * Defines the all actions of the application used manipulate the DOM.
- */
+import configureMockStore from 'redux-mock-store'
+import thunk from 'redux-thunk'
+import {SET_STATE, FETCH_FULL_STATE_REQUEST, FETCH_FULL_STATE_SUCCESS, setState, fetchFullState} from './fullState'
+import fetchMock from 'fetch-mock'
+import nock from 'nock'
 
-/*
- * Action types. See action definition for explanation
-*/
+const middlewares = [ thunk ]
+const mockStore = configureMockStore(middlewares)
 
-// sets the full state to a stored value (e.g. from a cookie)
-// This action is delegated to other reducers
-test('', () => {});
+describe('async full state actions', () => {
+    it('creates FETCH_FULL_STATE_SUCCESS when fetching full state has been done', () => {
 
+        const fakeHost = 'http://cloudycloud.co'
+        // Mock fetch to always return the same thing
+        nock(fakeHost)
+            .get('/settings')
+            .reply(200, {
+                body: {
+                    settings: {
+                        foo: 1
+                    }
+                }
+            });
+
+        const expectedActions = [
+            { type: FETCH_FULL_STATE_REQUEST },
+            {
+                type: FETCH_FULL_STATE_SUCCESS,
+                body: {
+                    settings: {
+                        foo: 1
+                    }
+                }
+            }
+        ];
+        const store = mockStore({ settings: {} })
+
+        store.dispatch(fetchFullState(fakeHost))
+            .then(() => {
+                expect(store.getActions()).toEqual(expectedActions)
+            });
+        nock.cleanAll()
+    })
+});

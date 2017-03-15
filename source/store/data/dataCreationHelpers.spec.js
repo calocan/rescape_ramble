@@ -1,12 +1,12 @@
 
-import * as places from './places';
+import * as places from './california/places';
 import * as helper from './dataCreationHelpers';
-import * as w from './stops';
-import * as regions from './regions';
-import * as routeTypes from './routeTypes';
-import {DEFAULT_SERVICE} from './services'
+import * as w from './california/stops';
+import * as regions from './california/regions';
+import * as routeTypes from './default/routeTypes';
+import {DEFAULT_SERVICE} from './default/services'
 import * as query from './dataQueryHelpers';
-import * as stopTypes from './stopTypes'
+import * as stopTypes from './default/stopTypes'
 
 describe('Data Creation Helpers', () => {
     test('Creates a Stop id from a Place and Stop location', () => {
@@ -100,10 +100,10 @@ describe('Trips with Stops', () => {
 
     test('Creates Trips with Stop Times Pair', () => {
         expect(helper.createTripWithStopTimesPair(route, DEFAULT_SERVICE,
-            trip => {
+            oneTrip => {
                 return helper.createStopTimes(
-                    trip,
-                    helper.orderStops(trip, [
+                    oneTrip,
+                    helper.orderStops(oneTrip, [
                         resolveStop(places.SAN_FRANCISCO, w.TRANSBAY),
                         resolveStop(places.OAKLAND, w.CENTRAL),
                         resolveStop(places.STOCKTON, w.AMTRAK),

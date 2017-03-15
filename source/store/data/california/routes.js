@@ -9,15 +9,15 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import {createRoute} from './dataCreationHelpers'
-import {stopResolver} from './dataQueryHelpers'
+import {createRoute} from '../dataCreationHelpers'
+import {stopResolver} from '../dataQueryHelpers'
 import * as places from './places'
 import * as regions from './regions'
 import stops, * as w from './stops'
-import * as routeTypes from './routeTypes'
+import * as routeTypes from '../default/routeTypes'
 
 const resolveStop = stopResolver(stops);
-const routeType = routeTypes.INTER_REGIONAL_RAIL_SERVICE.id;
+const defaultRouteType = routeTypes.INTER_REGIONAL_RAIL_SERVICE.id;
 
 const sanFranciscoStop = resolveStop(places.SAN_FRANCISCO, w.TRANSBAY);
 const renoStop = resolveStop(places.RENO, w.AMTRAK);
@@ -28,18 +28,18 @@ export default [
         sanFranciscoStop,
         renoStop,
         {via: regions.NORTH_BAY,
-        routeType}
+        defaultRouteType}
     ),
     createRoute(
         sanFranciscoStop,
         renoStop,
         {via: regions.ALTAMONT,
-        routeType}
+        defaultRouteType}
     ),
     createRoute(
         sanFranciscoStop,
         losAngelesStop,
-        {routeType}
+        {defaultRouteType}
     ),
 ];
 

@@ -1,7 +1,7 @@
 
-import {createStop} from './dataCreationHelpers'
+import {createStop} from '../dataCreationHelpers'
 import * as places from './places'
-import * as stopTypes from './stopTypes'
+import * as stopTypes from '../default/stopTypes'
 
 export const UNION = 'Union';
 export const CENTRAL = 'Central';

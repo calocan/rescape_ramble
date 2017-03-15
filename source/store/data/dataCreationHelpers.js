@@ -12,8 +12,8 @@
 import R from 'ramda';
 import moment from 'moment'
 import {compact, idOrIdFromObj, fromImmutable, reduceWithNext} from 'helpers/functions';
-import {parseTimeToGenericDate, toTimeString} from "helpers/timeHelpers";
-import {calculateDistance} from "helpers/geospatialHelpers";
+import {toTimeString} from 'helpers/timeHelpers';
+import {calculateDistance} from 'helpers/geospatialHelpers';
 
 // Direction ids for typical Trip pairs
 export const FROM_TO_DIRECTION = {id: '0', resolveToStop: route => route.places.to};
@@ -112,7 +112,7 @@ export const createRouteId = (from, to, via) => {
  * @param {string} specs.routeType - GTFS extended RouteType (see routes.json)
  * @returns {Route} An object representing the Route
  */
-export const createRoute = (from, to, specs={}) => {
+export const createRoute = (from, to, specs = {}) => {
     // The id is from the place ids with an optional via
     // (e.g. 'SFC-REN via Altamont')
     const id = createRouteId(from, to, specs.via);
@@ -351,8 +351,9 @@ export const stopTimeGenerator = function* (trip, stops, startTime, endTime, dwe
 
         const totalRemainingDistance = totalDistance - (previousStopTime.totalDistance + distanceFromPreviousStop);
         // If there is no remaining distance we are at the last stop
-        if (totalRemainingDistance === 0)
+        if (totalRemainingDistance === 0) {
             return moment.duration(endDuration);
+        }
 
         // Calculate the fraction of distance to stop over the total remainingDistance
         const distanceFraction = distanceFromPreviousStop / totalRemainingDistance

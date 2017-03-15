@@ -8,7 +8,7 @@
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import {fromJS, Iterable, Map} from 'immutable';
+import {fromJS, Iterable} from 'immutable';
 import R from 'ramda';
 
 /***
@@ -35,6 +35,13 @@ export const compact = R.reject(R.isNil)
 export const toImmutable = obj => Iterable.isIterable(obj) ? obj : fromJS(obj);
 
 /***
+ * Converts an Immutable to javascript
+ * @param {Map} obj
+ * toJS:: Immutable a = a -> b
+ */
+export const toJS = obj => obj.toJS();
+
+/***
  * Convert the Immutable to plain JS if it is not
  * @param obj
  * fromImmutable:: Immutable b = b -> a
@@ -42,9 +49,9 @@ export const toImmutable = obj => Iterable.isIterable(obj) ? obj : fromJS(obj);
  */
 export const fromImmutable = obj =>
     R.ifElse(
-        obj => Iterable.isIterable(obj),
-        obj => obj.toJS(),
-        R.when(obj => Array.isArray(obj), R.map(fromImmutable))
+        Iterable.isIterable,
+        toJS,
+        R.when(Array.isArray, R.map(fromImmutable))
     )(obj);
 
 /***
@@ -88,11 +95,9 @@ export const toImmutableKeyedByProp = R.curry((prop, objs) =>
  *              :: {k, v} -> a
  */
 export const idOrIdFromObj = R.when(
-    objOrId => (typeof objOrId === 'object') && objOrId != null,
+    objOrId => (typeof objOrId === 'object') && objOrId !== null,
     R.prop('id')
 );
-
-
 
 /***
  * Reduces with the current and next value of a list. The reducer is called n-1 times for a list of n length
@@ -103,7 +108,7 @@ export const idOrIdFromObj = R.when(
  * @return {Object} the reduction
  */
 export const reduceWithNext = (fn, [head, next, ...tail], previous) =>
-    next == undefined ?
+    next === undefined ?
         previous :
         reduceWithNext(fn, [next, ...tail], fn(previous, head, next));
 
