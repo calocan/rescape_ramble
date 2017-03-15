@@ -64,12 +64,17 @@ export const mapProp = R.curry((prop, objs) => R.pipe(R.prop, R.map)(prop)(objs)
 
 /***
  * Creates a partial function that maps an array of objects to an object keyed by the given prop of the objects
- * of the array, valued by the item
+ * of the array, valued by the item. If the item is not an array, it leaves it alone, assuming it is already indexed
  * @param {String} prop The prop of each object to use as the key
  * @param {[Object]} items The items to map
  * mapPropValueAsIndex:: String -> [{k, v}] -> {j, {k, v}}
+ * mapPropValueAsIndex:: String -> {k, v} -> {k, v}
  */
-export const mapPropValueAsIndex = R.compose(R.indexBy, R.prop);
+export const mapPropValueAsIndex = R.curry((prop, obj) =>
+    R.when(
+        Array.isArray,
+        R.pipe(R.prop, R.indexBy)(prop)
+    )(obj));
 
 /***
  * Creates a partial function that expects a property of an object which in turn returns a function that

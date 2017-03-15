@@ -9,7 +9,10 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import {toImmutableKeyedByGeneratedId} from './initialState'
+import createInitialState, {toObjectKeyedByGeneratedId} from './initialState'
+import config from 'store/data/california/config'
+import R from 'ramda'
+import {mapPropValueAsIndex} from '../../helpers/functions';
 
 describe('Initial Satate', () => {
     test('toImmutableKeyedById adds an id and keys by it', () => {
@@ -27,7 +30,7 @@ describe('Initial Satate', () => {
                 yield (i++).toString();
             }
         };
-        expect(toImmutableKeyedByGeneratedId(numbers())(obj).toJS()).toEqual(
+        expect(toObjectKeyedByGeneratedId(numbers())(obj)).toEqual(
             {
                 '1': {
                     id: '1',
@@ -39,5 +42,10 @@ describe('Initial Satate', () => {
                 },
             }
         )
-    })
     });
+    test('matchs the current configuration', () => {
+        const toObjectKeyedById = mapPropValueAsIndex('id');
+        R.map(toObjectKeyedById, config.gtfs)
+        expect(createInitialState(config)).toMatchSnapshot();
+    })
+});

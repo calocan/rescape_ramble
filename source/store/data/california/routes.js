@@ -16,29 +16,24 @@ import * as regions from './regions'
 import stops, * as w from './stops'
 import * as routeTypes from '../default/routeTypes'
 
-const resolveStop = stopResolver(stops);
 const defaultRouteType = routeTypes.INTER_REGIONAL_RAIL_SERVICE.id;
-
-const sanFranciscoStop = resolveStop(places.SAN_FRANCISCO, w.TRANSBAY);
-const renoStop = resolveStop(places.RENO, w.AMTRAK);
-const losAngelesStop = resolveStop(places.LOS_ANGELES, w.UNION);
 
 export default [
     createRoute(
-        sanFranciscoStop,
-        renoStop,
+        places.SAN_FRANCISCO,
+        places.RENO,
         {via: regions.NORTH_BAY,
         defaultRouteType}
     ),
     createRoute(
-        sanFranciscoStop,
-        renoStop,
+        places.SAN_FRANCISCO,
+        places.RENO,
         {via: regions.ALTAMONT,
         defaultRouteType}
     ),
     createRoute(
-        sanFranciscoStop,
-        losAngelesStop,
+        places.SAN_FRANCISCO,
+        places.LOS_ANGELES,
         {defaultRouteType}
     ),
 ];

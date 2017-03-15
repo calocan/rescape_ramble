@@ -12,19 +12,23 @@
 import privateConfig from 'config.json'
 import * as routeTypes from './routeTypes';
 import {DEFAULT_SERVICE, WEEKEND_SERVICE} from './services';
-import {deepMerge} from 'helpers/functions'
+import {mergeDeep} from 'helpers/functions'
 
-export default deepMerge(privateConfig, {
-    viewport: {
-        style: "mapbox://styles/mapbox/streets-v8",
-        pitch: 40,
-        bearing: 0
-    },
+export default mergeDeep(privateConfig, {
     gtfs: {
-        calendar: {
-            daily: DEFAULT_SERVICE,
-            weekend: WEEKEND_SERVICE
-        },
+        calendar: [
+            DEFAULT_SERVICE,
+            WEEKEND_SERVICE
+        ],
         routeTypes: routeTypes
+    },
+    mapbox: {
+        viewport: {
+            style: "mapbox://styles/mapbox/streets-v8",
+            pitch: 40,
+            bearing: 0,
+            startDragLngLat: null,
+            isDragging: false
+        },
     }
 });

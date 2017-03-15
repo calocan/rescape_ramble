@@ -10,7 +10,7 @@
  */
 
 import {createRouteId, createStopId} from './dataCreationHelpers'
-import {toImmutableKeyedByProp} from 'helpers/functions'
+import {mapPropValueAsIndex} from 'helpers/functions'
 
 
 /**
@@ -26,8 +26,8 @@ import {toImmutableKeyedByProp} from 'helpers/functions'
  * @returns {stopResolverCallback} - A function that takes a place.id and which
  */
 export const stopResolver = stops => {
-    const stopLookup = toImmutableKeyedByProp('id')(stops);
-    return (place, which) => stopLookup.get(createStopId(place.id, which));
+    const stopLookup = mapPropValueAsIndex('id')(stops);
+    return (place, which) => stopLookup[createStopId(place.id, which)];
 };
 
 /**
@@ -43,8 +43,9 @@ export const stopResolver = stops => {
  * @returns {routeResolverCallback} - See callback
  */
 export const routeResolver = routes => {
-    const routeLookup = toImmutableKeyedByProp('id')(routes);
-    return (from, to, via = null) => routeLookup.get(createRouteId(from, to, via))
+    const routeLookup = mapPropValueAsIndex('id')(routes);
+    return (from, to, via = null) =>
+        routeLookup[createRouteId(from, to, via)];
 };
 
 

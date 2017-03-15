@@ -15,13 +15,13 @@ import locations from './locations.json';
 import routes from './routes';
 import trips from './trips';
 import stops from './stops';
-import {deepMerge} from './helpers/functions'
+import {mergeDeep} from 'helpers/functions'
 
 /***
  * California configuration
  * @type {*}
  */
-export const config = deepMerge(defaultConfig, {
+export default mergeDeep(defaultConfig, {
     gtfs: {
         routes,
         trips,
@@ -33,21 +33,21 @@ export const config = deepMerge(defaultConfig, {
         locations,
     },
 
-    viewport: {
-        bounds: {
-            minimum: {
-                latitude: 31,
-                longitude: -125
+    mapBox: {
+        viewport: {
+            bounds: {
+                minimum: {
+                    latitude: 31,
+                    longitude: -125
+                },
+                maximum: {
+                    latitude: 43,
+                    longitude: -113
+                }
             },
-            maximum: {
-                latitude: 43,
-                longitude: -113
-            }
-        },
-        center: {
             latitude: 37,
-            longitude: -119
-        },
-        zoom: 5
+            longitude: -119,
+            zoom: 5
+        }
     }
 });
