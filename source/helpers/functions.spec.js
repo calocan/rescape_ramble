@@ -20,6 +20,20 @@ describe('helperFunctions', () => {
         expect(Rx.compact([1, null, 2])).
         toEqual([1, 2]);
     });
+    test('Should filter out null and empty values', () => {
+        expect(Rx.compactEmpty(['', null, []])).
+        toEqual([]);
+    });
+    test('Should filter out null and empty values', () => {
+        expect(Rx.emptyToNull('')).
+        toEqual(null);
+    });
+    test('Should filter out null and empty values', () => {
+        expect(Rx.compactJoin('-', ['', 'a', null, 'b'])).
+        toEqual('a-b');
+        expect(Rx.compactJoin('-', ['', null])).
+        toEqual(null);
+    });
     test('Should be an Immutable Map', () => {
         expect(ImMap.isMap(Rx.toImmutable({foo: 1}))).
         toBeTruthy();
@@ -62,5 +76,8 @@ describe('helperFunctions', () => {
             {foo: 1, bar: {bizz: [2, 3], buzz: 7}},
             {foo: 4, bar: {bizz: [5, 6]}}
         )).toEqual({foo: 4, bar: {bizz: [5, 6], buzz: 7}});
+    })
+    test("Should capitalize first letter", () => {
+        expect(Rx.capitalize("good grief")).toEqual("Good grief")
     })
 });

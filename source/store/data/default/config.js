@@ -28,7 +28,11 @@ export default mergeDeep(privateConfig, {
             pitch: 40,
             bearing: 0,
             startDragLngLat: null,
-            isDragging: false
+            isDragging: false,
+
+            latitude: 0,
+            longitude: 0,
+            zoom: 1
         },
     }
 });

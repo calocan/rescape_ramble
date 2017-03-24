@@ -24,7 +24,33 @@ export const orEmpty = entity => entity || '';
  * @param [a] items Items that might have falsy values to remove
  * compact:: [a] -> [a]
  */
-export const compact = R.reject(R.isNil)
+export const compact = R.reject(R.isNil);
+
+/***
+ * Remove empty strings
+ * @param [a] items Items that might have empty or null strings to remove
+ * compactEmpty:: [a] -> [a]
+ */
+export const compactEmpty = R.reject(R.either(R.isNil, R.isEmpty));
+
+/**
+ * Convert an empty value to null
+ * @param a item Item that might be empty according to isEmpty
+ * emptyToNull:: a -> a
+ *            :: a -> null
+ */
+export const emptyToNull = R.when(R.isEmpty, ()=>null);
+
+/***
+ * Join elements, first remove null items and empty strings. If the result is empty make it null
+ * @param connector Join connector string
+ * @param [a] items Items to join that might be removed
+ * compactEmpty:: [a] -> String
+ *             :: [a] -> null
+ */
+export const compactJoin = R.compose(
+    (connector, items) => R.pipe(compactEmpty, R.join(connector), emptyToNull)(items)
+);
 
 /***
  * Convert the obj to an Immutable if it is not.
@@ -136,3 +162,13 @@ export const mergeDeep = R.mergeWith((l, r) =>
         r:
         mergeDeep(l, r) // tail recursive
 )
+
+/***
+ * http://stackoverflow.com/questions/40011725/point-free-style-capitalize-function-with-ramda
+ * Capitalize the first letter
+ * capitalize:: String -> String
+ */
+export const capitalize = R.compose(
+    R.join(''),
+    R.juxt([R.compose(R.toUpper, R.head), R.tail])
+);

@@ -9,7 +9,6 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import {Map} from 'immutable';
 import {SET_STATE} from './fullState'
 export const SET_FOO = '/settings/SET_FOO';
 
@@ -21,10 +20,10 @@ export const SET_FOO = '/settings/SET_FOO';
  * @param action: SET_STATE, SET_FOO, etc
  * @returns {*}
  */
-export default function(state = Map({}), action) {
+export default function(state = {}, action) {
     // If setting state
     if (action.type === SET_STATE) {
-        return state.merge(action.state.get('settings'));
+        return state.merge(action.state['settings']);
     }
     // Handle any other setting
     else if (action.type && action.type in actions) {

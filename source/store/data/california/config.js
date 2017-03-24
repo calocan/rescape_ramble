@@ -33,8 +33,9 @@ export default mergeDeep(defaultConfig, {
         locations,
     },
 
-    mapBox: {
+    mapbox: {
         viewport: {
+            /*
             bounds: {
                 minimum: {
                     latitude: 31,
@@ -45,6 +46,7 @@ export default mergeDeep(defaultConfig, {
                     longitude: -113
                 }
             },
+            */
             latitude: 37,
             longitude: -119,
             zoom: 5

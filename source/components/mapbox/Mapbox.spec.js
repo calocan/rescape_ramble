@@ -1,22 +1,19 @@
 import MapGL from 'react-map-gl'
 import React from 'react';
 import {shallow, mount} from 'enzyme';
-import config from 'config.json';
 
-// Hoping to use maxBounds like in the react-mapbox-gl lib
-const {mapboxApiAccessToken, style, maxBounds, center, zoom, pitch, bearing} = config;
-
-const defaultProps = {
-    width: 500,
-    height: 500,
-    longitude: center.longitude,
-    latitude: center.latitude,
-    zoom: zoom,
-    mapboxApiAccessToken
-};
+import config from 'store/data/california/config'
+const props = Object.assign(
+    {
+        mapboxApiAccessToken: config.settings.mapboxApiAccessToken,
+        width: 500,
+        height: 500,
+    },
+    config.mapbox.viewport
+);
 
 it('MapGL can mount', () => {
-    const wrapper = shallow(<MapGL {...defaultProps} />);
+    const wrapper = shallow(<MapGL {...props} />);
     expect(wrapper).toMatchSnapshot();
 });
 

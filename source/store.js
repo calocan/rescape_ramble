@@ -18,7 +18,6 @@ import 'babel-polyfill'
 import thunk from 'redux-thunk'
 import { createStore, applyMiddleware, compose } from 'redux'
 import reducer from './store/reducers/reducer'
-import {Map} from 'immutable';
 
 const middlewares = [
     thunk
@@ -31,7 +30,7 @@ if (process.env.NODE_ENV === `development`) {
 }
 
 // Create the store applying our reducer and the thunk and logger middleware
-export default function makeStore(initialState = Map()) {
+export default function makeStore(initialState = {}) {
     return createStore(
         reducer,
         initialState,

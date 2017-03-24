@@ -1,72 +1,31 @@
-import test from 'tape-catch';
-import deepFreeze from 'deep-freeze';
+import reducer from 'store/reducers/mapbox'
+import config from 'store/data/default/config'
+import {Map} from 'immutable'
 
-import settings from 'store/reducers/settings';
-
-test('placeholder', () => {});
-test('SET_MODE', () => {
-  expect('...initial', assert => {
-    const message = `should set { mode: 'display', subject: 'world' }`;
-
-    const expected = {
-      mode: 'display',
-      subject: 'World'
-    };
-
-    const actual = settings
-
-    assert.deepEqual(actual, expected, message);
-    assert.end();
-  });
-
-
-  expect(`...with { mode: 'edit' }`, assert => {
-    const message = 'should set mode to edit mode';
-
-    const stateBefore = {
-      mode: 'display',
-      subject: 'World'
-    };
-    const action = {
-      type: 'SET_MODE',
-      mode: 'edit'
-    };
-    const expected = {
-      mode: 'edit',
-      subject: 'World'
-    };
-
-    deepFreeze(stateBefore);
-    deepFreeze(action);
-
-    const actual = settings(stateBefore, action);
-
-    assert.deepEqual(actual, expected, message);
-    assert.end();
-  });
-
-  expect(`...with { subject: 'foo'}`, assert => {
-    const message = 'should set subject to "foo"';
-
-    const stateBefore = {
-      mode: 'display',
-      subject: 'World'
-    };
-    const action = {
-      type: 'SET_SUBJECT',
-      subject: 'foo'
-    };
-    const expected = {
-      mode: 'display',
-      subject: 'foo'
-    };
-
-    deepFreeze(stateBefore);
-    deepFreeze(action);
-
-    const actual = settings(stateBefore, action);
-
-    assert.deepEqual(actual, expected, message);
-    assert.end();
-  });
+describe('mabpox reducer', () => {
+    it('should return the initial state', () => {
+        expect(
+            Map(reducer(undefined, {})).toJS()
+        ).toEqual(
+            {viewport: config.mapbox.viewport}
+        )
+    });
+    it('should handle CHANGE_VIEWPORT', () => {
+        expect(
+            reducer({}, {
+                type: 'map/CHANGE_VIEWPORT',
+                mapState: {
+                    zoom: 4,
+                    latitude: 5,
+                    longitude: 6
+                }
+            })
+        ).toEqual({
+            mapState: {
+                zoom: 4,
+                latitude: 5,
+                longitude: 6
+            }
+        })
+    })
 });

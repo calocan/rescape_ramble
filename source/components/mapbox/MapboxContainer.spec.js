@@ -13,12 +13,11 @@ import React from 'react';
 import { Provider } from 'react-redux';
 import { shallow } from 'enzyme';
 import thunk from 'redux-thunk'
-import logger from 'redux-logger'
 
 import MapBoxContainer from './MapBoxContainer';
 import configureStore from 'redux-mock-store';
 
-const middlewares = [thunk, logger];
+const middlewares = [thunk];
 const mockStore = configureStore(middlewares);
 const action = { type: 'ADD_TODO' };
 

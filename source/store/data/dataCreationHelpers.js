@@ -11,13 +11,21 @@
 
 import R from 'ramda';
 import moment from 'moment'
-import {compact, idOrIdFromObj, fromImmutable, reduceWithNext} from 'helpers/functions';
+import {compact, compactEmpty, compactJoin, idOrIdFromObj, emptyToNull, fromImmutable, reduceWithNext, capitalize} from 'helpers/functions';
 import {toTimeString} from 'helpers/timeHelpers';
 import {calculateDistance} from 'helpers/geospatialHelpers';
 
 // Direction ids for typical Trip pairs
-export const FROM_TO_DIRECTION = {id: '0', resolveToStop: route => route.places.to};
-export const TO_FROM_DIRECTION = {id: '1', resolveToStop: route => route.places.from};
+export const FROM_TO_DIRECTION = {
+    id: '0',
+    resolveToStop: route => route.places.to,
+    resolveTripSymbol: route => `${route.places.from.id}->${route.via ? `(${route.via})->` : ''}${route.places.to.id}`
+};
+export const TO_FROM_DIRECTION = {
+    id: '1',
+    resolveToStop: route => route.places.from,
+    resolveTripSymbol: route => `${route.places.to.id}->${route.via ? `(${route.via})->` : ''}${route.places.from.id}`
+};
 
 const tripHeadSign = ( to, via ) =>
     compact([to.label, via]).join(' via ');
@@ -68,7 +76,7 @@ export const createStop = (place, which, location, options = {}) => {
         place: place,
         which: which,
         stopName: options.stopName || `${place.label} ${which} ${options.stopType || 'Station'}`,
-        location
+        location,
     };
 };
 
@@ -79,6 +87,7 @@ export const createStop = (place, which, location, options = {}) => {
  * @property {string} routeLongName The full name of the Route
  * @property {string} routeShortName The short name of the Route
  * @property {string} routeType The id of the RouteType
+ * @property {string} [via] The optional intermediate Region of the Route
  */
 
 /***
@@ -89,13 +98,11 @@ export const createStop = (place, which, location, options = {}) => {
  * @returns {string} A Route id
  */
 export const createRouteId = (from, to, via) => {
-    return compact([
-        [
-            idOrIdFromObj(from),
-            idOrIdFromObj(to)
-        ].join('-'),
-        via
-    ]).join(' via ');
+    const fromId = idOrIdFromObj(from);
+    const toId = idOrIdFromObj(to);
+    return via ?
+        `${fromId}<-${via}->${toId}`:
+        `${fromId}<->${toId}`;
 };
 
 /***
@@ -128,6 +135,7 @@ export const createRoute = (from, to, specs = {}) => {
     return {
         id: id,
         places: {from, to},
+        via: specs.via,
         routeLongName,
         routeShortName,
         routeType: specs.routeType,
@@ -139,12 +147,15 @@ export const createRoute = (from, to, specs = {}) => {
  * @property {string} id The id of the Service
  * @property {[string]} days Days of service
  * @property {[string]} seasons Seasons of service
+ * @property {[string]} label Friendly label of based on the parameters
  */
 
 /***
  * Creates a Service is based on the given days and season. In the GTSF spec this file is calendar
- * @param {string} startDate. The startDate of the service in the form YYYYMMDD
- * @param {string} endDate. The endDate of the service in the form YYYYMMDD
+ * @param {string|null} startDate. The startDate of the service in the form YYYYMMDD.
+ * If null then the start date is the "beginning of time"
+ * @param {string|null} endDate. The endDate of the service in the form YYYYMMDD
+ * If null then the end date is the "end of time"
  * @param {[string]} [days]. Default ['everyday'] Days of the week, 'everyday', 'weekday', 'weekend', 'blue moons', etc
  * @param {[string]} [seasons]. Default ['yearlong'] Seasons of the year: 'Winter', 'School Year', 'Tourist Season'
  * @returns {Service} A Service object with an id based on days and seasons
@@ -155,7 +166,19 @@ export const createService = (startDate, endDate, days = ['everyday'], seasons =
         days,
         seasons,
         startDate,
-        endDate
+        endDate,
+        label:
+            // '[startDate-endDate] Day, Day Season, Season'
+            compactJoin(' ', [
+                compactJoin('-', [startDate, endDate]),
+                R.pipe(
+                    R.map(
+                        R.pipe(R.map(capitalize), R.join(', '), emptyToNull)
+                    ),
+                    R.join(' '),
+                    emptyToNull
+                )([days, seasons]),
+            ])
     }
 };
 
@@ -163,14 +186,15 @@ export const createService = (startDate, endDate, days = ['everyday'], seasons =
  * Creates a Trip id
  * @param {Route|String} route The Route or Route id of the Trip
  * @param {Direction} direction Direction or Direction id for the Trip (from -> to vs to -> from)
+ * @param {callback} direction.resolveTripSymbol Takes the route to create a directional Trip symbol
+ * (e.g. to->[(via)]->from or from->[(via)]->to
  * @param {Service|String} service The Service or Service id of the Trip
  */
 export const createTripId = (route, direction, service ) => {
     return [
-        idOrIdFromObj(route),
-        idOrIdFromObj(direction),
-        idOrIdFromObj(service)
-    ].join('-');
+        direction.resolveTripSymbol(route),
+        service.label
+    ].join(' ');
 };
 
 /**

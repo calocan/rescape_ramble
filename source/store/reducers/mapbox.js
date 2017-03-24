@@ -9,14 +9,12 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import {enhanceMapReducer} from 'redux-map-gl'
-import config from 'config.json';
+import enhanceMapReducer from 'redux-map-gl';
+import config from 'store/data/default/config';
+import R from 'ramda';
 
 const SET_MODE = '/settings/SET_MODE';
 const SET_SUBJECT = '/settings/SET_SUBJECT';
-const assign = Object.assign;
-// Hoping to use maxBounds like in the react-mapbox-gl lib
-const { mapboxApiAccessToken, style, maxBounds, center, zoom, pitch, bearing } = config;
 
 const mapboxReducer = (
     state = { mode: 'display', subject: 'World' }, { mode, subject, type } = {}
@@ -24,11 +22,11 @@ const mapboxReducer = (
 
     switch (type) {
         case SET_MODE:
-            return assign({}, state, {
+            return R.merge(state, {
                 mode
             });
         case SET_SUBJECT:
-            return assign({}, state, {
+            return R.merge({}, state, {
                 subject
             });
         default:
@@ -36,17 +34,4 @@ const mapboxReducer = (
     }
 };
 
-export default enhanceMapReducer(mapboxReducer, {
-    viewPort: {
-        // Defaults
-        latitude: center.latitude,
-        longitude: center.longitude,
-        zoom: zoom,
-        bearing: bearing,
-        pitch: pitch,
-        startDragLngLat: null,
-        isDragging: false,
-        style: style,
-    },
-    mapboxApiAccessToken: mapboxApiAccessToken
-});
+export default enhanceMapReducer(mapboxReducer, config.mapbox.viewport);

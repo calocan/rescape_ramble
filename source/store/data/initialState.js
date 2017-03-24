@@ -30,7 +30,7 @@ export default (config) => {
         settings: config.settings,
         travel: R.map(toObjectKeyedByGeneratedId, config.travel),
         gtfs: R.map(toObjectKeyedById, config.gtfs),
-        mapBox: config.mapbox,
+        mapbox: config.mapbox,
     }
 };
 

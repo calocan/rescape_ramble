@@ -29,8 +29,14 @@
     "webpack": "webpack"
   },
   "jest": {
+    "setupFiles": [
+      "<rootDir>/jestsetup.js"
+    ],
     "testPathIgnorePatterns": [
       "__snapshots__"
+    ],
+    "snapshotSerializers": [
+      "<rootDir>/node_modules/enzyme-to-json/serializer"
     ],
     "moduleNameMapper": {
       "mapbox-gl$": "<rootDir>/node_modules/mapbot-gl/dist/mapbox-gl.js",
@@ -144,7 +150,7 @@
     "react-share": "^1.9.3",
     "redux": "^3.6.0",
     "redux-immutable": "^3.0.8",
-    "redux-logger": "^2.6.1",
+    "redux-logger": "^2.8.2",
     "redux-map-gl": "^0.1.0",
     "redux-router": "^2.1.2",
     "redux-thunk": "^2.1.0",
