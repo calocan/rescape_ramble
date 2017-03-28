@@ -3,7 +3,7 @@ import webpack from 'webpack';
 import ExtractTextPlugin from 'extract-text-webpack-plugin';
 
 export default {
-    devtool: '#inline-source-map',
+    devtool: 'inline-source-map',
 
     resolve: {
         modules: [

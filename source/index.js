@@ -12,8 +12,8 @@
 import 'babel-polyfill'
 import React from 'react'
 import ReactDOM from 'react-dom'
-import Current from 'views/current/Current'
-import Application from 'views/application/Application'
+import Current from 'views/current/CurrentContainer'
+import Application from 'views/application/ApplicationContainer'
 
 import {Provider} from 'react-redux'
 import { Router, Route, browserHistory } from 'react-router'
@@ -22,8 +22,9 @@ import { syncHistoryWithStore } from 'react-router-redux'
 import {setState} from './store/reducers/fullState'
 import initialState from './store/data/initialState'
 import makeStore from './store'
-
+import currentConfig from './store/data/current/config'
 const store = makeStore();
+store.dispatch(setState(initialState(currentConfig)));
 // Create an enhanced history that syncs navigation events with the store
 const history = syncHistoryWithStore(browserHistory, store);
 
@@ -40,6 +41,4 @@ ReactDOM.render(
     </Provider>,
     document.getElementById('root')
 );
-
-store.dispatch(setState(initialState))
 

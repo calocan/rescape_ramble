@@ -13,7 +13,6 @@
  * Defines the all actions of the application used manipulate the DOM.
  */
 
-// Making global to enable mock testing
 import {actionFetch} from 'helpers/requestHelpers';
 
 /*

@@ -8,8 +8,9 @@
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import MapBox from 'components/mapbox/Mapbox'
+import Mapbox from 'components/mapbox/MapboxContainer';
 import styles from './Region.style.js';
+import R from 'ramda';
 
 /***
  * The View for a Region, such as California. Theoretically we could display multiple regions at once
@@ -27,12 +28,12 @@ export default React => {
         // Convert percent to pixel.
         const size = {
             width: styles.container.width * document.documentElement.clientWidth,
-            height: styles.container.height * document.documentElement.clientHeight
+            height: styles.container.height * document.documentElement.clientHeight,
         }
         return (
-            <div className='region' style={Object.assign(styles.container, size)} >
+            <div className='region' style={R.merge(styles.container, size)} >
                 {/* We additionally give Mapbox the container width and height so the map can track changes to these */}
-                <MapBox {...size}/>
+                <Mapbox {...size}/>
             </div>
         );
     }

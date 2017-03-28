@@ -1,5 +1,7 @@
 import {connect} from 'react-redux';
-import Region from './Region.js';
+import React from 'react';
+import createRegion from './Region.js';
+import R from 'ramda';
 
 export default connect(
     /***
@@ -8,8 +10,8 @@ export default connect(
      * @returns {{}}
      */
     (state)=>{
-        return Object.assign(
-            state.get('settings')
+        return R.merge(
+            state['settings']
         );
     }
-)(Region);
+)(createRegion(React));

@@ -1,27 +1,38 @@
 import reducer from 'store/reducers/mapbox'
-import config from 'store/data/default/config'
 import {Map} from 'immutable'
+import currentConfig from 'store/data/current/config'
+import initialState from 'store/data/initialState'
 
 describe('mabpox reducer', () => {
     it('should return the initial state', () => {
         expect(
-            Map(reducer(undefined, {})).toJS()
-        ).toEqual(
-            {viewport: config.mapbox.viewport}
-        )
+            Map(reducer(initialState(currentConfig).mapbox, {})).toJS()
+        ).toEqual(currentConfig.mapbox)
     });
+    // This is really internal to redux-map-gl's reducer, but good to have here to document what
+    // it does
     it('should handle CHANGE_VIEWPORT', () => {
         expect(
-            reducer({}, {
+            Map(reducer(
+                {
+                    viewport: Map({
+                        zoom: 1,
+                        latitude: 2,
+                        longitude: 3
+                    })
+                },
+                {
                 type: 'map/CHANGE_VIEWPORT',
-                mapState: {
-                    zoom: 4,
-                    latitude: 5,
-                    longitude: 6
+                payload: {
+                        mapState: {
+                            zoom: 4,
+                            latitude: 5,
+                            longitude: 6
+                        }
                 }
-            })
+            })).toJS()
         ).toEqual({
-            mapState: {
+            viewport: {
                 zoom: 4,
                 latitude: 5,
                 longitude: 6

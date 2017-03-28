@@ -1,7 +1,9 @@
 {
   "settings": {
-    "mapboxApiAccessToken": "pk.eyJ1IjoiY2Fsb2NhbiIsImEiOiJjaXl1aXkxZjkwMG15MndxbmkxMHczNG50In0.07Zu3XXYijL6GJMuxFtvQg",
     "productionDomain": "rescapes.net",
     "current": "california"
+  },
+  "mapbox": {
+    "mapboxApiAccessToken": "pk.eyJ1IjoiY2Fsb2NhbiIsImEiOiJjaXl1aXkxZjkwMG15MndxbmkxMHczNG50In0.07Zu3XXYijL6GJMuxFtvQg"
   }
 }

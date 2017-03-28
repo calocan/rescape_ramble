@@ -1,9 +1,10 @@
 import MapGL from 'react-map-gl'
 import React from 'react';
 import {shallow, mount} from 'enzyme';
+import R from 'ramda';
 
 import config from 'store/data/california/config'
-const props = Object.assign(
+const props = R.merge(
     {
         mapboxApiAccessToken: config.settings.mapboxApiAccessToken,
         width: 500,

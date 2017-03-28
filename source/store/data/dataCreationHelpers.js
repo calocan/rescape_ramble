@@ -275,7 +275,7 @@ export const createTripWithStopTimesPair = (route, service, stopTimeCallback) =>
     [
         createTrip(route, FROM_TO_DIRECTION, service),
         createTrip(route, TO_FROM_DIRECTION, service)
-    ].map(trip => Object.assign(trip, {stopTimes: stopTimeCallback(trip)}));
+    ].map(trip => R.merge(trip, {stopTimes: stopTimeCallback(trip)}));
 
 /**
  * @typedef {Object} StopTime
@@ -296,7 +296,7 @@ export const createTripWithStopTimesPair = (route, service, stopTimeCallback) =>
  * @returns {StopTime}
  */
 export const createStopTime = (trip, stopSequence, stop, arrivalTime = null, departureTime = null) => {
-    return Object.assign(
+    return R.mergeAll([
         {
             trip,
             stopSequence,
@@ -304,7 +304,7 @@ export const createStopTime = (trip, stopSequence, stop, arrivalTime = null, dep
         },
         arrivalTime ? {arrivalTime} : null,
         departureTime ? {departureTime} : null
-    )
+    ])
 };
 
 /***
@@ -412,7 +412,7 @@ export const stopTimeGenerator = function* (trip, stops, startTime, endTime, dwe
 
         // Calculate the arrivalTime of the next stop based on distance or stop.arrivalTime.
         const arrivalDuration = calculateArrivalDuration(stop, previousStopTime, distanceFromPreviousStop);
-        return previousStopTimes.concat(Object.assign(
+        return previousStopTimes.concat(R.merge(
             createStopTime(
                 trip,
                 index + 1,

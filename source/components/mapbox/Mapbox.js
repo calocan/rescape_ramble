@@ -18,16 +18,11 @@ export default React => {
         string
     } = React.PropTypes;
 
-    const MapBox = ({
-        mapState,
-        mapStyle,
-        mapboxApiAccessToken,
-        onChangeViewport
-    }) => {
+    const MapBox = ({onChangeViewport, ...props}) => {
 
         return (
             <MapGL
-                {...mapState}
+                {...props}
                 showZoomControls={true}
                 width={500}
                 height={500}
@@ -35,8 +30,6 @@ export default React => {
                 // setting to `true` should cause the map to flicker because all sources
                 // and layers need to be reloaded without diffing enabled.
                 preventStyleDiffing={ false }
-                mapStyle={mapStyle}
-                mapboxApiAccessToken={mapboxApiAccessToken}
                 onChangeViewport={onChangeViewport}
             />
         );
@@ -46,6 +39,8 @@ export default React => {
         height: number.isRequired,
         mapboxApiAccessToken: string.isRequired
     };
+
+    return MapBox;
 };
 
 

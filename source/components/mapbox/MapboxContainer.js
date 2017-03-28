@@ -11,16 +11,27 @@
 
 import {connect} from 'react-redux';
 import {onChangeViewport} from 'redux-map-gl';
-import MapBox from './MapBox';
+import React from 'react';
+import createMapbox from './Mapbox';
+import R from 'ramda';
+import {toJS} from 'helpers/functions';
 
-function mapStateToProps(state) {
-    const mapState = state.map.viewport.toJS();
-    //const mapStyle = getMapStyle(state);
+/***
+ * Expects state to match that of the store. Expects ownProps to contain parent component
+ * properties, such as the width and height of the container
+ * @param state
+ * @param ownProps
+ * @return {{mapState: *, mapStyle: {}, mapboxApiAccessToken: *}}
+ */
+function mapStateToProps(state, ownProps) {
+    const mapState = R.mergeAll([
+        ownProps,
+        // Flatten viewport and remove immutable
+        toJS(state.mapbox.viewport),
+        R.omit(['viewport'], state.mapbox)
+    ]);
 
-    return {
-        mapState,
-        //mapStyle
-    };
+    return mapState
 }
 
 // This is just an example of what mapDispatchToProps does.
@@ -39,4 +50,4 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(MapBox);
+export default connect(mapStateToProps, mapDispatchToProps)(createMapbox(React));

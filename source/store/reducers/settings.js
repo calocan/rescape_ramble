@@ -10,7 +10,9 @@
  */
 
 import {SET_STATE} from './fullState'
+import R from 'ramda'
 export const SET_FOO = '/settings/SET_FOO';
+const actions = [SET_FOO];
 
 /***
  * Reduces the state of the settings
@@ -23,7 +25,7 @@ export const SET_FOO = '/settings/SET_FOO';
 export default function(state = {}, action) {
     // If setting state
     if (action.type === SET_STATE) {
-        return state.merge(action.state['settings']);
+        return R.merge(state, action.state['settings']);
     }
     // Handle any other setting
     else if (action.type && action.type in actions) {

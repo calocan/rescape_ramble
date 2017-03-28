@@ -61,11 +61,11 @@ export const compactJoin = R.compose(
 export const toImmutable = obj => Iterable.isIterable(obj) ? obj : fromJS(obj);
 
 /***
- * Converts an Immutable to javascript
- * @param {Map} obj
+ * Converts an Immutable to javascript if it's an Immutable
+ * @param {Map|Object} obj
  * toJS:: Immutable a = a -> b
  */
-export const toJS = obj => obj.toJS();
+export const toJS = obj => obj.toJS ? obj.toJS() : obj;
 
 /***
  * Convert the Immutable to plain JS if it is not

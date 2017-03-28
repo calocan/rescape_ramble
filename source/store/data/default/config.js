@@ -23,8 +23,8 @@ export default mergeDeep(privateConfig, {
         routeTypes: routeTypes
     },
     mapbox: {
+        mapStyle: "mapbox://styles/mapbox/streets-v8",
         viewport: {
-            style: "mapbox://styles/mapbox/streets-v8",
             pitch: 40,
             bearing: 0,
             startDragLngLat: null,

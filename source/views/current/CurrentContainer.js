@@ -1,5 +1,7 @@
 import {connect} from 'react-redux';
-import Current from './Current.js';
+import createCurrent from './Current.js';
+import React from 'react';
+import R from 'ramda';
 
 export default connect(
     /***
@@ -9,8 +11,8 @@ export default connect(
      * @returns {{}}
      */
     (state)=>{
-        return Object.assign(
-            state.get('settings')
+        return R.merge(
+            state['settings']
         );
     }
-)(Current);
+)(createCurrent(React));
