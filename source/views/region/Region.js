@@ -11,35 +11,52 @@
 import Mapbox from 'components/mapbox/MapboxContainer';
 import styles from './Region.style.js';
 import R from 'ramda';
+import React from 'react';
 
 /***
  * The View for a Region, such as California. Theoretically we could display multiple regions at once
  * if we had more than one, or we could have a zoomed in region of California like the Bay Area.
  */
-export default React => {
+const Region = (React) => React.createClass({
 
     /*
      const {
      string, shape, func
      } = React.PropTypes;
      */
+    updateDimensions: function() {
 
-    const region = ({}) => {
-        // Convert percent to pixel.
-        const size = {
-            width: styles.container.width * document.documentElement.clientWidth,
-            height: styles.container.height * document.documentElement.clientHeight,
-        }
+        const w = window,
+            d = document,
+            documentElement = d.documentElement,
+            body = d.getElementsByTagName('body')[0],
+            width = styles.container.width * (w.innerWidth || documentElement.clientWidth || body.clientWidth),
+            height = styles.container.height * (w.innerHeight|| documentElement.clientHeight|| body.clientHeight);
+
+        this.setState({width, height});
+    },
+    componentWillMount: function() {
+        this.updateDimensions();
+    },
+    componentDidMount: function() {
+        window.addEventListener("resize", this.updateDimensions);
+    },
+    componentWillUnmount: function() {
+        window.removeEventListener("resize", this.updateDimensions);
+    },
+
+    render: function() {
         return (
-            <div className='region' style={R.merge(styles.container, size)} >
+            <div className='region' style={R.merge(styles.container, this.state)}>
                 {/* We additionally give Mapbox the container width and height so the map can track changes to these */}
-                <Mapbox {...size}/>
+                <Mapbox {...this.state}/>
             </div>
         );
     }
+});
 
     /*
-     region.propTypes = {
+     Region.propTypes = {
      helloClass: string.isRequired,
      subject: string,
      actions: shape({
@@ -48,5 +65,4 @@ export default React => {
      };
      */
 
-    return region;
-}
+export default Region;

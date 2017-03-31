@@ -1,6 +1,17 @@
 {
   "settings": {
-    "productionDomain": "rescapes.net",
+    "environments": [
+      {
+        "id": "production",
+        "domain": "rescapes.net"
+      }
+    ],
+    "regions": [
+      {
+        "id": "california",
+        "label": "California"
+      }
+    ],
     "current": "california"
   },
   "mapbox": {

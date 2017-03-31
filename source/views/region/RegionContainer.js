@@ -10,8 +10,6 @@ export default connect(
      * @returns {{}}
      */
     (state)=>{
-        return R.merge(
-            state['settings']
-        );
+        return {};
     }
 )(createRegion(React));

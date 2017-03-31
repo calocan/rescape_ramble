@@ -10,7 +10,7 @@
  */
 
 import R from 'ramda';
-import {mapPropValueAsIndex} from '../../helpers/functions';
+import {mapPropValueAsIndex, toImmutable} from '../../helpers/functions';
 
 /***
  * Returns a function that can be applied to a list to add an id value to each object of the list
@@ -30,7 +30,8 @@ export default (config) => {
         settings: config.settings,
         travel: R.map(toObjectKeyedByGeneratedId, config.travel),
         gtfs: R.map(toObjectKeyedById, config.gtfs),
-        mapbox: config.mapbox,
+        // The viewport must be an Immutable to satisfied the redux-map-gl reducer
+        mapbox: R.over(R.lensProp('viewport'), toImmutable, config.mapbox)
     }
 };
 

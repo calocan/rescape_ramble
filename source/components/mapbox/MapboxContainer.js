@@ -10,6 +10,7 @@
  */
 
 import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux'
 import {onChangeViewport} from 'redux-map-gl';
 import React from 'react';
 import createMapbox from './Mapbox';
@@ -36,7 +37,7 @@ function mapStateToProps(state, ownProps) {
 
 // This is just an example of what mapDispatchToProps does.
 const mapDispatchToProps = (dispatch, ownProps) => {
-    return {
+    return bindActionCreators({
         /*
         doFooThingInComponent: () => {
             dispatch(someImportedAction(
@@ -47,7 +48,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         */
         // Pass this straight through
         onChangeViewport
-    };
+    }, dispatch);
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(createMapbox(React));

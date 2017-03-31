@@ -10,37 +10,46 @@
  */
 
 import MapGL from 'react-map-gl';
+import React from 'react'
+import autobind from 'autobind-decorator';
 
-export default React => {
+const {
+    number,
+    string
+} = React.PropTypes;
 
-    const {
-        number,
-        string
-    } = React.PropTypes;
+const Mapbox = (React) => React.createClass({
 
-    const MapBox = ({onChangeViewport, ...props}) => {
+    @autobind
+    _onChangeViewport(opt) {
+        this.props.onChangeViewport(opt);
+    },
+
+    render: function() {
+        const {width, height, ...props} = this.props;
 
         return (
             <MapGL
                 {...props}
                 showZoomControls={true}
-                width={500}
-                height={500}
+                width={width}
+                height={height}
                 perspectiveEnabled={ true }
                 // setting to `true` should cause the map to flicker because all sources
                 // and layers need to be reloaded without diffing enabled.
                 preventStyleDiffing={ false }
-                onChangeViewport={onChangeViewport}
+                onChangeViewport={this._onChangeViewport}
             />
         );
     }
-    MapBox.propTypes = {
-        width: number.isRequired,
-        height: number.isRequired,
-        mapboxApiAccessToken: string.isRequired
-    };
+});
 
-    return MapBox;
+Mapbox.propTypes = {
+    width: number.isRequired,
+    height: number.isRequired,
+    mapboxApiAccessToken: string.isRequired
 };
+
+export default Mapbox;
 
 
