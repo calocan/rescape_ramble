@@ -302,8 +302,7 @@ export const createStopTime = (trip, stopSequence, stop, arrivalTime = null, dep
             stopSequence,
             stop,
         },
-        arrivalTime ? {arrivalTime} : null,
-        departureTime ? {departureTime} : null
+        compact({arrivalTime, departureTime})
     ])
 };
 

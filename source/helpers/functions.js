@@ -23,6 +23,7 @@ export const orEmpty = entity => entity || '';
  * Removed null or undefined items from an iterable
  * @param [a] items Items that might have falsy values to remove
  * compact:: [a] -> [a]
+ * compact:: {k,v} -> {k,v}
  */
 export const compact = R.reject(R.isNil);
 
