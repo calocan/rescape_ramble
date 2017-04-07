@@ -9,14 +9,17 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import {fetchOpenStreetMapTransit} from './overpassHelpers';
-import config from 'store/data/california/config'
+import {fetchTransit} from './overpassHelpers';
+jest.mock('query-overpass');
 
 describe("operpassHelpers", () =>{
-    test("fetchOpenStreetMapTransit", () =>{
-        const expectedData =
-        expect(
-            fetchOpenStreetMapTransit(config.geospatial.bounds
-        ).resolves.toEqual(expectedData);
-    });
+    const bounds = require('query-overpass').LA_BOUNDS;
+    test("fetchTransit", () =>
+        // Pass bounds in the options. Our mock query-overpass uses is to avoid parsing the query
+        fetchTransit(bounds, {bounds}).then(
+            response => expect(response).toEqual(
+                require('queryOverpassResponse').LA_SAMPLE
+            )
+        )
+    );
 });

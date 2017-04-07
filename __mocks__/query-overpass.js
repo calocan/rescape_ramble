@@ -9,40 +9,43 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import query_overpass from 'query-overpass';
-import R from 'ramda';
-import os from 'os';
+import {PARIS_SAMPLE, LA_SAMPLE} from './queryOverpassResponse';
+import {Map, fromJS} from 'immutable';
 
-export const fetchTransit = (bounds, options) => {
-
-    const boundsAsString = `(${[bounds.min.lat, bounds.min.lon, bounds.max.lat, bounds.max.lon].join(',')})`;
-    const query =  `
-    [out:xml];
-    (
-        ${R.pipe(R.map(type => `
-        ${type} 
-            ["railway"]
-            ["service" != "siding"]
-            ["service" != "spur"]
-            ({{${boundsAsString}}});
-        `),
-        R.join(os.EOL))(['node', 'way', 'rel'])}
-    );
-    // print results
-    out meta;/*fixed by auto repair*/
-    >;
-    out meta qt;/*fixed by auto repair*/
-    `;
-    return new Promise(function(resolve, reject) {
-        query_overpass(query, (error, data) => {
-            if (!error) {
-                resolve(data);
-            }
-            else {
-                reject(error);
-            }
-        }, options);
-    });
+export const PARIS_BOUNDS = {
+    min: { lon: -125, lat: 31 },
+    max: { lon: -113, lat: 43 }
 };
 
+export const LA_BOUNDS = {
+    min: { lon: -125, lat: 31 },
+    max: { lon: -113, lat: 43 }
+};
 
+// Use Map for equality matching of keys
+const responses = Map([
+    [fromJS(PARIS_BOUNDS), PARIS_SAMPLE],
+    [fromJS(LA_BOUNDS), LA_SAMPLE],
+]);
+const getResponse = (bounds) => responses.get(fromJS(bounds));
+
+/***
+ * Mocks the query_overpass method,
+ * accepting an extra options.bounds argument to save parsing the bounds from the query
+ * @param query
+ * @param cb
+ * @param options
+ * @param options.bounds Required for testing
+ * @return {Promise}
+ */
+export default (query, cb, options) => {
+    const response = getResponse(options.bounds);
+    process.nextTick(
+        () => response ?
+            cb(undefined, response) :
+            cb({
+                   message: "Bounds don't match any mock response",
+                   statusCode: 404
+            })
+   );
+};
