@@ -10,13 +10,46 @@
  */
 
 import query_overpass from 'query-overpass';
+import Task from 'data.task'
+import {futurizer as Future} from 'futurizer'
 import R from 'ramda';
 import os from 'os';
+import squareGrid from '@turf/square-grid';
+import bbox from '@turf/bbox';
 
-export const fetchTransit = (bounds, options) => {
+/***
+ * fetches transit data from OpenStreetMap using the Overpass API.
+ * @param {Number} cellSize Splits query-overpass into separate requests, by splitting
+ * the bounding box by the number of kilometers specified here. Example, if 200 is specified,
+ * 200 by 200km bounding boxes will be created and sent to query-overpass. Any remainder will
+ * be queried separately. The results from all queries are merged by feature id so that no
+ * duplicates are returned.
+ * @param {Object} options Options to pass to query-overpass, plus the following:
+ * @param {Object} options.bounds Used only for testing
+ * @param {Array} bounds [lat_min, lon_min, lat_max, lon_max]
+ *
+ */
+export const fetchTansitCelled = (cellSize, options, bounds) => {
+    const units = 'kilometers';
+    const squares = R.map(
+        polygon => bbox(polygon),
+        squareGrid(bounds, cellSize, units).features);
+    const concatValues = (k, l, r) => k == 'features' ? R.concat(l, r) : r;
+    return R.traverse(Task.of, fetchTransit(options), squares).chain(
+        (results) => Task.of(R.mergeWithKey(concatValues, results))
+    )
+};
 
-    const boundsAsString = `(${[bounds.min.lat, bounds.min.lon, bounds.max.lat, bounds.max.lon].join(',')})`;
-    const query =  `
+/***
+ * fetches transit data from OpenStreetMap using the Overpass API.
+ * @param {Object} options Options to pass to query-overpass, plus the following:
+ * @param {Object} options.bounds Used only for testing
+ * @param {Array} bounds [lat_min, lon_min, lat_max, lon_max]
+ */
+export const fetchTransit = R.curry((options, bounds) => {
+
+    const boundsAsString = `(${bounds.join(',')})`;
+    const query = boundsString => `
     [out:xml];
     (
         ${R.pipe(R.map(type => `
@@ -24,7 +57,7 @@ export const fetchTransit = (bounds, options) => {
             ["railway"]
             ["service" != "siding"]
             ["service" != "spur"]
-            ({{${boundsAsString}}});
+            ({{${boundsString}}});
         `),
         R.join(os.EOL))(['node', 'way', 'rel'])}
     );
@@ -33,8 +66,8 @@ export const fetchTransit = (bounds, options) => {
     >;
     out meta qt;/*fixed by auto repair*/
     `;
-    return new Promise(function(resolve, reject) {
-        query_overpass(query, (error, data) => {
+    return new Task(function(reject, resolve) {
+        query_overpass(query(boundsAsString), (error, data) => {
             if (!error) {
                 resolve(data);
             }
@@ -43,6 +76,6 @@ export const fetchTransit = (bounds, options) => {
             }
         }, options);
     });
-};
+});
 
 

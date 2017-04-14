@@ -12,15 +12,8 @@
 import {PARIS_SAMPLE, LA_SAMPLE} from './queryOverpassResponse';
 import {Map, fromJS} from 'immutable';
 
-export const PARIS_BOUNDS = {
-    min: { lon: -125, lat: 31 },
-    max: { lon: -113, lat: 43 }
-};
-
-export const LA_BOUNDS = {
-    min: { lon: -125, lat: 31 },
-    max: { lon: -113, lat: 43 }
-};
+export const PARIS_BOUNDS = [-125, 31, -113, 43];
+export const LA_BOUNDS = [-125, 31, -113, 43];
 
 // Use Map for equality matching of keys
 const responses = Map([

@@ -9,17 +9,28 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import {fetchTransit} from './overpassHelpers';
+import {fetchTransit, fetchTansitCelled} from './overpassHelpers';
+// requires are used below since the jest includes aren't available at compile time
 jest.mock('query-overpass');
 
-describe("operpassHelpers", () =>{
+describe("overpassHelpers", ()=>{
     const bounds = require('query-overpass').LA_BOUNDS;
     test("fetchTransit", () =>
         // Pass bounds in the options. Our mock query-overpass uses is to avoid parsing the query
-        fetchTransit(bounds, {bounds}).then(
-            response => expect(response).toEqual(
+        fetchTransit({bounds}, bounds).fork(
+            error => { throw new Error(error) },
+            response =>  expect(response).toEqual(
                 require('queryOverpassResponse').LA_SAMPLE
             )
         )
     );
+
+    test("fetchTransit in cells", ()=>{
+        fetchTansitCelled(200, {bounds}, bounds).fork(
+            error => { throw new Error(error) },
+            response => expect(response).toEqual(
+                require('queryOverpassResponse').LA_SAMPLE
+            )
+        )
+    })
 });

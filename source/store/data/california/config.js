@@ -34,21 +34,11 @@ export default mergeDeep(defaultConfig, {
     },
 
     geospatial: {
-        bounds: {
-            min: {
-                lon: -125,
-                lat: 31
-            },
-            max: {
-                lon: -113,
-                lat: 43
-            }
-        }
+        bounds: [-125, 31, -113, 43]
     },
 
     mapbox: {
         viewport: {
-
             latitude: 37,
             longitude: -119,
             zoom: 5
