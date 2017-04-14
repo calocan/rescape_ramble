@@ -11,7 +11,6 @@
 
 import query_overpass from 'query-overpass';
 import Task from 'data.task'
-import {futurizer as Future} from 'futurizer'
 import R from 'ramda';
 import {mergeAllWithKey, removeDuplicateObjectsByProp} from 'helpers/functions';
 import os from 'os';
@@ -60,16 +59,21 @@ export const fetchTansitCelled = (cellSize, options, bounds) => {
  */
 export const fetchTransit = R.curry((options, bounds) => {
 
-    const boundsAsString = `(${bounds.join(',')})`;
+    const boundsAsString = R.pipe(
+        list=>R.concat(
+            R.reverse(R.slice(0,2)(list)),
+            R.reverse(R.slice(2,4)(list))),
+        R.join(',')
+    )(bounds)
     const query = boundsString => `
-    [out:xml];
+    [out:json];
     (
         ${R.pipe(R.map(type => `
         ${type} 
             ["railway"]
             ["service" != "siding"]
             ["service" != "spur"]
-            ({{${boundsString}}});
+            (${boundsString});
         `),
         R.join(os.EOL))(['node', 'way', 'rel'])}
     );

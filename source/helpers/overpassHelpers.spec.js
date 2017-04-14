@@ -13,9 +13,25 @@ import {fetchTransit, fetchTansitCelled} from './overpassHelpers';
 import {removeDuplicateObjectsByProp} from 'helpers/functions'
 
 // requires are used below since the jest includes aren't available at compile time
-jest.mock('query-overpass');
 
 describe("overpassHelpers", ()=>{
+
+    /*
+        Unmocked integration test
+    jest.unmock('query-overpass')
+    test('does not mock it when I ask nicely', function() {
+        const realBounds = [-118.24031352996826, 34.04298753935195,-118.21018695831297,34.065209887879476];
+        fetchTransit({realBounds}, realBounds).fork(
+            error => {
+                throw new Error(error)
+            },
+            response => {
+                expect(response.features.length > 500).toEqual(true)
+            }
+        )
+    });
+    */
+
     const bounds = require('query-overpass').LA_BOUNDS;
     test("fetchTransit", () =>
         // Pass bounds in the options. Our mock query-overpass uses is to avoid parsing the query
@@ -27,7 +43,7 @@ describe("overpassHelpers", ()=>{
         )
     );
 
-    test("fetchTransit in cells", ()=>{
+    test("fetchTransit in cells", ()=> {
         fetchTansitCelled(200, {bounds}, bounds).fork(
             error => { throw new Error(error) },
             response => {
@@ -38,4 +54,5 @@ describe("overpassHelpers", ()=>{
             }
         )
     })
+
 });

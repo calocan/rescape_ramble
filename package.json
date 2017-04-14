@@ -41,8 +41,6 @@
     "moduleNameMapper": {
       "mapbox-gl$": "<rootDir>/node_modules/mapbot-gl/dist/mapbox-gl.js",
       "webworkify": "<rootDir>/node_moducles/webworkify-webpack",
-      "query-overpass$": "<rootDir>/__mocks__/query-overpass.js",
-      "queryOverpassRsponse$": "<rootDir>/__mocks__/queryOverpassResponse.js",
       "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/__mocks__/fileMock.js",
       "\\.(css|less)$": "identity-obj-proxy"
     }
