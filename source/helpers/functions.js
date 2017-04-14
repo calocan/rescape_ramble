@@ -104,6 +104,18 @@ export const mapPropValueAsIndex = R.curry((prop, obj) =>
     )(obj));
 
 /***
+ * Merges a list of objects by the given key and returns the values, meaning all items that are
+ * duplicate prop key value are removed from the final list
+ * removeDuplicateObjectsByProp:: String -> [{k, v}] -> [{k, v}]
+ */
+export const removeDuplicateObjectsByProp = R.curry((prop, list) =>
+    R.pipe(
+        mapPropValueAsIndex(prop),
+        R.values
+    )(list)
+);
+
+/***
  * Creates a partial function that expects a property of an object which in turn returns a function that
  * expects a listOrObj
  * If listOrObj is not already object, the function converts an array to an Immutable keyed by each array items id.
@@ -173,3 +185,20 @@ export const capitalize = R.compose(
     R.join(''),
     R.juxt([R.compose(R.toUpper, R.head), R.tail])
 );
+
+/**
+ * Merge a list of objects using the given concat function
+ * [{k: v}] → {k: v}
+ * (String → a → a → a) → [{a}] → {a}
+ */
+export const mergeAllWithKey = R.curry((fn, [head, ...rest]) =>
+    R.mergeWithKey(                     // call mergeWithKey on two objects at a time
+        fn,
+        head || {},                     // first object is always the head
+        R.ifElse(                       // second object is the merged object of the recursion
+            R.isEmpty,                  // if no rest
+            ()=>R.empty({}),            // end case empty object
+            mergeAllWithKey(fn),        // else recurse with the rest
+        )(rest)
+    )
+)

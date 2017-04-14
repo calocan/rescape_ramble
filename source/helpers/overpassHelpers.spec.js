@@ -10,6 +10,8 @@
  */
 
 import {fetchTransit, fetchTansitCelled} from './overpassHelpers';
+import {removeDuplicateObjectsByProp} from 'helpers/functions'
+
 // requires are used below since the jest includes aren't available at compile time
 jest.mock('query-overpass');
 
@@ -28,9 +30,12 @@ describe("overpassHelpers", ()=>{
     test("fetchTransit in cells", ()=>{
         fetchTansitCelled(200, {bounds}, bounds).fork(
             error => { throw new Error(error) },
-            response => expect(response).toEqual(
-                require('queryOverpassResponse').LA_SAMPLE
-            )
+            response => {
+                expect(response.features).toEqual(
+                    // the sample can have duplicate ids
+                    removeDuplicateObjectsByProp('id', require('queryOverpassResponse').LA_SAMPLE.features)
+                )
+            }
         )
     })
 });

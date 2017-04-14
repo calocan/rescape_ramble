@@ -51,6 +51,10 @@ describe('helperFunctions', () => {
         expect(Rx.mapPropValueAsIndex('bar')([{bar: 1}, {bar: 2}])).
         toEqual(R.indexBy(R.prop('bar'), [{bar: 1}, {bar: 2}]))
     });
+    test('Should remove duplicate objects with same prop key', () => {
+        expect(Rx.removeDuplicateObjectsByProp('bar')([{bar: 1, foo: 2}, {bar: 1, foo: 2}, {bar: 2}])).
+        toEqual([{bar: 1, foo: 2}, {bar: 2}])
+    });
     test('Should be immutable and keyed by prop', () => {
         expect(Rx.toImmutableKeyedByProp('bar')([{bar: 1}, {bar: 2}]).toJS()).
         toEqual(ImMap([[1, {bar: 1}], [2, {bar: 2}]]).toJS())
@@ -79,5 +83,12 @@ describe('helperFunctions', () => {
     })
     test("Should capitalize first letter", () => {
         expect(Rx.capitalize("good grief")).toEqual("Good grief")
+    })
+    test("Should merge all with key", () => {
+        expect(
+            Rx.mergeAllWithKey(
+                (k, l, r) => k == 'a' ? R.concat(l, r) : r,
+                [{a: [1], b: 2}, {a: [2], c: 3}, {a: [3]}]
+        )).toEqual({a: [1, 2, 3], b: 2, c: 3});
     })
 });
