@@ -11,6 +11,7 @@
 
 import query_overpass from 'query-overpass';
 import Task from 'data.task'
+import Maybe from 'data.maybe'
 import R from 'ramda';
 import {mergeAllWithKey, removeDuplicateObjectsByProp} from 'helpers/functions';
 import os from 'os';
@@ -18,7 +19,8 @@ import squareGrid from '@turf/square-grid';
 import bbox from '@turf/bbox';
 
 /***
- * fetches transit data from OpenStreetMap using the Overpass API.
+ * fetches transit data in squares sequentially from OpenStreetMap using the Overpass API.
+ * Concurrent calls were triggering API limits.
  * @param {Number} cellSize Splits query-overpass into separate requests, by splitting
  * the bounding box by the number of kilometers specified here. Example, if 200 is specified,
  * 200 by 200km bounding boxes will be created and sent to query-overpass. Any remainder will
@@ -29,26 +31,30 @@ import bbox from '@turf/bbox';
  * @param {Array} bounds [lat_min, lon_min, lat_max, lon_max]
  *
  */
-export const fetchTansitCelled = (cellSize, options, bounds) => {
+export const fetchTransitCelled = (cellSize, options, bounds) => {
     const units = 'kilometers';
     // Use turf's squareGrid function to break up the bbox by cellSize squares
     const squares = R.map(
         polygon => bbox(polygon),
         squareGrid(bounds, cellSize, units).features);
+
     // Fetch each square of transit and merge the results by feature id
     // concatValues combines are results sets when they return
     const concatValues = (k, l, r) => k == 'features' ? R.concat(l, r) : r;
-    // Combine the Tasks into one Task and then merge and filter the results
-    return R.traverse(Task.of, fetchTransit(options), squares).chain(
-        (results) => Task.of(
+
+    // fetchTasks :: Task (Array (Task Object))
+    const fetchTasks = R.map(fetchTransit(options), squares);
+    // sequenced :: Task (Array Object)
+    const sequenced = R.sequence(Task.of, fetchTasks);
+    return sequenced.chain((results) => Task.of(
             R.pipe(
                 mergeAllWithKey(concatValues),  // combine the results into one obj with concatinated features
-                R.over(                         // Remove features with the same id
+                R.over(                         // remove features with the same id
                     R.lens(R.prop('features'), R.assoc('features')),
                     removeDuplicateObjectsByProp('id'))
             )(results)
         )
-    )
+    );
 };
 
 /***

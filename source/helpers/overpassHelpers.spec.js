@@ -9,18 +9,20 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import {fetchTransit, fetchTansitCelled} from './overpassHelpers';
+import {fetchTransit, fetchTransitCelled} from './overpassHelpers';
 import {removeDuplicateObjectsByProp} from 'helpers/functions'
 
 // requires are used below since the jest includes aren't available at compile time
+jest.unmock('query-overpass')
 
-describe("overpassHelpers", ()=>{
+// TODO use .resolves for all async tests whenever Jest 20 comes out, assuming it works with fork
+
+describe("overpassHelpers unmocked", ()=> {
 
     /*
-        Unmocked integration test
-    jest.unmock('query-overpass')
-    test('does not mock it when I ask nicely', function() {
-        const realBounds = [-118.24031352996826, 34.04298753935195,-118.21018695831297,34.065209887879476];
+    test('unmocked fetchTransit', () => {
+        // Unmocked integration test
+        const realBounds = [-118.24031352996826, 34.04298753935195, -118.21018695831297, 34.065209887879476];
         fetchTransit({realBounds}, realBounds).fork(
             error => {
                 throw new Error(error)
@@ -31,20 +33,37 @@ describe("overpassHelpers", ()=>{
         )
     });
     */
+    test('unmocked fetchTransitCelled', () => {
+        const realBounds = [-118.24031352996826, 34.04298753935195, -118.21018695831297, 34.065209887879476];
+        fetchTransitCelled(2, {realBounds}, realBounds).fork(
+            error => {
+                throw new Error(error)
+            },
+            response => {
+                expect(response.features.length > 500).toEqual(true)
+            }
+        )
+    });
+});
+/*
+describe("overpassHelpers", ()=>{
 
+    jest.mock('query-overpass')
     const bounds = require('query-overpass').LA_BOUNDS;
-    test("fetchTransit", () =>
+    test("fetchTransit", () => {
         // Pass bounds in the options. Our mock query-overpass uses is to avoid parsing the query
         fetchTransit({bounds}, bounds).fork(
-            error => { throw new Error(error) },
-            response =>  expect(response).toEqual(
+            error => {
+                throw new Error(error)
+            },
+            response => expect(response).toEqual(
                 require('queryOverpassResponse').LA_SAMPLE
             )
         )
-    );
+    });
 
     test("fetchTransit in cells", ()=> {
-        fetchTansitCelled(200, {bounds}, bounds).fork(
+        fetchTransitCelled(200, {bounds}, bounds).fork(
             error => { throw new Error(error) },
             response => {
                 expect(response.features).toEqual(
@@ -56,3 +75,4 @@ describe("overpassHelpers", ()=>{
     })
 
 });
+*/
