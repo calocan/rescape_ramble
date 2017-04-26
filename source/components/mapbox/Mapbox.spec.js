@@ -3,7 +3,7 @@ import React from 'react';
 import {shallow, mount} from 'enzyme';
 import R from 'ramda';
 
-import config from 'store/data/california/config'
+import config from 'store/data/test/config'
 const props = R.merge(
     {
         mapboxApiAccessToken: config.settings.mapboxApiAccessToken,

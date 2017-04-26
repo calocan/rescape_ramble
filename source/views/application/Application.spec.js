@@ -5,12 +5,10 @@ import createApplication from './Application';
 
 const Application = createApplication(React);
 
-test('Application', () => {
-    const titleText = 'Hello!';
-    const props = {
-        title: titleText,
-        titleClass: 'title'
-    };
-    const Component = shallow(<Application {...props} />);
-    expect(Component).toMatchSnapshot();
+describe('Application', () => {
+    test('Application can mount', () => {
+        const props = {};
+        const Component = shallow(<Application {...props} />);
+        expect(Component).toMatchSnapshot();
+    })
 });

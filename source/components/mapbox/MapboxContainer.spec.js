@@ -10,31 +10,25 @@
  */
 
 import React from 'react';
-import { Provider } from 'react-redux';
-import { shallow } from 'enzyme';
 import thunk from 'redux-thunk'
-
-import MapBoxContainer from './MapBoxContainer';
+import {mapStateToProps} from './MapboxContainer';
 import configureStore from 'redux-mock-store';
+
+import testConfig from 'store/data/test/config'
+import initialState from 'store/data/initialState'
 
 const middlewares = [thunk];
 const mockStore = configureStore(middlewares);
-const action = { type: 'ADD_TODO' };
 
 describe('MapboxContainer', () => {
-    process.setMaxListeners(11);
+    test('mapStateToProps flattens viewport props', () => {
+        const store = mockStore(initialState(testConfig));
 
-    test('MapBoxContainer can mount', () => {
-        const initialState = {}; // initial state of the store
+        const ownProps = {
+            width: 500,
+            height: 500
+        };
 
-        const store = mockStore(initialState)
-        store.dispatch(action);
-
-        const wrapper = shallow(
-            <Provider store={store}>
-                <MapBoxContainer />
-            </Provider>
-        );
-        expect(wrapper).toMatchSnapshot();
+        expect(mapStateToProps(store.getState(), ownProps)).toMatchSnapshot()
     });
 });

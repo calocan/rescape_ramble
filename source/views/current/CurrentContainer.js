@@ -3,16 +3,14 @@ import createCurrent from './Current.js';
 import React from 'react';
 import R from 'ramda';
 
+export const mapStateToProps = (state, ownProps) => R.pick(['regions', 'current'], state.settings);
+
 export default connect(
     /***
-     * The only state needed directly by the wrapped component is settings
+     * Passes the regions and current region
      * @param state
-     * @param props
+     * @param ownProps
      * @returns {{}}
      */
-    (state)=>{
-        return R.merge(
-            state['settings']
-        );
-    }
+    mapStateToProps
 )(createCurrent(React));

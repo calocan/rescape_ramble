@@ -12,31 +12,27 @@
 import Region from 'views/region/RegionContainer'
 
 /***
- * Displays the appropriate view based on the given settings. Defaults to showing one configured Region
+ * Displays the Region of the current state and eventually a Region selector.
+ * This might also be modified to display all available regions, perhaps on a continental map
  */
 export default React => {
-
-    /*
-     const {
-     string, shape, func
-     } = React.PropTypes;
-     */
 
     const current = ({}) => {
         return <div className='current'>
             <Region />
         </div>
-    }
+    };
 
-    /*
-     current.propTypes = {
+    const {
+        string, shape, func
+    } = React.PropTypes;
+    current.propTypes = {
          helloClass: string.isRequired,
          subject: string,
          actions: shape({
             setMode: func.isRequired
          })
-     };
-     */
+    };
 
     return current;
 }

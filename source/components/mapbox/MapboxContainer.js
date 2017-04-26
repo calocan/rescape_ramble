@@ -18,22 +18,17 @@ import R from 'ramda';
 import {toJS} from 'helpers/functions';
 
 /***
- * Expects state to match that of the store. Expects ownProps to contain parent component
- * properties, such as the width and height of the container
+ * Merges state.mapbox with ownProps, but raises level of state.mapbox.viewport to top level
  * @param state
  * @param ownProps
- * @return {{mapState: *, mapStyle: {}, mapboxApiAccessToken: *}}
  */
-function mapStateToProps(state, ownProps) {
-    const mapState = R.mergeAll([
+export const mapStateToProps = (state, ownProps) =>
+    R.mergeAll([
         ownProps,
         // Flatten viewport and remove immutable
         toJS(state.mapbox.viewport),
         R.omit(['viewport'], state.mapbox)
     ]);
-
-    return mapState
-}
 
 // This is just an example of what mapDispatchToProps does.
 const mapDispatchToProps = (dispatch, ownProps) => {

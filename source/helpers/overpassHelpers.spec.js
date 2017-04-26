@@ -12,40 +12,39 @@
 import {fetchTransit, fetchTransitCelled} from './overpassHelpers';
 import {removeDuplicateObjectsByProp} from 'helpers/functions'
 
-// requires are used below since the jest includes aren't available at compile time
-jest.unmock('query-overpass')
 
 // TODO use .resolves for all async tests whenever Jest 20 comes out, assuming it works with fork
 
-describe("overpassHelpers unmocked", ()=> {
+if (false) {
+    // requires are used below since the jest includes aren't available at compile time
+    jest.unmock('query-overpass')
+    describe("overpassHelpers unmocked", () => {
 
-    /*
-    test('unmocked fetchTransit', () => {
-        // Unmocked integration test
-        const realBounds = [-118.24031352996826, 34.04298753935195, -118.21018695831297, 34.065209887879476];
-        fetchTransit({realBounds}, realBounds).fork(
-            error => {
-                throw new Error(error)
-            },
-            response => {
-                expect(response.features.length > 500).toEqual(true)
-            }
-        )
+        test('unmocked fetchTransit', () => {
+            // Unmocked integration test
+            const realBounds = [-118.24031352996826, 34.04298753935195, -118.21018695831297, 34.065209887879476];
+            fetchTransit({realBounds}, realBounds).fork(
+                error => {
+                    throw new Error(error)
+                },
+                response => {
+                    expect(response.features.length > 500).toEqual(true)
+                }
+            )
+        });
+        test('unmocked fetchTransitCelled', () => {
+            const realBounds = [-118.24031352996826, 34.04298753935195, -118.21018695831297, 34.065209887879476];
+            fetchTransitCelled(2, {realBounds}, realBounds).fork(
+                error => {
+                    throw new Error(error)
+                },
+                response => {
+                    expect(response.features.length > 500).toEqual(true)
+                }
+            )
+        });
     });
-    */
-    test('unmocked fetchTransitCelled', () => {
-        const realBounds = [-118.24031352996826, 34.04298753935195, -118.21018695831297, 34.065209887879476];
-        fetchTransitCelled(2, {realBounds}, realBounds).fork(
-            error => {
-                throw new Error(error)
-            },
-            response => {
-                expect(response.features.length > 500).toEqual(true)
-            }
-        )
-    });
-});
-/*
+}
 describe("overpassHelpers", ()=>{
 
     jest.mock('query-overpass')
@@ -75,4 +74,3 @@ describe("overpassHelpers", ()=>{
     })
 
 });
-*/

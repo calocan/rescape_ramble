@@ -58,7 +58,8 @@ export default {
             'process.env': {
                 'NODE_ENV': JSON.stringify('development'),
             }
-        })
+        }),
+        new ExtractTextPlugin( "bundle.css" )
     ],
     externals: {
         'react/addons': 'react',

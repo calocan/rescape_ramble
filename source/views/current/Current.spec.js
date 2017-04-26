@@ -6,6 +6,8 @@ import createCurrent from './Current';
 const Current = createCurrent(React);
 
 describe('The current application', () => {
-    test('Current', () => {
+    it('Current can mount', () => {
+        const wrapper = shallow(<Current {...props} />);
+        expect(wrapper).toMatchSnapshot();
     });
 });
