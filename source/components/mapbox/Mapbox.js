@@ -26,7 +26,7 @@ const Mapbox = (React) => React.createClass({
     },
 
     render: function() {
-        const {width, height, ...props} = this.props;
+        const {width, height, stops, lines, icons, ...props} = this.props;
 
         return (
             <MapGL
@@ -39,7 +39,11 @@ const Mapbox = (React) => React.createClass({
                 // and layers need to be reloaded without diffing enabled.
                 preventStyleDiffing={ false }
                 onChangeViewport={this._onChangeViewport}
-            />
+            >
+                <MapStops stops={stops}/>
+                <MapLines lines={lines}/>
+                <MapIcons icons={icons}/>
+            </MapGL>
         );
     }
 });

@@ -16,6 +16,7 @@ import configureStore from 'redux-mock-store';
 
 import testConfig from 'store/data/test/config'
 import initialState from 'store/data/initialState'
+import {getPath} from 'helpers/functions'
 
 const middlewares = [thunk];
 const mockStore = configureStore(middlewares);
@@ -25,6 +26,7 @@ describe('MapboxContainer', () => {
         const store = mockStore(initialState(testConfig));
 
         const ownProps = {
+            region: getPath(['regions', 'current'], store.getState()),
             width: 500,
             height: 500
         };

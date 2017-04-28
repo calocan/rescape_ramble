@@ -10,5 +10,5 @@
  */
 
 import config from 'config.json'
-const current = config.settings.current;
+const current = config.settings.defaultRegion;
 export default require(`store/data/${current}/config`).default;

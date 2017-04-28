@@ -2,15 +2,19 @@ import MapGL from 'react-map-gl'
 import React from 'react';
 import {shallow, mount} from 'enzyme';
 import R from 'ramda';
+import {getPath, toJS} from 'helpers/functions'
 
 import config from 'store/data/test/config'
+import initialState from "store/data/initialState";
+
+const state = initialState(config);
 const props = R.merge(
     {
         mapboxApiAccessToken: config.settings.mapboxApiAccessToken,
         width: 500,
         height: 500,
     },
-    config.mapbox.viewport
+    toJS(getPath(['regions', 'current', 'mapbox', 'viewport'], state))
 );
 
 it('MapGL can mount', () => {

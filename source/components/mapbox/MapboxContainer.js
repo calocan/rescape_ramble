@@ -18,17 +18,16 @@ import R from 'ramda';
 import {toJS} from 'helpers/functions';
 
 /***
- * Merges state.mapbox with ownProps, but raises level of state.mapbox.viewport to top level
+ * Merges state.mapbox with ownProps, but raises level of state
  * @param state
  * @param ownProps
  */
 export const mapStateToProps = (state, ownProps) =>
-    R.mergeAll([
-        ownProps,
+    R.merge(
         // Flatten viewport and remove immutable
-        toJS(state.mapbox.viewport),
+        toJS(ownProps.region.mapbox.viewport),
         R.omit(['viewport'], state.mapbox)
-    ]);
+    );
 
 // This is just an example of what mapDispatchToProps does.
 const mapDispatchToProps = (dispatch, ownProps) => {

@@ -1,4 +1,4 @@
-import {SET_FOO, setState, setFoo} from './settings';
+import {SET_CURRENT, setState, setCurrent} from './settings';
 import {SET_STATE} from './fullState';
 
 describe('settings actions', () => {
@@ -14,8 +14,8 @@ describe('settings actions', () => {
     });
     it('should create an action to set foo', () => {
         const value = 1;
-        expect(setFoo(value)).toEqual({
-            type: SET_FOO,
+        expect(setCurrent(value)).toEqual({
+            type: SET_CURRENT,
             value
         });
     })

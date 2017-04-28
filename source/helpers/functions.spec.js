@@ -91,4 +91,9 @@ describe('helperFunctions', () => {
                 [{a: [1], b: 2}, {a: [2], c: 3}, {a: [3]}]
         )).toEqual({a: [1, 2, 3], b: 2, c: 3});
     })
+    test("Should getPath of object", () => {
+        expect(
+            Rx.getPath(['a', 'b', 1, 'c'], {a: {b: [null, {c:2}]}})
+        ).toEqual(2)
+    })
 });

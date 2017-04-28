@@ -17,21 +17,23 @@ import Region from 'views/region/RegionContainer'
  */
 export default React => {
 
-    const current = ({}) => {
+    const current = ({region}) => {
         return <div className='current'>
-            <Region />
+            <Region region={region} />
         </div>
     };
 
     const {
-        string, shape, func
+        string, object, number, func
     } = React.PropTypes;
+    /***
+     * Expect the current region
+     * @type {{region: *}}
+     */
     current.propTypes = {
-         helloClass: string.isRequired,
-         subject: string,
-         actions: shape({
-            setMode: func.isRequired
-         })
+        region: object.isRequired,
+        width: number.isRequired,
+        height: number.isRequired
     };
 
     return current;

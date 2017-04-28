@@ -202,3 +202,11 @@ export const mergeAllWithKey = R.curry((fn, [head, ...rest]) =>
         )(rest)
     )
 )
+
+/***
+ * Shortcut to get the value of an object at the given lensPath
+ * @param {String} path A lensPath, e.g. ['a', 'b'] or ['a', 2, 'b']
+ * @param {Object} obj The object to inspect
+ * getPath:: String -> {k: v} → v
+ */
+export const getPath = R.curry((path, obj) => R.pipe(R.lensPath, R.view)(path)(obj))

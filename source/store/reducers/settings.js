@@ -11,15 +11,14 @@
 
 import {SET_STATE} from './fullState'
 import R from 'ramda'
-export const SET_FOO = '/settings/SET_FOO';
-const actions = [SET_FOO];
+export const SET_CURRENT = '/settings/SET_CURRENT';
 
 /***
  * Reduces the state of the settings
  * @param state:
  *  {} (default): Use default value for each setting
  *  {aSetting: true|false, ...}: Pass desired value of setting
- * @param action: SET_STATE, SET_FOO, etc
+ * @param action: SET_STATE, SET_CURRENT, etc
  * @returns {*}
  */
 export default function(state = {}, action) {
@@ -27,9 +26,8 @@ export default function(state = {}, action) {
     if (action.type === SET_STATE) {
         return R.merge(state, action.state['settings']);
     }
-    // Handle any other setting
-    else if (action.type && action.type in actions) {
-        return state.set(action.type, action.value);
+    else if (action.type === SET_CURRENT) {
+        return R.merge(state, action.state['settings']);
     }
     else {
         return state
@@ -40,6 +38,6 @@ export function setState(state) {
     return { type: SET_STATE, state }
 }
 
-export function setFoo(value) {
-    return { type: SET_FOO, value }
+export function setCurrent(value) {
+    return { type: SET_CURRENT, value }
 }

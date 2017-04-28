@@ -13,6 +13,7 @@ import defaultConfig from 'store/data/default/config'
 import journeys from './journeys.json';
 import locations from './locations.json';
 import routes from './routes';
+import * as routeTypes from 'store/data/default/routeTypes';
 import trips from './trips';
 import stops from './stops';
 import {mergeDeep} from 'helpers/functions'
@@ -22,10 +23,13 @@ import {mergeDeep} from 'helpers/functions'
  * @type {*}
  */
 export default mergeDeep(defaultConfig, {
+    id: 'california',
+
     gtfs: {
         routes,
         trips,
         stops,
+        routeTypes: [routeTypes.INTER_REGIONAL_RAIL_SERVICE]
     },
 
     travel: {

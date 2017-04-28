@@ -8,7 +8,11 @@
  * @property {number} label name of the Place
  */
 
-// Places
+// Places are general areas--cities, counties, national parks, universities, etc that contain 0 or more transit stops
+// They are identified by their primary AMTRAK station id, from which stop ids are created along with which stop it
+// is. So a Stop id at LA Union station would be LAX-Union and at the airport would be LAX-Airport. In the case
+// that AMTRAK has ids for secondary stops (e.g. Oakland Coliseum is OAC, we can either disregard that id or do an
+// override on the Stop to make OAC-Coliseum instead of the default OAK-Coliseum, but the latter is probably better)
 export const LOS_ANGELES = {id: 'LAX', label: 'Los Angeles'};
 export const OAKLAND = {id: 'OAK', label: 'Oakland'};
 export const PLEASANTON = {id: 'PLS', label: 'Pleasanton'};

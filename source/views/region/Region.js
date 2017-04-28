@@ -9,7 +9,7 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 import Mapbox from 'components/mapbox/MapboxContainer';
-import styles from './Region.style.css';
+import styles from './Region.style.js';
 import R from 'ramda';
 import React from 'react';
 
@@ -19,13 +19,10 @@ import React from 'react';
  */
 const Region = (React) => React.createClass({
 
-    /*
-     const {
-     string, shape, func
-     } = React.PropTypes;
+    /***
+     * Updates the width and height property to match the window
      */
     updateDimensions: function() {
-
         const w = window,
             d = document,
             documentElement = d.documentElement,
@@ -44,25 +41,34 @@ const Region = (React) => React.createClass({
     componentWillUnmount: function() {
         window.removeEventListener("resize", this.updateDimensions);
     },
+    componentWillReceiveProps(nextProps) {
+        // Region has changed
+        if (this.props.region != nextProps.region) {
+            this.props.loadRegion(nextProps.region);
+        }
+    },
 
     render: function() {
         return (
-            <div className='region' style={R.merge(styles.container, this.state)}>
+            <div style={R.merge(styles.container, this.state)}>
                 {/* We additionally give Mapbox the container width and height so the map can track changes to these */}
-                <Mapbox {...R.pick(['width', 'height'], this.state)}/>
+                <Mapbox region={this.props.region} {...this.state}/>
             </div>
         );
     }
 });
 
-    /*
-     Region.propTypes = {
-     helloClass: string.isRequired,
-     subject: string,
-     actions: shape({
-     setMode: func.isRequired
-     })
-     };
-     */
+    /***
+     * Expect the region
+     * @type {{region: *}}
+    */
+    const {
+        string, object, number, func
+    } = React.PropTypes;
+    Region.propTypes = {
+        region: object.isRequired,
+        width: number.isRequired,
+        height: number.isRequired
+    };
 
 export default Region;
