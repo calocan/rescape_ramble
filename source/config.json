@@ -6,6 +6,9 @@
         "domain": "rescapes.net"
       }
     ],
+    "overpass": {
+      "requestBoundsSize": 5
+    },
     "regions": [
       {
         "id": "california",

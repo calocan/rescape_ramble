@@ -1,16 +1,22 @@
 import React from 'react';
 import {shallow} from 'enzyme'
-
 import createRegion from './Region';
+import testConfig from 'store/data/test/config'
+import initialState from 'store/data/initialState'
 
 const Region = createRegion(React);
 
 test('Region', () => {
-    const titleText = 'Hello!';
+    const state = initialState(testConfig);
+
     const props = {
-        title: titleText,
-        titleClass: 'title'
+        region: state.regions.current,
+        width: 500,
+        height: 500
     };
-    const Component = shallow(<Region {...props} />)
-    expect(Component).toMatchSnapshot();
+
+    it('Region can mount', () => {
+        const wrapper = shallow(<Region {...props} />);
+        expect(wrapper).toMatchSnapshot();
+    });
 });

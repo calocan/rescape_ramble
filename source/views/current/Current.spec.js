@@ -12,8 +12,9 @@ describe('The current application', () => {
     const state = initialState(testConfig);
 
     const props = {
+        region: state.regions.current,
         width: 500,
-        height: 500,
+        height: 500
     };
 
     it('Current can mount', () => {

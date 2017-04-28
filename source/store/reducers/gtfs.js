@@ -24,8 +24,15 @@ import enhanceMapReducer from 'redux-map-gl';
 import R from 'ramda';
 import {SET_STATE} from './fullState'
 import {Map} from 'immutable'
+import {actionFetch} from 'helpers/requestHelpers';
+import {fetchTransitCelled, fetchTransit} from 'helpers/overpassHelpers'
+import Task from 'data.task'
 
-const SET_OPEN_STREET_MAP = '/settings/SET_OPEN_STREET_MAP';
+const FETCH_GTFS = '/gtfs/FETCH_GTFS';
+const FETCH_GTFS_DATA = '/gtfs/FETCH_GTFS_DATA';
+const FETCH_GTFS_SUCCESS = '/gtfs/FETCH_GTFS_SUCCESS';
+const FETCH_GTFS_FAILURE = '/gtfs/FETCH_GTFS_FAILURE';
+export const actions = {FETCH_GTFS, FETCH_GTFS_DATA, FETCH_GTFS_SUCCESS, FETCH_GTFS_FAILURE};
 
 const mapboxReducer = (
     state = { mapboxApiAccessToken: '', viewport: Map() }, action = {}
@@ -34,12 +41,58 @@ const mapboxReducer = (
     switch (action.type) {
         case SET_STATE:
             return R.merge(state, action.state.gtfs);
-        // Sets the GTFS state from an OPEN_STREET_MAP source. value contains stops, lines, and routes
-        case SET_OPEN_STREET_MAP:
+        case FETCH_GTFS_SUCCESS:
             return R.merge(state, action.value)
         default:
             return state;
     }
 };
+
+/***
+ * Action to request the full state
+ * @return {{type: string}}
+ */
+function fetchGtfsData() {
+    return {
+        type: FETCH_GTFS_DATA
+    }
+}
+
+/***
+ * Action to process the successful response
+ * @param body
+ * @return {{type: string, body: *}}
+ */
+function fetchGtfsSuccess(body) {
+    return {
+        type: FETCH_GTFS_SUCCESS,
+        body
+    }
+}
+
+/***
+ * Action to process the failure response
+ * @param ex
+ * @return {{type: string, ex: *}}
+ */
+function fetchGtfsFailure(ex) {
+    return {
+        type: FETCH_GTFS_FAILURE,
+        ex
+    }
+}
+
+export function fetchGtfs(settings, options, bounds) {
+    return dispatch => {
+        dispatch(fetchGtfsData());
+        return fetchTransit(options, bounds).chain(response => {
+            console.log("B")
+            return Task.of(res => {
+                console.log("A")
+                dispatch(fetchGtfsSuccess(res))
+            })
+        })
+    }
+}
 
 export default enhanceMapReducer(mapboxReducer);

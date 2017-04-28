@@ -42,11 +42,12 @@ export const fetchTransitCelled = (cellSize, options, bounds) => {
     // concatValues combines are results sets when they return
     const concatValues = (k, l, r) => k == 'features' ? R.concat(l, r) : r;
 
-    // fetchTasks :: Task (Array (Task Object))
+    // fetchTasks :: Array (Task Object)
     const fetchTasks = R.map(fetchTransit(options), squares);
     // sequenced :: Task (Array Object)
     const sequenced = R.sequence(Task.of, fetchTasks);
-    return sequenced.chain((results) => Task.of(
+    return sequenced.chain((results) =>
+        Task.of(
             R.pipe(
                 mergeAllWithKey(concatValues),  // combine the results into one obj with concatinated features
                 R.over(                         // remove features with the same id
@@ -64,7 +65,6 @@ export const fetchTransitCelled = (cellSize, options, bounds) => {
  * @param {Array} bounds [lat_min, lon_min, lat_max, lon_max]
  */
 export const fetchTransit = R.curry((options, bounds) => {
-
     const boundsAsString = R.pipe(
         list=>R.concat(
             R.reverse(R.slice(0,2)(list)),
