@@ -28,11 +28,11 @@ const getResponse = (bounds) => responses.get(fromJS(bounds));
  * @param query
  * @param cb
  * @param options
- * @param options.bounds Required for testing
+ * @param options.testBounds Required for testing
  * @return {Promise}
  */
 export default (query, cb, options) => {
-    const response = getResponse(options.bounds);
+    const response = getResponse(options.testBounds);
     process.nextTick(
         () => response ?
             cb(undefined, response) :

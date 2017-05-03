@@ -43,7 +43,7 @@ export const fetchTransitCelled = ({cellSize=1, testBounds}, bounds) => {
     const concatValues = (k, l, r) => k == 'features' ? R.concat(l, r) : r;
 
     // fetchTasks :: Array (Task Object)
-    const fetchTasks = R.map(fetchTransit({bounds:testBounds}), squares);
+    const fetchTasks = R.map(fetchTransit({testBounds}), squares);
     // sequenced :: Task (Array Object)
     const sequenced = R.sequence(Task.of, fetchTasks);
     return sequenced.chain((results) =>
@@ -61,7 +61,7 @@ export const fetchTransitCelled = ({cellSize=1, testBounds}, bounds) => {
 /***
  * fetches transit data from OpenStreetMap using the Overpass API.
  * @param {Object} options Options to pass to query-overpass, plus the following:
- * @param {Object} options.bounds Used only for testing
+ * @param {Object} options.testBounds Used only for testing
  * @param {Array} bounds [lat_min, lon_min, lat_max, lon_max]
  */
 export const fetchTransit = R.curry((options, bounds) => {
