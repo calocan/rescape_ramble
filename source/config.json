@@ -7,7 +7,7 @@
       }
     ],
     "overpass": {
-      "requestBoundsSize": 5
+      "cellSize": 5
     },
     "regions": [
       {

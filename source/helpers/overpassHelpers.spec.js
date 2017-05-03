@@ -34,7 +34,7 @@ if (false) {
         });
         test('unmocked fetchTransitCelled', () => {
             const realBounds = [-118.24031352996826, 34.04298753935195, -118.21018695831297, 34.065209887879476];
-            fetchTransitCelled(2, {realBounds}, realBounds).fork(
+            fetchTransitCelled({cellSize: 2, bounds: realBounds}, realBounds).fork(
                 error => {
                     throw new Error(error)
                 },
@@ -62,8 +62,8 @@ describe("overpassHelpers", ()=>{
     });
 
     test("fetchTransit in cells", ()=> {
-        fetchTransitCelled(200, {bounds}, bounds).fork(
-            error => { throw new Error(error) },
+        fetchTransitCelled({cellSize: 200, testBounds: bounds}, bounds).fork(
+            error => { or(error.message) },
             response => {
                 expect(response.features).toEqual(
                     // the sample can have duplicate ids

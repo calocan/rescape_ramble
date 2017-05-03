@@ -81,18 +81,20 @@ function fetchGtfsFailure(ex) {
     }
 }
 
-export function laodRegion(settings, region) {
-   return fetchGtfs(settings, {}, region.geospatial)
-}
-
-export function fetchGtfs(settings, options, bounds) {
+/***
+ * Asynchronous call to fetch GTFS data from user the overhead api
+ * @param {Object} options:
+ * @param options.cellSize: Pass the cellSize in kilometers here
+ * @param {[Number]} bounds
+ * @return {function(*)}
+ * fetchGtfs:: <k,v> -> [a] -> Task Error String
+ */
+export function fetchGtfs(options, bounds) {
     return dispatch => {
-        console.log("A")
         dispatch(fetchGtfsData());
-        fetchTransit(options, bounds).chain(response => {
-            console.log("B")
-            return result(dispatch(fetchGtfsSuccess(response)))
-        })
+        return fetchTransit(options, bounds).chain(response =>
+            Task.of(dispatch(fetchGtfsSuccess(response)))
+        )
     }
 }
 

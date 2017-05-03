@@ -44,7 +44,7 @@ const Region = (React) => React.createClass({
     componentWillReceiveProps(nextProps) {
         // Region has changed
         if (this.props.region != nextProps.region) {
-            this.props.loadRegion(nextProps.settings, nextProps.region);
+            this.props.fetchGtfs(nextProps.settings, nextProps.region);
         }
     },
 

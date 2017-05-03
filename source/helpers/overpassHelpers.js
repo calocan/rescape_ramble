@@ -26,11 +26,12 @@ import bbox from '@turf/bbox';
  * be queried separately. The results from all queries are merged by feature id so that no
  * duplicates are returned.
  * @param {Object} options Options to pass to query-overpass, plus the following:
- * @param {Object} options.bounds Used only for testing
+ * @param {Object} options.cellSize Size of cells to request in kilometers, defaults to 1 km
+ * @param {Object} options.testBounds Used only for testing
  * @param {Array} bounds [lat_min, lon_min, lat_max, lon_max]
  *
  */
-export const fetchTransitCelled = (cellSize, options, bounds) => {
+export const fetchTransitCelled = ({cellSize=1, testBounds}, bounds) => {
     const units = 'kilometers';
     // Use turf's squareGrid function to break up the bbox by cellSize squares
     const squares = R.map(
@@ -42,7 +43,7 @@ export const fetchTransitCelled = (cellSize, options, bounds) => {
     const concatValues = (k, l, r) => k == 'features' ? R.concat(l, r) : r;
 
     // fetchTasks :: Array (Task Object)
-    const fetchTasks = R.map(fetchTransit(options), squares);
+    const fetchTasks = R.map(fetchTransit({bounds:testBounds}), squares);
     // sequenced :: Task (Array Object)
     const sequenced = R.sequence(Task.of, fetchTasks);
     return sequenced.chain((results) =>

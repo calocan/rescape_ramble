@@ -16,5 +16,5 @@ export default connect(
      * @param state
      * @returns {{}}
      */
-    mapStateToProps
-)(createRegion(React), gtfsActions);
+    mapStateToProps, gtfsActions
+)(createRegion(React));

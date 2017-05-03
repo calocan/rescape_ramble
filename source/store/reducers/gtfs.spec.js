@@ -28,7 +28,7 @@ describe('gtfs reducer', () => {
     test('should return the initial state', () => {
         expect(
             Map(reducer(
-                getPath(['regions', 'current', 'gtfs'], state),
+                getPath(['regions', state.regions.currentKey, 'gtfs'], state),
                 {})
             ).toJS()
         ).toEqual(R.map(toObjectKeyedById, testConfig.gtfs))
@@ -42,16 +42,19 @@ describe('gtfs reducer', () => {
         ]
 
         // Pass bounds in the options. Our mock query-overpass uses is to avoid parsing the query
-        store.dispatch(fetchGtfs(store.getState().settings, {bounds}, bounds).fork(
+        store.dispatch(fetchGtfs(
+            {cellSize: store.getState().settings.overpass.cellSize, testBounds: bounds},
+            bounds
+        )).fork(
+            reject => {
+                throw new Error(reject.message)
+            },
             response => {
                 console.log(store.getActions())
                 expect(store.getActions()).toEqual(
                     expectedActions
                 )
             },
-            error => {
-                throw new Error(error)
-            }
-        ))
+        )
     })
 });
