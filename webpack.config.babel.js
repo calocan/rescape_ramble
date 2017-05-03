@@ -4,8 +4,15 @@ import ExtractTextPlugin from 'extract-text-webpack-plugin';
 
 export default {
     devtool: 'inline-source-map',
+    node: {
+        console: true,
+        fs: 'empty',
+        net: 'empty',
+        tls: 'empty'
+    },
 
     resolve: {
+
         modules: [
             resolve('./source'),
             resolve('./node_modules')

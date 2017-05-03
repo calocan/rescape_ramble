@@ -44,7 +44,7 @@ const Region = (React) => React.createClass({
     componentWillReceiveProps(nextProps) {
         // Region has changed
         if (this.props.region != nextProps.region) {
-            this.props.loadRegion(nextProps.region);
+            this.props.loadRegion(nextProps.settings, nextProps.region);
         }
     },
 
@@ -66,6 +66,7 @@ const Region = (React) => React.createClass({
         string, object, number, func
     } = React.PropTypes;
     Region.propTypes = {
+        settings: object.isRequired,
         region: object.isRequired,
         width: number.isRequired,
         height: number.isRequired

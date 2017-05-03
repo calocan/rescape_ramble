@@ -24,7 +24,6 @@ import enhanceMapReducer from 'redux-map-gl';
 import R from 'ramda';
 import {SET_STATE} from './fullState'
 import {Map} from 'immutable'
-import {actionFetch} from 'helpers/requestHelpers';
 import {fetchTransitCelled, fetchTransit} from 'helpers/overpassHelpers'
 import Task from 'data.task'
 
@@ -82,15 +81,17 @@ function fetchGtfsFailure(ex) {
     }
 }
 
+export function laodRegion(settings, region) {
+   return fetchGtfs(settings, {}, region.geospatial)
+}
+
 export function fetchGtfs(settings, options, bounds) {
     return dispatch => {
+        console.log("A")
         dispatch(fetchGtfsData());
-        return fetchTransit(options, bounds).chain(response => {
+        fetchTransit(options, bounds).chain(response => {
             console.log("B")
-            return Task.of(res => {
-                console.log("A")
-                dispatch(fetchGtfsSuccess(res))
-            })
+            return result(dispatch(fetchGtfsSuccess(response)))
         })
     }
 }

@@ -11,7 +11,6 @@
 
 import query_overpass from 'query-overpass';
 import Task from 'data.task'
-import Maybe from 'data.maybe'
 import R from 'ramda';
 import {mergeAllWithKey, removeDuplicateObjectsByProp} from 'helpers/functions';
 import os from 'os';

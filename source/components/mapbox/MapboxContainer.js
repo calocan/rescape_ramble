@@ -22,12 +22,13 @@ import {toJS} from 'helpers/functions';
  * @param state
  * @param ownProps
  */
-export const mapStateToProps = (state, ownProps) =>
-    R.merge(
+export const mapStateToProps = (state, ownProps) => {
+    return R.merge(
         // Flatten viewport and remove immutable
         toJS(ownProps.region.mapbox.viewport),
-        R.omit(['viewport'], state.mapbox)
+        R.omit(['viewport'], ownProps.region.mapbox)
     );
+}
 
 // This is just an example of what mapDispatchToProps does.
 const mapDispatchToProps = (dispatch, ownProps) => {

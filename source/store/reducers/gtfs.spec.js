@@ -42,10 +42,13 @@ describe('gtfs reducer', () => {
         ]
 
         // Pass bounds in the options. Our mock query-overpass uses is to avoid parsing the query
-        store.dispatch(fetchGtfs(store.getState().settings, {bounds}, bounds)).then(
-            response => expect(store.getActions()).toEqual(
-                expectedActions
-            ),
+        store.dispatch(fetchGtfs(store.getState().settings, {bounds}, bounds).fork(
+            response => {
+                console.log(store.getActions())
+                expect(store.getActions()).toEqual(
+                    expectedActions
+                )
+            },
             error => {
                 throw new Error(error)
             }

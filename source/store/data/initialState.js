@@ -25,11 +25,11 @@ export const toObjectKeyedByGeneratedId = generator => R.pipe(
 );
 const toObjectKeyedById = mapPropValueAsIndex('id');
 // Maps the array to objects keyed by id and also inserts a 'current' key to reference the given currentKey
-// toObjectKeyedByIdWithCurrent:: String -> [{k,v}] -> {j|current, {k, v}}
+// toObjectKeyedByIdWithCurrent:: String -> [{k,v}] -> {j|currentKey, {k, v}}
 const toObjectKeyedByIdWithCurrent = R.curry((currentKey, object) => {
     const obj = toObjectKeyedById(object);
     return {
-        current: obj[currentKey],
+        currentKey: currentKey,
         ...obj
     }
 });
@@ -46,6 +46,7 @@ export default (config) => {
         regions: toObjectKeyedByIdWithCurrent(config.id, [
             {
                 id: config.id,
+                geospatial: config.geospatial,
                 // make each array of objects in travel to an object by array object id
                 travel: R.map(toObjectKeyedByGeneratedId, config.travel),
                 // make each array of objects in gtf to an object by array object id

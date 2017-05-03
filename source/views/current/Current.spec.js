@@ -12,7 +12,7 @@ describe('The current application', () => {
     const state = initialState(testConfig);
 
     const props = {
-        region: state.regions.current,
+        region: R.prop(state.regions.currentKey, state.regions),
         width: 500,
         height: 500
     };

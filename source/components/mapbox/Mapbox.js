@@ -12,6 +12,12 @@
 import MapGL from 'react-map-gl';
 import React from 'react'
 import autobind from 'autobind-decorator';
+import createMapStops from 'components/mapStop/mapStops';
+import createMapIcons from 'components/mapIcon/mapIcons';
+import createMapLines from 'components/mapLine/mapLines';
+const MapStops = createMapStops(React);
+const MapLines = createMapLines(React);
+const MapIcons = createMapIcons(React);
 
 const {
     number,
@@ -27,6 +33,7 @@ const Mapbox = (React) => React.createClass({
 
     render: function() {
         const {width, height, stops, lines, icons, ...props} = this.props;
+
 
         return (
             <MapGL

@@ -5,7 +5,7 @@ import R from 'ramda';
 
 export const mapStateToProps = (state) => {
     return {
-        region: state.regions.current
+        region: R.prop(state.regions.currentKey, state.regions)
     }
 }
 

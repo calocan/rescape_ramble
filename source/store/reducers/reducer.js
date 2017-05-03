@@ -11,11 +11,11 @@
 
 import { combineReducers } from 'redux';
 import settings from './settings.js'
-import mapboxReducer from './mapbox.js'
-import { routerReducer } from 'react-router-redux'
+import regions from './regions.js'
+import { routerReducer as routing} from 'react-router-redux'
 
 export default combineReducers({
     settings,
-    mapbox: mapboxReducer,
-    routing: routerReducer
+    regions,
+    routing
 })

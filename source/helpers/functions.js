@@ -210,3 +210,9 @@ export const mergeAllWithKey = R.curry((fn, [head, ...rest]) =>
  * getPath:: String -> {k: v} → v
  */
 export const getPath = R.curry((path, obj) => R.pipe(R.lensPath, R.view)(path)(obj))
+
+/***
+ * Use immutable to make a deep copy of an object
+ * copy:: a -> a
+ */
+export const copy = R.compose(toJS, toImmutable);
