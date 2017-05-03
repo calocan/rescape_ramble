@@ -8,3 +8,26 @@
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+import React from 'react';
+import thunk from 'redux-thunk'
+import {mapStateToProps} from './CurrentContainer';
+import configureStore from 'redux-mock-store';
+import testConfig from 'store/data/test/config'
+import initialState from 'store/data/initialState'
+const middlewares = [thunk];
+const mockStore = configureStore(middlewares);
+
+describe('CurrentContainer', () => {
+    test('mapStateToProps returns regions and current of state.settings', () => {
+        const store = mockStore(initialState(testConfig));
+        const state = store.getState();
+
+        const ownProps = {
+            region: R.prop(state.regions.currentKey, state.regions),
+            width: 500,
+            height: 500
+        };
+
+        expect(mapStateToProps(store.getState(), ownProps)).toMatchSnapshot()
+    });
+})

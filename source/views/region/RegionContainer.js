@@ -1,16 +1,20 @@
 import {connect} from 'react-redux';
-import Region from './Region.js';
+import React from 'react';
+import createRegion from './Region.js';
+import {bindActionCreators} from 'redux'
+import * as gtfsActions from 'store/reducers/gtfs';
 
+export const mapStateToProps = (state, ownProps) => {
+    return {
+        settings: state.settings,
+        region: ownProps.region
+    };
+}
 export default connect(
     /***
      * The wrapped component needs access to the settings and a r
      * @param state
-     * @param props
      * @returns {{}}
      */
-    (state, props)=>{
-        return {
-            ...state.get('settings')
-        };
-    }
-)(Region);
+    mapStateToProps
+)(createRegion(React), gtfsActions);

@@ -1,7 +1,8 @@
-const path = require('path');
-const express = require('express');
-const webpack = require('webpack');
-const config = require('../webpack.config.dev.js');
+
+import path from 'path';
+import express from 'express';
+import webpack from 'webpack';
+import config from '../webpack.config.babel.js';
 
 const app = express();
 const compiler = webpack(config);

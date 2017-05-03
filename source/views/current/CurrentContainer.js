@@ -1,16 +1,20 @@
 import {connect} from 'react-redux';
-import Current from './Current.js';
+import createCurrent from './Current.js';
+import React from 'react';
+import R from 'ramda';
+
+export const mapStateToProps = (state) => {
+    return {
+        region: R.prop(state.regions.currentKey, state.regions)
+    }
+}
 
 export default connect(
     /***
-     * The only state needed directly by the wrapped component is settings
+     * Passes the regions and current region
      * @param state
-     * @param props
+     * @param ownProps
      * @returns {{}}
      */
-    (state, props)=>{
-        return {
-            ...state.get('settings')
-        };
-    }
-)(Current);
+    mapStateToProps
+)(createCurrent(React));

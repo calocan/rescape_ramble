@@ -1,25 +1,24 @@
 import React from 'react';
-import test from 'tape-catch';
 import {shallow} from 'enzyme'
 
 import createCurrent from './Current';
+import testConfig from 'store/data/test/config'
+import initialState from 'store/data/initialState'
 
 const Current = createCurrent(React);
 
-test('Current', t => {
-    const titleText = 'Hello!';
-    const props = {
-        title: titleText,
-        titleClass: 'title'
-    };
-    const re = new RegExp(titleText, 'g');
+describe('The current application', () => {
 
-    const choice = 'Choice 1'
-    const Component = shallow(<Current {...props} />)
-    t.ok(Component.length)
-    t.equals(Component.find('label').text(), choice, `Expect label to contain ${choice}`)
-    Component.find('input').simulate('click');
-    // i.e. change the component in some way from clicking and check for the change
-    t.equals(Component.find('.clicks-1').length, 1, 'Should have been clicked')
-    t.end();
+    const state = initialState(testConfig);
+
+    const props = {
+        region: R.prop(state.regions.currentKey, state.regions),
+        width: 500,
+        height: 500
+    };
+
+    it('Current can mount', () => {
+        const wrapper = shallow(<Current {...props} />);
+        expect(wrapper).toMatchSnapshot();
+    });
 });

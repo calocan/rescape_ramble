@@ -13,6 +13,8 @@
  * Defines the all actions of the application used manipulate the DOM.
  */
 
+import {actionFetch} from 'helpers/requestHelpers';
+
 /*
  * Action types. See action definition for explanation
 */
@@ -20,8 +22,59 @@
 // sets the full state to a stored value (e.g. from a cookie)
 // This action is delegated to other reducers
 export const SET_STATE = 'SET_STATE'
+export const FETCH_FULL_STATE_REQUEST = 'FETCH_FULL_STATE_REQUEST';
+export const FETCH_FULL_STATE_SUCCESS = 'FETCH_FULL_STATE_SUCCESS';
+export const FETCH_FULL_STATE_FAILURE = 'FETCH_FULL_STATE_FAILURE';
 
+/***
+ * Sets the full state to a stored value (e.g. from a cookie or cloud)
+ * This action is delegated to other reducers
+ * @param state
+ * @return {{type: string, state: *}}
+ */
 export function setState(state = null) {
     return { type: SET_STATE, state: state }
+}
+
+/***
+ * Action to request the full state
+ * @return {{type: string}}
+ */
+function fetchFullStateRequest() {
+    return {
+        type: FETCH_FULL_STATE_REQUEST
+    }
+}
+
+/***
+ * Action to process the successful response
+ * @param body
+ * @return {{type: string, body: *}}
+ */
+function fetchFullStateSuccess(body) {
+    return {
+        type: FETCH_FULL_STATE_SUCCESS,
+        body
+    }
+}
+
+/***
+ * Action to process the failure response
+ * @param ex
+ * @return {{type: string, ex: *}}
+ */
+function fetchFullStateFailure(ex) {
+    return {
+        type: FETCH_FULL_STATE_FAILURE,
+        ex
+    }
+}
+
+export function fetchFullState(host) {
+    const url = `${host}/settings`;
+    return dispatch => {
+        dispatch(fetchFullStateRequest());
+        return actionFetch(dispatch, fetch(url), fetchFullStateSuccess, fetchFullStateFailure)
+    }
 }
 

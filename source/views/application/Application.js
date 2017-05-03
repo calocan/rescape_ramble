@@ -8,11 +8,11 @@
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import Current from 'views/current/CurrentContainer'
 
 /***
- * Application is our highest-level React component. It embeds the Current View, which based on time or props
- * displays whatever View we're interested in
+ * Application is our highest-level React component, displaying whatever compatible application
+ * we are interested in.
+ * TODO move this and rounting to a parent rescape repository since this isn't specific to the application of this repo
  */
 export default React => {
 
@@ -22,9 +22,9 @@ export default React => {
     } = React.PropTypes;
     */
 
-    const application = ({}) => {
+    const application = (props) => {
         return <div className='application'>
-            <Current />
+            {props.children}
         </div>
     }
 

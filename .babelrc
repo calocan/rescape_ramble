@@ -1,4 +1,15 @@
 {
-  "presets": ["es2015", "stage-0", "react"],
-  "plugins": ["transform-decorators-legacy"]
+  "sourceMaps": true,
+  "presets": [
+    "react",
+    "es2015"
+  ],
+  "plugins": [
+    "transform-object-rest-spread",
+    "transform-runtime",
+    "transform-decorators-legacy",
+    ["transform-es2015-modules-commonjs-simple", {
+      "noMangle": true
+    }],
+  ]
 }

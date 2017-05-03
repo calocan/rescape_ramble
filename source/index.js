@@ -12,19 +12,21 @@
 import 'babel-polyfill'
 import React from 'react'
 import ReactDOM from 'react-dom'
-import {Router, Route, useRouterHistory} from 'react-router'
-import Current from 'views/current/Current'
-import Application from 'views/application/Application'
-import makeStore from './store'
+import Current from 'views/current/CurrentContainer'
+import Application from 'views/application/ApplicationContainer'
+
 import {Provider} from 'react-redux'
+import { Router, Route, browserHistory } from 'react-router'
+import { syncHistoryWithStore } from 'react-router-redux'
+
 import {setState} from './store/reducers/fullState'
 import initialState from './store/data/initialState'
-import { createHistory } from 'history'
-
-// useRouterHistory creates a composable higher-order function
-const appHistory = useRouterHistory(createHistory)({ queryKey: false })
-
-const store = makeStore()
+import makeStore from './store'
+import currentConfig from './store/data/current/config'
+const store = makeStore();
+store.dispatch(setState(initialState(currentConfig)));
+// Create an enhanced history that syncs navigation events with the store
+const history = syncHistoryWithStore(browserHistory, store);
 
 /***
  * App is the common component for all of our routes
@@ -35,10 +37,8 @@ const routes = (<Route component={Application}>
 
 ReactDOM.render(
     <Provider store={store}>
-        <Router history={appHistory}>{routes}</Router>
+        <Router history={history}>{routes}</Router>
     </Provider>,
     document.getElementById('root')
 );
-
-store.dispatch(setState(initialState))
 

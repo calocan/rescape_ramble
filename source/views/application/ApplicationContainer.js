@@ -1,5 +1,6 @@
 import {connect} from 'react-redux';
-import Application from './Application.js';
+import createApplication from './Application.js';
+import React from 'react'
 
 export default connect(
     /***
@@ -8,9 +9,9 @@ export default connect(
      * @param props
      * @returns {{}}
      */
-    (state, props)=>{
+    (state)=>{
         return {
-            ...state.get('settings')
+            ...state['settings']
         };
     }
-)(Application);
+)(createApplication(React));
