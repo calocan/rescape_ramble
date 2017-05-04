@@ -34,9 +34,10 @@ const mockStore = configureStore(middlewares);
 describe('RegionContainer', () => {
     test('mapStateToProps returns regions and current of state.settings', () => {
         const store = mockStore(initialState(testConfig));
+        const currentKey = getPath(['regions', 'currentKey'], store.getState());
 
         const ownProps = {
-            region: getPath(['regions', 'current'], store.getState()),
+            region: getPath(['regions', currentKey], store.getState()),
             width: 500,
             height: 500
         };

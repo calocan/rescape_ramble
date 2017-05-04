@@ -19,11 +19,6 @@ const MapStops = createMapStops(React);
 const MapLines = createMapLines(React);
 const MapIcons = createMapIcons(React);
 
-const {
-    number,
-    string
-} = React.PropTypes;
-
 const Mapbox = (React) => React.createClass({
 
     @autobind
@@ -55,10 +50,25 @@ const Mapbox = (React) => React.createClass({
     }
 });
 
+const {
+    number,
+    string,
+    object,
+    bool
+} = React.PropTypes;
+
 Mapbox.propTypes = {
     width: number.isRequired,
     height: number.isRequired,
-    mapboxApiAccessToken: string.isRequired
+    bearing: number.isRequired,
+    isDragging: bool.isRequired,
+    latitude: number.isRequired,
+    longitude: number.isRequired,
+    mapStyle: string.isRequired,
+    mapboxApiAccessToken: string.isRequired,
+    pitch: number.isRequired,
+    startDragLngLat: object,
+    zoom: number.isRequired
 };
 
 export default Mapbox;

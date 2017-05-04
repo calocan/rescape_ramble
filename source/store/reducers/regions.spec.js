@@ -6,9 +6,10 @@ import {getPath} from 'helpers/functions'
 
 describe('mabpox reducer', () => {
     it('should return the initial state', () => {
+        const state = initialState(testConfig);
         expect(
             Map(reducer(
-                getPath(['regions', 'current', 'mapbox'], initialState(testConfig)),
+                getPath(['regions', getPath(['regions', 'currentKey'], state), 'mapbox'], state),
                 {})
             ).toJS()
         ).toEqual(testConfig.mapbox)

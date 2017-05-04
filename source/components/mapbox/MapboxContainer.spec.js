@@ -24,9 +24,10 @@ const mockStore = configureStore(middlewares);
 describe('MapboxContainer', () => {
     test('mapStateToProps flattens viewport props', () => {
         const store = mockStore(initialState(testConfig));
+        const state = store.getState();
 
         const ownProps = {
-            region: getPath(['regions', 'current'], store.getState()),
+            region: getPath(['regions', getPath(['regions', 'currentKey'], state)], state),
             width: 500,
             height: 500
         };

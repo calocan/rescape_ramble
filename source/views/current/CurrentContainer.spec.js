@@ -14,8 +14,10 @@ import {mapStateToProps} from './CurrentContainer';
 import configureStore from 'redux-mock-store';
 import testConfig from 'store/data/test/config'
 import initialState from 'store/data/initialState'
+import R from 'ramda'
 const middlewares = [thunk];
 const mockStore = configureStore(middlewares);
+
 
 describe('CurrentContainer', () => {
     test('mapStateToProps returns regions and current of state.settings', () => {

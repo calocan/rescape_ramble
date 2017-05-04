@@ -3,6 +3,7 @@ import {shallow} from 'enzyme'
 import createRegion from './Region';
 import testConfig from 'store/data/test/config'
 import initialState from 'store/data/initialState'
+import R from 'ramda'
 
 const Region = createRegion(React);
 

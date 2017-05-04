@@ -9,7 +9,7 @@ export const mapStateToProps = (state) => {
     }
 }
 
-export default connect(
+const CurrentContainer = connect(
     /***
      * Passes the regions and current region
      * @param state
@@ -18,3 +18,4 @@ export default connect(
      */
     mapStateToProps
 )(createCurrent(React));
+export default CurrentContainer;

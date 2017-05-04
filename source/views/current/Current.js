@@ -10,31 +10,52 @@
  */
 
 import Region from 'views/region/RegionContainer'
+import styles from './Current.style.js';
+import React from 'react'
 
 /***
  * Displays the Region of the current state and eventually a Region selector.
  * This might also be modified to display all available regions, perhaps on a continental map
  */
-export default React => {
+const Current = (React) => React.createClass({
 
-    const current = ({region}) => {
-        return <div className='current'>
-            <Region region={region} />
-        </div>
-    };
+        /***
+         * Updates the width and height property to match the window
+         */
+        updateDimensions: function() {
+            const w = window,
+                d = document,
+                documentElement = d.documentElement,
+                body = d.getElementsByTagName('body')[0],
+                width = styles.container.width * (w.innerWidth || documentElement.clientWidth || body.clientWidth),
+                height = styles.container.height * (w.innerHeight|| documentElement.clientHeight|| body.clientHeight);
 
-    const {
-        string, object, number, func
-    } = React.PropTypes;
-    /***
-     * Expect the current region
-     * @type {{region: *}}
-     */
-    current.propTypes = {
-        region: object.isRequired,
-        width: number.isRequired,
-        height: number.isRequired
-    };
+            this.setState({width, height});
+        },
+        componentWillMount: function() {
+            this.updateDimensions();
+        },
+        componentDidMount: function() {
+            window.addEventListener("resize", this.updateDimensions);
+        },
+        componentWillUnmount: function() {
+            window.removeEventListener("resize", this.updateDimensions);
+        },
 
-    return current;
-}
+        render() {
+            return <div className='current'>
+                <Region region={this.props.region} style={{width: this.state.width, height: this.state.height}}/>
+            </div>
+        }
+});
+const {
+    string, object, number, func
+} = React.PropTypes;
+/***
+ * Expect the current region
+ * @type {{region: *}}
+ */
+Current.propTypes = {
+    region: object.isRequired,
+};
+export default Current;

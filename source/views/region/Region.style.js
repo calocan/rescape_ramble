@@ -21,7 +21,5 @@
  */
 export default {
     container: {
-        height: '1',
-        width: '.5'
     },
 }

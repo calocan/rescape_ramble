@@ -23,11 +23,13 @@ import {toJS} from 'helpers/functions';
  * @param ownProps
  */
 export const mapStateToProps = (state, ownProps) => {
-    return R.merge(
+    return R.mergeAll([
+        // flatten the style to get the width and height
+        R.pick(['width', 'height'], ownProps.style),
         // Flatten viewport and remove immutable
         toJS(ownProps.region.mapbox.viewport),
         R.omit(['viewport'], ownProps.region.mapbox)
-    );
+    ]);
 }
 
 // This is just an example of what mapDispatchToProps does.

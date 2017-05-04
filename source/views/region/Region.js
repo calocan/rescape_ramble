@@ -19,57 +19,40 @@ import React from 'react';
  */
 const Region = (React) => React.createClass({
 
-    /***
-     * Updates the width and height property to match the window
-     */
-    updateDimensions: function() {
-        const w = window,
-            d = document,
-            documentElement = d.documentElement,
-            body = d.getElementsByTagName('body')[0],
-            width = styles.container.width * (w.innerWidth || documentElement.clientWidth || body.clientWidth),
-            height = styles.container.height * (w.innerHeight|| documentElement.clientHeight|| body.clientHeight);
 
-        this.setState({width, height});
-    },
-    componentWillMount: function() {
-        this.updateDimensions();
-    },
-    componentDidMount: function() {
-        window.addEventListener("resize", this.updateDimensions);
-    },
-    componentWillUnmount: function() {
-        window.removeEventListener("resize", this.updateDimensions);
-    },
     componentWillReceiveProps(nextProps) {
         // Region has changed
         if (this.props.region != nextProps.region) {
-            this.props.fetchGtfs(nextProps.settings, nextProps.region);
+            this.props.fetchGtfs(nextProps.settings, nextProps.region).chain(
+                error => this.props.fetchGtfsFailure(error),
+                gtfs => {
+                    this.setState({gtfs})
+                }
+            );
         }
     },
 
     render: function() {
         return (
-            <div style={R.merge(styles.container, this.state)}>
+            <div className='region' style={R.merge(this.props.style, styles.container)}>
                 {/* We additionally give Mapbox the container width and height so the map can track changes to these */}
-                <Mapbox region={this.props.region} {...this.state}/>
+                <Mapbox region={this.props.region} style={this.props.style} gtfs={this.state.gtfs}/>
             </div>
         );
     }
 });
 
-    /***
-     * Expect the region
-     * @type {{region: *}}
-    */
-    const {
-        string, object, number, func
-    } = React.PropTypes;
-    Region.propTypes = {
-        settings: object.isRequired,
-        region: object.isRequired,
-        width: number.isRequired,
-        height: number.isRequired
-    };
+/***
+ * Expect the region
+ * @type {{region: *}}
+*/
+const {
+    string, object, number, func
+} = React.PropTypes;
+Region.propTypes = {
+    settings: object.isRequired,
+    region: object.isRequired,
+    style: object.isRequired
+};
 
 export default Region;

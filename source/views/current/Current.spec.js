@@ -4,6 +4,7 @@ import {shallow} from 'enzyme'
 import createCurrent from './Current';
 import testConfig from 'store/data/test/config'
 import initialState from 'store/data/initialState'
+import R from 'ramda'
 
 const Current = createCurrent(React);
 
