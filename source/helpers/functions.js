@@ -90,7 +90,7 @@ export const fromImmutable = obj =>
 export const mapProp = R.curry((prop, objs) => R.pipe(R.prop, R.map)(prop)(objs));
 
 /***
- * Creates a partial function that maps an array of objects to an object keyed by the given prop of the objects
+ * Creates a partial function that maps an array of objects to an object keyed by the given prop of the object's
  * of the array, valued by the item. If the item is not an array, it leaves it alone, assuming it is already indexed
  * @param {String} prop The prop of each object to use as the key
  * @param {[Object]} items The items to map

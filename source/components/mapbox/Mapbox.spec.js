@@ -13,11 +13,19 @@ jest.unmock('query-overpass')
 const state = initialState(config);
 const currentKey = getPath(['regions', 'currentKey'], state);
 const gtfs = require('queryOverpassResponse').LA_SAMPLE;
-//const {stops, lines, icons} = x(['way', 'node'], gtfs)
+const reduceFeaturesBy = R.reduceBy((acc, feature) => acc.concat(feature), []);
+const regex = /(.+)\/\d+/;
+// Get the feature by type based on its id
+const featureByType = reduceFeaturesBy(feature => R.match(regex, feature.id)[1]);
+// Create valid GTFS json to give the map by replacing the features of the original by filtered values for each type
+const gtfsByType = R.map(
+    featureOfType => R.set(R.lensProp('features'), featureOfType, gtfs),
+    featureByType(gtfs.features));
+
 const props = mapStateToProps(state, {
     region: getPath(['regions', currentKey], state),
-    stops: null,
-    lines: null,
+    stops: gtfsByType.node,
+    lines: gtfsByType.way,
     icons: null,
     style: {
         width: 500,
@@ -31,7 +39,6 @@ it('MapGL can mount', () => {
 });
 it('MapBox loads data', () => {
     const Mapbox = createMapbox(React);
-    const {stops, lines, icons} = this.props.gtfs
     const wrapper = shallow(<Mapbox {...props} />);
     expect(wrapper).toMatchSnapshot();
 });
