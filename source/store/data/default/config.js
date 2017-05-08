@@ -22,6 +22,8 @@ export default mergeDeep(privateConfig, {
         ],
         routeTypes: routeTypes
     },
+    geojson: {
+    },
     mapbox: {
         mapStyle: "mapbox://styles/mapbox/streets-v8",
         viewport: {

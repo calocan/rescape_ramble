@@ -15,7 +15,7 @@ import initialState from 'store/data/initialState'
 import configureStore from 'redux-mock-store';
 import {getPath, mapPropValueAsIndex} from 'helpers/functions'
 import R from 'ramda'
-import {fetchGtfs, actions} from './gtfs';
+import {fetchOsm, actions} from './geojson';
 import thunk from 'redux-thunk'
 const middlewares = [thunk];
 const mockStore = configureStore(middlewares);
@@ -23,26 +23,26 @@ const toObjectKeyedById = mapPropValueAsIndex('id');
 
 jest.mock('query-overpass');
 
-describe('gtfs reducer', () => {
+describe('geojson reducer', () => {
     const state = initialState(testConfig)
-    test('should return the initial state', () => {
+    it('should return the initial state', () => {
         expect(
             Map(reducer(
-                getPath(['regions', state.regions.currentKey, 'gtfs'], state),
+                getPath(['regions', state.regions.currentKey, 'geojson'], state),
                 {})
             ).toJS()
-        ).toEqual(R.map(toObjectKeyedById, testConfig.gtfs))
+        ).toEqual(R.map(toObjectKeyedById, testConfig.geojson))
     });
-    test('should fetch gtfs', () => {
+    it('should fetch geojson', () => {
         const bounds = require('query-overpass').LA_BOUNDS;
         const store = mockStore(initialState(testConfig));
         const expectedActions = [
-            { type: actions.FETCH_GTFS_DATA },
-            { type: actions.FETCH_GTFS_SUCCESS, body: require('queryOverpassResponse').LA_SAMPLE}
+            { type: actions.FETCH_OSM_DATA },
+            { type: actions.FETCH_OSM_SUCCESS, body: require('queryOverpassResponse').LA_SAMPLE}
         ]
 
         // Pass bounds in the options. Our mock query-overpass uses is to avoid parsing the query
-        store.dispatch(fetchGtfs(
+        store.dispatch(fetchOsm(
             {cellSize: store.getState().settings.overpass.cellSize, testBounds: bounds},
             bounds
         )).fork(

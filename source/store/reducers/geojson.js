@@ -27,11 +27,11 @@ import {Map} from 'immutable'
 import {fetchTransitCelled, fetchTransit} from 'helpers/overpassHelpers'
 import Task from 'data.task'
 
-const FETCH_GTFS = '/gtfs/FETCH_GTFS';
-const FETCH_GTFS_DATA = '/gtfs/FETCH_GTFS_DATA';
-const FETCH_GTFS_SUCCESS = '/gtfs/FETCH_GTFS_SUCCESS';
-const FETCH_GTFS_FAILURE = '/gtfs/FETCH_GTFS_FAILURE';
-export const actions = {FETCH_GTFS, FETCH_GTFS_DATA, FETCH_GTFS_SUCCESS, FETCH_GTFS_FAILURE};
+const FETCH_OSM = '/osm/FETCH_OSM';
+const FETCH_OSM_DATA = '/osm/FETCH_OSM_DATA';
+const FETCH_OSM_SUCCESS = '/osm/FETCH_OSM_SUCCESS';
+const FETCH_OSM_FAILURE = '/osm/FETCH_OSM_FAILURE';
+export const actions = {FETCH_OSM, FETCH_OSM_DATA, FETCH_OSM_SUCCESS, FETCH_OSM_FAILURE};
 
 const mapboxReducer = (
     state = { mapboxApiAccessToken: '', viewport: Map() }, action = {}
@@ -39,8 +39,8 @@ const mapboxReducer = (
 
     switch (action.type) {
         case SET_STATE:
-            return R.merge(state, action.state.gtfs);
-        case FETCH_GTFS_SUCCESS:
+            return R.merge(state, action.state.osm);
+        case FETCH_OSM_SUCCESS:
             return R.merge(state, action.value)
         default:
             return state;
@@ -51,9 +51,9 @@ const mapboxReducer = (
  * Action to request the full state
  * @return {{type: string}}
  */
-function fetchGtfsData() {
+function fetchOsmData() {
     return {
-        type: FETCH_GTFS_DATA
+        type: FETCH_OSM_DATA
     }
 }
 
@@ -62,9 +62,9 @@ function fetchGtfsData() {
  * @param body
  * @return {{type: string, body: *}}
  */
-function fetchGtfsSuccess(body) {
+function fetchOsmSuccess(body) {
     return {
-        type: FETCH_GTFS_SUCCESS,
+        type: FETCH_OSM_SUCCESS,
         body
     }
 }
@@ -74,26 +74,26 @@ function fetchGtfsSuccess(body) {
  * @param ex
  * @return {{type: string, ex: *}}
  */
-function fetchGtfsFailure(ex) {
+function fetchOsmFailure(ex) {
     return {
-        type: FETCH_GTFS_FAILURE,
+        type: FETCH_OSM_FAILURE,
         ex
     }
 }
 
 /***
- * Asynchronous call to fetch GTFS data from user the overhead api
+ * Asynchronous call to fetch OSM data from user the overhead api
  * @param {Object} options:
  * @param options.cellSize: Pass the cellSize in kilometers here
  * @param {[Number]} bounds
  * @return {function(*)}
- * fetchGtfs:: <k,v> -> [a] -> Task Error String
+ * fetchOsm:: <k,v> -> [a] -> Task Error String
  */
-export function fetchGtfs(options, bounds) {
+export function fetchOsm(options, bounds) {
     return dispatch => {
-        dispatch(fetchGtfsData());
+        dispatch(fetchOsmData());
         return fetchTransit(options, bounds).chain(response =>
-            Task.of(dispatch(fetchGtfsSuccess(response)))
+            Task.of(dispatch(fetchOsmSuccess(response)))
         )
     }
 }

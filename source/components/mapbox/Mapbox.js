@@ -27,8 +27,8 @@ const Mapbox = (React) => React.createClass({
     },
 
     render: function() {
-        const {width, height, stops, lines, icons, ...props} = this.props;
-
+        const {width, height, geojson, ...props} = this.props;
+        const {node, way, icon} = geojson;
 
         return (
             <MapGL
@@ -42,9 +42,9 @@ const Mapbox = (React) => React.createClass({
                 preventStyleDiffing={ false }
                 onChangeViewport={this._onChangeViewport}
             >
-                <MapStops stops={stops}/>
-                <MapLines lines={lines}/>
-                <MapIcons icons={icons}/>
+                <MapStops stops={node}/>
+                <MapLines lines={way}/>
+                <MapIcons icons={icon}/>
             </MapGL>
         );
     }

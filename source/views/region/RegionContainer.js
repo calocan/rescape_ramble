@@ -2,7 +2,7 @@ import {connect} from 'react-redux';
 import React from 'react';
 import R from 'ramda';
 import createRegion from './Region.js';
-import * as gtfsActions from 'store/reducers/gtfs';
+import * as osmActions from 'store/reducers/osm';
 
 export const mapStateToProps = (state, ownProps) => {
     return R.merge(
@@ -18,6 +18,6 @@ const RegionContainer = connect(
      * @param state
      * @returns {{}}
      */
-    mapStateToProps, gtfsActions
+    mapStateToProps, osmActions
 )(createRegion(React));
 export default  RegionContainer;

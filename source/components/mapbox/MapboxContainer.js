@@ -25,7 +25,9 @@ import {toJS} from 'helpers/functions';
 export const mapStateToProps = (state, ownProps) => {
     return R.mergeAll([
         // flatten the style to get the width and height
-        R.pick(['width', 'height'], ownProps.style),
+        R.pick(['width', 'height'], ownProps),
+        // include osm and gtfs data of the region
+        R.pick(['geojson', 'geojson'], ownProps.region),
         // Flatten viewport and remove immutable
         toJS(ownProps.region.mapbox.viewport),
         R.omit(['viewport'], ownProps.region.mapbox)

@@ -9,10 +9,46 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-export default React => {
-    const mapLines = () => {
-        return <div className='map-lines'>
-        </div>
-    };
-    return mapLines;
+import {DraggablePointsOverlay, SVGOverlay} from 'react-map-gl';
+import autobind from 'autobind-decorator';
+
+const MapLines = (React) => React.createClass({
+
+    @autobind
+    _redrawSVGOverlay(opt) {
+        if (!this.props.nodes.size) {
+            return null;
+        }
+        const pointString = this.props.nodes.map(
+            point => opt.project(point.get('location').toArray())
+        ).join('L');
+
+        return (
+            <path
+                style={ {stroke: '#1FBAD6', strokeWidth: 2, fill: 'none'} }
+                d={ `M${pointString}` }/>
+        );
+    },
+
+    render() {
+        return <SVGOverlay
+            className='map-lines'
+            key="svg-overlay" { ...this.props.viewport }
+            redraw={ this._redrawSVGOverlay } />
+    }
+});
+
+const {
+    number,
+    string,
+    object,
+    bool,
+    array
+} = React.PropTypes;
+
+MapLines.propTypes = {
+    width: number.isRequired,
+    height: number.isRequired,
+    locations: array.isRequired,
 };
+export default MapLines;

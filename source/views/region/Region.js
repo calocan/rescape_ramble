@@ -23,10 +23,10 @@ const Region = (React) => React.createClass({
     componentWillReceiveProps(nextProps) {
         // Region has changed
         if (this.props.region != nextProps.region) {
-            this.props.fetchGtfs(nextProps.settings, nextProps.region).chain(
-                error => this.props.fetchGtfsFailure(error),
-                gtfs => {
-                    this.setState({gtfs})
+            this.props.fetchOsm(nextProps.settings, nextProps.region).chain(
+                error => this.props.fetchOsmFailure(error),
+                osm => {
+                    // osm was set in store by action
                 }
             );
         }
@@ -36,7 +36,7 @@ const Region = (React) => React.createClass({
         return (
             <div className='region' style={R.merge(this.props.style, styles.container)}>
                 {/* We additionally give Mapbox the container width and height so the map can track changes to these */}
-                <Mapbox region={this.props.region} style={this.props.style} gtfs={this.state.gtfs}/>
+                <Mapbox region={this.props.region} style={this.props.style} osm={this.props.osm}/>
             </div>
         );
     }

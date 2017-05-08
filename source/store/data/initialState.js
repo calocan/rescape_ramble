@@ -49,7 +49,9 @@ export default (config) => {
                 geospatial: config.geospatial,
                 // make each array of objects in travel to an object by array object id
                 travel: R.map(toObjectKeyedByGeneratedId, config.travel),
-                // make each array of objects in gtf to an object by array object id
+                // make each array of objects in geojson to an object by array object id
+                geojson: R.map(toObjectKeyedById, config.geojson),
+                // make each array of objects in gtfs to an object by array object id
                 gtfs: R.map(toObjectKeyedById, config.gtfs),
                 // The viewport must be an Immutable to satisfied the redux-map-gl reducer
                 // Apply toImmutable to the viewport of config.mapbox
