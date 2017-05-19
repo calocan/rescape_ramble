@@ -23,15 +23,15 @@ import {toJS} from 'helpers/functions';
  * @param ownProps
  */
 export const mapStateToProps = (state, ownProps) => {
-    return R.mergeAll([
-        // flatten the style to get the width and height
-        R.pick(['width', 'height'], ownProps),
-        // include osm and gtfs data of the region
-        R.pick(['geojson', 'geojson'], ownProps.region),
-        // Flatten viewport and remove immutable
-        toJS(ownProps.region.mapbox.viewport),
-        R.omit(['viewport'], ownProps.region.mapbox)
-    ]);
+    return R.merge(
+        // override width and height of viewport
+        {
+            viewport: R.merge(toJS(ownProps.region.mapbox.viewport), R.pick(['width', 'height'], ownProps.style)),
+            mapboxApiAccessToken: ownProps.region.mapbox.mapboxApiAccessToken
+        },
+        // include geojson and gtfs data of the region
+        R.pick(['geojson', 'gtfs'], ownProps.region),
+    );
 }
 
 // This is just an example of what mapDispatchToProps does.

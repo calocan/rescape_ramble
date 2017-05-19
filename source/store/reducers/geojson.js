@@ -20,7 +20,6 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import enhanceMapReducer from 'redux-map-gl';
 import R from 'ramda';
 import {SET_STATE} from './fullState'
 import {Map} from 'immutable'
@@ -33,13 +32,13 @@ const FETCH_OSM_SUCCESS = '/osm/FETCH_OSM_SUCCESS';
 const FETCH_OSM_FAILURE = '/osm/FETCH_OSM_FAILURE';
 export const actions = {FETCH_OSM, FETCH_OSM_DATA, FETCH_OSM_SUCCESS, FETCH_OSM_FAILURE};
 
-const mapboxReducer = (
+const geojsonReducer = (
     state = { mapboxApiAccessToken: '', viewport: Map() }, action = {}
 ) => {
 
     switch (action.type) {
         case SET_STATE:
-            return R.merge(state, action.state.osm);
+            return R.merge(state, action.state.geojson);
         case FETCH_OSM_SUCCESS:
             return R.merge(state, action.value)
         default:
@@ -98,4 +97,5 @@ export function fetchOsm(options, bounds) {
     }
 }
 
-export default enhanceMapReducer(mapboxReducer);
+export default geojsonReducer;
+

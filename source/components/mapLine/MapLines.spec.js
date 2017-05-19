@@ -25,8 +25,22 @@ const geojson = require('queryOverpassResponse').LA_SAMPLE;
 const MapLines = createMapLines(React)
 
 describe('MapLines', () => {
+    const props = {
+        viewport: {
+            bearing: 0,
+            height: 500,
+            isDragging: false,
+            latitude: 37,
+            longitude: -119,
+            pitch: 40,
+            startDragLngLat: null,
+            width: 500,
+            zoom: 5
+        },
+        locations: geojsonByType(geojson).way,
+    };
     it('MapLines can mount', () => {
-        const wrapper = shallow(<MapLines lines={geojsonByType(geojson).way} />);
+        const wrapper = shallow(<MapLines {...props} />);
         expect(wrapper).toMatchSnapshot();
     });
 });

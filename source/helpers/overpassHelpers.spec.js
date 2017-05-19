@@ -51,7 +51,7 @@ describe("overpassHelpers", ()=>{
     const bounds = require('query-overpass').LA_BOUNDS;
     test("fetchTransit", () => {
         // Pass bounds in the options. Our mock query-overpass uses is to avoid parsing the query
-        fetchTransit({bounds}, bounds).fork(
+        fetchTransit({testBounds: bounds}, bounds).fork(
             error => {
                 throw new Error(error)
             },

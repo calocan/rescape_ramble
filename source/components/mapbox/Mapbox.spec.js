@@ -21,13 +21,20 @@ const props = mapStateToProps(state, {
         geojsonByType(geojson),
         getPath(['regions', currentKey], state)
     ),
-    width: 500,
-    height: 500
+    style: {
+        width: 500,
+        height: 500
+    }
 });
 
 describe('Mapbox', () => {
     it('MapGL can mount', () => {
-        const wrapper = shallow(<MapGL {...props} />);
+        const wrapper = shallow(<MapGL
+            {...props.viewport}
+            showZoomControls={ true }
+            perspectiveEnabled={ true }
+            preventStyleDiffing={ false }
+        />);
         expect(wrapper).toMatchSnapshot();
     });
     it('MapBox loads data', () => {

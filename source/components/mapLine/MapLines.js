@@ -11,15 +11,18 @@
 
 import {DraggablePointsOverlay, SVGOverlay} from 'react-map-gl';
 import autobind from 'autobind-decorator';
+import React from 'react';
+import R from 'ramda';
+import {getPath} from 'helpers/functions'
 
 const MapLines = (React) => React.createClass({
 
     @autobind
     _redrawSVGOverlay(opt) {
-        if (!this.props.nodes.size) {
+        if (!getPath(['locations', 'size'], this.props)) {
             return null;
         }
-        const pointString = this.props.nodes.map(
+        const pointString = this.props.locations.map(
             point => opt.project(point.get('location').toArray())
         ).join('L');
 
@@ -33,7 +36,8 @@ const MapLines = (React) => React.createClass({
     render() {
         return <SVGOverlay
             className='map-lines'
-            key="svg-overlay" { ...this.props.viewport }
+            key="svg-overlay"
+            { ...this.props.viewport }
             redraw={ this._redrawSVGOverlay } />
     }
 });
@@ -47,8 +51,7 @@ const {
 } = React.PropTypes;
 
 MapLines.propTypes = {
-    width: number.isRequired,
-    height: number.isRequired,
+    viewport: object.isRequired,
     locations: array.isRequired,
 };
 export default MapLines;

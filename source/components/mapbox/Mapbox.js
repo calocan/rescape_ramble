@@ -27,23 +27,22 @@ const Mapbox = (React) => React.createClass({
     },
 
     render: function() {
-        const {width, height, geojson, ...props} = this.props;
-        const {node, way, icon} = geojson;
+        const { viewport, mapboxApiAccessToken, geojson } = this.props;
+        const { node, way, icon } = geojson;
 
         return (
             <MapGL
-                {...props}
-                showZoomControls={true}
-                width={width}
-                height={height}
+                mapboxApiAccessToken = { mapboxApiAccessToken }
+                { ...viewport }
+                showZoomControls={ true }
                 perspectiveEnabled={ true }
                 // setting to `true` should cause the map to flicker because all sources
                 // and layers need to be reloaded without diffing enabled.
                 preventStyleDiffing={ false }
                 onChangeViewport={this._onChangeViewport}
             >
-                <MapStops stops={node}/>
-                <MapLines lines={way}/>
+                <MapStops locations={node}/>
+                <MapLines locations={way} viewport={viewport} />
                 <MapIcons icons={icon}/>
             </MapGL>
         );
@@ -58,17 +57,9 @@ const {
 } = React.PropTypes;
 
 Mapbox.propTypes = {
-    width: number.isRequired,
-    height: number.isRequired,
-    bearing: number.isRequired,
-    isDragging: bool.isRequired,
-    latitude: number.isRequired,
-    longitude: number.isRequired,
+    viewport: object.isRequired,
     mapStyle: string.isRequired,
     mapboxApiAccessToken: string.isRequired,
-    pitch: number.isRequired,
-    startDragLngLat: object,
-    zoom: number.isRequired
 };
 
 export default Mapbox;

@@ -28,8 +28,10 @@ describe('MapboxContainer', () => {
 
         const ownProps = {
             region: getPath(['regions', getPath(['regions', 'currentKey'], state)], state),
-            width: 500,
-            height: 500
+            style: {
+                width: 500,
+                height: 500
+            }
         };
 
         expect(mapStateToProps(store.getState(), ownProps)).toMatchSnapshot()

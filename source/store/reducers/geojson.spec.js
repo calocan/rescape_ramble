@@ -50,7 +50,6 @@ describe('geojson reducer', () => {
                 throw new Error(reject.message)
             },
             response => {
-                console.log(store.getActions())
                 expect(store.getActions()).toEqual(
                     expectedActions
                 )

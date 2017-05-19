@@ -9,7 +9,9 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import enhanceMapReducer, {createViewportReducer} from 'redux-map-gl';
+import { combineReducers } from 'redux';
+import geojsonReducer from './geojson'
+import {createViewportReducer} from 'redux-map-gl';
 import R from 'ramda';
 import {SET_STATE} from './fullState'
 import {Map} from 'immutable'
@@ -18,7 +20,12 @@ import {copy} from 'helpers/functions'
 const SET_MODE = '/settings/SET_MODE';
 const SET_SUBJECT = '/settings/SET_SUBJECT';
 
-const viewportReducer = createViewportReducer();
+
+const regionReducer = combineReducers({
+    geojson: geojsonReducer,
+    mapbox: createViewportReducer()
+});
+
 const regionsReducer = (
     state = { }, action = {}
 ) => {
@@ -26,19 +33,21 @@ const regionsReducer = (
     switch (action.type) {
         case SET_STATE:
             return R.merge(state, action.state['regions'] || {});
-        case 'map/CHANGE_VIEWPORT':
-            // Delegate CHANGE_VIEWPORT to the viewportReducer for the current Region's mapbox state
-            // Let the reducer reduce and set state.current.mapbox
-            // I need to deep copy state for a deep path R.set to prevent mutation of state
-            const lens = R.lensPath([state.currentKey, 'mapbox']);
-            return R.set(
-                lens,
-                viewportReducer(R.view(lens, state), action),
-                copy(state)
-            );
         default:
-            return state;
+            // Delegate all other actions to the current Region's reducer
+            // This lens points to the state of the current Region
+            const currentRegionLens = R.lensPath([state.currentKey]);
+            return state.currentKey ? R.set(
+                currentRegionLens,
+                regionReducer(
+                    // Only pass the region state keys that are handled by the regionReducer
+                    R.pick(['geojson', 'mapbox'], R.view(currentRegionLens, state)),
+                    action),
+                // Deep copy state for a deep path R.set to prevent mutation of state
+                copy(state)
+            ): state;
     }
 };
+
 
 export default regionsReducer;
