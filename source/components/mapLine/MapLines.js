@@ -17,20 +17,39 @@ import {getPath} from 'helpers/functions'
 
 const MapLines = (React) => React.createClass({
 
+    resolveSvg(opt, feature) {
+        switch (feature.geometry.type) {
+            case 'LineString':
+                return feature.geometry.coordinates.map(coordinate => opt.project(coordinate)).join('L');
+            case 'Polygon':
+                return feature.geometry.coordinates[0].map(coordinate => opt.project(coordinate)).join('L');
+        }
+    },
+
     @autobind
     _redrawSVGOverlay(opt) {
-        if (!getPath(['locations', 'size'], this.props)) {
+        if (!getPath(['locations', 'features'], this.props)) {
             return null;
         }
-        const pointString = this.props.locations.map(
-            point => opt.project(point.get('location').toArray())
-        ).join('L');
+        const pointStrings = R.map(
+            feature => {
+                return {
+                    key: feature.id,
+                    pointString: this.resolveSvg(opt, feature)
+                };
+            },
+            this.props.locations.features);
 
-        return (
+        const paths = R.map(({key, pointString}) =>
             <path
+                key={key}
                 style={ {stroke: '#1FBAD6', strokeWidth: 2, fill: 'none'} }
-                d={ `M${pointString}` }/>
+                d={ `M${pointString}` }/>,
+            pointStrings
         );
+        return <g>
+            {paths}
+        </g>
     },
 
     render() {

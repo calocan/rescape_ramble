@@ -22,7 +22,6 @@
 
 import R from 'ramda';
 import {SET_STATE} from './fullState'
-import {Map} from 'immutable'
 import {fetchTransitCelled, fetchTransit} from 'helpers/overpassHelpers'
 import Task from 'data.task'
 

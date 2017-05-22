@@ -1,4 +1,6 @@
+
 import reducer from 'store/reducers/regions'
+import {actions as geoJsonActions} from 'store/reducers/geojson'
 import {Map} from 'immutable'
 import testConfig from 'store/data/test/config'
 import initialState from 'store/data/initialState'
@@ -12,6 +14,24 @@ describe('mabpox reducer', () => {
                 state.regions,
                 {})
             ).toJS()
+        ).toMatchSnapshot();
+    });
+    it('should update the current region', () => {
+        const state = initialState(testConfig);
+        expect(
+            reducer(
+                state.regions,
+                {
+                    type: geoJsonActions.FETCH_OSM_SUCCESS,
+                    value: {
+                        "type": "FeatureCollection",
+                        "generator": "overpass-turbo",
+                        "copyright": "The data included in this document is from www.openstreetmap.org. The data is made available under ODbL.",
+                        "timestamp": "2017-04-06T22:46:03Z",
+                        "features": []
+                    }
+                }
+            )
         ).toMatchSnapshot();
     });
     // This is really internal to redux-map-gl's reducer, but good to have here to document what

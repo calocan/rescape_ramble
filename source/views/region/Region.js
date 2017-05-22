@@ -12,6 +12,7 @@ import Mapbox from 'components/mapbox/MapboxContainer';
 import styles from './Region.style.js';
 import R from 'ramda';
 import React from 'react';
+import {getPath} from 'helpers/functions'
 
 /***
  * The View for a Region, such as California. Theoretically we could display multiple regions at once
@@ -22,7 +23,7 @@ const Region = (React) => React.createClass({
 
     componentWillReceiveProps(nextProps) {
         // Region has changed
-        if (this.props.region != nextProps.region) {
+        if (getPath(['region', 'id'], this.props) != getPath(['region', 'id'], this.nextProps)) {
             this.props.fetchOsm(nextProps.settings, nextProps.region).chain(
                 error => this.props.fetchOsmFailure(error),
                 osm => {

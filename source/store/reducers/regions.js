@@ -16,14 +16,16 @@ import R from 'ramda';
 import {SET_STATE} from './fullState'
 import {copy} from 'helpers/functions'
 
-const SET_MODE = '/settings/SET_MODE';
-const SET_SUBJECT = '/settings/SET_SUBJECT';
 
 
-const regionReducer = combineReducers({
-    geojson: geojsonReducer,
-    mapbox: createViewportReducer()
-});
+const regionReducer = combineReducers(R.merge(
+    {
+        geojson: geojsonReducer,
+        mapbox: createViewportReducer()
+    },
+    // Implement reducers for these as/if needed
+    R.fromPairs(R.map(key=>[key, (state={})=>state], ['id', 'geospatial', 'travel', 'gtfs']))
+));
 
 /**
  @typedef Geospatial
@@ -74,7 +76,7 @@ const regionsReducer = (
                 currentRegionLens,
                 regionReducer(
                     // Only pass the region state keys that are handled by the regionReducer
-                    R.pick(['geojson', 'mapbox'], R.view(currentRegionLens, state)),
+                    R.view(currentRegionLens, state),
                     action),
                 // Deep copy state for a deep path R.set to prevent mutation of state
                 copy(state)

@@ -43,5 +43,11 @@ describe('MapLines', () => {
         const wrapper = shallow(<MapLines {...props} />);
         expect(wrapper).toMatchSnapshot();
     });
+    it('It redraws', () => {
+        const wrapper = shallow(<MapLines {...props} />);
+        const svgOverlayWrapper = wrapper.find('SVGOverlay')
+        //svgOverlayWrapper.simulate('redraw');
+        expect(svgOverlayWrapper.shallow()).toMatchSnapshot();
+    });
 });
 
