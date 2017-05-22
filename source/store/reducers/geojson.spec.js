@@ -8,14 +8,13 @@
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import reducer from 'store/reducers/mapbox'
 import {Map} from 'immutable'
 import testConfig from 'store/data/test/config'
 import initialState from 'store/data/initialState'
 import configureStore from 'redux-mock-store';
 import {getPath, mapPropValueAsIndex} from 'helpers/functions'
 import R from 'ramda'
-import {fetchOsm, actions} from './geojson';
+import reducer, {fetchOsm, actions} from './geojson';
 import thunk from 'redux-thunk'
 const middlewares = [thunk];
 const mockStore = configureStore(middlewares);

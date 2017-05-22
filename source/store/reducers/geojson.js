@@ -32,8 +32,22 @@ const FETCH_OSM_SUCCESS = '/osm/FETCH_OSM_SUCCESS';
 const FETCH_OSM_FAILURE = '/osm/FETCH_OSM_FAILURE';
 export const actions = {FETCH_OSM, FETCH_OSM_DATA, FETCH_OSM_SUCCESS, FETCH_OSM_FAILURE};
 
+
+/**
+ @typedef Geojson
+ @type {Object}
+ @property {[Number]} bounds A four element array representing the bounds [min lon, min lat, max lon, max lat]
+ */
+
+
+/***
+ *
+ * @param state geojson data from OpenStreetMap
+ * @param action
+ * @return {*}
+ */
 const geojsonReducer = (
-    state = { mapboxApiAccessToken: '', viewport: Map() }, action = {}
+    state = { }, action = {}
 ) => {
 
     switch (action.type) {
@@ -79,6 +93,7 @@ function fetchOsmFailure(ex) {
         ex
     }
 }
+
 
 /***
  * Asynchronous call to fetch OSM data from user the overhead api

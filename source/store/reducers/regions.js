@@ -14,7 +14,6 @@ import geojsonReducer from './geojson'
 import {createViewportReducer} from 'redux-map-gl';
 import R from 'ramda';
 import {SET_STATE} from './fullState'
-import {Map} from 'immutable'
 import {copy} from 'helpers/functions'
 
 const SET_MODE = '/settings/SET_MODE';
@@ -26,10 +25,44 @@ const regionReducer = combineReducers({
     mapbox: createViewportReducer()
 });
 
+/**
+ @typedef Geospatial
+ @type {Object}
+ @property {[Number]} bounds The bounds of the region [min lon, min lat, max lon, max lat]
+ */
+
+/**
+ @typedef Travel
+ @type {Object}
+ @property {[Number]} bounds The bounds of the region [min lon, min lat, max lon, max lat]
+ */
+
+/**
+ @typedef Mapbox
+ @type {Object}
+ @property {Object} viewport The current Mapbox viewport
+ */
+
+/**
+ @typedef Region
+ @type {Object}
+ @property {Geospatial} geospatial Represents location information about the Region
+ @property {Travel} User travel within the Region.
+ @property {Object} All geojson pertaining to the region from sources such as OpenStreetMap
+ @property {Object} Gtfs formatted data for the region
+ @property {Mapbox} Required data for the map, suh as the viewport.
+ */
+
+/***
+ * @param {Object<String, Region>} state The regions reducer reduces an object keyed by Region id
+ * @param {String} state.regionId The id of the region
+
+ * @param action
+ * @return {*}
+ */
 const regionsReducer = (
     state = { }, action = {}
 ) => {
-
     switch (action.type) {
         case SET_STATE:
             return R.merge(state, action.state['regions'] || {});
