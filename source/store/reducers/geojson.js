@@ -105,7 +105,7 @@ function fetchOsmFailure(ex) {
 export function fetchOsm(options, bounds) {
     return dispatch => {
         dispatch(fetchOsmData());
-        return fetchTransit(options, bounds).chain(response =>
+        return fetchTransitCelled(options, bounds).chain(response =>
             Task.of(dispatch(fetchOsmSuccess(response)))
         )
     }

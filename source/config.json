@@ -7,7 +7,7 @@
       }
     ],
     "overpass": {
-      "cellSize": 5
+      "cellSize": 50
     },
     "regions": [
       {

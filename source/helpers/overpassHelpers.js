@@ -44,9 +44,13 @@ export const fetchTransitCelled = ({cellSize=1, testBounds}, bounds) => {
 
     // fetchTasks :: Array (Task Object)
     const fetchTasks = R.map(fetchTransit({testBounds}), squares);
+    const chainedTasks = R.reduce(
+        (chainedTasks, fetchTask) => chainedTasks.chain(fetchTask),
+        R.head(fetchTasks),
+        R.tail(fetchTasks));
     // sequenced :: Task (Array Object)
-    const sequenced = R.sequence(Task.of, fetchTasks);
-    return sequenced.chain((results) =>
+    //const sequenced = R.sequence(Task.of, fetchTasks);
+    return chainedTasks.chain((results) =>
         Task.of(
             R.pipe(
                 mergeAllWithKey(concatValues),  // combine the results into one obj with concatinated features

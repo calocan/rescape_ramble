@@ -23,8 +23,9 @@ const Region = (React) => React.createClass({
 
     componentWillReceiveProps(nextProps) {
         // Region has changed
-        if (getPath(['region', 'id'], this.props) != getPath(['region', 'id'], this.nextProps)) {
-            this.props.fetchOsm(nextProps.settings, nextProps.region).chain(
+        if (!getPath(['region', 'geojson', 'features'], this.props) ||
+            getPath(['region', 'id'], this.props) != getPath(['region', 'id'], nextProps)) {
+            this.props.fetchOsm(nextProps.settings.overpass, nextProps.region.geospatial.bounds).fork(
                 error => this.props.fetchOsmFailure(error),
                 osm => {
                     // osm was set in store by action

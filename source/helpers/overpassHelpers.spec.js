@@ -11,21 +11,23 @@
 
 import {fetchTransit, fetchTransitCelled} from './overpassHelpers';
 import {removeDuplicateObjectsByProp} from 'helpers/functions'
-
+import prettyFormat from 'pretty-format'
 
 // TODO use .resolves for all async tests whenever Jest 20 comes out, assuming it works with fork
 
-if (false) {
+// Move this out of if statement when testing
+jest.unmock('query-overpass')
+if (true) {
     // requires are used below since the jest includes aren't available at compile time
-    jest.unmock('query-overpass')
     describe("overpassHelpers unmocked", () => {
 
+        if (false)
         test('unmocked fetchTransit', () => {
             // Unmocked integration test
             const realBounds = [-118.24031352996826, 34.04298753935195, -118.21018695831297, 34.065209887879476];
             fetchTransit({realBounds}, realBounds).fork(
                 error => {
-                    throw new Error(error)
+                    throw new Error(prettyFormat(error))
                 },
                 response => {
                     expect(response.features.length > 500).toEqual(true)
@@ -45,6 +47,7 @@ if (false) {
         });
     });
 }
+if (false)
 describe("overpassHelpers", ()=>{
 
     jest.mock('query-overpass')
