@@ -38,16 +38,25 @@ export const fetchTransitCelled = ({cellSize=1, testBounds}, bounds) => {
         polygon => bbox(polygon),
         squareGrid(bounds, cellSize, units).features);
 
+    // fetchTasks :: Array (Task Object)
+    const fetchTasks = R.map(fetchTransit({testBounds}), squares);
+    // chainedTasks :: Array (Task Object) -> Task.chain(Task).chain(Task)...
+    // We want each request to overpass to run after the previous is finished,
+    // so as to not exceed the permitted request rate. Chain the tasks and reduce
+    // them using map to combine all previous Task results.
+    const chainedTasks = R.reduce(
+        (chainedTasks, fetchTask) => chainedTasks.chain(results =>
+            fetchTask.map(result =>
+                R.concat(results.length ? results : [results], [result])
+            )
+        ),
+        R.head(fetchTasks),
+        R.tail(fetchTasks));
+
     // Fetch each square of transit and merge the results by feature id
     // concatValues combines are results sets when they return
     const concatValues = (k, l, r) => k == 'features' ? R.concat(l, r) : r;
 
-    // fetchTasks :: Array (Task Object)
-    const fetchTasks = R.map(fetchTransit({testBounds}), squares);
-    const chainedTasks = R.reduce(
-        (chainedTasks, fetchTask) => chainedTasks.chain(fetchTask),
-        R.head(fetchTasks),
-        R.tail(fetchTasks));
     // sequenced :: Task (Array Object)
     //const sequenced = R.sequence(Task.of, fetchTasks);
     return chainedTasks.chain((results) =>

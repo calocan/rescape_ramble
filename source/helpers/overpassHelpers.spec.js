@@ -21,6 +21,7 @@ if (true) {
     // requires are used below since the jest includes aren't available at compile time
     describe("overpassHelpers unmocked", () => {
 
+        jasmine.DEFAULT_TIMEOUT_INTERVAL = 100000000
         if (false)
         test('unmocked fetchTransit', () => {
             // Unmocked integration test
@@ -36,14 +37,18 @@ if (true) {
         });
         test('unmocked fetchTransitCelled', () => {
             const realBounds = [-118.24031352996826, 34.04298753935195, -118.21018695831297, 34.065209887879476];
-            fetchTransitCelled({cellSize: 2, bounds: realBounds}, realBounds).fork(
-                error => {
-                    throw new Error(error)
-                },
-                response => {
-                    expect(response.features.length > 500).toEqual(true)
-                }
-            )
+            // Wrap the Task in a Promise for jest's sake
+            return new Promise((resolve, reject) => {
+                fetchTransitCelled({cellSize: 2, bounds: realBounds}, realBounds).fork(
+                    error => reject(error),
+                    response => resolve(response)
+                )
+            }).then(response => {
+                // We expect over 500 results. I'll leave it fuzzy in case the source dataset changes
+                expect(response.features.length > 500).toBe(true);
+            }).catch(error => {
+                throw error
+            })
         });
     });
 }
