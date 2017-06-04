@@ -16,6 +16,7 @@ import {mergeAllWithKey, removeDuplicateObjectsByProp} from 'helpers/functions';
 import os from 'os';
 import squareGrid from '@turf/square-grid';
 import bbox from '@turf/bbox';
+/*
 import PouchDB from 'pouchdb'
 
 export const fetchTransitAndWrite = (options, bounds) => {
@@ -26,6 +27,7 @@ export const fetchTransitAndWrite = (options, bounds) => {
     db.put(fetchTransitCelled(options, bounds), (err, result) => {
     });
 };
+ */
 
 /***
  * fetches transit data in squares sequentially from OpenStreetMap using the Overpass API.

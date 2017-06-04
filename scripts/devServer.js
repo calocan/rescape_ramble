@@ -23,7 +23,6 @@ app.get('*', function (req, res) {
   )
 });
 
-
 app.listen(PORT, HOST, function (err) {
   if (err) {
     console.log(err);
