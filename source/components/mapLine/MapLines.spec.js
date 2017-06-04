@@ -37,7 +37,7 @@ describe('MapLines', () => {
             width: 500,
             zoom: 5
         },
-        locations: geojsonByType(geojson).way,
+        geojson: geojson
     };
     it('MapLines can mount', () => {
         const wrapper = shallow(<MapLines {...props} />);

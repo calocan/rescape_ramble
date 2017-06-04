@@ -7,7 +7,8 @@
       }
     ],
     "overpass": {
-      "cellSize": 50
+      "cellSize": 100,
+      "sleepBetweenCalls": 1000
     },
     "regions": [
       {

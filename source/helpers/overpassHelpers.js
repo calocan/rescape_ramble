@@ -16,6 +16,16 @@ import {mergeAllWithKey, removeDuplicateObjectsByProp} from 'helpers/functions';
 import os from 'os';
 import squareGrid from '@turf/square-grid';
 import bbox from '@turf/bbox';
+import PouchDB from 'pouchdb'
+
+export const fetchTransitAndWrite = (options, bounds) => {
+    const db = new PouchDB('osm');
+    db.allDocs({include_docs: true, descending: true}, function(err, doc) {
+        expect(R.map(R.view(R.lensPath(['doc', 'title'])), doc.rows)).toEqual(['Buy grapes', 'Buy grapes'])
+    });
+    db.put(fetchTransitCelled(options, bounds), (err, result) => {
+    });
+};
 
 /***
  * fetches transit data in squares sequentially from OpenStreetMap using the Overpass API.
@@ -26,12 +36,13 @@ import bbox from '@turf/bbox';
  * be queried separately. The results from all queries are merged by feature id so that no
  * duplicates are returned.
  * @param {Object} options Options to pass to query-overpass, plus the following:
- * @param {Object} options.cellSize Size of cells to request in kilometers, defaults to 1 km
+ * @param {Number} options.cellSize Size of cells to request in kilometers, defaults to 1 km
+ * @param {Number} options.sleepBetweenCalls Pause this many milliseconds between calls to avoid the request rate limit
  * @param {Object} options.testBounds Used only for testing
  * @param {Array} bounds [lat_min, lon_min, lat_max, lon_max]
  *
  */
-export const fetchTransitCelled = ({cellSize=1, testBounds}, bounds) => {
+export const fetchTransitCelled = ({cellSize=1, sleepBetweenCalls, testBounds}, bounds) => {
     const units = 'kilometers';
     // Use turf's squareGrid function to break up the bbox by cellSize squares
     const squares = R.map(
@@ -39,7 +50,7 @@ export const fetchTransitCelled = ({cellSize=1, testBounds}, bounds) => {
         squareGrid(bounds, cellSize, units).features);
 
     // fetchTasks :: Array (Task Object)
-    const fetchTasks = R.map(fetchTransit({testBounds}), squares);
+    const fetchTasks = R.map(fetchTransit({sleepBetweenCalls, testBounds}), squares);
     // chainedTasks :: Array (Task Object) -> Task.chain(Task).chain(Task)...
     // We want each request to overpass to run after the previous is finished,
     // so as to not exceed the permitted request rate. Chain the tasks and reduce
@@ -102,14 +113,18 @@ export const fetchTransit = R.curry((options, bounds) => {
     out meta qt;/*fixed by auto repair*/
     `;
     return new Task(function(reject, resolve) {
-        query_overpass(query(boundsAsString), (error, data) => {
-            if (!error) {
-                resolve(data);
-            }
-            else {
-                reject(error);
-            }
-        }, options);
+        // Possibly delay each call to query_overpass to avoid request rate threshold
+        // Since we are executing calls sequentially, this will pause sleepBetweenCalls before each call
+        setTimeout(() =>
+            query_overpass(query(boundsAsString), (error, data) => {
+                if (!error) {
+                    resolve(data);
+                }
+                else {
+                    reject(error);
+                }
+            }, options),
+            options.sleepBetweenCalls || 0)
     });
 });
 

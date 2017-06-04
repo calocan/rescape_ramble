@@ -13,7 +13,6 @@ import {DraggablePointsOverlay, SVGOverlay} from 'react-map-gl';
 import autobind from 'autobind-decorator';
 import React from 'react';
 import R from 'ramda';
-import {getPath} from 'helpers/functions'
 
 const MapLines = (React) => React.createClass({
 
@@ -28,9 +27,8 @@ const MapLines = (React) => React.createClass({
 
     @autobind
     _redrawSVGOverlay(opt) {
-        if (!getPath(['locations', 'features'], this.props)) {
+        if (!this.props.geojson || !this.props.geojson.features)
             return null;
-        }
         const pointStrings = R.map(
             feature => {
                 return {
@@ -38,7 +36,7 @@ const MapLines = (React) => React.createClass({
                     pointString: this.resolveSvg(opt, feature)
                 };
             },
-            this.props.locations.features);
+            this.props.geojson.features);
 
         const paths = R.map(({key, pointString}) =>
             <path
@@ -71,6 +69,6 @@ const {
 
 MapLines.propTypes = {
     viewport: object.isRequired,
-    locations: array.isRequired,
+    geojson: object.isRequired,
 };
 export default MapLines;

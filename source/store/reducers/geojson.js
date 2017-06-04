@@ -22,7 +22,7 @@
 
 import R from 'ramda';
 import {SET_STATE} from './fullState'
-import {fetchTransitCelled, fetchTransit} from 'helpers/overpassHelpers'
+import {fetchTransitCelled} from 'helpers/overpassHelpers'
 import Task from 'data.task'
 
 const FETCH_OSM = '/osm/FETCH_OSM';
@@ -51,9 +51,14 @@ const geojsonReducer = (
 
     switch (action.type) {
         case SET_STATE:
+            // Currently never used but could be. State is set in the region reducer
             return R.merge(state, action.state.geojson);
+        case FETCH_OSM_DATA:
+            // Indicate that the geojson has been requested so that it never tries to lad again
+            return R.merge(state, {requested: true});
         case FETCH_OSM_SUCCESS:
-            return R.merge(state, action.value)
+            // Merge the returned geojson into the state
+            return R.merge(state, action.body);
         default:
             return state;
     }

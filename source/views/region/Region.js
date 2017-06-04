@@ -20,11 +20,15 @@ import {getPath} from 'helpers/functions'
  */
 const Region = (React) => React.createClass({
 
-
     componentWillReceiveProps(nextProps) {
-        // Region has changed
-        if (!getPath(['region', 'geojson', 'features'], this.props) ||
-            getPath(['region', 'id'], this.props) != getPath(['region', 'id'], nextProps)) {
+        const getRegionId = getPath(['region', 'id'])
+        if (
+            !(R.equals(...R.map(getRegionId, [this.props, nextProps])) && // Region changed
+              R.equals(getRegionId(nextProps), getPath(['state', 'geojsonRequested'], this))) // geojson not yet requested
+        )
+        {
+            // Region hasn't requested features yet and/or Region has changed
+            this.setState({geojsonRequested: nextProps.region.id})
             this.props.fetchOsm(nextProps.settings.overpass, nextProps.region.geospatial.bounds).fork(
                 error => this.props.fetchOsmFailure(error),
                 osm => {
