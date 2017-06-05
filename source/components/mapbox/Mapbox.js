@@ -13,20 +13,23 @@ import MapGL from 'react-map-gl';
 import React from 'react'
 import autobind from 'autobind-decorator';
 import createMapStops from 'components/mapStop/mapStops';
-import createMapIcons from 'components/mapIcon/mapIcons';
-import MapLines from 'components/mapLine/mapLines';
+import MapLines from 'components/mapLine/MapLines';
+import MapIcons from 'components/mapIcon/MapIcons';
 import {getPath} from 'helpers/functions'
 import {geojsonByType} from 'helpers/geojsonHelpers'
 const MapStops = createMapStops(React);
-const MapIcons = createMapIcons(React);
+import R from 'ramda';
 
 class Mapbox extends React.Component {
 
     componentWillReceiveProps(nextProps) {
-        // Region has changed
-        if (getPath(['geojson', 'features', 'length'], this.props) !=
-            getPath(['geojson', 'features', 'length'], nextProps))
-            this.setState({geojsonByType: geojsonByType(nextProps.geojson)});
+        const osmLens = R.lensPath(['geojson', 'osm', 'features', 'length']);
+        const markersLens = R.lensPath(['geojson', 'markers', 'features', 'length']);
+        // Features have changed
+        if (R.view(osmLens, this.props) != R.view(osmLens, nextProps))
+            this.setState({osmByType: geojsonByType(nextProps.geojson.osm)});
+        if (R.view(markersLens, this.props) != R.view(markersLens, nextProps))
+            this.setState({markersByType: geojsonByType(nextProps.geojson.markers)});
     }
 
     @autobind
@@ -36,8 +39,8 @@ class Mapbox extends React.Component {
 
     render() {
         const { viewport, mapboxApiAccessToken, geojson } = this.props;
-        const {node, way} = getPath(['state', 'geojsonByType'], this) || {}
-        const icons = []
+        const {node, way} = getPath(['state', 'osmByType'], this) || {}
+        const icons = getPath(['state', 'markersByType'], this) || {}
 
         return (
             <MapGL

@@ -38,17 +38,12 @@ if (true) {
         test('unmocked fetchTransitCelled', () => {
             const realBounds = [-118.24031352996826, 34.04298753935195, -118.21018695831297, 34.065209887879476];
             // Wrap the Task in a Promise for jest's sake
-            return new Promise((resolve, reject) => {
+            return expect(new Promise((resolve, reject) => {
                 fetchTransitCelled({cellSize: 2, bounds: realBounds}, realBounds).fork(
                     error => reject(error),
-                    response => resolve(response)
+                    response => resolve(response).features.length
                 )
-            }).then(response => {
-                // We expect over 500 results. I'll leave it fuzzy in case the source dataset changes
-                expect(response.features.length > 500).toBe(true);
-            }).catch(error => {
-                throw error
-            })
+            })).resolves.toBeGreaterThan(500) // We expect over 500 results. I'll leave it fuzzy in case the source dataset changes
         });
     });
 }

@@ -10,6 +10,9 @@
       "cellSize": 100,
       "sleepBetweenCalls": 1000
     },
+    "markers": {
+
+    },
     "regions": [
       {
         "id": "california",

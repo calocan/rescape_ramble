@@ -35,6 +35,12 @@ class Region extends React.Component {
                     // osm was set in store by action
                 }
             );
+            this.props.fetchMarkers(nextProps.settings.markers, nextProps.region.geospatial.bounds).fork(
+                error => this.props.fetchMarkersFailure(error),
+                markers => {
+                    // markers was set in store by action
+                }
+            );
         }
     }
 

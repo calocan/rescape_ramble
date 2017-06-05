@@ -23,13 +23,21 @@
 import R from 'ramda';
 import {SET_STATE} from './fullState'
 import {fetchTransitCelled} from 'helpers/overpassHelpers'
+import {fetchMarkers as fetchMarkersHelper} from 'helpers/markerHelpers'
 import Task from 'data.task'
 
 const FETCH_OSM = '/osm/FETCH_OSM';
 const FETCH_OSM_DATA = '/osm/FETCH_OSM_DATA';
 const FETCH_OSM_SUCCESS = '/osm/FETCH_OSM_SUCCESS';
 const FETCH_OSM_FAILURE = '/osm/FETCH_OSM_FAILURE';
-export const actions = {FETCH_OSM, FETCH_OSM_DATA, FETCH_OSM_SUCCESS, FETCH_OSM_FAILURE};
+const FETCH_MARKERS = '/osm/FETCH_MARKER';
+const FETCH_MARKERS_DATA = '/osm/FETCH_MARKER_DATA';
+const FETCH_MARKERS_SUCCESS = '/osm/FETCH_MARKER_SUCCESS';
+const FETCH_MARKERS_FAILURE = '/osm/FETCH_MARKER_FAILURE';
+export const actions = {
+    FETCH_OSM, FETCH_OSM_DATA, FETCH_OSM_SUCCESS, FETCH_OSM_FAILURE,
+    FETCH_MARKERS, FETCH_MARKERS_DATA, FETCH_MARKERS_SUCCESS, FETCH_MARKERS_FAILURE
+};
 
 
 /**
@@ -58,7 +66,10 @@ const geojsonReducer = (
             return R.merge(state, {requested: true});
         case FETCH_OSM_SUCCESS:
             // Merge the returned geojson into the state
-            return R.merge(state, action.body);
+            return R.merge(state, {osm: action.body});
+        case FETCH_MARKERS_SUCCESS:
+            // Merge the returned geojson into the state
+            return R.merge(state, {markers: action.body});
         default:
             return state;
     }
@@ -113,6 +124,56 @@ export function fetchOsm(options, bounds) {
         return fetchTransitCelled(options, bounds).chain(response =>
             Task.of(dispatch(fetchOsmSuccess(response)))
         )
+    }
+}
+
+/***
+ * Asynchronous call to fetch marker data
+ * @param {Object} options:
+ * @param {[Number]} bounds
+ * @return {function(*)}
+ * fetchOsm:: <k,v> -> [a] -> Task Error String
+ */
+export function fetchMarkers(options, bounds) {
+    return dispatch => {
+        dispatch(fetchMarkersData());
+        return fetchMarkersHelper(options, bounds).chain(response =>
+            Task.of(dispatch(fetchMarkersSuccess(response)))
+        )
+    }
+}
+
+/***
+ * Action to request the full state
+ * @return {{type: string}}
+ */
+function fetchMarkersData() {
+    return {
+        type: FETCH_MARKERS_DATA
+    }
+}
+
+/***
+ * Action to process the successful response
+ * @param body
+ * @return {{type: string, body: *}}
+ */
+function fetchMarkersSuccess(body) {
+    return {
+        type: FETCH_MARKERS_SUCCESS,
+        body
+    }
+}
+
+/***
+ * Action to process the failure response
+ * @param ex
+ * @return {{type: string, ex: *}}
+ */
+function fetchmarkerFailure(ex) {
+    return {
+        type: FETCH_MARKERS_FAILURE,
+        ex
     }
 }
 

@@ -1,0 +1,76 @@
+/**
+ * Created by Andy Likuski on 2017.06.05
+ * Copyright (c) 2017 Andy Likuski
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+import React from 'react'
+
+/***
+ * Inspects a feature and returns its type and projected point representation
+ * @param opt
+ * @param feature
+ * @return {*}
+ */
+export const resolveSvgPoints = (opt, feature) => {
+    switch (feature.geometry.type) {
+        case 'Point':
+            return {
+                type: feature.geometry.type,
+                points: [opt.project(feature.geometry.coordinate)]
+            }
+        case 'LineString':
+            return {
+                type: feature.geometry.type,
+                points: feature.geometry.coordinates.map(coordinate => opt.project(coordinate))
+            }
+        case 'Polygon':
+            return {
+                type: feature.geometry.type,
+                points: feature.geometry.coordinates[0].map(coordinate => opt.project(coordinate))
+            }
+    }
+}
+
+export const resolveSvgJsx = (opt, features) => {
+    const pointData = R.map(
+        feature => {
+            return {
+                key: feature.id,
+                pointString: resolveSvgPoints(opt, feature)
+            };
+        },
+        features);
+
+    const paths = R.map(({key, pointData}) => {
+        switch (pointData.type) {
+            case 'Point':
+                const [cx, cy] = R.head(pointData.points);
+                return <circle cx={cx} cy={cy} r="100" fill="red" stroke="blue" stroke-width="10" />
+            case 'LineString':
+                return <polyline key={key} fill="none" stroke="blue" strokeWidth="10"
+                    points={pointData.points.map(point => point.join(',')).join(' ')} />
+            case 'Polygon':
+                // TODO might need to remove a last redundant point here
+                return <polygon fill="red" stroke="blue" stroke-width="10"
+                    points={pointData.points.map(point => point.join(',')).join(' ')} />
+        }
+    },
+    /*
+            // I was using this for lines and polygons before. Hopefully the svg shapes work just as well
+            // for mapbox
+            <path
+                key={key}
+                style={ {stroke: '#1FBAD6', strokeWidth: 2, fill: 'none'} }
+                d={ `M${pointString}` }/>,
+        */
+    pointData);
+
+    return <g>
+        {paths}
+    </g>
+};

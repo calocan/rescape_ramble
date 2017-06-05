@@ -41,7 +41,7 @@
     ],
     "moduleNameMapper": {
       "mapbox-gl$": "<rootDir>/node_modules/mapbot-gl/dist/mapbox-gl.js",
-      "webworkify": "<rootDir>/node_moducles/webworkify-webpack",
+      "webworkify": "<rootDir>/node_modules/webworkify-webpack",
       "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/__mocks__/fileMock.js",
       "\\.(css|less)$": "identity-obj-proxy"
     }
@@ -118,6 +118,7 @@
     "postcss-calc": "^6.0.0",
     "postcss-custom-media": "^6.0.0",
     "pouchdb": "^6.2.0",
+    "query-overpass": "^1.5.0",
     "ramda": "^0.24.1",
     "ramda-fantasy": "^0.8.0",
     "react": "^15.5.4",
@@ -143,6 +144,7 @@
     "tls": "0.0.1"
   },
   "babel": {
+    "plugins": ["transform-class-properties", "transform-decorators-legacy", "transform-object-rest-spread"],
     "presets": [
       "es2015",
       "stage-2",
