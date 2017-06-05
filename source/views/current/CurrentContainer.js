@@ -1,5 +1,5 @@
 import {connect} from 'react-redux';
-import createCurrent from './Current.js';
+import Current from './Current.js';
 import React from 'react';
 import R from 'ramda';
 
@@ -17,5 +17,5 @@ const CurrentContainer = connect(
      * @returns {{}}
      */
     mapStateToProps
-)(createCurrent(React));
+)(Current);
 export default CurrentContainer;

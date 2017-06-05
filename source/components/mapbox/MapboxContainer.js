@@ -13,7 +13,7 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux'
 import {onChangeViewport} from 'redux-map-gl';
 import React from 'react';
-import createMapbox from './Mapbox';
+import Mapbox from './Mapbox';
 import R from 'ramda';
 import {toJS} from 'helpers/functions';
 
@@ -50,4 +50,4 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     }, dispatch);
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(createMapbox(React));
+export default connect(mapStateToProps, mapDispatchToProps)(Mapbox);

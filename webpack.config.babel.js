@@ -40,12 +40,12 @@ export default {
                 loader: 'babel-loader',
                 include: [resolve('.')],
                 exclude: [/node_modules/],
-                //options: {
-                    //babelrc: false,
-                    //presets: ['env', 'react'],
-                    //plugins: ["transform-class-properties", "transform-decorators-legacy"]
+                options: {
+                    babelrc: false,
+                    presets: ['env', 'react'],
+                    plugins: ["transform-class-properties", "transform-decorators-legacy", "transform-object-rest-spread"],
                     //plugins: ["transform-flow-strip-types", "transform-object-rest-spread", "transform-class-properties", "transform-decorators-legacy"]
-                //}
+                }
             },
             {
                 test: /node_modules\/JSONStream\/index\.js$/,

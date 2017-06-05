@@ -14,28 +14,27 @@ import React from 'react'
 import autobind from 'autobind-decorator';
 import createMapStops from 'components/mapStop/mapStops';
 import createMapIcons from 'components/mapIcon/mapIcons';
-import createMapLines from 'components/mapLine/mapLines';
+import MapLines from 'components/mapLine/mapLines';
 import {getPath} from 'helpers/functions'
 import {geojsonByType} from 'helpers/geojsonHelpers'
 const MapStops = createMapStops(React);
-const MapLines = createMapLines(React);
 const MapIcons = createMapIcons(React);
 
-const Mapbox = (React) => React.createClass({
+class Mapbox extends React.Component {
 
     componentWillReceiveProps(nextProps) {
         // Region has changed
         if (getPath(['geojson', 'features', 'length'], this.props) !=
             getPath(['geojson', 'features', 'length'], nextProps))
             this.setState({geojsonByType: geojsonByType(nextProps.geojson)});
-    },
+    }
 
     @autobind
     _onChangeViewport(opt) {
         this.props.onChangeViewport(opt);
-    },
+    }
 
-    render: function() {
+    render() {
         const { viewport, mapboxApiAccessToken, geojson } = this.props;
         const {node, way} = getPath(['state', 'geojsonByType'], this) || {}
         const icons = []
@@ -57,7 +56,7 @@ const Mapbox = (React) => React.createClass({
             </MapGL>
         );
     }
-});
+};
 
 const {
     number,

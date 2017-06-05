@@ -1,7 +1,7 @@
 import {connect} from 'react-redux';
 import React from 'react';
 import R from 'ramda';
-import createRegion from './Region.js';
+import Region from './Region.js';
 import * as actions from 'store/reducers/geojson';
 
 export const mapStateToProps = (state, ownProps) => {
@@ -19,5 +19,5 @@ const RegionContainer = connect(
      * @returns {{}}
      */
     mapStateToProps, actions
-)(createRegion(React));
+)(Region);
 export default  RegionContainer;

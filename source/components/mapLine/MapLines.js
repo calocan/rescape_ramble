@@ -14,7 +14,7 @@ import autobind from 'autobind-decorator';
 import React from 'react';
 import R from 'ramda';
 
-const MapLines = (React) => React.createClass({
+class MapLines extends React.Component {
 
     resolveSvg(opt, feature) {
         switch (feature.geometry.type) {
@@ -23,7 +23,7 @@ const MapLines = (React) => React.createClass({
             case 'Polygon':
                 return feature.geometry.coordinates[0].map(coordinate => opt.project(coordinate)).join('L');
         }
-    },
+    }
 
     @autobind
     _redrawSVGOverlay(opt) {
@@ -48,7 +48,7 @@ const MapLines = (React) => React.createClass({
         return <g>
             {paths}
         </g>
-    },
+    }
 
     render() {
         return <SVGOverlay
@@ -57,7 +57,7 @@ const MapLines = (React) => React.createClass({
             { ...this.props.viewport }
             redraw={ this._redrawSVGOverlay } />
     }
-});
+};
 
 const {
     number,

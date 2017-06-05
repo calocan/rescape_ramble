@@ -24,7 +24,7 @@ const middlewares = [
 ];
 
 if (process.env.NODE_ENV === `development`) {
-    const createLogger = require(`redux-logger`);
+    const {createLogger} = require(`redux-logger`);
     const logger = createLogger();
     middlewares.push(logger);
 }

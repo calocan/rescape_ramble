@@ -18,7 +18,7 @@ import {getPath} from 'helpers/functions'
  * The View for a Region, such as California. Theoretically we could display multiple regions at once
  * if we had more than one, or we could have a zoomed in region of California like the Bay Area.
  */
-const Region = (React) => React.createClass({
+class Region extends React.Component {
 
     componentWillReceiveProps(nextProps) {
         const getRegionId = getPath(['region', 'id'])
@@ -36,9 +36,9 @@ const Region = (React) => React.createClass({
                 }
             );
         }
-    },
+    }
 
-    render: function() {
+    render() {
         return (
             <div className='region' style={R.merge(this.props.style, styles.container)}>
                 {/* We additionally give Mapbox the container width and height so the map can track changes to these */}
@@ -46,7 +46,7 @@ const Region = (React) => React.createClass({
             </div>
         );
     }
-});
+};
 
 /***
  * Expect the region

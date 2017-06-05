@@ -17,12 +17,12 @@ import React from 'react'
  * Displays the Region of the current state and eventually a Region selector.
  * This might also be modified to display all available regions, perhaps on a continental map
  */
-const Current = (React) => React.createClass({
+class Current extends React.Component {
 
         /***
          * Updates the width and height property to match the window
          */
-        updateDimensions: function() {
+        updateDimensions() {
             const w = window,
                 d = document,
                 documentElement = d.documentElement,
@@ -31,23 +31,27 @@ const Current = (React) => React.createClass({
                 height = styles.container.height * (w.innerHeight|| documentElement.clientHeight|| body.clientHeight);
 
             this.setState({width, height});
-        },
-        componentWillMount: function() {
+        }
+
+        componentWillMount() {
             this.updateDimensions();
-        },
-        componentDidMount: function() {
+        }
+
+        componentDidMount() {
             window.addEventListener("resize", this.updateDimensions);
-        },
-        componentWillUnmount: function() {
+        }
+
+        componentWillUnmount() {
             window.removeEventListener("resize", this.updateDimensions);
-        },
+        }
 
         render() {
             return <div className='current'>
                 <Region region={this.props.region} style={{width: this.state.width, height: this.state.height}}/>
             </div>
         }
-});
+};
+
 const {
     string, object, number, func
 } = React.PropTypes;
