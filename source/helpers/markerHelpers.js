@@ -18,18 +18,27 @@ import bbox from '@turf/bbox';
 import PouchDB from 'pouchdb'
 PouchDB.plugin(require('pouchdb-erase'));
 
-export const removeMarkers = () => {
-    const db = new PouchDB('markers');
+const sync = (db, remoteCouch) => {
+    const opts = {live: true};
+    return db.sync(remoteCouch, opts)
+}
+
+export const removeMarkers = (options) => {
+    const name = 'markers';
+    const db = new PouchDB(name);
+    const remoteCouch = `http://localhost:5984/${name}`;
     return new Task((reject, resolve) => {
-        db.erase().then(
-            resp => resolve(resp)
-        ).catch(
-            err => reject(err)
-        );
+        sync(db, remoteCouch).then(response =>
+            db.erase().then(
+                resp => resolve(resp)
+            ).catch(
+                err => reject(err)
+            )
+        )
     })
 }
 
-export const persistMarkers = (features) => {
+export const persistMarkers = (options, features) => {
     const dateLens = R.lensProp('date');
     const _idLens = R.lensProp('_id');
     const featureIdLens = R.lensPath(['properties', '@id']);
@@ -40,7 +49,7 @@ export const persistMarkers = (features) => {
             .timestamp()
             // Add a timestamp and _id to the feature for storing
             .map(obj => R.compose(R.set(dateLens, obj.timestamp), R.set(_idLens, obj.value.id))(obj.value))
-            .do(feature => console.log(`Processing feature for: ${R.view(featureIdLens, feature)}`))
+            .do(feature => console.log(`sudo apt-get install couchdbProcessing feature for: ${R.view(featureIdLens, feature)}`))
             .mergeMap(datedFeature =>
                 Rx.Observable.fromPromise(db.post(datedFeature)));
 

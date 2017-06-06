@@ -21,12 +21,8 @@ describe("markerHelpers", ()=>{
         // Pass bounds in the options. Our mock query-overpass uses is to avoid parsing the query
         expect(new Promise((resolve, reject) => {
             fetchMarkers({testBounds: bounds}, bounds).fork(
-                error => {
-                    throw new reject(error)
-                },
-                response => {
-                    return resolve(response)
-                }
+                error => reject(error),
+                response => resolve(response),
             )
         })).resolves.toEqual(require('queryOverpassResponse').LA_SAMPLE)
     });
@@ -114,9 +110,7 @@ describe("markerHelpers", ()=>{
             removeMarkers(geojson.features).chain(
                 destroySuccess => fetchMarkers({testBounds: bounds}, bounds)
             ).fork(
-                error => {
-                    throw new reject(error)
-                },
+                error => reject(error),
                 response => {
                     console(`Should be no rows ${response.rows}`)
                     resolve(response.rows)
@@ -128,7 +122,7 @@ describe("markerHelpers", ()=>{
         expect(new Promise((resolve, reject) => {
             persistMarkers(geojson.features).fork(
                 error => {
-                    throw new reject(error)
+                    reject(error)
                 },
                 response => resolve(response)
             )
@@ -138,7 +132,7 @@ describe("markerHelpers", ()=>{
         expect(new Promise((resolve, reject) => {
             fetchMarkers({testBounds: bounds}, bounds).fork(
                 error => {
-                    throw new reject(error)
+                    reject(error)
                 },
                 response => {
                     resolve(response.rows)
