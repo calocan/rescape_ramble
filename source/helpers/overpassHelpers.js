@@ -114,6 +114,8 @@ export const fetchTransit = R.curry((options, bounds) => {
     >;
     out meta qt;/*fixed by auto repair*/
     `;
+
+    // Wrap overpass helper's execution and callback in a Task
     return new Task(function(reject, resolve) {
         // Possibly delay each call to query_overpass to avoid request rate threshold
         // Since we are executing calls sequentially, this will pause sleepBetweenCalls before each call

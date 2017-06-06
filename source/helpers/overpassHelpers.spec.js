@@ -10,70 +10,55 @@
  */
 
 import {fetchTransit, fetchTransitCelled} from './overpassHelpers';
-import {removeDuplicateObjectsByProp} from 'helpers/functions'
-import prettyFormat from 'pretty-format'
+import {removeDuplicateObjectsByProp, taskToPromise} from 'helpers/functions'
+import {expectTask} from 'helpers/jestHelpers'
 
 // TODO use .resolves for all async tests whenever Jest 20 comes out, assuming it works with fork
 
-// Move this out of if statement when testing
+// Comment/Uncomment. Must be at top level
+const mock = false
 jest.unmock('query-overpass')
-if (true) {
-    // requires are used below since the jest includes aren't available at compile time
-    describe("overpassHelpers unmocked", () => {
-
-        jasmine.DEFAULT_TIMEOUT_INTERVAL = 100000000
-        if (false)
-        test('unmocked fetchTransit', () => {
-            // Unmocked integration test
-            const realBounds = [-118.24031352996826, 34.04298753935195, -118.21018695831297, 34.065209887879476];
-            fetchTransit({realBounds}, realBounds).fork(
-                error => {
-                    throw new Error(prettyFormat(error))
-                },
-                response => {
-                    expect(response.features.length > 500).toEqual(true)
-                }
-            )
-        });
-        test('unmocked fetchTransitCelled', () => {
-            const realBounds = [-118.24031352996826, 34.04298753935195, -118.21018695831297, 34.065209887879476];
-            // Wrap the Task in a Promise for jest's sake
-            return expect(new Promise((resolve, reject) => {
-                fetchTransitCelled({cellSize: 2, bounds: realBounds}, realBounds).fork(
-                    error => reject(error),
-                    response => resolve(response).features.length
-                )
-            })).resolves.toBeGreaterThan(500) // We expect over 500 results. I'll leave it fuzzy in case the source dataset changes
-        });
+// requires are used below since the jest includes aren't available at compile time
+describe("overpassHelpersUnmocked", () => {
+    if (mock)
+        return
+    jasmine.DEFAULT_TIMEOUT_INTERVAL = 100000000
+    test('unmockedFetchTransit', () => {
+        // Unmocked integration test
+        const realBounds = [-118.24031352996826, 34.04298753935195, -118.21018695831297, 34.065209887879476];
+        expectTask(
+            fetchTransit({realBounds}, realBounds).map(response => response.features.length)
+        ).resolves.toBeGreaterThan(500)
     });
-}
-if (false)
-describe("overpassHelpers", ()=>{
+    test('unmockedFetchTransitCelled', () => {
+        const realBounds = [-118.24031352996826, 34.04298753935195, -118.21018695831297, 34.065209887879476];
+        // Wrap the Task in a Promise for jest's sake
+        return expectTask(
+            fetchTransitCelled({cellSize: 2, bounds: realBounds, sleepBetweenCalls: 500}, realBounds).map(
+                response => response.features.length
+            )
+        ).resolves.toBeGreaterThan(500) // We expect over 500 results. I'll leave it fuzzy in case the source dataset changes
+    });
+});
+describe("overpassHelpers", () => {
 
-    jest.mock('query-overpass')
+    if (!mock)
+        return
     const bounds = require('query-overpass').LA_BOUNDS;
     test("fetchTransit", () => {
         // Pass bounds in the options. Our mock query-overpass uses is to avoid parsing the query
-        fetchTransit({testBounds: bounds}, bounds).fork(
-            error => {
-                throw new Error(error)
-            },
-            response => expect(response).toEqual(
-                require('queryOverpassResponse').LA_SAMPLE
-            )
-        )
+        expectTask(
+            fetchTransit({testBounds: bounds}, bounds)
+        ).resolves.toEqual(require('queryOverpassResponse').LA_SAMPLE);
     });
 
-    test("fetchTransit in cells", ()=> {
-        fetchTransitCelled({cellSize: 200, testBounds: bounds}, bounds).fork(
-            error => { or(error.message) },
-            response => {
-                expect(response.features).toEqual(
-                    // the sample can have duplicate ids
-                    removeDuplicateObjectsByProp('id', require('queryOverpassResponse').LA_SAMPLE.features)
-                )
-            }
+    test("fetchTransit in cells", () => {
+        expectTask(
+            fetchTransitCelled({cellSize: 200, testBounds: bounds}, bounds).map(response => response.features)
+        ).resolves.toEqual(
+            // the sample can have duplicate ids
+            removeDuplicateObjectsByProp('id', require('queryOverpassResponse').LA_SAMPLE.features)
         )
     })
-
 });
+

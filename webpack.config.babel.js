@@ -2,6 +2,12 @@ import {resolve} from 'path';
 import webpack from 'webpack';
 import ExtractTextPlugin from 'extract-text-webpack-plugin';
 
+/**
+ * brew services start couchdb
+ * brew services start couchdb
+ * npm install -g add-cors-to-couchdb
+ * add-cors-to-couchdb
+ */
 export default {
     devtool: 'inline-source-map',
     /*

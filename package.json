@@ -30,6 +30,7 @@
     "webpack-profile": "webpack --profile --json > webpack-stats.json"
   },
   "jest": {
+    "testEnvironment": "node",
     "setupFiles": [
       "<rootDir>/jestsetup.js"
     ],
@@ -119,6 +120,7 @@
     "postcss-custom-media": "^6.0.0",
     "pouchdb": "^6.2.0",
     "pouchdb-erase": "^1.0.2",
+    "promise-to-task": "^1.0.0",
     "query-overpass": "^1.5.0",
     "ramda": "^0.24.1",
     "ramda-fantasy": "^0.8.0",

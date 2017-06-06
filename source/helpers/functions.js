@@ -216,3 +216,18 @@ export const getPath = R.curry((path, obj) => R.pipe(R.lensPath, R.view)(path)(o
  * copy:: a -> a
  */
 export const copy = R.compose(toJS, toImmutable);
+
+/***
+ * Wraps a Task in a Promise.
+ * For the other direction use the module promise-to-task
+ * @param task
+ * @return {Promise}
+ */
+export const taskToPromise = task => {
+    if (!task.fork) {
+        throw new TypeError(`Expected a Task, got ${typeof task}`);
+    }
+    return new Promise((res, rej) => {
+        task.fork(reject=>rej, resolve=>res)
+    });
+};
