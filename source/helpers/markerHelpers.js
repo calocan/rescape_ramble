@@ -11,20 +11,52 @@
 
 import Task from 'data.task'
 import R from 'ramda';
+import Rx from 'rxjs';
 import {mergeAllWithKey, removeDuplicateObjectsByProp} from 'helpers/functions';
-import os from 'os';
 import squareGrid from '@turf/square-grid';
 import bbox from '@turf/bbox';
 import PouchDB from 'pouchdb'
+PouchDB.plugin(require('pouchdb-erase'));
 
-export const fetchMarkersAndWrite = (options, bounds) => {
-    const db = new PouchDB('osm');
-    db.allDocs({include_docs: true, descending: true}, function(err, doc) {
-        expect(R.map(R.view(R.lensPath(['doc', 'title'])), doc.rows)).toEqual(['Buy grapes', 'Buy grapes'])
-    });
-    db.put(fetchMarkersCelled(options, bounds), (err, result) => {
-    });
+export const removeMarkers = () => {
+    const db = new PouchDB('markers');
+    return new Task((reject, resolve) => {
+        db.erase().then(
+            resp => resolve(resp)
+        ).catch(
+            err => reject(err)
+        );
+    })
+}
+
+export const persistMarkers = (features) => {
+    const dateLens = R.lensProp('date');
+    const _idLens = R.lensProp('_id');
+    const featureIdLens = R.lensPath(['properties', '@id']);
+    const db = new PouchDB('markers');
+    return new Task(function(reject, resolve) {
+        // Function that writes features to document store
+        const writeFeature$ = feature => Rx.Observable.of(feature)
+            .timestamp()
+            // Add a timestamp and _id to the feature for storing
+            .map(obj => R.compose(R.set(dateLens, obj.timestamp), R.set(_idLens, obj.value.id))(obj.value))
+            .do(feature => console.log(`Processing feature for: ${R.view(featureIdLens, feature)}`))
+            .mergeMap(datedFeature =>
+                Rx.Observable.fromPromise(db.post(datedFeature)));
+
+        // Run through all Features in the array
+        Rx.Observable.from(features)
+            .concatMap(writeFeature$) // Map the writeFeatures$ to each Feature object
+            .subscribe(
+                rec => console.log(`New record created: ${rec.id}`),
+                err => reject(err),
+                () => {
+                    resolve(features);
+                }
+            );
+    })
 };
+
 
 /***
  * fetches transit data in squares sequentially from OpenStreetMap using the Overpass API.
@@ -88,42 +120,20 @@ export const fetchMarkersCelled = ({cellSize=1, sleepBetweenCalls, testBounds}, 
  * @param {Array} bounds [lat_min, lon_min, lat_max, lon_max]
  */
 export const fetchMarkers = R.curry((options, bounds) => {
-    const boundsAsString = R.pipe(
-        list=>R.concat(
-            R.reverse(R.slice(0,2)(list)),
-            R.reverse(R.slice(2,4)(list))),
-        R.join(',')
-    )(bounds)
-    const query = boundsString => `
-    [out:json];
-    (
-        ${R.pipe(R.map(type => `
-        ${type} 
-            ["railway"]
-            ["service" != "siding"]
-            ["service" != "spur"]
-            (${boundsString});
-        `),
-        R.join(os.EOL))(['node', 'way', 'rel'])}
-    );
-    // print results
-    out meta;/*fixed by auto repair*/
-    >;
-    out meta qt;/*fixed by auto repair*/
-    `;
+    const db = new PouchDB('markers');
     return new Task(function(reject, resolve) {
-        // Possibly delay each call to query_overpass to avoid request rate threshold
-        // Since we are executing calls sequentially, this will pause sleepBetweenCalls before each call
-        setTimeout(() =>
-            query_overpass(query(boundsAsString), (error, data) => {
-                if (!error) {
-                    resolve(data);
-                }
-                else {
-                    reject(error);
-                }
-            }, options),
-            options.sleepBetweenCalls || 0)
+        Rx.Observable.fromEvent(db, 'created').subscribe(
+            () => {
+                db.allDocs({include_docs: true, descending: true}, function(err, doc) {
+                    if (!err) {
+                        resolve(doc);
+                    }
+                    else {
+                        reject(err);
+                    }
+                })
+            }
+        )
     });
 });
 

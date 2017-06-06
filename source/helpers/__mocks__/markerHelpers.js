@@ -23,6 +23,7 @@ const responses = Map([
 ]);
 const getResponse = (bounds) => responses.get(fromJS(bounds));
 
+
 /***
  * Mocks the query_overpass method,
  * accepting an extra options.bounds argument to save parsing the bounds from the query
@@ -58,3 +59,4 @@ export const fetchMarkersCelled = R.curry((options, bounds) => {
         );
     })
 });
+
