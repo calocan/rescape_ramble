@@ -23,8 +23,9 @@
 import R from 'ramda';
 import {SET_STATE} from './fullState'
 import {fetchTransitCelled} from 'helpers/overpassHelpers'
-import {fetchMarkers as fetchMarkersHelper} from 'helpers/markerHelpers'
+import {fetchMarkers as fetchMarkersHelper, sync} from 'helpers/markerHelpers'
 import Task from 'data.task'
+import PouchDB from 'pouchdb'
 
 const FETCH_OSM = '/osm/FETCH_OSM';
 const FETCH_OSM_DATA = '/osm/FETCH_OSM_DATA';
@@ -38,7 +39,10 @@ export const actions = {
     FETCH_OSM, FETCH_OSM_DATA, FETCH_OSM_SUCCESS, FETCH_OSM_FAILURE,
     FETCH_MARKERS, FETCH_MARKERS_DATA, FETCH_MARKERS_SUCCESS, FETCH_MARKERS_FAILURE
 };
-
+const name = 'markers';
+const db = new PouchDB(name);
+const remoteUrl = `http://localhost:5984/${name}`;
+const syncObject = sync({db, remoteUrl});
 
 /**
  @typedef Geojson
@@ -63,7 +67,10 @@ const geojsonReducer = (
             return R.merge(state, action.state.geojson);
         case FETCH_OSM_DATA:
             // Indicate that the geojson has been requested so that it never tries to lad again
-            return R.merge(state, {requested: true});
+            return R.merge(state, {osmRequested: true});
+        case FETCH_MARKERS_DATA:
+            // Indicate that the geojson has been requested so that it never tries to lad again
+            return R.merge(state, {markersRequested: true});
         case FETCH_OSM_SUCCESS:
             // Merge the returned geojson into the state
             return R.merge(state, {osm: action.body});
@@ -137,7 +144,7 @@ export function fetchOsm(options, bounds) {
 export function fetchMarkers(options, bounds) {
     return dispatch => {
         dispatch(fetchMarkersData());
-        return fetchMarkersHelper(options, bounds).chain(response =>
+        return fetchMarkersHelper(db, options, bounds).chain(response =>
             Task.of(dispatch(fetchMarkersSuccess(response)))
         )
     }

@@ -16,18 +16,7 @@ import {mergeAllWithKey, removeDuplicateObjectsByProp} from 'helpers/functions';
 import os from 'os';
 import squareGrid from '@turf/square-grid';
 import bbox from '@turf/bbox';
-/*
-import PouchDB from 'pouchdb'
-
-export const fetchTransitAndWrite = (options, bounds) => {
-    const db = new PouchDB('osm');
-    db.allDocs({include_docs: true, descending: true}, function(err, doc) {
-        expect(R.map(R.view(R.lensPath(['doc', 'title'])), doc.rows)).toEqual(['Buy grapes', 'Buy grapes'])
-    });
-    db.put(fetchTransitCelled(options, bounds), (err, result) => {
-    });
-};
- */
+import {concatFeatures} from './geojsonHelpers'
 
 /***
  * fetches transit data in squares sequentially from OpenStreetMap using the Overpass API.
@@ -66,16 +55,13 @@ export const fetchTransitCelled = ({cellSize=1, sleepBetweenCalls, testBounds}, 
         R.head(fetchTasks),
         R.tail(fetchTasks));
 
-    // Fetch each square of transit and merge the results by feature id
-    // concatValues combines are results sets when they return
-    const concatValues = (k, l, r) => k == 'features' ? R.concat(l, r) : r;
 
     // sequenced :: Task (Array Object)
     //const sequenced = R.sequence(Task.of, fetchTasks);
     return chainedTasks.chain((results) =>
         Task.of(
             R.pipe(
-                mergeAllWithKey(concatValues),  // combine the results into one obj with concatinated features
+                mergeAllWithKey(concatFeatures),  // combine the results into one obj with concatinated features
                 R.over(                         // remove features with the same id
                     R.lens(R.prop('features'), R.assoc('features')),
                     removeDuplicateObjectsByProp('id'))

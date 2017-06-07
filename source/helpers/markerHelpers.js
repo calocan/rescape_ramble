@@ -9,49 +9,74 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import Task from 'data.task'
+import Task from 'data.task';
 import R from 'ramda';
 import Rx from 'rxjs';
-import {mergeAllWithKey, removeDuplicateObjectsByProp} from 'helpers/functions';
 import squareGrid from '@turf/square-grid';
 import bbox from '@turf/bbox';
-import PouchDB from 'pouchdb'
+import PouchDB from 'pouchdb';
+import {mergeAllWithKey, removeDuplicateObjectsByProp} from 'helpers/functions';
+
 PouchDB.plugin(require('pouchdb-erase'));
 
-const sync = (db, remoteCouch) => {
-    const opts = {live: true};
-    return db.sync(remoteCouch, opts)
+export const sync = ({db, remoteUrl}) => {
+    return PouchDB.sync(db, remoteUrl, {
+        live: true,
+        retry: true
+    }).on('change', function (info) {
+        // handle change
+        console.info(`Sync Changed: ${info}`);
+    }).on('paused', function (err) {
+        // replication paused (e.g. replication up to date, user went offline)
+        console.warn(`Sync Paused: ${err}`);
+    }).on('active', function () {
+        // replicate resumed (e.g. new changes replicating, user went back online)
+        console.info('Sync Active');
+    }).on('denied', function (err) {
+        // a document failed to replicate (e.g. due to permissions)
+        console.warn(`Sync Denied: ${err}`);
+    }).on('complete', function (info) {
+        // handle complete
+        console.info(`Sync Completed: ${info}`);
+    }).on('error', function (err) {
+        console.warn(`Sync Erred: ${err}`);
+        // handle error
+    });
 }
 
-export const removeMarkers = (options) => {
-    const name = 'markers';
-    const db = new PouchDB(name);
-    const remoteCouch = `http://localhost:5984/${name}`;
+export const removeMarkers = (db, options) => {
     return new Task((reject, resolve) => {
-        sync(db, remoteCouch).then(response =>
-            db.erase().then(
-                resp => resolve(resp)
-            ).catch(
-                err => reject(err)
-            )
-        )
+        db.allDocs().then(function (result) {
+            console.log(result);
+            // Promise isn't supported by all browsers; you may want to use bluebird
+            return Promise.all(result.rows.map(function (row) {
+                console.log(`Deleting ${row.id}`);
+                return db.remove(row.id, row.value.rev);
+            }));
+        }).then(function () {
+            resolve();
+        }).catch(function (err) {
+            reject(err);
+        });
     })
 }
 
-export const persistMarkers = (options, features) => {
+export const persistMarkers = (db, options, features) => {
     const dateLens = R.lensProp('date');
     const _idLens = R.lensProp('_id');
     const featureIdLens = R.lensPath(['properties', '@id']);
-    const db = new PouchDB('markers');
     return new Task(function(reject, resolve) {
         // Function that writes features to document store
         const writeFeature$ = feature => Rx.Observable.of(feature)
             .timestamp()
             // Add a timestamp and _id to the feature for storing
             .map(obj => R.compose(R.set(dateLens, obj.timestamp), R.set(_idLens, obj.value.id))(obj.value))
-            .do(feature => console.log(`sudo apt-get install couchdbProcessing feature for: ${R.view(featureIdLens, feature)}`))
+            .do(feature => console.log(`Add/Update feature for: ${R.view(featureIdLens, feature)}`))
             .mergeMap(datedFeature =>
-                Rx.Observable.fromPromise(db.post(datedFeature)));
+                Rx.Observable.fromPromise(
+                    db.post(datedFeature)
+                )
+            );
 
         // Run through all Features in the array
         Rx.Observable.from(features)
@@ -65,7 +90,6 @@ export const persistMarkers = (options, features) => {
             );
     })
 };
-
 
 /***
  * fetches transit data in squares sequentially from OpenStreetMap using the Overpass API.
@@ -82,7 +106,7 @@ export const persistMarkers = (options, features) => {
  * @param {Array} bounds [lat_min, lon_min, lat_max, lon_max]
  *
  */
-export const fetchMarkersCelled = ({cellSize=1, sleepBetweenCalls, testBounds}, bounds) => {
+export const fetchMarkersCelled = (db, {name, cellSize=1, sleepBetweenCalls, testBounds}, bounds) => {
     const units = 'kilometers';
     // Use turf's squareGrid function to break up the bbox by cellSize squares
     const squares = R.map(
@@ -90,7 +114,7 @@ export const fetchMarkersCelled = ({cellSize=1, sleepBetweenCalls, testBounds}, 
         squareGrid(bounds, cellSize, units).features);
 
     // fetchTasks :: Array (Task Object)
-    const fetchTasks = R.map(fetchMarkers({sleepBetweenCalls, testBounds}), squares);
+    const fetchTasks = R.map(fetchMarkers({name, sleepBetweenCalls, testBounds}), squares);
     // chainedTasks :: Array (Task Object) -> Task.chain(Task).chain(Task)...
     // We want each request to overpass to run after the previous is finished,
     // so as to not exceed the permitted request rate. Chain the tasks and reduce
@@ -121,15 +145,13 @@ export const fetchMarkersCelled = ({cellSize=1, sleepBetweenCalls, testBounds}, 
         )
     );
 };
-
 /***
  * fetches transit data from OpenStreetMap using the Overpass API.
  * @param {Object} options Options to pass to query-overpass, plus the following:
  * @param {Object} options.testBounds Used only for testing
  * @param {Array} bounds [lat_min, lon_min, lat_max, lon_max]
  */
-export const fetchMarkers = R.curry((options, bounds) => {
-    const db = new PouchDB('markers');
+export const fetchMarkers = R.curry((db, options, bounds) => {
     return new Task(function(reject, resolve) {
         Rx.Observable.fromEvent(db, 'created').subscribe(
             () => {

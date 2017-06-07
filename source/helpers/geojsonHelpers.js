@@ -28,3 +28,12 @@ export const geojsonByType = R.curry((geojson) => R.map(
     featureOfType => R.set(R.lensProp('features'), featureOfType, geojson),
     featureByType(geojson.features) // Reduce by feature type
 ));
+
+/***
+ * Fetch each square of transit and merge the results by feature id
+ * concatValues combines are results sets when they return
+ * @param k.
+ * @param l
+ * @param r
+ */
+export const concatFeatures = (k, l, r) => k == 'features' ? R.concat(l, r) : r;

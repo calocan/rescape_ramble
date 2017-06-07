@@ -13,11 +13,9 @@
     "build": "npm run clean && npm run build:webpack",
     "start": "cross-env NODE_PATH='source' node -r babel-register scripts/devServer.js",
     "start-webpack": "webpack-dev-server --progress --hot --port 3000",
-    "start-debug": "cross-env NODE_PATH='source' node $NODE_DEBUG_OPTION scripts/devServer.js",
     "debug": "cross-env NODE_PATH='source' echo 'Nothing? `npm install -g iron-node`' && iron-node source/debug.js",
     "lint": "eslint source",
     "pretest": "npm run lint",
-    "browserify": "cross-env NODE_PATH='source' BABEL_ENV=test browserify --debug -x react/addons -x react/lib/ExecutionEnvironment -x react/lib/ReactContext -t babelify ./source/**/**/*.spec.js",
     "testB": "cross-env NODE_PATH='source' BABEL_ENV=test browserify --debug -x react/addons -x react/lib/ExecutionEnvironment -x react/lib/ReactContext -t babelify ./source/**/**/*.spec.js | NODE_PATH='source' BABEL_ENV=test jest",
     "test": "cross-env NODE_PATH='source' BABEL_ENV=test jest",
     "test:watch": "cross-env NODE_PATH='source' jest --watch",
@@ -147,15 +145,14 @@
     "tls": "0.0.1"
   },
   "babel": {
+    "presets": [
+      "env",
+      "react"
+    ],
     "plugins": [
       "transform-class-properties",
       "transform-decorators-legacy",
       "transform-object-rest-spread"
-    ],
-    "presets": [
-      "es2015",
-      "stage-2",
-      "react"
     ]
   }
 }

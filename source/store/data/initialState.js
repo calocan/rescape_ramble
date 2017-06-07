@@ -10,7 +10,7 @@
  */
 
 import R from 'ramda';
-import {mapPropValueAsIndex, toImmutable} from '../../helpers/functions';
+import {mapPropValueAsIndex, toImmutable} from 'helpers/functions';
 
 /***
  * Returns a function that can be applied to a list to add an id value to each object of the list

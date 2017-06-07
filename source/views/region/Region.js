@@ -23,18 +23,20 @@ class Region extends React.Component {
     componentWillReceiveProps(nextProps) {
         const getRegionId = getPath(['region', 'id'])
         if (
-            !(R.equals(...R.map(getRegionId, [this.props, nextProps])) && // Region changed
-              R.equals(getRegionId(nextProps), getPath(['state', 'geojsonRequested'], this))) // geojson not yet requested
+            !(R.equals(...R.map(getRegionId, [this.props, nextProps]))) || // Region changed
+            !getPath(['region', 'geojson', 'osmRequested'], nextProps) // or geojson not yet requested
         )
         {
-            // Region hasn't requested features yet and/or Region has changed
-            this.setState({geojsonRequested: nextProps.region.id})
             this.props.fetchOsm(nextProps.settings.overpass, nextProps.region.geospatial.bounds).fork(
                 error => this.props.fetchOsmFailure(error),
                 osm => {
                     // osm was set in store by action
                 }
             );
+        if (
+            !(R.equals(...R.map(getRegionId, [this.props, nextProps]))) || // Region changed
+            !getPath(['region', 'geojson', 'markersRequested'], nextProps) // or markers not yet requested
+        )
             this.props.fetchMarkers(nextProps.settings.markers, nextProps.region.geospatial.bounds).fork(
                 error => this.props.fetchMarkersFailure(error),
                 markers => {
