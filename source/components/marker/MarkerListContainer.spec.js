@@ -1,5 +1,5 @@
 /**
- * Created by Andy Likuski on 2017.04.26
+ * Created by Andy Likuski on 2017.02.06
  * Copyright (c) 2017 Andy Likuski
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
@@ -10,47 +10,26 @@
  */
 
 import React from 'react';
-import {DraggablePointsOverlay, SVGOverlay} from 'react-map-gl';
-import autobind from 'autobind-decorator';
-import R from 'ramda';
-import {resolveSvgJsx} from 'helpers/svgHelpers'
-import {LineLayer} from 'deck.gl';
+import thunk from 'redux-thunk'
+import {mapStateToProps} from './MapboxContainer';
+import configureStore from 'redux-mock-store';
 
-class MapLines extends React.Component {
+import testConfig from 'store/data/test/config'
+import initialState from 'store/data/initialState'
+import {getPath} from 'helpers/functions'
 
-    @autobind
-    _redrawSVGOverlay(opt) {
-        if (!this.props.geojson || !this.props.geojson.features)
-            return null;
-        return resolveSvgJsx(opt, this.props.geojson.features)
-    }
+const middlewares = [thunk];
+const mockStore = configureStore(middlewares);
 
-    render() {
-        return  <LineLayer
-            data={[
-                {sourcePosition: [-122.41669, 37.7883], targetPosition: [-122.41669, 37.781]}
-            ]}
-            strokeWidth={5}/>
-        /*
-        return <SVGOverlay
-            className='map-lines'
-            key="svg-overlay"
-            { ...this.props.viewport }
-            redraw={ this._redrawSVGOverlay } />
-            */
-    }
-};
+describe('MarkersContainer', () => {
+    test('mapStateToProps flattens viewport props', () => {
+        const store = mockStore(initialState(testConfig));
+        const state = store.getState();
 
-const {
-    number,
-    string,
-    object,
-    bool,
-    array
-} = React.PropTypes;
+        const ownProps = {
+            region: getPath(['regions', getPath(['regions', 'currentKey'], state)], state),
+        };
 
-MapLines.propTypes = {
-    viewport: object.isRequired,
-    geojson: object.isRequired,
-};
-export default MapLines;
+        expect(mapStateToProps(store.getState(), ownProps)).toMatchSnapshot()
+    });
+});

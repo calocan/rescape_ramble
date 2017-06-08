@@ -99,8 +99,8 @@ const regionsReducer = (
                     // Only pass the region state keys that are handled by the regionReducer
                     R.view(currentRegionLens, state),
                     action),
-                // Deep copy state for a deep path R.set to prevent mutation of state
-                copy(state)
+                // TODO we need to prevent R.set from overwriting the state object inner components
+                state
             ): state;
     }
 };

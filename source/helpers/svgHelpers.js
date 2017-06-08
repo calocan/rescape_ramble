@@ -9,6 +9,7 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 import React from 'react'
+import R from 'ramda'
 
 /***
  * Inspects a feature and returns its type and projected point representation
@@ -21,7 +22,7 @@ export const resolveSvgPoints = (opt, feature) => {
         case 'Point':
             return {
                 type: feature.geometry.type,
-                points: [opt.project(feature.geometry.coordinate)]
+                points: [opt.project(feature.geometry.coordinates)]
             }
         case 'LineString':
             return {
@@ -41,7 +42,7 @@ export const resolveSvgJsx = (opt, features) => {
         feature => {
             return {
                 key: feature.id,
-                pointString: resolveSvgPoints(opt, feature)
+                pointData: resolveSvgPoints(opt, feature)
             };
         },
         features);
@@ -50,13 +51,13 @@ export const resolveSvgJsx = (opt, features) => {
         switch (pointData.type) {
             case 'Point':
                 const [cx, cy] = R.head(pointData.points);
-                return <circle cx={cx} cy={cy} r="100" fill="red" stroke="blue" stroke-width="10" />
+                return <circle key={key} cx={cx} cy={cy} r="10" fill="red" stroke="blue" strokeWidth="1" />
             case 'LineString':
                 return <polyline key={key} fill="none" stroke="blue" strokeWidth="10"
                     points={pointData.points.map(point => point.join(',')).join(' ')} />
             case 'Polygon':
                 // TODO might need to remove a last redundant point here
-                return <polygon fill="red" stroke="blue" stroke-width="10"
+                return <polygon key={key} fill="red" stroke="blue" strokeWidth="10"
                     points={pointData.points.map(point => point.join(',')).join(' ')} />
         }
     },

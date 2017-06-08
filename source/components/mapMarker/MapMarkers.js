@@ -14,7 +14,16 @@ import autobind from 'autobind-decorator';
 import React from 'react';
 import {resolveSvgJsx} from 'helpers/svgHelpers'
 import {updateMarker} from "helpers/markerHelpers";
+import {GeoJsonLayer} from 'deck.gl';
 const ENTER_KEY = 13;
+const LIGHT_SETTINGS = {
+    lightsPosition: [-125, 50.5, 5000, -122.8, 48.5, 8000],
+    ambientRatio: 0.2,
+    diffuseRatio: 0.5,
+    specularRatio: 0.3,
+    lightsStrength: [1.0, 0.0, 2.0, 0.0],
+    numberOfLights: 2
+};
 
 class MapMarkers extends React.Component {
 
@@ -22,7 +31,7 @@ class MapMarkers extends React.Component {
     _redrawSVGOverlay(opt) {
         if (!this.props.geojson || !this.props.geojson.features)
             return null;
-        return resolveSvgJsx(opt, this.props.geojson)
+        return resolveSvgJsx(opt, this.props.geojson.features)
     }
 
     markerAdded(value) {
@@ -122,6 +131,6 @@ const {
 
 MapMarkers.propTypes = {
     viewport: object.isRequired,
-    markers: object.isRequired,
+    geojson: object.isRequired,
 };
 export default MapMarkers;

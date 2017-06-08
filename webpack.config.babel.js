@@ -53,6 +53,11 @@ export default {
                 }
             },
             {
+                test: /node_modules[\/\\]react-geocoder[\/\\].*\.js/,
+                loader: 'babel-loader',
+                query: { presets:['env', 'react'] }
+            },
+            {
                 test: /node_modules\/JSONStream\/index\.js$/,
                 loaders: ['shebang-loader', 'babel-loader'],
             },

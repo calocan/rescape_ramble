@@ -51,7 +51,8 @@ class Region extends React.Component {
 
     render() {
         // applies parent container width/height to mapboxContainer width/height
-        const styleMultiplier = prop => R.apply(R.multiply, R.map(R.prop(prop), [styles.mapboxContainer, this.props.style]));
+        const multiplyByPercent = R.compose((percent, num) => num * parseFloat(percent) / 100.0);
+        const styleMultiplier = prop => R.apply(multiplyByPercent, R.map(R.prop(prop), [styles.mapboxContainer, this.props.style]));
         return (
             <div className='region' style={R.merge(this.props.style, styles.container)}>
                 {/* We additionally give Mapbox the container width and height so the map can track changes to these
@@ -64,7 +65,7 @@ class Region extends React.Component {
                     }} />
                 </div>
                 <div className='markersContainer' style={styles.markersContainer}>
-                    <MarkerList region={this.props.region} />
+                    <MarkerList region={this.props.region} accessToken={this.props.accessToken} />
                 </div>
             </div>
         );
@@ -81,7 +82,8 @@ const {
 Region.propTypes = {
     settings: object.isRequired,
     region: object.isRequired,
-    style: object.isRequired
+    style: object.isRequired,
+    accessToken: string.isRequired
 };
 
 export default Region;

@@ -15,22 +15,27 @@ import autobind from 'autobind-decorator';
 import createMapStops from 'components/mapStop/mapStops';
 import MapLines from 'components/mapLine/MapLines';
 import MapMarkers from 'components/mapMarker/MapMarkers';
+const MapStops = createMapStops(React);
 import {getPath} from 'helpers/functions'
 import {featuresByType, geojsonByType} from 'helpers/geojsonHelpers'
-const MapStops = createMapStops(React);
+import Deck from './Deck'
 import R from 'ramda';
 import styles from './Mapbox.style.js';
 
 class Mapbox extends React.Component {
 
+
     componentWillReceiveProps(nextProps) {
         const osmLens = R.lensPath(['geojson', 'osm', 'features', 'length']);
         const markersLens = R.lensPath(['geojson', 'markers']);
+        const widthLens = R.lensPath(['viewport', 'width']);
+        const heightLens = R.lensPath(['viewport', 'height']);
         // Features have changed
         if (R.view(osmLens, this.props) != R.view(osmLens, nextProps))
             this.setState({osmByType: geojsonByType(nextProps.geojson.osm)});
-        if (R.view(markersLens, this.props) != R.view(markersLens, nextProps))
-            this.setState({markersByType: featuresByType(nextprops.geojson.markers)});
+        if (R.view(markersLens, this.props) != R.view(markersLens, nextProps)) {
+            this.setState({markers: nextProps.geojson.markers});
+        }
     }
 
     @autobind
@@ -39,9 +44,16 @@ class Mapbox extends React.Component {
     }
 
     render() {
-        const { viewport, mapboxApiAccessToken } = this.props;
-        const {node, way} = getPath(['state', 'osmByType'], this) || {}
-        const markers = getPath(['state', 'markersByType'], this) || {}
+        const { viewport, mapboxApiAccessToken, iconAtlas, showCluster } = this.props;
+        const {node, way} = getPath(['state', 'osmByType'], this) || {};
+        const markers = {type: "FeatureCollection", features: getPath(['state', 'markers'], this) || []};
+
+        //<MapStops geojson={node || {}} viewport={viewport}/>,
+        //<MapLines geojson={way || {}} viewport={viewport}/>,
+        const mapMarkers = <MapMarkers geojson={markers} viewport={viewport}/>
+        const deck = <Deck
+            viewport={viewport} geojson={markers} iconAtlas={iconAtlas} showCluster={showCluster} debug
+        />
 
         return (
             <MapGL
@@ -55,9 +67,7 @@ class Mapbox extends React.Component {
                 preventStyleDiffing={ false }
                 onChangeViewport={this._onChangeViewport}
             >
-                <MapStops geojson={node || {}} viewport={viewport}/>
-                <MapLines geojson={way || {}} viewport={viewport}/>
-                <MapMarkers markers={markers || {}} viewport={viewport}/>
+                {deck}
             </MapGL>
         );
     }
@@ -74,6 +84,8 @@ Mapbox.propTypes = {
     viewport: object.isRequired,
     mapboxApiAccessToken: string.isRequired,
     geojson: object.isRequired,
+    iconAtlas: string.isRequired,
+    showCluster: bool.isRequired
 };
 
 export default Mapbox;

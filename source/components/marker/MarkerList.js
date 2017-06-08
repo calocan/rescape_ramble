@@ -13,36 +13,42 @@ import React from 'react'
 import autobind from 'autobind-decorator';
 import {getPath} from 'helpers/functions'
 import {geojsonByType} from 'helpers/geojsonHelpers'
+import {AddMarkerItem, MarkerItem} from './MarkerItem'
 import R from 'ramda';
-import Geocoder from 'react-geocoder'
 
-export class MarkerItem extends React.Component {
+class MarkerList extends React.Component {
 
-    @autobind
-    onSelect(opt) {
-        //this.props.onChangeViewport(opt);
+    componentDidUpdate() {
+
+    }
+
+    componentWillReceiveProps(nextProps) {
+        const markersLens = R.lensPath(['geojson', 'markers', 'features', 'length']);
+        const dbLens = R.lensProp('db')
+        // Features have changed
+        if (R.view(markersLens, this.props) != R.view(markersLens, nextProps))
+            this.setState({markersByType: geojsonByType(nextProps.geojson.markers)});
+        // db is configured
+        if (R.view(dbLens, this.props) != R.view(dbLens, nextProps)) {
+            nextProps.db.changes({
+                since: 'now',
+                live: true
+            }).on('change', showTodos);
+        }
     }
 
     render() {
-        return (
-            <div className="marker-container">
-                <icon click="" />
-                <div>{this.props.marker.name}</div>
-                <Geocoder
-                    accessToken={this.props.accessToken}
-                    onSelect={this.onSelect}
-                />
-            </div>
-        );
-    }
-};
+        const markers = getPath(['state', 'markersByType'], this) || {}
+        const markerItems = R.map(
+            marker => <MarkerItem key={marker.properties.id} accessToken={this.props.accessToken} {...R.pick(['name', 'id'], marker.properties)} />,
+            markers.features || []);
 
-export class AddMarkerItem extends React.Component {
-    render() {
         return (
-            <div className="add-marker-container">
-                <input className="add-marker"/>
-                <div/>
+            <div className="marker-list">
+                <div className="add-marker-item-container">
+                    <AddMarkerItem/>
+                </div>
+                {markerItems}
             </div>
         );
     }
@@ -55,13 +61,11 @@ const {
     bool
 } = React.PropTypes;
 
-MarkerItem.propTypes = {
-    name: string.isRequired,
-    id: string.isRequired,
-    color: string.isRequired,
+MarkerList.propTypes = {
+    geojson: object.isRequired,
     accessToken: string.isRequired
 };
 
-AddMarkerItem.propTypes = {
+export default MarkerList;
 
-};
+

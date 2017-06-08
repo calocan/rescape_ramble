@@ -29,7 +29,10 @@ export const mapStateToProps = (state, ownProps) => {
                 toJS(ownProps.region.mapbox.viewport),
                 // viewport needs absolute width and height from parent
                 R.pick(['width', 'height'], ownProps.style)),
-            mapboxApiAccessToken: ownProps.region.mapbox.mapboxApiAccessToken
+            mapboxApiAccessToken: ownProps.region.mapbox.mapboxApiAccessToken,
+            iconAtlas: ownProps.region.mapbox.iconAtlas,
+            // TODO showCluster should come in as bool
+            showCluster: ownProps.region.mapbox.showCluster == 'true'
         },
         // include geojson and gtfs data of the region
         R.pick(['geojson', 'gtfs'], ownProps.region),

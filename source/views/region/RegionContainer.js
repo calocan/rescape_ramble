@@ -8,7 +8,8 @@ export const mapStateToProps = (state, ownProps) => {
     return R.merge(
         ownProps,
         {
-            settings: state.settings
+            settings: state.settings,
+            accessToken: ownProps.region.mapbox.mapboxApiAccessToken
         }
     );
 }
