@@ -11,6 +11,6 @@
 export default {
     container: {
         height: '1',
-        width: '.5'
+        width: '1'
     },
 }

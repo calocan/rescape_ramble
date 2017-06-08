@@ -14,11 +14,12 @@ import React from 'react'
 import autobind from 'autobind-decorator';
 import createMapStops from 'components/mapStop/mapStops';
 import MapLines from 'components/mapLine/MapLines';
-import MapIcons from 'components/mapIcon/MapIcons';
+import MapMarkers from 'components/mapMarker/MapMarkers';
 import {getPath} from 'helpers/functions'
 import {geojsonByType} from 'helpers/geojsonHelpers'
 const MapStops = createMapStops(React);
 import R from 'ramda';
+import styles from './Mapbox.style.js';
 
 class Mapbox extends React.Component {
 
@@ -38,14 +39,16 @@ class Mapbox extends React.Component {
     }
 
     render() {
-        const { viewport, mapboxApiAccessToken, geojson } = this.props;
+        const { viewport, mapboxApiAccessToken } = this.props;
         const {node, way} = getPath(['state', 'osmByType'], this) || {}
-        const icons = getPath(['state', 'markersByType'], this) || {}
+        const markers = getPath(['state', 'markersByType'], this) || {}
 
         return (
             <MapGL
+                style={styles.container}
                 mapboxApiAccessToken = { mapboxApiAccessToken }
-                { ...viewport }
+                // Add the width and height to the viewport
+                { ...R.merge(viewport, R.pick(['width', 'height'], styles.container)) }
                 showZoomControls={ true }
                 perspectiveEnabled={ true }
                 // setting to `true` should cause the map to flicker because all sources
@@ -53,9 +56,9 @@ class Mapbox extends React.Component {
                 preventStyleDiffing={ false }
                 onChangeViewport={this._onChangeViewport}
             >
-                <MapStops geojson={node}/>
+                <MapStops geojson={node} viewport={viewport}/>
                 <MapLines geojson={way} viewport={viewport}/>
-                <MapIcons icons={icons}/>
+                <MapMarkers markers={markers} viewport={viewport}/>
             </MapGL>
         );
     }
@@ -70,8 +73,8 @@ const {
 
 Mapbox.propTypes = {
     viewport: object.isRequired,
-    mapStyle: string.isRequired,
     mapboxApiAccessToken: string.isRequired,
+    geojson: object.isRequired,
 };
 
 export default Mapbox;

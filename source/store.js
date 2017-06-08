@@ -17,29 +17,31 @@
 import 'babel-polyfill'
 import thunk from 'redux-thunk'
 import { createStore, applyMiddleware, compose } from 'redux'
+import logger from 'redux-logger'
 import reducer from './store/reducers/reducer'
+import { persistentStore } from 'redux-pouchdb-plus';
+import PouchDB from 'pouchdb'
 
-const middlewares = [
-    thunk
-];
+const db = new PouchDB('default');
 
+let extras = [];
 if (process.env.NODE_ENV === `development`) {
     const {createLogger} = require(`redux-logger`);
     const logger = createLogger();
-    middlewares.push(logger);
+    extras.push(logger);
 }
 
-// Create the store applying our reducer and the thunk and logger middleware
-export default function makeStore(initialState = {}) {
-    return createStore(
-        reducer,
-        initialState,
-        compose(
-            applyMiddleware(
-                ...middlewares
-            ),
-            // Use the Chrome devToolsExtension
-            window.devToolsExtension ? window.devToolsExtension() : f => f
-        )
-    )
-}
+// Use thunk and the persistentStore, the latter applies couchDB persistence to the store
+const applyMiddlewares = applyMiddleware(
+    thunk,
+    ...extras
+);
+
+const createStoreWithMiddleware = compose(
+    applyMiddlewares,
+    // Use the Chrome devToolsExtension
+    window.devToolsExtension ? window.devToolsExtension() : f => f,
+    persistentStore({db})
+)(createStore);
+
+export default (initialState = {}) => createStoreWithMiddleware(reducer, initialState);

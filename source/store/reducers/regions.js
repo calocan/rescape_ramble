@@ -16,11 +16,15 @@ import R from 'ramda';
 import {SET_STATE} from './fullState'
 import {copy} from 'helpers/functions'
 
-
-
-const regionReducer = combineReducers(R.merge(
+/***
+ * Creates a region reducer for the given region. The regionName is passed
+ * so that a database specific to the region can be used
+ * @param regionName
+ * @returns A reducer expecting a state
+ */
+const regionReducer = (regionName) => combineReducers(R.merge(
     {
-        geojson: geojsonReducer,
+        geojson: geojsonReducer(regionName),
         mapbox: createViewportReducer()
     },
     // Implement reducers for these as/if needed
@@ -74,7 +78,7 @@ const regionsReducer = (
             const currentRegionLens = R.lensPath([state.currentKey]);
             return state.currentKey ? R.set(
                 currentRegionLens,
-                regionReducer(
+                regionReducer(state.currentKey)(
                     // Only pass the region state keys that are handled by the regionReducer
                     R.view(currentRegionLens, state),
                     action),

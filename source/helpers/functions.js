@@ -228,6 +228,10 @@ export const taskToPromise = task => {
         throw new TypeError(`Expected a Task, got ${typeof task}`);
     }
     return new Promise((res, rej) => {
-        task.fork(reject=>rej, resolve=>res)
+        task.fork(reject=>{
+                console.error(reject.message)
+                return rej
+            }, resolve=>res
+        )
     });
 };

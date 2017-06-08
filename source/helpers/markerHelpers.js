@@ -19,6 +19,12 @@ import {mergeAllWithKey, removeDuplicateObjectsByProp} from 'helpers/functions';
 
 PouchDB.plugin(require('pouchdb-erase'));
 
+/***
+ * Returns the remote URL for the given database
+ * @param name
+ */
+export const remoteUrl = name => `http://localhost:5984/${name}`;
+
 export const sync = ({db, remoteUrl}) => {
     return PouchDB.sync(db, remoteUrl, {
         live: true,
@@ -44,9 +50,42 @@ export const sync = ({db, remoteUrl}) => {
     });
 }
 
-export const removeMarkers = (db, options) => {
+/***
+ * Destroy the given database
+ * @param dbName
+ * @returns {Task}
+ */
+export function destroy(dbName) {
     return new Task((reject, resolve) => {
-        db.allDocs().then(function (result) {
+        new PouchDB(dbName).destroy().then(function () {
+            resolve()
+        }).catch(function (err) {
+            reject()
+        })
+    });
+}
+
+/***
+ * Remove the given marker
+ * @param db
+ * @param options Reserved for future use
+ * @param marker Geojson feature representing the marker to delete
+ */
+export function removeMarker(db, options, marker) {
+    removeMarkers(db, options, [marker])
+}
+
+/***
+ * Removes the given markers or all markers if markers is null
+ * @param db
+ * @param options
+ * @param markers
+ * @returns {*|Task}
+ */
+export const removeMarkers = (db, options, markers) => {
+    return new Task((reject, resolve) => {
+        // Get all markers or just those specified
+        db.allDocs(markers ? { keys: R.map(R.prop('id'), markers) } : {}).then(function (result) {
             console.log(result);
             // Promise isn't supported by all browsers; you may want to use bluebird
             return Promise.all(result.rows.map(function (row) {
@@ -61,6 +100,13 @@ export const removeMarkers = (db, options) => {
     })
 }
 
+/***
+ * Persists a list of features that represent markers
+ * @param {Object} db
+ * @param {Object} options Currently unused, reserved for future use
+ * @param {Array} features Geojson features
+ * @returns {Task} A Task that when forked executes the persistence
+ */
 export const persistMarkers = (db, options, features) => {
     const dateLens = R.lensProp('date');
     const _idLens = R.lensProp('_id');
@@ -153,18 +199,18 @@ export const fetchMarkersCelled = (db, {name, cellSize=1, sleepBetweenCalls, tes
  */
 export const fetchMarkers = R.curry((db, options, bounds) => {
     return new Task(function(reject, resolve) {
-        Rx.Observable.fromEvent(db, 'created').subscribe(
-            () => {
-                db.allDocs({include_docs: true, descending: true}, function(err, doc) {
-                    if (!err) {
-                        resolve(doc);
-                    }
-                    else {
-                        reject(err);
-                    }
-                })
+        console.log('Fetching records')
+        db.allDocs({include_docs: true, descending: true}, function(err, doc) {
+            if (!err) {
+                console.log('Fetched')
+                console.log(doc)
+                resolve(doc);
             }
-        )
+            else {
+                console.error('Fetch failed')
+                reject(err);
+            }
+        })
     });
 });
 

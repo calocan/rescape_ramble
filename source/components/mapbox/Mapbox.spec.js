@@ -1,5 +1,5 @@
 import MapGL from 'react-map-gl'
-import createMapbox from './Mapbox'
+import Mapbox from './Mapbox'
 import React from 'react';
 import {shallow, mount} from 'enzyme';
 import {getPath, toJS} from 'helpers/functions'
@@ -38,7 +38,6 @@ describe('Mapbox', () => {
         expect(wrapper).toMatchSnapshot();
     });
     it('MapBox loads data', () => {
-        const Mapbox = createMapbox(React);
         const wrapper = shallow(<Mapbox {...props} />);
         expect(wrapper).toMatchSnapshot();
     })

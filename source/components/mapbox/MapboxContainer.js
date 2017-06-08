@@ -18,15 +18,14 @@ import R from 'ramda';
 import {toJS} from 'helpers/functions';
 
 /***
- * Merges state.mapbox with ownProps, but raises level of state
+ * Raises viewport, mapboxApiAccessToken, geojson, and gtfs to top level
  * @param state
  * @param ownProps
  */
 export const mapStateToProps = (state, ownProps) => {
     return R.merge(
-        // override width and height of viewport
         {
-            viewport: R.merge(toJS(ownProps.region.mapbox.viewport), R.pick(['width', 'height'], ownProps.style)),
+            viewport: toJS(ownProps.region.mapbox.viewport),
             mapboxApiAccessToken: ownProps.region.mapbox.mapboxApiAccessToken
         },
         // include geojson and gtfs data of the region

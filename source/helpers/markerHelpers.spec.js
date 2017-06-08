@@ -10,12 +10,13 @@
  */
 
 import PouchDB from 'pouchdb'
-import {sync, removeMarkers, fetchMarkers, fetchMarkersCelled, persistMarkers} from './markerHelpers';
+import {sync, destroy, removeMarkers, removeMarker, fetchMarkers, fetchMarkersCelled, persistMarkers} from './markerHelpers';
 import {removeDuplicateObjectsByProp} from 'helpers/functions'
 import {expectTask} from './jestHelpers'
 import {PARIS_SAMPLE, LA_SAMPLE} from './markerHelpers.sample'
 import {mergeAllWithKey} from './functions'
 import {concatFeatures} from './geojsonHelpers'
+import R from 'ramda'
 
 // combine the samples into one obj with concatinated features
 const geojson = mergeAllWithKey(concatFeatures)([PARIS_SAMPLE, LA_SAMPLE]);
@@ -24,55 +25,53 @@ const geojson = mergeAllWithKey(concatFeatures)([PARIS_SAMPLE, LA_SAMPLE]);
 
 describe("markerHelpers", () => {
 
-    PouchDB.debug.enable('*');
+    //PouchDB.debug.enable('*');
     const bounds = require('query-overpass').LA_BOUNDS;
+    const path = '__db__/tests/markerHelpers.'
+    // const remoteUrl = `http://localhost:5984/${name}`;
+    // const syncObject = sync({db, remoteUrl});
 
-    const name = 'markers';
-    const remoteUrl = `http://localhost:5984/${name}`;
-    const options = {
-        cellSize: 200, testBounds: bounds
-    };
-    const db = new PouchDB(name);
-    const syncObject = sync({db, remoteUrl});
+    test("Persist MarkerList", () => {
+        const name = 'PersistMarkers';
+        const options = {};
+        destroy(name);
+        const db = new PouchDB(path + name);
 
-    /*
-     test("fetchMarkers", () => {
-     // Pass bounds in the options. Our mock query-overpass uses is to avoid parsing the query
-     expectTask(
-     fetchMarkers(db, options, bounds)
-     ).resolves.toEqual(require('queryOverpassResponse').LA_SAMPLE)
-     });
-
-     test("fetchMarker in cells", () => {
-     expectTask(
-     fetchMarkersCelled(db, options, bounds)
-     ).resolves.toEqual(
-     // the sample can have duplicate ids
-     removeDuplicateObjectsByProp('id', require('queryOverpassResponse').LA_SAMPLE.features)
-     )
-     })
-     */
-
-    test("Remove Markers", () => {
-        // Destroy the db and make sure it's empty
-        expectTask(
-            removeMarkers(db, options).chain(
-                destroySuccess => fetchMarkers({testBounds: bounds}, bounds)
-            ).map(response => response.rows.length)
-        ).resolves.toBe(0);
-    });
-
-    test("Persist Markers", () => {
         // Populate the db
         expectTask(
             persistMarkers(db, options, geojson.features)
         ).resolves.toEqual(geojson.features);
     });
 
-    test("Query Markers", () => {
+    test("Query MarkerList", () => {
+        const name = 'QueryMarkers';
+        const options = {};
+        destroy(name);
+        const db = new PouchDB(path + name);
+
         // Query the db
         expectTask(
-            fetchMarkers(db, {testBounds: bounds}, bounds).map(response => response.rows.length)
+            persistMarkers(db, options, geojson.features).chain(
+                response => fetchMarkers(db, options, bounds)
+            ).map(response => response.rows.length)
         ).resolves.toEqual(geojson.features.length);
     });
+
+    test("Remove Marker", () => {
+        const name = 'RemoveMarker';
+        const options = {};
+        destroy(name);
+        const db = new PouchDB(path + name);
+
+        expectTask(
+                console.log("Persist") || persistMarkers(db, options, geojson.features)
+            .chain(
+                response => console.log("Fetch") || fetchMarkers(db, {testBounds: bounds}, bounds)
+            ).chain(
+                response => console.log("Remove") || removeMarker(db, {testBounds: bounds}, R.head(response.rows))
+            ).chain(
+                response => console.log("Fetch") || fetchMarkers(db, {testBounds: bounds}, bounds)
+            ).map(response => R.head(response.rows))
+        ).resolves.toEqual(geojson.features.length - 1);
+    })
 });
