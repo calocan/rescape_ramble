@@ -86,7 +86,6 @@ export const removeMarkers = (db, options, markers) => {
     return new Task((reject, resolve) => {
         // Get all markers or just those specified
         db.allDocs(markers ? { keys: R.map(R.prop('id'), markers) } : {}).then(function (result) {
-            console.log(result);
             // Promise isn't supported by all browsers; you may want to use bluebird
             return Promise.all(result.rows.map(function (row) {
                 console.log(`Deleting ${row.id}`);
@@ -118,23 +117,25 @@ export const persistMarkers = (db, options, features) => {
             // Add a timestamp and _id to the feature for storing
             .map(obj => R.compose(R.set(dateLens, obj.timestamp), R.set(_idLens, obj.value.id))(obj.value))
             .do(feature => console.log(`Add/Update feature for: ${R.view(featureIdLens, feature)}`))
-            .mergeMap(datedFeature =>
-                Rx.Observable.fromPromise(
-                    db.post(datedFeature)
-                )
-            );
+            .mergeMap(datedFeature => Rx.Observable.fromPromise(
+                db.put(datedFeature)
+            ));
 
         // Run through all Features in the array
         Rx.Observable.from(features)
             .concatMap(writeFeature$) // Map the writeFeatures$ to each Feature object
             .subscribe(
                 rec => console.log(`New record created: ${rec.id}`),
-                err => reject(err),
+                err => {
+                    console.log("Rejected features")
+                    reject(err)
+                },
                 () => {
+                    console.log("Finished updating features")
                     resolve(features);
                 }
             );
-    })
+    }).chain(response => fetchMarkers(db, options, null))
 };
 
 /***
@@ -193,17 +194,16 @@ export const fetchMarkersCelled = (db, {name, cellSize=1, sleepBetweenCalls, tes
 };
 /***
  * fetches transit data from OpenStreetMap using the Overpass API.
- * @param {Object} options Options to pass to query-overpass, plus the following:
+ * @param {Object} options Currently ununused. Options to pass to query-overpass, plus the following
  * @param {Object} options.testBounds Used only for testing
- * @param {Array} bounds [lat_min, lon_min, lat_max, lon_max]
+ * @param {Array} bounds Currently unusued [lat_min, lon_min, lat_max, lon_max]
  */
-export const fetchMarkers = R.curry((db, options, bounds) => {
+export const fetchMarkers = (db, options, bounds) => {
     return new Task(function(reject, resolve) {
         console.log('Fetching records')
         db.allDocs({include_docs: true, descending: true}, function(err, doc) {
             if (!err) {
                 console.log('Fetched')
-                console.log(doc)
                 resolve(doc);
             }
             else {
@@ -212,6 +212,6 @@ export const fetchMarkers = R.curry((db, options, bounds) => {
             }
         })
     });
-});
+};
 
 

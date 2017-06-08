@@ -32,7 +32,7 @@ export class AddMarkerItem extends React.Component {
             <div className="add-marker-container">
                 <input className="add-marker"/>
                 <icon click=""/>
-                <div>{this.props.marker.name}</div>
+                <div></div>
             </div>
         );
     }

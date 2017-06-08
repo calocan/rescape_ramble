@@ -46,6 +46,7 @@ class Current extends React.Component {
         }
 
         render() {
+            // Pass the absolute width and height to give to the Mapbox viewport
             return <div className='current'>
                 <Region region={this.props.region} style={{width: this.state.width, height: this.state.height}}/>
             </div>

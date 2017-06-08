@@ -26,19 +26,21 @@ class Region extends React.Component {
         if (
             !(R.equals(...R.map(getRegionId, [this.props, nextProps]))) || // Region changed
             !getPath(['region', 'geojson', 'osmRequested'], nextProps) // or geojson not yet requested
-        )
-        {
+        ) {
+            // TODO query_overpass is currently broken
+            if (false)
             this.props.fetchOsm(nextProps.settings.overpass, nextProps.region.geospatial.bounds).fork(
                 error => this.props.fetchOsmFailure(error),
                 osm => {
                     // osm was set in store by action
                 }
             );
+        }
         if (
             !(R.equals(...R.map(getRegionId, [this.props, nextProps]))) || // Region changed
             !getPath(['region', 'geojson', 'markersRequested'], nextProps) // or markers not yet requested
-        )
-            this.props.fetchMarkers(nextProps.settings.markers, nextProps.region.geospatial.bounds).fork(
+        ) {
+            this.props.fetchMarkers({}, nextProps.region.id).fork(
                 error => this.props.fetchMarkersFailure(error),
                 markers => {
                     // markers was set in store by action
@@ -48,11 +50,18 @@ class Region extends React.Component {
     }
 
     render() {
+        // applies parent container width/height to mapboxContainer width/height
+        const styleMultiplier = prop => R.apply(R.multiply, R.map(R.prop(prop), [styles.mapboxContainer, this.props.style]));
         return (
             <div className='region' style={R.merge(this.props.style, styles.container)}>
-                {/* We additionally give Mapbox the container width and height so the map can track changes to these */}
+                {/* We additionally give Mapbox the container width and height so the map can track changes to these
+                    We have to apply the width and height fractions of this container to them.
+                */}
                 <div className='mapboxContainer' style={styles.mapboxContainer}>
-                    <Mapbox region={this.props.region} />
+                    <Mapbox region={this.props.region} style={{
+                        width: styleMultiplier('width'),
+                        height: styleMultiplier('height')
+                    }} />
                 </div>
                 <div className='markersContainer' style={styles.markersContainer}>
                     <MarkerList region={this.props.region} />

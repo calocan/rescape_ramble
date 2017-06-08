@@ -14,7 +14,7 @@ const reduceFeaturesBy = R.reduceBy((acc, feature) => acc.concat(feature), []);
 const regex = /(.+)\/\d+/;
 // Get the feature by type based on its id
 // featuresByType:: Feature f = [f] -> <String, [f]>
-const featureByType = reduceFeaturesBy(feature => R.match(regex, feature.id)[1]);
+export const featureByType = reduceFeaturesBy(feature => R.match(regex, feature.id)[1]);
 
 /***
  * Split geojson by feature type

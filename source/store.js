@@ -40,7 +40,7 @@ const applyMiddlewares = applyMiddleware(
 const createStoreWithMiddleware = compose(
     applyMiddlewares,
     // Use the Chrome devToolsExtension
-    window.devToolsExtension ? window.devToolsExtension() : f => f,
+    typeof(window) != "undefined" && window.devToolsExtension ? window.devToolsExtension() : f => f,
     persistentStore({db})
 )(createStore);
 

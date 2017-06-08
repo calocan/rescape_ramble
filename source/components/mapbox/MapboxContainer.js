@@ -25,7 +25,10 @@ import {toJS} from 'helpers/functions';
 export const mapStateToProps = (state, ownProps) => {
     return R.merge(
         {
-            viewport: toJS(ownProps.region.mapbox.viewport),
+            viewport: R.merge(
+                toJS(ownProps.region.mapbox.viewport),
+                // viewport needs absolute width and height from parent
+                R.pick(['width', 'height'], ownProps.style)),
             mapboxApiAccessToken: ownProps.region.mapbox.mapboxApiAccessToken
         },
         // include geojson and gtfs data of the region

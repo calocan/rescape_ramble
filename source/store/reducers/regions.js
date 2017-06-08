@@ -17,19 +17,32 @@ import {SET_STATE} from './fullState'
 import {copy} from 'helpers/functions'
 
 /***
+ * Only allow the region reducer to be created once for each Region
+ * @param regionName
+ * @returns {Function}
+ */
+const once = () => {
+    let done = {};
+    return regionName => fn => done[regionName] || (done[regionName] = fn.apply(this, arguments))
+};
+
+/***
  * Creates a region reducer for the given region. The regionName is passed
  * so that a database specific to the region can be used
  * @param regionName
  * @returns A reducer expecting a state
  */
-const regionReducer = (regionName) => combineReducers(R.merge(
-    {
-        geojson: geojsonReducer(regionName),
-        mapbox: createViewportReducer()
-    },
-    // Implement reducers for these as/if needed
-    R.fromPairs(R.map(key=>[key, (state={})=>state], ['id', 'geospatial', 'travel', 'gtfs']))
-));
+const regionReducerOnce = once()
+const regionReducer = regionName => regionReducerOnce(regionName)(() =>
+    combineReducers(R.merge(
+        {
+            geojson: geojsonReducer(regionName),
+            mapbox: createViewportReducer()
+        },
+        // Implement reducers for these as/if needed
+        R.fromPairs(R.map(key=>[key, (state={})=>state], ['id', 'geospatial', 'travel', 'gtfs']))
+    ))
+);
 
 /**
  @typedef Geospatial
@@ -71,13 +84,17 @@ const regionsReducer = (
 ) => {
     switch (action.type) {
         case SET_STATE:
-            return R.merge(state, action.state['regions'] || {});
+            const fullState =  R.merge(state, action.state['regions'] || {});
+            // Get the RegionReducer created for this region asap so the PouchDb is created
+            regionReducer(fullState.currentKey)
+            return fullState;
         default:
             // Delegate all other actions to the current Region's reducer
             // This lens points to the state of the current Region
             const currentRegionLens = R.lensPath([state.currentKey]);
             return state.currentKey ? R.set(
                 currentRegionLens,
+                // Get or create the reducer for this region
                 regionReducer(state.currentKey)(
                     // Only pass the region state keys that are handled by the regionReducer
                     R.view(currentRegionLens, state),

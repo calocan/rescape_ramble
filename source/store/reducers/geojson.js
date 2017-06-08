@@ -12,10 +12,10 @@
 import R from 'ramda';
 import {SET_STATE} from './fullState'
 import {fetchTransitCelled} from 'helpers/overpassHelpers'
-import {fetchMarkers as fetchMarkersHelper, persistMarkers, sync, remoteUrl} from 'helpers/markerHelpers'
+import {fetchMarkers as fetchMarkersHelper, removeMarkers as removeMarkersHelper, persistMarkers, sync, remoteUrl} from 'helpers/markerHelpers'
 import Task from 'data.task'
-import PouchDB from 'pouchdb'
 import { persistentReducer, reinit } from 'redux-pouchdb-plus';
+import PouchDB from 'pouchdb'
 
 const FETCH_OSM = '/osm/FETCH_OSM';
 const FETCH_OSM_DATA = '/osm/FETCH_OSM_DATA';
@@ -32,11 +32,37 @@ const UPDATE_MARKERS_DATA = '/geojson/UPDATE_MARKERS_DATA';
 const UPDATE_MARKERS_SUCCESS = '/geojson/UPDATE_MARKERS_SUCCESS';
 const UPDATE_MARKERS_FAILURE = '/geojson/UPDATE_MARKERS_FAILURE';
 
+const REMOVE_MARKERS = '/geojson/REMOVE_MARKERS';
+const REMOVE_MARKERS_DATA = '/geojson/REMOVE_MARKERS_DATA';
+const REMOVE_MARKERS_SUCCESS = '/geojson/REMOVE_MARKERS_SUCCESS';
+const REMOVE_MARKERS_FAILURE = '/geojson/REMOVE_MARKERS_FAILURE';
+
 export const actions = {
     FETCH_OSM, FETCH_OSM_DATA, FETCH_OSM_SUCCESS, FETCH_OSM_FAILURE,
     FETCH_MARKERS, FETCH_MARKERS_DATA, FETCH_MARKERS_SUCCESS, FETCH_MARKERS_FAILURE,
-    UPDATE_MARKERS, UPDATE_MARKERS_DATA, UPDATE_MARKERS_SUCCESS, UPDATE_MARKERS_FAILURE
+    UPDATE_MARKERS, UPDATE_MARKERS_DATA, UPDATE_MARKERS_SUCCESS, UPDATE_MARKERS_FAILURE,
+    REMOVE_MARKERS, REMOVE_MARKERS_DATA, REMOVE_MARKERS_SUCCESS, REMOVE_MARKERS_FAILURE
 };
+// A reference to our PouchDb instances keyed by region name
+const dbs = {};
+const syncs = {};
+const DB_PATH = '__db__/geojson/'
+const DB_PREFIX = ''
+export const createDb = (regionName, dbPath, dbPrefix) => {
+    const name = regionName; //`${dbPath}${dbPrefix}${regionName}`;
+    dbs[regionName] = new PouchDB(name);
+    return dbs[regionName];
+};
+export const startSync = (db, regionName) => {
+    syncs[regionName] = sync({db, remoteUrl: remoteUrl(regionName)});
+    return syncs[regionName]
+}
+export const stopSync = (regionName) => {
+    syncs[regionName].cancel()
+}
+export const getDb = regionName => {
+    return dbs[regionName]
+}
 
 /**
  @typedef Geojson
@@ -70,10 +96,14 @@ const geojsonReducer = (
             return R.merge(state, {osm: action.body});
         case FETCH_MARKERS_SUCCESS:
             // Merge the returned geojson into the state
-            return R.merge(state, {markers: action.body});
+            return R.merge(state, {markers: R.map(R.prop('doc'), action.body.rows)});
         case UPDATE_MARKERS_SUCCESS:
             // Merge the returned geojson into the state
-            return R.merge(state, {markers: action.body});
+            console.log(action.body.rows)
+            return R.merge(state, {markers: R.map(R.prop('doc'), action.body.rows)});
+        case REMOVE_MARKERS_SUCCESS:
+            // Merge the returned geojson into the state
+            return state; //R.merge(state, {markers: action.body});
         default:
             return state;
     }
@@ -133,14 +163,15 @@ export function fetchOsm(options, bounds) {
 /***
  * Asynchronous call to fetch marker data
  * @param {Object} options:
+ * @param {String} regionName:
  * @param {[Number]} bounds
  * @return {function(*)}
  * fetchOsm:: <k,v> -> [a] -> Task Error String
  */
-export function fetchMarkers(options, bounds) {
+export function fetchMarkers(options, regionName, bounds) {
     return dispatch => {
         dispatch(fetchMarkersData());
-        return fetchMarkersHelper(db, options, bounds).chain(response =>
+        return fetchMarkersHelper(getDb(regionName), options, bounds).chain(response =>
             Task.of(dispatch(fetchMarkersSuccess(response)))
         )
     }
@@ -183,15 +214,16 @@ function fetchMarkerFailure(ex) {
 /***
  * Asynchronous call to update MarkerList
  * @param {Object} options:
+ * @param {Object} regionName
  * @param {[Feature]} markers: Features representing markers
  * @return {function(*)}
  * updateMarkers:: <k,v> -> [f] Task Error String
  */
-export function updateMarkers(options, markers) {
+export function updateMarkers(options, regionName, markers) {
     return dispatch => {
         dispatch(updateMarkersData());
-        persistMarkers(db, options, markers).chain(response =>
-            Task.of(dispatch(updateMarkersSuccess(response)))
+        return persistMarkers(getDb(regionName), options, markers).map(response =>
+            dispatch(updateMarkersSuccess(response))
         )
     }
 }
@@ -218,25 +250,75 @@ function updateMarkersSuccess(body) {
     }
 }
 
+/***
+ * Asynchronous call to remove markers
+ * @param {Object} options:
+ * @param {String} regionName:
+ * @param {[Feature]} markers: Optional Features representing markers or null to remove all
+ * @return {function(*)}
+ * updateMarkers:: <k,v> -> [f] Task Error String
+ */
+export function removeMarkers(options, regionName, markers) {
+    return dispatch => {
+        dispatch(removeMarkersData());
+        return removeMarkersHelper(getDb(regionName), options, markers).map(response =>
+            dispatch(removeMarkersSuccess(response))
+        )
+    }
+}
+
+/***
+ * Action to remove the markers
+ * @return {{type: string}}
+ */
+function removeMarkersData() {
+    return {
+        type: REMOVE_MARKERS_DATA
+    }
+}
+
+/***
+ * Action to process the successful markers removal
+ * @param body
+ * @return {{type: string, body: *}}
+ */
+function removeMarkersSuccess(body) {
+    return {
+        type: REMOVE_MARKERS_SUCCESS,
+        body
+    }
+}
+
 // Enhance the geojsonReducer with the persistentReducer
 // The reducer must be initialized with its region name to give it the correct db
-export default regionName => persistentReducer(geojsonReducer, {
-    db: regionName,
-    onInit: (reducerName, reducerState, store) => {
-        // Called when this reducer was initialized
-        // (the state was loaded from or saved to the
-        // database for the first time or after a reinit action).
-        const syncObject = sync({db, remoteUrl:remoteUrl(regionName)});
-    },
-    onUpdate: (reducerName, reducerState, store) => {
-        // Called when the state of reducer was updated with
-        // data from the database.
-        // Cave! The store still contains the state before
-        // the updated reducer state was applied to it.
-    },
-    onSave: (reducerName, reducerState, store) => {
-        // Called every time the state of this reducer was
-        // saved to the database.
-    }
-});
+export default (regionName, dbPath=DB_PATH, dbPrefix=DB_PREFIX) => {
+    const db = createDb(regionName, dbPath, dbPrefix);
+    startSync(db, regionName);
+    return persistentReducer(geojsonReducer, {
+        db,
+        onReady: (store) => {
+            // Called when all reducers are initialized (also after
+            // a reinit for all reducers is finished).
+            console.log('onReady')
+        },
+        onInit: (reducerName, reducerState, store) => {
+            // Called when this reducer was initialized
+            // (the state was loaded from or saved to the
+            // database for the first time or after a reinit action).
+            console.log('onInit')
+        },
+        onUpdate: (reducerName, reducerState, store) => {
+            // Called when the state of reducer was updated with
+            // data from the database.
+            // Cave! The store still contains the state before
+            // the updated reducer state was applied to it.
+            console.log('onUpdate')
+        },
+        onSave: (reducerName, reducerState, store) => {
+            // Called every time the state of this reducer was
+            // saved to the database.
+            console.log('onSave')
+        }
+    });
+}
 

@@ -40,4 +40,4 @@ export default {
     border: '1px solid #5867BC',
     outline: 'none'
   }
-}
+};

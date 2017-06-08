@@ -16,7 +16,7 @@ import createMapStops from 'components/mapStop/mapStops';
 import MapLines from 'components/mapLine/MapLines';
 import MapMarkers from 'components/mapMarker/MapMarkers';
 import {getPath} from 'helpers/functions'
-import {geojsonByType} from 'helpers/geojsonHelpers'
+import {featuresByType, geojsonByType} from 'helpers/geojsonHelpers'
 const MapStops = createMapStops(React);
 import R from 'ramda';
 import styles from './Mapbox.style.js';
@@ -25,12 +25,12 @@ class Mapbox extends React.Component {
 
     componentWillReceiveProps(nextProps) {
         const osmLens = R.lensPath(['geojson', 'osm', 'features', 'length']);
-        const markersLens = R.lensPath(['geojson', 'markers', 'features', 'length']);
+        const markersLens = R.lensPath(['geojson', 'markers']);
         // Features have changed
         if (R.view(osmLens, this.props) != R.view(osmLens, nextProps))
             this.setState({osmByType: geojsonByType(nextProps.geojson.osm)});
         if (R.view(markersLens, this.props) != R.view(markersLens, nextProps))
-            this.setState({markersByType: geojsonByType(nextProps.geojson.markers)});
+            this.setState({markersByType: featuresByType(nextprops.geojson.markers)});
     }
 
     @autobind
@@ -47,8 +47,7 @@ class Mapbox extends React.Component {
             <MapGL
                 style={styles.container}
                 mapboxApiAccessToken = { mapboxApiAccessToken }
-                // Add the width and height to the viewport
-                { ...R.merge(viewport, R.pick(['width', 'height'], styles.container)) }
+                { ...viewport }
                 showZoomControls={ true }
                 perspectiveEnabled={ true }
                 // setting to `true` should cause the map to flicker because all sources
@@ -56,9 +55,9 @@ class Mapbox extends React.Component {
                 preventStyleDiffing={ false }
                 onChangeViewport={this._onChangeViewport}
             >
-                <MapStops geojson={node} viewport={viewport}/>
-                <MapLines geojson={way} viewport={viewport}/>
-                <MapMarkers markers={markers} viewport={viewport}/>
+                <MapStops geojson={node || {}} viewport={viewport}/>
+                <MapLines geojson={way || {}} viewport={viewport}/>
+                <MapMarkers markers={markers || {}} viewport={viewport}/>
             </MapGL>
         );
     }
