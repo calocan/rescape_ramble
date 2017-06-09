@@ -23,7 +23,8 @@ class Geocode extends React.Component {
     onInput(e) {
         this.setState({loading:true});
         var value = e.target.value;
-        if (value === '') {
+        if (value === '' || !value) {
+            this.textInput.value = null;
             this.setState({
                 results: [],
                 focus: null,

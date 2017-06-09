@@ -57,7 +57,7 @@ export class AddMarkerItem extends React.Component {
     @autobind
     _handleKeyPress(e) {
         if (e.key === 'Enter') {
-            if (this.props.locationFeature.geometry) {
+            if (this.props.locationFeature.geometry && this.textInput.value) {
                 this.setState({'warn': false});
                 const id = `node/${moment.now()}`
                 const marker = R.merge(this.props.locationFeature, {
@@ -88,13 +88,12 @@ export class AddMarkerItem extends React.Component {
     render() {
         return (
             <div className="add-marker-container" style={styles.container}>
-                <div style={styles.instructionsLabel}>Choose a location and enter a name. Press enter on the name to submit</div>
                 <div style={styles.nameLabel}>Name</div>
                 <input className="add-marker" style={styles.addNameContainer} onKeyPress={this._handleKeyPress}
                        ref={(input) => { this.textInput = input; }}
                 />
                 <div ref='warn' className="warn" style={{display: this.state.warn ? 'block' : 'none', ...styles.warnContainer}} >
-                    Please select a location and then the name and click enter.
+                    Please select a location, enter a name, and click enter on the name.
                 </div>
             </div>
         );

@@ -4,6 +4,12 @@ export default {
     width: '100%',
     height: '95%'
   },
+    instructionsLabel: {
+        position: 'absolute',
+        top: '0',
+        width: '100%',
+        height: '15px',
+    },
   addMarkerContainer: {
     position: 'relative',
     top: '20px',
@@ -14,11 +20,11 @@ export default {
     position: 'relative',
     top: '0',
     width: '100%',
-    height: '60px',
+    height: '100px',
   },
     addItemContainer: {
         position: 'relative',
-        top: '65px',
+        top: '100px',
         width: '100%',
         height: '20px',
     },

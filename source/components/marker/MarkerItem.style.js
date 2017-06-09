@@ -2,7 +2,7 @@ export default {
     container: {
         position: 'relative',
         width: '100%',
-        height: '50px'
+        height: '55px'
     },
     labelContainer: {
         position: 'absolute',
@@ -10,12 +10,7 @@ export default {
         width: '100%',
         height: '20px',
     },
-    instructionsLabel: {
-        position: 'absolute',
-        top: '0',
-        width: '100%',
-        height: '20px',
-    },
+
     nameLabel: {
         position: 'absolute',
         top: '45px',
@@ -30,7 +25,7 @@ export default {
     },
     warnContainer: {
         position: 'absolute',
-        top: '85',
+        top: '85px',
         color: 'red',
         width: '100%',
         height: '20px',
