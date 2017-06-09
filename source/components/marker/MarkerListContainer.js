@@ -15,6 +15,7 @@ import {onChangeViewport} from 'redux-map-gl';
 import React from 'react';
 import MarkerList from './MarkerList';
 import R from 'ramda';
+import * as geojsonActions from 'store/reducers/geojson';
 
 /***
  * Merges state.mapbox with ownProps, but raises level of state
@@ -23,13 +24,7 @@ import R from 'ramda';
  */
 export const mapStateToProps = (state, ownProps) => {
     // include geojson data of the region
-    return R.pick(['geojson'], ownProps.region);
+    return R.pick(['geojson', 'id'], ownProps.region);
 }
 
-// This is just an example of what mapDispatchToProps does.
-const mapDispatchToProps = (dispatch, ownProps) => {
-    return bindActionCreators({
-    }, dispatch);
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(MarkerList);
+export default connect(mapStateToProps, geojsonActions)(MarkerList);

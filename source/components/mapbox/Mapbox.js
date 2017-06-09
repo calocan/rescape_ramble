@@ -24,7 +24,6 @@ import styles from './Mapbox.style.js';
 
 class Mapbox extends React.Component {
 
-
     componentWillReceiveProps(nextProps) {
         const osmLens = R.lensPath(['geojson', 'osm', 'features', 'length']);
         const markersLens = R.lensPath(['geojson', 'markers']);
@@ -44,15 +43,16 @@ class Mapbox extends React.Component {
     }
 
     render() {
-        const { viewport, mapboxApiAccessToken, iconAtlas, showCluster } = this.props;
+        const { viewport, mapboxApiAccessToken, iconAtlas, showCluster, hoverMarker, selectMarker } = this.props;
         const {node, way} = getPath(['state', 'osmByType'], this) || {};
         const markers = {type: "FeatureCollection", features: getPath(['state', 'markers'], this) || []};
 
         //<MapStops geojson={node || {}} viewport={viewport}/>,
         //<MapLines geojson={way || {}} viewport={viewport}/>,
-        const mapMarkers = <MapMarkers geojson={markers} viewport={viewport}/>
+        const mapMarkers = <MapMarkers geojson={markers} viewport={viewport} regionId={this.props.region.id}/>
         const deck = <Deck
-            viewport={viewport} geojson={markers} iconAtlas={iconAtlas} showCluster={showCluster} debug
+            viewport={viewport} geojson={markers} iconAtlas={iconAtlas} showCluster={showCluster}
+            onHover={hoverMarker} onClick={selectMarker}
         />
 
         return (
@@ -85,7 +85,7 @@ Mapbox.propTypes = {
     mapboxApiAccessToken: string.isRequired,
     geojson: object.isRequired,
     iconAtlas: string.isRequired,
-    showCluster: bool.isRequired
+    showCluster: bool.isRequired,
 };
 
 export default Mapbox;

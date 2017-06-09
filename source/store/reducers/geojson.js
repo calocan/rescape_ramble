@@ -16,6 +16,7 @@ import {fetchMarkers as fetchMarkersHelper, removeMarkers as removeMarkersHelper
 import Task from 'data.task'
 import { persistentReducer, reinit } from 'redux-pouchdb-plus';
 import PouchDB from 'pouchdb'
+import xhr from 'xhr';
 
 const FETCH_OSM = '/osm/FETCH_OSM';
 const FETCH_OSM_DATA = '/osm/FETCH_OSM_DATA';
@@ -37,11 +38,21 @@ const REMOVE_MARKERS_DATA = '/geojson/REMOVE_MARKERS_DATA';
 const REMOVE_MARKERS_SUCCESS = '/geojson/REMOVE_MARKERS_SUCCESS';
 const REMOVE_MARKERS_FAILURE = '/geojson/REMOVE_MARKERS_FAILURE';
 
+const SEARCH_LOCATION = '/geojson/SEARCH_LOCATION';
+const SEARCH_LOCATION_DATA = '/geojson/SEARCH_LOCATION_DATA';
+const SEARCH_LOCATION_SUCCESS = '/geojson/SEARCH_LOCATION_SUCCESS';
+const SEARCH_LOCATION_FAILURE = '/geojson/SEARCH_LOCATION_FAILURE';
+
+const SELECT_MARKER = '/geojson/SELECT_MARKER';
+const HOVER_MARKER = '/geojson/HOVER_MARKER';
+
 export const actions = {
     FETCH_OSM, FETCH_OSM_DATA, FETCH_OSM_SUCCESS, FETCH_OSM_FAILURE,
     FETCH_MARKERS, FETCH_MARKERS_DATA, FETCH_MARKERS_SUCCESS, FETCH_MARKERS_FAILURE,
     UPDATE_MARKERS, UPDATE_MARKERS_DATA, UPDATE_MARKERS_SUCCESS, UPDATE_MARKERS_FAILURE,
-    REMOVE_MARKERS, REMOVE_MARKERS_DATA, REMOVE_MARKERS_SUCCESS, REMOVE_MARKERS_FAILURE
+    REMOVE_MARKERS, REMOVE_MARKERS_DATA, REMOVE_MARKERS_SUCCESS, REMOVE_MARKERS_FAILURE,
+    SEARCH_LOCATION, SEARCH_LOCATION_DATA, SEARCH_LOCATION_SUCCESS, SEARCH_LOCATION_FAILURE,
+    SELECT_MARKER, HOVER_MARKER
 };
 // A reference to our PouchDb instances keyed by region name
 const dbs = {};
@@ -81,6 +92,7 @@ const geojsonReducer = (
     state = { }, action = {}
 ) => {
 
+    const sortById = R.sortBy(R.prop('id'));
     switch (action.type) {
         case SET_STATE:
             // Currently never used but could be. State is set in the region reducer
@@ -96,14 +108,13 @@ const geojsonReducer = (
             return R.merge(state, {osm: action.body});
         case FETCH_MARKERS_SUCCESS:
             // Merge the returned geojson into the state
-            return R.merge(state, {markers: R.map(R.prop('doc'), action.body.rows)});
+            return R.merge(state, {markers: R.map(R.prop('doc'), sortById(action.body.rows))});
         case UPDATE_MARKERS_SUCCESS:
             // Merge the returned geojson into the state
-            console.log(action.body.rows)
-            return R.merge(state, {markers: R.map(R.prop('doc'), action.body.rows)});
+            return R.merge(state, {markers: R.map(R.prop('doc'), sortById(action.body.rows))});
         case REMOVE_MARKERS_SUCCESS:
             // Merge the returned geojson into the state
-            return state; //R.merge(state, {markers: action.body});
+            return R.merge(state, {markers: R.map(R.prop('doc'), sortById(action.body.rows))});
         default:
             return state;
     }
@@ -136,7 +147,7 @@ function fetchOsmSuccess(body) {
  * @param ex
  * @return {{type: string, ex: *}}
  */
-function fetchOsmFailure(ex) {
+export function fetchOsmFailure(ex) {
     return {
         type: FETCH_OSM_FAILURE,
         ex
@@ -204,7 +215,7 @@ function fetchMarkersSuccess(body) {
  * @param ex
  * @return {{type: string, ex: *}}
  */
-function fetchMarkerFailure(ex) {
+export function fetchMarkerFailure(ex) {
     return {
         type: FETCH_MARKERS_FAILURE,
         ex
@@ -286,6 +297,69 @@ function removeMarkersSuccess(body) {
     return {
         type: REMOVE_MARKERS_SUCCESS,
         body
+    }
+}
+
+export function removeMarkersFailure(ex) {
+    return {
+        type: REMOVE_MARKERS_FAILURE,
+        ex
+    }
+}
+
+export function searchLocation(endpoint, source, accessToken, proximity, query) {
+    return dispatch => new Task((reject, response) => {
+        const searchTime = new Date();
+        const uri = `${endpoint}/geocoding/v5/${source}/${encodeURIComponent(query)}.json?access_token=${accessToken}${(proximity ? '&proximity=' + proximity : '')}`;
+        xhr({
+            uri: uri,
+            json: true
+        }, function (err, res, body) {
+            if (err)
+                reject(err)
+            else {
+                dispatch(searchLocationSuccess(body));
+                response(res, body, searchTime)
+            }
+        });
+    });
+}
+
+function searchLocationSuccess(body) {
+    return {
+        type: SEARCH_LOCATION_SUCCESS,
+        body
+    }
+}
+
+export function searchLocationFailure(ex) {
+    return {
+        type: SEARCH_LOCATION_FAILURE,
+        ex
+    }
+}
+
+/***
+ * Action to process the successful markers removal
+ * @param info
+ * @return {{type: string, body: *}}
+ */
+export function selectMarker(info) {
+    return {
+        type: SELECT_MARKER,
+        info
+    }
+}
+
+/***
+ * Action to process the successful markers removal
+ * @param info
+ * @return {{type: string, body: *}}
+ */
+export function hoverMarker(info) {
+    return {
+        type: HOVER_MARKER,
+        info
     }
 }
 

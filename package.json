@@ -102,6 +102,7 @@
     "webpack-dev-server": "^2.4.5"
   },
   "dependencies": {
+    "@mapbox/react-geocoder": "^2.5.0",
     "@turf/turf": "^4.3.1",
     "autobind-decorator": "^1.4.1",
     "babel-polyfill": "^6.23.0",
@@ -139,6 +140,7 @@
     "react-redux": "^5.0.5",
     "react-router": "3",
     "react-router-redux": "^4.0.8",
+    "react-scrollbar": "^0.5.1",
     "react-share": "^1.14.1",
     "redux": "^3.6.0",
     "redux-immutable": "^4.0.0",

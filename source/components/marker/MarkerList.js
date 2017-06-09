@@ -12,22 +12,30 @@
 import React from 'react'
 import autobind from 'autobind-decorator';
 import {getPath} from 'helpers/functions'
-import {geojsonByType} from 'helpers/geojsonHelpers'
 import {AddMarkerItem, MarkerItem} from './MarkerItem'
 import R from 'ramda';
+import styles from './MarkerList.style.js';
+import Geocode from 'components/mapbox/Geocode'
+import ScrollArea from 'react-scrollbar'
 
 class MarkerList extends React.Component {
 
+    constructor(props) {
+        super(props)
+        this.state = {
+            locationFeature: {}
+        }
+    }
     componentDidUpdate() {
 
     }
 
     componentWillReceiveProps(nextProps) {
-        const markersLens = R.lensPath(['geojson', 'markers', 'features', 'length']);
+        const markersLens = R.lensPath(['geojson', 'markers']);
         const dbLens = R.lensProp('db')
         // Features have changed
         if (R.view(markersLens, this.props) != R.view(markersLens, nextProps))
-            this.setState({markersByType: geojsonByType(nextProps.geojson.markers)});
+            this.setState({markers: nextProps.geojson.markers});
         // db is configured
         if (R.view(dbLens, this.props) != R.view(dbLens, nextProps)) {
             nextProps.db.changes({
@@ -37,18 +45,48 @@ class MarkerList extends React.Component {
         }
     }
 
+    @autobind
+    onSelect(locationFeature) {
+        this.setState({ locationFeature: locationFeature });
+    }
+
     render() {
-        const markers = getPath(['state', 'markersByType'], this) || {}
+        const markers = getPath(['state', 'markers'], this) || []
         const markerItems = R.map(
-            marker => <MarkerItem key={marker.properties.id} accessToken={this.props.accessToken} {...R.pick(['name', 'id'], marker.properties)} />,
-            markers.features || []);
+            marker => <MarkerItem
+                regionId={this.props.id}
+                key={marker.id}
+                locationFeature={marker}
+                removeMarkers={this.props.removeMarkers}
+            />,
+            markers || []);
 
         return (
-            <div className="marker-list">
-                <div className="add-marker-item-container">
-                    <AddMarkerItem/>
+            <div className="marker-list" style={styles.container}>
+                <div className="add-marker-container" style={styles.addMarkerContainer}>
+                    <div className="geocoder-container" style={styles.geocoderContainer} >
+                        <Geocode onSelect={this.onSelect} search={this.props.searchLocation} searchFailure={this.props.searchLocationFailure} accessToken={this.props.accessToken} />
+                    </div>
+                    <div className="add-marker-item-container" style={styles.addItemContainer} >
+                        <AddMarkerItem
+                            regionId={this.props.id}
+                            locationFeature={this.state.locationFeature}
+                            updateMarkers={this.props.updateMarkers}
+                        />
+                    </div>
                 </div>
-                {markerItems}
+                <ScrollArea
+                    speed={0.8}
+                    className="marker-tims-scoll-area"
+                    contentClassName="content"
+                    contentStyle={{height: '100%'}}
+                    horizontal={false}
+                    style={styles.scrollContainer}
+                >
+                    <div className="marker-items-container" style={styles.itemsContainer} >
+                        {markerItems}
+                    </div>
+                </ScrollArea>
             </div>
         );
     }
@@ -63,7 +101,9 @@ const {
 
 MarkerList.propTypes = {
     geojson: object.isRequired,
-    accessToken: string.isRequired
+    accessToken: string.isRequired,
+    // Region id
+    id: string.isRequired
 };
 
 export default MarkerList;

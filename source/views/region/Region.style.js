@@ -10,14 +10,18 @@
  */
 export default {
     container: {
-        flex: 1,
+        position: 'absolute',
     },
     mapboxContainer: {
-        flex: 1,
+        position: 'absolute',
         width: '50%',
         height: '100%'
     },
     markersContainer: {
-        flex: 2,
+        position: 'absolute',
+        top: '2%',
+        left: '55%',
+        right: '5%',
+        height: '95%'
     }
 }

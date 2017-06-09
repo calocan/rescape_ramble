@@ -96,7 +96,7 @@ export const removeMarkers = (db, options, markers) => {
         }).catch(function (err) {
             reject(err);
         });
-    })
+    }).chain(response => fetchMarkers(db, options, null))
 }
 
 /***

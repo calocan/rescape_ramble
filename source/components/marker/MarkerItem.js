@@ -11,38 +11,91 @@
 
 import React from 'react'
 import autobind from 'autobind-decorator';
-import {getPath} from 'helpers/functions'
-import {geojsonByType} from 'helpers/geojsonHelpers'
-import R from 'ramda';
-import Geocoder from 'react-geocoder'
+import styles from './MarkerItem.style.js';
+import moment from 'moment'
+import R from 'ramda'
 
 export class MarkerItem extends React.Component {
 
     @autobind
-    onSelect(opt) {
-        //this.props.onChangeViewport(opt);
+    _handleRemove(e) {
+        this.props.removeMarkers({}, this.props.regionId, [this.props.locationFeature]).fork(
+            error => {
+                console.error("Error removing marker")
+            },
+            response => {
+            }
+        );
     }
 
     render() {
         return (
-            <div className="marker-container">
-                <icon click="" />
-                <div>{this.props.marker.name}</div>
-                <Geocoder
-                    accessToken={this.props.accessToken}
-                    onSelect={this.onSelect}
-                />
+            <div className="marker-container" style={styles.container}>
+                <div className="marker-name" style={styles.nameContainer}>{this.props.locationFeature.properties.name}</div>
+                <div className="marker-location-name" style={styles.locationContainer}>
+                    {this.props.locationFeature.place_name || this.props.locationFeature.geometry.coordinates}
+                </div>
+                <div className="remove" style={styles.removeContainer}
+                     onClick={this._handleRemove}
+                >
+                    x
+                </div>
             </div>
         );
     }
 };
 
 export class AddMarkerItem extends React.Component {
+
+    constructor(props) {
+        super(props)
+        this.state = {
+            warn: false
+        }
+    }
+
+    @autobind
+    _handleKeyPress(e) {
+        if (e.key === 'Enter') {
+            if (this.props.locationFeature.geometry) {
+                this.setState({'warn': false});
+                const id = `node/${moment.now()}`
+                const marker = R.merge(this.props.locationFeature, {
+                    id,
+                    _id: id,
+                    type: "Feature",
+                    properties: {
+                        name: this.textInput.value
+                    },
+                });
+                this.props.updateMarkers({}, this.props.regionId, [marker]).fork(
+                    error => {
+                        console.error("Error adding marker")
+                    },
+                    response => {
+                        this.textInput.value = null;
+                    }
+                );
+            }
+            else {
+                // Warn user to set a location
+                this.setState({'warn': true});
+            }
+            console.log('do validate');
+        }
+    }
+
     render() {
         return (
-            <div className="add-marker-container">
-                <input className="add-marker"/>
-                <div/>
+            <div className="add-marker-container" style={styles.container}>
+                <div style={styles.instructionsLabel}>Choose a location and enter a name. Press enter on the name to submit</div>
+                <div style={styles.nameLabel}>Name</div>
+                <input className="add-marker" style={styles.addNameContainer} onKeyPress={this._handleKeyPress}
+                       ref={(input) => { this.textInput = input; }}
+                />
+                <div ref='warn' className="warn" style={{display: this.state.warn ? 'block' : 'none', ...styles.warnContainer}} >
+                    Please select a location and then the name and click enter.
+                </div>
             </div>
         );
     }
@@ -52,16 +105,17 @@ const {
     number,
     string,
     object,
-    bool
+    bool,
+    arrayOf
 } = React.PropTypes;
 
 MarkerItem.propTypes = {
-    name: string.isRequired,
-    id: string.isRequired,
-    color: string.isRequired,
-    accessToken: string.isRequired
+    locationFeature: object.isRequired,
+    regionId: string.isRequired
 };
 
 AddMarkerItem.propTypes = {
-
+    locationFeature: object.isRequired,
+    coordinates: arrayOf(number),
+    regionId: string.isRequired
 };

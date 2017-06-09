@@ -130,7 +130,7 @@ class Deck extends React.Component {
     }
 
     render() {
-        const {viewport, iconAtlas, showCluster, geojson} = this.props;
+        const {viewport, iconAtlas, showCluster, geojson, onHover, onClick} = this.props;
 
         const z = Math.floor(viewport.zoom);
         const size = showCluster ? 1 : Math.min(Math.pow(1.5, viewport.zoom - 10), 1);
@@ -139,15 +139,15 @@ class Deck extends React.Component {
         const layers = geojson.features.length ? [new IconLayer({
             id: 'icon',
             data: geojson.features,
-            pickable: this.props.onHover || this.props.onClick,
+            pickable: true,
             iconAtlas,
             iconMapping: locationIconMapping,
             sizeScale: ICON_SIZE * size * window.devicePixelRatio,
             getPosition: d => d.geometry.coordinates,
             getIcon: d => showCluster ? (d.zoomLevels[z] && d.zoomLevels[z].icon) : 'marker',
             getSize: d => showCluster ? (d.zoomLevels[z] && d.zoomLevels[z].size) : 1,
-            onHover: this.props.onHover,
-            onClick: this.props.onClick,
+            onHover: onHover,
+            onClick: onClick,
             updateTriggers: {
                 getIcon: updateTrigger,
                 getSize: updateTrigger
