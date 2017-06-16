@@ -8,14 +8,11 @@
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import {sync, remoteUrl} from 'store/reducers/async/markerHelpers'
 import PouchDB from 'pouchdb'
 
 // A reference to our PouchDb instances keyed by region name
 const dbs = {};
 const syncs = {};
-const DB_PATH = '__db__/geojson/'
-const DB_PREFIX = ''
 PouchDB.plugin(require('pouchdb-erase'));
 
 /***
@@ -64,8 +61,8 @@ export function destroy(dbName) {
     });
 }
 
-export const createDb = (regionName, dbPath, dbPrefix) => {
-    const name = regionName; //`${dbPath}${dbPrefix}${regionName}`;
+export const createDb = regionName => {
+    const name = regionName;
     dbs[regionName] = new PouchDB(name);
     return dbs[regionName];
 };

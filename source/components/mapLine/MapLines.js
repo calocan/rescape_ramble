@@ -15,6 +15,7 @@ import autobind from 'autobind-decorator';
 import R from 'ramda';
 import {resolveSvgJsx} from 'helpers/svgHelpers'
 import {LineLayer} from 'deck.gl';
+import PropTypes from 'prop-types'
 
 class MapLines extends React.Component {
 
@@ -47,7 +48,7 @@ const {
     object,
     bool,
     array
-} = React.PropTypes;
+} = PropTypes;
 
 MapLines.propTypes = {
     viewport: object.isRequired,

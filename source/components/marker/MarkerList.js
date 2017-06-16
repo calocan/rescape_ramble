@@ -17,6 +17,7 @@ import R from 'ramda';
 import styles from './MarkerList.style.js';
 import Geocode from 'components/mapbox/Geocode'
 import ScrollArea from 'react-scrollbar'
+import PropTypes from 'prop-types'
 
 class MarkerList extends React.Component {
 
@@ -98,7 +99,7 @@ const {
     string,
     object,
     bool
-} = React.PropTypes;
+} = PropTypes;
 
 MarkerList.propTypes = {
     geojson: object.isRequired,

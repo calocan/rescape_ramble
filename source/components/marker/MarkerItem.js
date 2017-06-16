@@ -10,6 +10,7 @@
  */
 
 import React from 'react'
+import PropTypes from 'prop-types'
 import autobind from 'autobind-decorator';
 import styles from './MarkerItem.style.js';
 import moment from 'moment'
@@ -106,7 +107,7 @@ const {
     object,
     bool,
     arrayOf
-} = React.PropTypes;
+} = PropTypes;
 
 MarkerItem.propTypes = {
     locationFeature: object.isRequired,

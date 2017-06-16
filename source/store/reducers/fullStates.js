@@ -13,7 +13,7 @@
  * Defines the all actions of the application used manipulate the DOM.
  */
 
-import {actionFetch} from 'store/reducers/async/requestHelpers';
+import {actionFetch} from 'store/async/requestHelpers';
 
 /*
  * Action types. See action definition for explanation

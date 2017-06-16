@@ -38,7 +38,7 @@ const searchLocationSuccess = body => ({ type: SEARCH_LOCATION_SUCCESS, body });
 
 export const searchLocationFailure = ex => ({ type: SEARCH_LOCATION_FAILURE, ex });
 
-export default searchesReducer = (state = {}, action = {}) => {
+export default (state = {}, action = {}) => {
     switch (action.type) {
         default:
             return state;

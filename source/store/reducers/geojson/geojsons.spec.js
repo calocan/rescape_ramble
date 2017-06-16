@@ -8,18 +8,14 @@
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import {Map} from 'immutable'
-import testConfig from 'store/data/test/config'
-import initialState from 'store/data/initialState'
-import configureStore from 'redux-mock-store';
-import {getPath, mapPropValueAsIndex} from 'helpers/functions'
-import R from 'ramda'
-import reducer, {stopSync, ftchOsm, removeMarkers, fetchMarkers, updateMarkers, actions} from './geojson';
-import {setState} from 'store/reducers/fullState'
-import thunk from 'redux-thunk'
-import {expectTask} from 'helpers/jestHelpers'
-import {LA_SAMPLE as markersSample} from 'store/reducers/async/markerHelpers.sample'
-import makeStore from 'source/store'
+import {Map} from "immutable";
+import testConfig from "store/data/test/config";
+import initialState from "store/data/initialState";
+import {getPath, mapPropValueAsIndex} from "helpers/functions";
+import R from "ramda";
+import reducer, {actions, fetchMarkers, ftchOsm, removeMarkers, stopSync, updateMarkers} from "./geojson";
+import {setState} from "store/reducers/fullState";
+import thunk from "redux-thunk";
 const middlewares = [thunk];
 const toObjectKeyedById = mapPropValueAsIndex('id');
 

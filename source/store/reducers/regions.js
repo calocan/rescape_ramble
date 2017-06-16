@@ -10,10 +10,10 @@
  */
 
 import { combineReducers } from 'redux';
-import geojsonReducer from './geojson/geojson'
+import geojsonReducer from 'store/reducers/geojson/geojsons'
 import {createViewportReducer} from 'redux-map-gl';
 import R from 'ramda';
-import {SET_STATE} from './fullState'
+import {SET_STATE} from 'store/reducers/fullStates'
 
 /***
  * Only allow the region reducer to be created once for each Region

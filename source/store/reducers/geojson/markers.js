@@ -23,6 +23,7 @@ const asyncActionIds = (action, crud='FETCH') => {
     ];
 }
 
+let FETCHES, UPDATES, REMOVES
 const [FETCH_MARKERS, FETCH_MARKERS_DATA, FETCH_MARKERS_SUCCESS, FETCH_MARKERS_FAILURE] = FETCHES = asyncActionIds('MARKER');
 const [UPDATE_MARKERS, UPDATE_MARKERS_DATA, UPDATE_MARKERS_SUCCESS, UPDATE_MARKERS_FAILURE] = UPDATES = asyncActionIds('MARKER', 'UPDATE');
 const [REMOVE_MARKERS, REMOVE_MARKERS_DATA, REMOVE_MARKERS_SUCCESS, REMOVE_MARKERS_FAILURE] = REMOVES = asyncActionIds('MARKER', 'REMOVE');
@@ -123,7 +124,7 @@ const removeMarkersData = () => ({ type: REMOVE_MARKERS_DATA });
  */
 const removeMarkersSuccess = body => ({ type: REMOVE_MARKERS_SUCCESS, body });
 
-export const removeMarkersFailure = ex = ({ type: REMOVE_MARKERS_FAILURE, ex });
+export const removeMarkersFailure = ex => ({ type: REMOVE_MARKERS_FAILURE, ex });
 
 /***
  * Action to process the successful markers removal
@@ -139,7 +140,7 @@ export const selectMarker = info => ({ type: SELECT_MARKER, info });
  */
 export const hoverMarker = info => ({ type: HOVER_MARKER, info });
 
-export default markersReducer = (state = {}, action = {}) => {
+export default (state = {}, action = {}) => {
 
     const sortById = R.sortBy(R.prop('id'));
     const merge = R.merge(state);

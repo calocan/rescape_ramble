@@ -19,7 +19,7 @@ export default React => {
     /*
     const {
         string, shape, func
-    } = React.PropTypes;
+    } = PropTypes;
     */
 
     const application = (props) => {

@@ -11,7 +11,7 @@
 
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux'
-import {hoverMarker, selectMarker} from 'store/reducers/geojson/geojson'
+import {hoverMarker, selectMarker} from 'store/reducers/geojson/geojsons'
 import {onChangeViewport} from 'redux-map-gl';
 import React from 'react';
 import Mapbox from './Mapbox';

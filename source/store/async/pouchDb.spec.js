@@ -10,22 +10,5 @@
  */
 
 // A reference to our PouchDb instances keyed by region name
-const dbs = {};
-const syncs = {};
-const DB_PATH = '__db__/geojson/'
-const DB_PREFIX = ''
-export const createDb = (regionName, dbPath, dbPrefix) => {
-    const name = regionName; //`${dbPath}${dbPrefix}${regionName}`;
-    dbs[regionName] = new PouchDB(name);
-    return dbs[regionName];
-};
-export const startSync = (db, regionName) => {
-    syncs[regionName] = sync({db, remoteUrl: remoteUrl(regionName)});
-    return syncs[regionName]
-}
-export const stopSync = (regionName) => {
-    syncs[regionName].cancel()
-}
-export const getDb = regionName => {
-    return dbs[regionName]
-}
+
+throw "Not Implmented"

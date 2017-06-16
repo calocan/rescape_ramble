@@ -9,13 +9,13 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import PouchDB from 'pouchdb'
-import {sync, destroy, removeMarkers, removeMarker, fetchMarkers, fetchMarkersCelled, persistMarkers} from './markerHelpers';
-import {removeDuplicateObjectsByProp} from 'helpers/functions'
-import {expectTask} from '../../../helpers/jestHelpers'
-import {PARIS_SAMPLE, LA_SAMPLE} from './markerHelpers.sample'
-import {mergeAllWithKey} from '../../../helpers/functions'
-import {concatFeatures} from '../../../helpers/geojsonHelpers'
+import PouchDB from 'store/async/pouchDb'
+import {removeMarkers, removeMarker, fetchMarkers, fetchMarkersCelled, persistMarkers} from './markerIO';
+import {sync, destroy} from './pouchDb'
+import {expectTask} from '../../helpers/jestHelpers'
+import {PARIS_SAMPLE, LA_SAMPLE} from './markerIO.sample'
+import {mergeAllWithKey} from '../../helpers/functions'
+import {concatFeatures} from '../../helpers/geojsonHelpers'
 import R from 'ramda'
 
 // combine the samples into one obj with concatinated features

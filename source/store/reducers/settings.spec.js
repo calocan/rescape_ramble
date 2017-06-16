@@ -1,5 +1,5 @@
 import {SET_CURRENT, setState, setCurrent} from './settings';
-import {SET_STATE} from './fullState';
+import {SET_STATE} from 'store/reducers/fullStates';
 
 describe('settings actions', () => {
     it('should create an action to set the state', () =>{

@@ -11,9 +11,10 @@
 
 import R from 'ramda';
 import {combineReducers} from 'redux';
-import markers, {actions as markerActions} from './markers'
-import openStreetMaps, {actions as openStreetMapActions} from './openStreetMaps'
-import searches, {actions as searchesActions} from './searches'
+import markers, {actions as markerActions} from 'store/reducers/geojson/markers'
+import openStreetMaps, {actions as openStreetMapActions} from 'store/reducers/geojson/openStreetMaps'
+import searches, {actions as searchesActions} from 'store/reducers/geojson/searches'
+import {createDb, startSync} from "store/async/pouchDb";
 
 export const actions = R.flatten([markerActions, openStreetMapActions, searchesActions])
 
@@ -27,9 +28,9 @@ export const actions = R.flatten([markerActions, openStreetMapActions, searchesA
 
 // Enhance the geojsonReducer with the persistentReducer
 // The reducer must be initialized with its region name to give it the correct db
-export default (regionName, dbPath=DB_PATH, dbPrefix=DB_PREFIX) => {
+export default regionName => {
     // TODO move to async
-    const db = createDb(regionName, dbPath, dbPrefix);
+    const db = createDb(regionName);
     startSync(db, regionName);
     return combineReducers({
         osm: openStreetMaps,

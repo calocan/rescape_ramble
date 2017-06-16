@@ -11,7 +11,7 @@
 
 import Task from 'data.task'
 import R from 'ramda'
-import {fetchTransitCelled} from 'store/reducers/async/overpassHelpers'
+import {fetchTransitCelled} from 'store/async/overpassIO'
 
 const FETCH_OSM = '/osm/FETCH_OSM';
 const FETCH_OSM_DATA = '/osm/FETCH_OSM_DATA';
@@ -54,7 +54,7 @@ export const fetchOsm = (options, bounds) => dispatch => {
     )
 };
 
-export default openStreetMapsReducer = (state = {}, action = {}) => {
+export default (state = {}, action = {}) => {
     switch (action.type) {
         case FETCH_OSM_DATA:
             // TODO handle with reselect in containers instead

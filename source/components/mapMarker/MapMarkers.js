@@ -10,10 +10,11 @@
  */
 
 import {DraggablePointsOverlay, SVGOverlay} from 'react-map-gl';
+import PropTypes from 'prop-types'
 import autobind from 'autobind-decorator';
 import React from 'react';
 import {resolveSvgJsx} from 'helpers/svgHelpers'
-import {updateMarker} from "store/reducers/async/markerHelpers";
+import {updateMarker} from "store/async/markerHelpers";
 import {GeoJsonLayer} from 'deck.gl';
 const ENTER_KEY = 13;
 const LIGHT_SETTINGS = {
@@ -127,7 +128,7 @@ const {
     object,
     bool,
     array
-} = React.PropTypes;
+} = PropTypes;
 
 MapMarkers.propTypes = {
     viewport: object.isRequired,

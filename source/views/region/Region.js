@@ -14,6 +14,7 @@ import styles from './Region.style.js';
 import R from 'ramda';
 import React from 'react';
 import {getPath} from 'helpers/functions'
+import PropTypes from 'prop-types'
 
 /***
  * The View for a Region, such as California. Theoretically we could display multiple regions at once
@@ -78,7 +79,7 @@ class Region extends React.Component {
 */
 const {
     string, object, number, func
-} = React.PropTypes;
+} = PropTypes;
 Region.propTypes = {
     settings: object.isRequired,
     region: object.isRequired,

@@ -15,6 +15,7 @@ import DeckGL, {IconLayer, WebMercatorViewport} from 'deck.gl';
 import rbush from 'rbush';
 import R from 'ramda';
 import locationIconMapping from  './locationIconMapping';
+import PropTypes from 'prop-types'
 
 const ICON_SIZE = 60;
 
@@ -168,7 +169,7 @@ const {
     object,
     bool,
     array
-} = React.PropTypes;
+} = PropTypes;
 
 Deck.propTypes = {
     viewport: object.isRequired,

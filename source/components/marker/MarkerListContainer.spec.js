@@ -11,7 +11,7 @@
 
 import React from 'react';
 import thunk from 'redux-thunk'
-import {mapStateToProps} from './MapboxContainer';
+import {mapStateToProps} from 'components/mapbox/MapboxContainer'
 import configureStore from 'redux-mock-store';
 
 import testConfig from 'store/data/test/config'
