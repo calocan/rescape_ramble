@@ -16,7 +16,7 @@ import {mergeAllWithKey, removeDuplicateObjectsByProp} from 'helpers/functions';
 import os from 'os';
 import squareGrid from '@turf/square-grid';
 import bbox from '@turf/bbox';
-import {concatFeatures} from './geojsonHelpers'
+import {concatFeatures} from '../../../helpers/geojsonHelpers'
 
 /***
  * fetches transit data in squares sequentially from OpenStreetMap using the Overpass API.

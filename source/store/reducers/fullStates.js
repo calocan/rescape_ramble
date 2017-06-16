@@ -13,10 +13,12 @@
  * Defines the all actions of the application used manipulate the DOM.
  */
 
-import {actionFetch} from 'helpers/requestHelpers';
+import {actionFetch} from 'store/reducers/async/requestHelpers';
 
 /*
  * Action types. See action definition for explanation
+ * TODO nothing but setSTate is used below yet. The async stuff in the future
+ * should be used in conjunction with PouchDb, cycle, etc
 */
 
 // sets the full state to a stored value (e.g. from a cookie)

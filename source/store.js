@@ -17,24 +17,46 @@
 import 'babel-polyfill'
 import thunk from 'redux-thunk'
 import { createStore, applyMiddleware, compose } from 'redux'
-import logger from 'redux-logger'
+import { run } from '@cycle/run';
+import { createCycleMiddleware } from 'redux-cycles';
 import reducer from './store/reducers/reducer'
 import { persistentStore } from 'redux-pouchdb-plus';
 import PouchDB from 'pouchdb'
-
 const db = new PouchDB('default');
+import R from 'ramda'
 
-let extras = [];
-if (process.env.NODE_ENV === `development`) {
-    const {createLogger} = require(`redux-logger`);
-    const logger = createLogger();
-    extras.push(logger);
+const environmentMiddlewares = R.ifElse(
+    R.equals('development'),
+    // Development-only middlewares
+    () => {
+        const {createLogger} = require(`redux-logger`);
+        return [
+            createLogger()
+        ];
+    },
+    // Production-only middlewares
+    () => []
+)(process.env.NODE_ENV);
+
+// Redux-cyles
+function main(sources) {
+    const pong$ = sources.ACTION
+        .filter(action => action.type === 'PING')
+        .mapTo({ type: 'PONG' });
+
+    return {
+        ACTION: pong$
+    }
 }
+
+const cycleMiddleware = createCycleMiddleware();
+const { makeActionDriver } = cycleMiddleware;
 
 // Use thunk and the persistentStore, the latter applies couchDB persistence to the store
 const applyMiddlewares = applyMiddleware(
     thunk,
-    ...extras
+    applyMiddleware(cycleMiddleware),
+    ...environmentMiddlewares
 );
 
 const createStoreWithMiddleware = compose(

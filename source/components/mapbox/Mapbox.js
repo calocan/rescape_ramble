@@ -37,11 +37,6 @@ class Mapbox extends React.Component {
         }
     }
 
-    @autobind
-    _onChangeViewport(opt) {
-        this.props.onChangeViewport(opt);
-    }
-
     render() {
         const { viewport, mapboxApiAccessToken, iconAtlas, showCluster, hoverMarker, selectMarker } = this.props;
         const {node, way} = getPath(['state', 'osmByType'], this) || {};
@@ -65,7 +60,7 @@ class Mapbox extends React.Component {
                 // setting to `true` should cause the map to flicker because all sources
                 // and layers need to be reloaded without diffing enabled.
                 preventStyleDiffing={ false }
-                onChangeViewport={this._onChangeViewport}
+                onChangeViewport={this.props.onChangeViewport}
             >
                 {deck}
             </MapGL>

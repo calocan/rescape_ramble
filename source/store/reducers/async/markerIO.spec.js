@@ -12,10 +12,10 @@
 import PouchDB from 'pouchdb'
 import {sync, destroy, removeMarkers, removeMarker, fetchMarkers, fetchMarkersCelled, persistMarkers} from './markerHelpers';
 import {removeDuplicateObjectsByProp} from 'helpers/functions'
-import {expectTask} from './jestHelpers'
+import {expectTask} from '../../../helpers/jestHelpers'
 import {PARIS_SAMPLE, LA_SAMPLE} from './markerHelpers.sample'
-import {mergeAllWithKey} from './functions'
-import {concatFeatures} from './geojsonHelpers'
+import {mergeAllWithKey} from '../../../helpers/functions'
+import {concatFeatures} from '../../../helpers/geojsonHelpers'
 import R from 'ramda'
 
 // combine the samples into one obj with concatinated features

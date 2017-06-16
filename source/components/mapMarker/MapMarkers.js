@@ -13,7 +13,7 @@ import {DraggablePointsOverlay, SVGOverlay} from 'react-map-gl';
 import autobind from 'autobind-decorator';
 import React from 'react';
 import {resolveSvgJsx} from 'helpers/svgHelpers'
-import {updateMarker} from "helpers/markerHelpers";
+import {updateMarker} from "store/reducers/async/markerHelpers";
 import {GeoJsonLayer} from 'deck.gl';
 const ENTER_KEY = 13;
 const LIGHT_SETTINGS = {

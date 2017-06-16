@@ -25,7 +25,7 @@ class Region extends React.Component {
         const getRegionId = getPath(['region', 'id'])
         if (
             !(R.equals(...R.map(getRegionId, [this.props, nextProps]))) || // Region changed
-            !getPath(['region', 'geojson', 'osmRequested'], nextProps) // or geojson not yet requested
+            !getPath(['region', 'geojson', 'osm', 'requested'], nextProps) // or geojson not yet requested
         ) {
             // TODO query_overpass is currently broken
             if (false)
@@ -38,7 +38,7 @@ class Region extends React.Component {
         }
         if (
             !(R.equals(...R.map(getRegionId, [this.props, nextProps]))) || // Region changed
-            !getPath(['region', 'geojson', 'markersRequested'], nextProps) // or markers not yet requested
+            !getPath(['region', 'geojson', 'markers', 'requested'], nextProps) // or markers not yet requested
         ) {
             this.props.fetchMarkers({}, nextProps.region.id).fork(
                 error => this.props.fetchMarkersFailure(error),

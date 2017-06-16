@@ -11,7 +11,7 @@
 
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux'
-import {hoverMarker, selectMarker} from 'store/reducers/geojson'
+import {hoverMarker, selectMarker} from 'store/reducers/geojson/geojson'
 import {onChangeViewport} from 'redux-map-gl';
 import React from 'react';
 import Mapbox from './Mapbox';
@@ -39,6 +39,7 @@ export const mapStateToProps = (state, ownProps) => {
         R.pick(['geojson', 'gtfs'], ownProps.region),
     );
 }
+
 
 // This is just an example of what mapDispatchToProps does.
 const mapDispatchToProps = (dispatch, ownProps) => {

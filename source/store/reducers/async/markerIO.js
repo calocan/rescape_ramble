@@ -17,53 +17,7 @@ import bbox from '@turf/bbox';
 import PouchDB from 'pouchdb';
 import {mergeAllWithKey, removeDuplicateObjectsByProp} from 'helpers/functions';
 
-PouchDB.plugin(require('pouchdb-erase'));
 
-/***
- * Returns the remote URL for the given database
- * @param name
- */
-export const remoteUrl = name => `http://localhost:5984/${name}`;
-
-export const sync = ({db, remoteUrl}) => {
-    return PouchDB.sync(db, remoteUrl, {
-        live: true,
-        retry: true
-    }).on('change', function (info) {
-        // handle change
-        console.info(`Sync Changed: ${info}`);
-    }).on('paused', function (err) {
-        // replication paused (e.g. replication up to date, user went offline)
-        console.warn(`Sync Paused: ${err}`);
-    }).on('active', function () {
-        // replicate resumed (e.g. new changes replicating, user went back online)
-        console.info('Sync Active');
-    }).on('denied', function (err) {
-        // a document failed to replicate (e.g. due to permissions)
-        console.warn(`Sync Denied: ${err}`);
-    }).on('complete', function (info) {
-        // handle complete
-        console.info(`Sync Completed: ${info}`);
-    }).on('error', function (err) {
-        console.warn(`Sync Erred: ${err}`);
-        // handle error
-    });
-}
-
-/***
- * Destroy the given database
- * @param dbName
- * @returns {Task}
- */
-export function destroy(dbName) {
-    return new Task((reject, resolve) => {
-        new PouchDB(dbName).destroy().then(function () {
-            resolve()
-        }).catch(function (err) {
-            reject()
-        })
-    });
-}
 
 /***
  * Remove the given marker
