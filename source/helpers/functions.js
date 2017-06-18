@@ -172,7 +172,7 @@ export const reduceWithNext = (fn, [head, next, ...tail], previous) =>
  */
 export const mergeDeep = R.mergeWith((l, r) =>
     (l.concat || r.concat) || !(R.is(Object, l) && R.is(Object, r)) ?
-        r:
+        r :
         mergeDeep(l, r) // tail recursive
 )
 
@@ -231,7 +231,7 @@ export const taskToPromise = task => {
         task.fork(reject=>{
                 console.error(reject.message)
                 return rej
-            }, resolve=>res
+            }, ()=>res
         )
     });
 };

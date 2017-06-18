@@ -76,28 +76,28 @@ describe('helperFunctions', () => {
             [1, 4, 9, 16],
             [])).toEqual([4 - 1, 9 - 4, 16 - 9]);
     });
-    test("Should deep merge objects", () => {
+    test('Should deep merge objects', () => {
         expect(f.mergeDeep(
             {foo: 1, bar: {bizz: [2, 3], buzz: 7}},
             {foo: 4, bar: {bizz: [5, 6]}}
         )).toEqual({foo: 4, bar: {bizz: [5, 6], buzz: 7}});
     })
-    test("Should capitalize first letter", () => {
-        expect(f.capitalize("good grief")).toEqual("Good grief")
+    test('Should capitalize first letter', () => {
+        expect(f.capitalize('good grief')).toEqual('Good grief')
     })
-    test("Should merge all with key", () => {
+    test('Should merge all with key', () => {
         expect(
             f.mergeAllWithKey(
-                (k, l, r) => k == 'a' ? R.concat(l, r) : r,
+                (k, l, r) => k === 'a' ? R.concat(l, r) : r,
                 [{a: [1], b: 2}, {a: [2], c: 3}, {a: [3]}]
         )).toEqual({a: [1, 2, 3], b: 2, c: 3});
     })
-    test("Should getPath of object", () => {
+    test('Should getPath of object', () => {
         expect(
-            f.getPath(['a', 'b', 1, 'c'], {a: {b: [null, {c:2}]}})
+            f.getPath(['a', 'b', 1, 'c'], {a: {b: [null, {c: 2}]}})
         ).toEqual(2)
     })
-    test("Should copy an object", () => {
+    test('Should copy an object', () => {
         const obj = { a: {b: 1}};
         const copy = f.copy(obj);
         expect(obj).toEqual(copy);
@@ -105,11 +105,11 @@ describe('helperFunctions', () => {
         expect(obj.a).toEqual(copy.a);
         expect(obj.a).not.toBe(copy.a);
     })
-    test("Should convert Task to Promise", () => {
+    test('Should convert Task to Promise', () => {
         expect(f.taskToPromise(new Task(function(reject, resolve) {
             resolve('donut')
         }))).resolves.toBe('donut')
-        expect(f.taskToPromise(new Task(function(reject, resolve) {
+        expect(f.taskToPromise(new Task(function(reject) {
             reject(new Error('octopus'))
         }))).rejects.toMatch('octopus')
     })

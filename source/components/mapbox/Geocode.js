@@ -22,14 +22,14 @@ class Geocode extends React.Component {
 
     @autobind
     onInput(e) {
-        this.setState({loading:true});
+        this.setState({ loading: true });
         var value = e.target.value;
         if (value === '' || !value) {
             this.textInput.value = null;
             this.setState({
                 results: [],
                 focus: null,
-                loading:false
+                loading: false
             });
         } else {
             this.props.search(
@@ -49,7 +49,9 @@ class Geocode extends React.Component {
         }
     }
     moveFocus(dir) {
-        if(this.state.loading) return;
+        if (this.state.loading) {
+            return;
+        }
         this.setState({
             focus: this.state.focus === null ?
                 0 : Math.max(0,
@@ -76,11 +78,13 @@ class Geocode extends React.Component {
                 break;
             // accept
             case 13:
-                if( this.state.results.length > 0 && this.state.focus == null) {
-                    this.clickOption(this.state.results[0],0);
+                if (this.state.results.length > 0 && this.state.focus === null) {
+                    this.clickOption(this.state.results[0], 0);
                 }
                 this.acceptFocus();
                 break;
+            default:
+                return
         }
     }
     onResult(body, searchTime) {
@@ -99,14 +103,14 @@ class Geocode extends React.Component {
     }
     clickOption(place, listLocation) {
         this.props.onSelect(place);
-        this.setState({focus:listLocation});
+        this.setState({ focus: listLocation });
         // focus on the input after click to maintain key traversal
         this.textInput.focus();
         this.textInput.value = place.text;
         return false;
     }
     render() {
-        const input = <input
+        const inputJsx = <input
             ref={(input) => { this.textInput = input; }}
             style={styles.inputContainer}
             className={this.props.inputClass}
@@ -116,7 +120,7 @@ class Geocode extends React.Component {
             type='text' />;
         return (
             <div>
-                {this.props.inputPosition === 'top' && input}
+                {this.props.inputPosition === 'top' && inputJsx}
                 {this.state.results.length > 0 && (
                     <ul className={`${this.props.showLoader && this.state.loading ? 'loading' : ''} ${this.props.resultsClass}`}>
                         {this.state.results.map((result, i) => (
@@ -129,11 +133,11 @@ class Geocode extends React.Component {
                         ))}
                     </ul>
                 )}
-                {this.props.inputPosition === 'bottom' && input}
+                {this.props.inputPosition === 'bottom' && inputJsx}
             </div>
         );
     }
-};
+}
 
 Geocode.defaultProps = {
     endpoint: 'https://api.mapbox.com',

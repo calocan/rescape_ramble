@@ -76,7 +76,8 @@ export function fetchFullState(host) {
     const url = `${host}/settings`;
     return dispatch => {
         dispatch(fetchFullStateRequest());
-        return actionFetch(dispatch, fetch(url), fetchFullStateSuccess, fetchFullStateFailure)
+        // TODO fetch is no longer around
+        ///return actionFetch(dispatch, fetch(url), fetchFullStateSuccess, fetchFullStateFailure)
     }
 }
 

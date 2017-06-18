@@ -36,4 +36,4 @@ export const geojsonByType = R.curry((geojson) => R.map(
  * @param l
  * @param r
  */
-export const concatFeatures = (k, l, r) => k == 'features' ? R.concat(l, r) : r;
+export const concatFeatures = (k, l, r) => k === 'features' ? R.concat(l, r) : r;

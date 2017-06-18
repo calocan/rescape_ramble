@@ -16,8 +16,8 @@ import fs from 'fs'
 function read(path) {
     return new Task(function(reject, resolve) {
         fs.readFile(path, function(error, data) {
-            if (error)  reject(error)
-            else        resolve(data)
+            if (error) reject(error)
+            else resolve(data)
         })
     })
 }
@@ -32,7 +32,7 @@ function decode(buffer) {
 const intro = decode(read('source/helpers/research.js'))
 const tasks = [intro, intro, intro]
 
-export const chainedTasks = R.reduce((chainedTasks, task) => chainedTasks.chain(
+export const chainedTasks = R.reduce((prevChainedTasks, task) => prevChainedTasks.chain(
         results => task.map(
             result => R.concat(results, result)
         )

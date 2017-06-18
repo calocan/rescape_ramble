@@ -11,10 +11,13 @@
 
 
 import xhr from 'xhr'
+import Task from 'data.task'
 const SEARCH_LOCATION = '/geojson/SEARCH_LOCATION';
 const SEARCH_LOCATION_DATA = '/geojson/SEARCH_LOCATION_DATA';
 const SEARCH_LOCATION_SUCCESS = '/geojson/SEARCH_LOCATION_SUCCESS';
 const SEARCH_LOCATION_FAILURE = '/geojson/SEARCH_LOCATION_FAILURE';
+
+const searchLocationSuccess = body => ({ type: SEARCH_LOCATION_SUCCESS, body });
 
 export const searchLocation = (endpoint, source, accessToken, proximity, query) => dispatch => {
     return new Task((reject, response) => {
@@ -24,8 +27,9 @@ export const searchLocation = (endpoint, source, accessToken, proximity, query) 
             uri: uri,
             json: true
         }, function (err, res, body) {
-            if (err)
+            if (err) {
                 reject(err)
+            }
             else {
                 dispatch(searchLocationSuccess(body));
                 response(res, body, searchTime)
@@ -33,8 +37,6 @@ export const searchLocation = (endpoint, source, accessToken, proximity, query) 
         });
     });
 }
-
-const searchLocationSuccess = body => ({ type: SEARCH_LOCATION_SUCCESS, body });
 
 export const searchLocationFailure = ex => ({ type: SEARCH_LOCATION_FAILURE, ex });
 

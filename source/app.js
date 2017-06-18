@@ -5,7 +5,7 @@ import ReactDOM from 'react-dom'
 //import Current from 'views/current/CurrentContainer'
 //import Application from 'views/application/ApplicationContainer'
 
-import {Provider} from 'react-redux'
+//import {Provider} from 'react-redux'
 //import { Router, Route, browserHistory } from 'react-router'
 //import { syncHistoryWithStore } from 'react-router-redux'
 

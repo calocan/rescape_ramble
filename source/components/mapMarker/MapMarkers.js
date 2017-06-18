@@ -2,20 +2,19 @@
  * Created by Andy Likuski on 2017.04.26
  * Copyright (c) 2017 Andy Likuski
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the 'Software'), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
  *
  * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
 import {DraggablePointsOverlay, SVGOverlay} from 'react-map-gl';
-import PropTypes from 'prop-types'
+import PropTypes from 'prop-types';
 import autobind from 'autobind-decorator';
 import React from 'react';
-import {resolveSvgJsx} from 'helpers/svgHelpers'
-import {updateMarker} from "store/async/markerHelpers";
-import {GeoJsonLayer} from 'deck.gl';
+import {resolveSvgJsx} from 'helpers/svgHelpers';
+import {updateMarker} from 'store/async/markerHelpers';
 const ENTER_KEY = 13;
 const LIGHT_SETTINGS = {
     lightsPosition: [-125, 50.5, 5000, -122.8, 48.5, 8000],
@@ -30,8 +29,9 @@ class MapMarkers extends React.Component {
 
     @autobind
     _redrawSVGOverlay(opt) {
-        if (!this.props.geojson || !this.props.geojson.features)
+        if (!this.props.geojson || !this.props.geojson.features) {
             return null;
+        }
         return resolveSvgJsx(opt, this.props.geojson.features)
     }
 
@@ -52,19 +52,19 @@ class MapMarkers extends React.Component {
         const id = `node/${value.id}`;
         const marker = {
             _id: value.id,
-            "type": "Feature",
-            "properties": {
-                "@id": id,
-                "name": `${value.name}`,
+            'type': 'Feature',
+            'properties': {
+                '@id': id,
+                'name': `${value.name}`,
             },
-            "geometry": {
-                "type": "Point",
-                "coordinates": value.location,
+            'geometry': {
+                'type': 'Point',
+                'coordinates': value.location,
             },
-            "id": id
+            'id': id
         };
         this.props.updateMarkers({}, [marker]);
-    };
+    }
 
     // Show the current markers
     showMarkers() {
@@ -77,10 +77,12 @@ class MapMarkers extends React.Component {
      */
     markerClicked(marker) {
         //TODO
-        var div = document.getElementById('li_' + marker.id);
-        var inputEditTodo = document.getElementById('input_' + marker.id);
+        /*
+        const div = document.getElementById('li_' + marker.id);
+        const inputEditTodo = document.getElementById('input_' + marker.id);
         div.className = 'editing';
         inputEditTodo.focus();
+        */
     }
 
     /***
@@ -91,6 +93,8 @@ class MapMarkers extends React.Component {
      * @param event
     */
     markerBlurred(marker, event) {
+        // TODO
+        /*
         const trimmedText = event.target.value.trim();
         if ( !trimmedText) {
             db.remove(marker);
@@ -98,6 +102,7 @@ class MapMarkers extends React.Component {
             marker.name = trimmedText;
             db.put(marker);
         }
+        */
     }
 
     /***
@@ -107,20 +112,23 @@ class MapMarkers extends React.Component {
      * @param event
      */
     markerKeyPressed(marker, event) {
+        // TODO
+        /*
         if (event.keyCode === ENTER_KEY) {
             const inputEditTodo = document.getElementById('input_' + todo._id);
             inputEditTodo.blur();
         }
+        */
     }
 
     render() {
         return <SVGOverlay
             className='map-markers'
-            key="svg-overlay"
+            key='svg-overlay'
             { ...this.props.viewport }
             redraw={ this._redrawSVGOverlay } />
     }
-};
+}
 
 const {
     number,

@@ -17,7 +17,7 @@ describe('Research helper functions', () => {
             function(error) {
                 throw error
             },
-            function(data)  {
+            function(data) {
                 console.log(data)
             }
         )

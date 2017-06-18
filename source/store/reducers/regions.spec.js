@@ -24,11 +24,11 @@ describe('mabpox reducer', () => {
                 {
                     type: geoJsonActions.FETCH_OSM_SUCCESS,
                     value: {
-                        "type": "FeatureCollection",
-                        "generator": "overpass-turbo",
-                        "copyright": "The data included in this document is from www.openstreetmap.org. The data is made available under ODbL.",
-                        "timestamp": "2017-04-06T22:46:03Z",
-                        "features": []
+                        'type': 'FeatureCollection',
+                        'generator': 'overpass-turbo',
+                        'copyright': 'The data included in this document is from www.openstreetmap.org. The data is made available under ODbL.',
+                        'timestamp': '2017-04-06T22:46:03Z',
+                        'features': []
                     }
                 }
             )
@@ -63,3 +63,4 @@ describe('mabpox reducer', () => {
         )
     })
 });
+

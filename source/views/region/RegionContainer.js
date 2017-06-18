@@ -21,4 +21,6 @@ const RegionContainer = connect(
      */
     mapStateToProps, geojsonActions
 )(Region);
-export default  RegionContainer;
+
+export default RegionContainer;
+

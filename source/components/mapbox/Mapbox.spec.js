@@ -1,14 +1,14 @@
-import MapGL from 'react-map-gl'
-import Mapbox from './Mapbox'
+import MapGL from 'react-map-gl';
+import Mapbox from './Mapbox';
 import React from 'react';
-import {shallow, mount} from 'enzyme';
-import {getPath, toJS} from 'helpers/functions'
-import {mapStateToProps} from './MapboxContainer'
-import {geojsonByType} from 'helpers/geojsonHelpers'
+import {shallow} from 'enzyme';
+import {getPath} from 'helpers/functions';
+import {mapStateToProps} from './MapboxContainer';
+import {geojsonByType} from 'helpers/geojsonHelpers';
 
-import config from 'store/data/test/config'
+import config from 'store/data/test/config';
 import initialState from 'store/data/initialState';
-import R from 'ramda'
+import R from 'ramda';
 
 jest.mock('query-overpass')
 const state = initialState(config);

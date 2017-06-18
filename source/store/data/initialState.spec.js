@@ -25,11 +25,11 @@ describe('Initial Satate', () => {
             }
         ];
         let i = 1;
-        function * numbers () {
+        function* numbers () {
             while (true) {
                 yield (i++).toString();
             }
-        };
+        }
         expect(toObjectKeyedByGeneratedId(numbers())(obj)).toEqual(
             {
                 '1': {

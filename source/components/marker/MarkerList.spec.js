@@ -1,13 +1,14 @@
-import Markers from './MarkerLIst'
 import React from 'react';
-import {shallow, mount} from 'enzyme';
-import {getPath, toJS} from 'helpers/functions'
-import {mapStateToProps} from './MarkersContainer'
-import {geojsonByType} from 'helpers/geojsonHelpers'
+import {shallow} from 'enzyme';
+import {getPath} from 'helpers/functions';
+import {mapStateToProps} from './MarkersContainer';
+import {geojsonByType} from 'helpers/geojsonHelpers';
+import Mapbox from 'components/mapbox/Mapbox'
 
-import config from 'store/data/test/config'
+
+import config from 'store/data/test/config';
 import initialState from 'store/data/initialState';
-import R from 'ramda'
+import R from 'ramda';
 
 jest.mock('query-overpass')
 const state = initialState(config);
@@ -37,7 +38,6 @@ describe('Mapbox', () => {
         expect(wrapper).toMatchSnapshot();
     });
     it('MapBox loads data', () => {
-        const Mapbox = createMapbox(React);
         const wrapper = shallow(<Mapbox {...props} />);
         expect(wrapper).toMatchSnapshot();
     })

@@ -1,6 +1,5 @@
 import {connect} from 'react-redux';
 import Current from './Current.js';
-import React from 'react';
 import R from 'ramda';
 
 export const mapStateToProps = (state) => {

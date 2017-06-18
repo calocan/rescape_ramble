@@ -2,20 +2,19 @@
  * Created by Andy Likuski on 2017.06.08
  * Copyright (c) 2017 Andy Likuski
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the 'Software'), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
  *
  * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import React from 'react'
-import {getPath} from 'helpers/functions'
-import {featuresByType, geojsonByType} from 'helpers/geojsonHelpers'
+import React from 'react';
+import {featuresByType} from 'helpers/geojsonHelpers';
 import DeckGL, {IconLayer, WebMercatorViewport} from 'deck.gl';
 import rbush from 'rbush';
 import R from 'ramda';
-import locationIconMapping from  './locationIconMapping';
-import PropTypes from 'prop-types'
+import locationIconMapping from './locationIconMapping';
+import PropTypes from 'prop-types';
 
 const ICON_SIZE = 60;
 
@@ -57,13 +56,13 @@ class Deck extends React.Component {
         const markersLens = R.lensPath(['geojson']);
         const widthLens = R.lensPath(['viewport', 'width']);
         const heightLens = R.lensPath(['viewport', 'height']);
-        if (R.view(markersLens, this.props) != R.view(markersLens, nextProps)) {
+        if (R.view(markersLens, this.props) !== R.view(markersLens, nextProps)) {
             this.setState({markers: nextProps.geojson.markers});
             this._updateCluster(nextProps);
         }
         if (
-            R.view(widthLens, this.props) != R.view(widthLens, nextProps) ||
-            R.view(heightLens, this.props) != R.view(heightLens, nextProps)) {
+            R.view(widthLens, this.props) !== R.view(widthLens, nextProps) ||
+            R.view(heightLens, this.props) !== R.view(heightLens, nextProps)) {
             this._updateCluster(nextProps);
         }
     }
@@ -73,8 +72,8 @@ class Deck extends React.Component {
     // We use the projected positions instead of longitude and latitude to build
     // the spatial index, because this particular dataset is distributed all over
     // the world, we can't use some fixed deltaLon and deltaLat
-    _updateCluster({viewport,geojson}) {
-        const data = geojson
+    _updateCluster({ viewport, geojson }) {
+        const data = geojson;
         if (!data.features.length) {
             return;
         }
@@ -161,7 +160,7 @@ class Deck extends React.Component {
             </DeckGL>
         );
     }
-};
+}
 
 const {
     number,

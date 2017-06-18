@@ -39,7 +39,7 @@ const regionReducer = regionName => regionReducerOnce(regionName)(() =>
             mapbox: createViewportReducer()
         },
         // Implement reducers for these as/if needed
-        R.fromPairs(R.map(key=>[key, (state={})=>state], ['id', 'geospatial', 'travel', 'gtfs']))
+        R.fromPairs(R.map(key=>[key, (state = {}) => state], ['id', 'geospatial', 'travel', 'gtfs']))
     ))
 );
 
@@ -83,7 +83,7 @@ const regionsReducer = (
 ) => {
     switch (action.type) {
         case SET_STATE:
-            const fullState =  R.merge(state, action.state['regions'] || {});
+            const fullState = R.merge(state, action.state.regions || {});
             // Get the RegionReducer created for this region asap so the PouchDb is created
             regionReducer(fullState.currentKey)
             return fullState;
@@ -100,7 +100,7 @@ const regionsReducer = (
                     action),
                 // TODO we need to prevent R.set from overwriting the state object inner components
                 state
-            ): state;
+            ) : state;
     }
 };
 

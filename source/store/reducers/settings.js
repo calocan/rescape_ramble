@@ -24,10 +24,10 @@ export const SET_CURRENT = '/settings/SET_CURRENT';
 export default function(state = {}, action) {
     // If setting state
     if (action.type === SET_STATE) {
-        return R.merge(state, action.state['settings']);
+        return R.merge(state, action.state.settings);
     }
     else if (action.type === SET_CURRENT) {
-        return R.merge(state, action.state['settings']);
+        return R.merge(state, action.state.settings);
     }
     else {
         return state

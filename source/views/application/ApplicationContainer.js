@@ -11,7 +11,7 @@ export default connect(
      */
     (state)=>{
         return {
-            ...state['settings']
+            ...state.settings
         };
     }
 )(createApplication(React));

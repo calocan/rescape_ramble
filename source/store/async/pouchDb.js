@@ -8,7 +8,8 @@
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import PouchDB from 'pouchdb'
+import PouchDB from 'pouchb'
+import Task from 'db.task'
 
 // A reference to our PouchDb instances keyed by region name
 const dbs = {};
@@ -19,7 +20,7 @@ PouchDB.plugin(require('pouchdb-erase'));
  * Returns the remote URL for the given database
  * @param name
  */
-export const remoteUrl = name => `http://localhost:5984/${name}`;
+export const createRemoteUrl = name => `http://localhost:5984/${name}`;
 
 export const sync = ({db, remoteUrl}) => {
     return PouchDB.sync(db, remoteUrl, {
@@ -55,7 +56,7 @@ export function destroy(dbName) {
     return new Task((reject, resolve) => {
         new PouchDB(dbName).destroy().then(function () {
             resolve()
-        }).catch(function (err) {
+        }).catch(function () {
             reject()
         })
     });
@@ -67,7 +68,7 @@ export const createDb = regionName => {
     return dbs[regionName];
 };
 export const startSync = (db, regionName) => {
-    syncs[regionName] = sync({db, remoteUrl: remoteUrl(regionName)});
+    syncs[regionName] = sync({db, remoteUrl: createRemoteUrl(regionName)});
     return syncs[regionName]
 }
 export const stopSync = (regionName) => {
