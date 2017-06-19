@@ -9,37 +9,26 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+import {searchLocation} from 'store/async/search'
+import {asyncActionIds, asyncActionHandlers} from 'store/reducers/reducerHelpers'
 
-import xhr from 'xhr'
-import Task from 'data.task'
-const SEARCH_LOCATION = '/geojson/SEARCH_LOCATION';
-const SEARCH_LOCATION_DATA = '/geojson/SEARCH_LOCATION_DATA';
-const SEARCH_LOCATION_SUCCESS = '/geojson/SEARCH_LOCATION_SUCCESS';
-const SEARCH_LOCATION_FAILURE = '/geojson/SEARCH_LOCATION_FAILURE';
+const scope = 'searches';
+const action = 'location';
+const makeAsyncActionHandlers = asyncActionHandlers(scope, action);
+let SEARCHES;
+const {SEARCH_LOCATION, SEARCH_LOCATION_DATA, SEARCH_LOCATION_SUCCESS, SEARCH_LOCATION_FAILURE} = SEARCHES = asyncActionIds(scope, action, 'SEARCH');
+export const actions = [SEARCHES];
+const {searchLocation, searchLocationData, searchLocationSuccess, searchLocationFailure} = makeAsyncActionHandlers('SEARCH', searchLocation);
+export { searchLocation, searchLocationData, searchLocationSuccess, searchLocationFailure }
 
-const searchLocationSuccess = body => ({ type: SEARCH_LOCATION_SUCCESS, body });
-
-export const searchLocation = (endpoint, source, accessToken, proximity, query) => dispatch => {
-    return new Task((reject, response) => {
-        const searchTime = new Date();
-        const uri = `${endpoint}/geocoding/v5/${source}/${encodeURIComponent(query)}.json?access_token=${accessToken}${(proximity ? '&proximity=' + proximity : '')}`;
-        xhr({
-            uri: uri,
-            json: true
-        }, function (err, res, body) {
-            if (err) {
-                reject(err)
-            }
-            else {
-                dispatch(searchLocationSuccess(body));
-                response(res, body, searchTime)
-            }
-        });
-    });
-}
-
-export const searchLocationFailure = ex => ({ type: SEARCH_LOCATION_FAILURE, ex });
-
+/***
+ * Reduces a gelocation search. This currently doesn't store anything in the state,
+ * the Component calling the action is using the response.
+ * TODO Store the search result in the state. Components should never access async results directly
+ * @param state
+ * @param action
+ * @returns {{}}
+ */
 export default (state = {}, action = {}) => {
     switch (action.type) {
         default:

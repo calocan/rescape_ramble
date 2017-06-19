@@ -10,137 +10,36 @@
  */
 import R from 'ramda'
 import {persistMarkers, fetchMarkers as fetchMarkersIO, removeMarkers as removeMarkersIO} from 'store/async/markerIO'
-import {getDb} from 'store/async/pouchDb';
-import Task from 'data.task';
-const PREFIX = 'geojson';
-const actionId = action => `/${PREFIX}/${R.toUpper(action)}`;
+import {actionId, asyncActionIds, asyncActionHandlers} from 'store/reducers/reducerHelpers'
 
-const asyncActionIds = (action, crud = 'FETCH') => {
-    const name = `${PREFIX}/${R.toUpper(action)}`;
-    return [
-        `${crud}_/${name}`,
-        `${crud}_/${name}_DATA`,
-        `${crud}_/${name}_SUCCESS`,
-        `${crud}_/${name}_FAILURE`,
-    ];
-}
+const SCOPE = 'geojson';
+const ACTION = 'markers';
+const makeAsyncActions = asyncActionIds(SCOPE, ACTION);
+const makeAction = actionId(SCOPE);
+const makeAsyncActionHandlers = asyncActionHandlers(SCOPE, ACTION);
 
-let FETCHES, UPDATES, REMOVES
-const [FETCH_MARKERS, FETCH_MARKERS_DATA, FETCH_MARKERS_SUCCESS, FETCH_MARKERS_FAILURE] = FETCHES = asyncActionIds('MARKER');
-const [UPDATE_MARKERS, UPDATE_MARKERS_DATA, UPDATE_MARKERS_SUCCESS, UPDATE_MARKERS_FAILURE] = UPDATES = asyncActionIds('MARKER', 'UPDATE');
-const [REMOVE_MARKERS, REMOVE_MARKERS_DATA, REMOVE_MARKERS_SUCCESS, REMOVE_MARKERS_FAILURE] = REMOVES = asyncActionIds('MARKER', 'REMOVE');
+let FETCHES, UPDATES, REMOVES;
+// Define Actions
+const {FETCH_MARKERS_DATA, FETCH_MARKERS_SUCCESS, FETCH_MARKERS_FAILURE} = FETCHES = makeAsyncActions('FETCH');
+const {UPDATE_MARKERS_DATA, UPDATE_MARKERS_SUCCESS, UPDATE_MARKERS_FAILURE} = UPDATES = makeAsyncActions('UPDATE');
+const {REMOVE_MARKERS_DATA, REMOVE_MARKERS_SUCCESS, REMOVE_MARKERS_FAILURE} = REMOVES = makeAsyncActions('REMOVE');
+const SELECT_MARKER = makeAction('SELECT_MARKER');
+const HOVER_MARKER = makeAction('HOVER_MARKER');
+// Export in actions object
+export const actions = R.flatten(R.map(R.values, [FETCHES, UPDATES, REMOVES, SELECT_MARKER, HOVER_MARKER]));
+// Define Action Handlers
+const {fetchMarkers, fetchMarkersData, fetchMarkersSuccess, fetchMarkersFailure} = makeAsyncActionHandlers('FETCH', fetchMarkersIO);
+const {updateMarkers, updateMarkersData, udpateMarkersSuccess, updateMarkersFailure} = makeAsyncActionHandlers('UPDATE', persistMarkers);
+const {removeMarkers, removeMarkersData, removeMarkersSuccess, removeMarkersFailure} = makeAsyncActionHandlers('REMOVE', removeMarkersIO);
+// Export all Action Handlers
+export {
+    fetchMarkers, fetchMarkersData, fetchMarkersSuccess, fetchMarkersFailure,
+    updateMarkers, updateMarkersData, udpateMarkersSuccess, updateMarkersFailure,
+    removeMarkers, removeMarkersData, removeMarkersSuccess, removeMarkersFailure};
 
-const SELECT_MARKER = actionId('SELECT_MARKER');
-const HOVER_MARKER = actionId('HOVER_MARKER');
-export const actions = R.flatten([FETCHES, UPDATES, REMOVES, SELECT_MARKER, HOVER_MARKER]);
 
-
-/***
- * Action to request the full state
- * @return {{type: string}}
- */
-const fetchMarkersData = () => ({ type: FETCH_MARKERS_DATA });
-
-/***
- * Action to process the successful response
- * @param body
- * @return {{type: string, body: *}}
- */
-const fetchMarkersSuccess = (body) => ({ type: FETCH_MARKERS_SUCCESS, body });
-
-/***
- * Asynchronous call to fetch marker data
- * @param {Object} options:
- * @param {String} regionName:
- * @param {[Number]} bounds
- * @return {function(*)}
- * fetchOsm:: <k,v> -> [a] -> d -> Task Error String
- */
-export const fetchMarkers = (options, regionName, bounds) => dispatch => {
-    dispatch(fetchMarkersData());
-    return fetchMarkersIO(
-        getDb(regionName), options, bounds).chain(response =>
-        Task.of(dispatch(fetchMarkersSuccess(response)))
-    )
-};
-
-/***
- * Action to process the failure response
- * @param ex
- * @return {{type: string, ex: *}}
- */
-export const fetchMarkerFailure = ex => ({ type: FETCH_MARKERS_FAILURE, ex });
-
-/***
- * Action to update the markers
- * @return {{type: string}}
- */
-const updateMarkersData = () => ({ type: UPDATE_MARKERS_DATA });
-
-/***
- * Action to process the successful markers update
- * @param body
- * @return {{type: string, body: *}}
- */
-const updateMarkersSuccess = (body) => ({ type: UPDATE_MARKERS_SUCCESS, body });
-
-/***
- * Asynchronous call to update MarkerList
- * @param {Object} options:
- * @param {Object} regionName
- * @param {[Feature]} markers: Features representing markers
- * @return {function(*)}
- * updateMarkers:: <k,v> -> d -> [f] Task Error String
- */
-export const updateMarkers = (options, regionName, markers) => dispatch => {
-    dispatch(updateMarkersData());
-    return persistMarkers(getDb(regionName), options, markers).map(response =>
-        dispatch(updateMarkersSuccess(response))
-    )
-};
-
-/***
- * Action to remove the markers
- * @return {{type: string}}
- */
-const removeMarkersData = () => ({ type: REMOVE_MARKERS_DATA });
-
-/***
- * Action to process the successful markers removal
- * @param body
- * @return {{type: string, body: *}}
- */
-const removeMarkersSuccess = body => ({ type: REMOVE_MARKERS_SUCCESS, body });
-
-/***
- * Asynchronous call to remove markers
- * @param {Object} options:
- * @param {String} regionName:
- * @param {[Feature]} markers: Optional Features representing markers or null to remove all
- * @return {function(*)}
- * updateMarkers:: <k,v> -> d -> [f] Task Error String
- */
-export const removeMarkers = (options, regionName, markers) => dispatch => {
-    dispatch(removeMarkersData());
-    return removeMarkersIO(getDb(regionName), options, markers).map(response =>
-        dispatch(removeMarkersSuccess(response))
-    );
-};
-
-export const removeMarkersFailure = ex => ({ type: REMOVE_MARKERS_FAILURE, ex });
-
-/***
- * Action to process the successful markers removal
- * @param info
- * @return {{type: string, body: *}}
- */
+// TODO not wired up
 export const selectMarker = info => ({ type: SELECT_MARKER, info });
-
-/***
- * Action to process the successful markers removal
- * @param info
- * @return {{type: string, body: *}}
- */
 export const hoverMarker = info => ({ type: HOVER_MARKER, info });
 
 export default (state = {}, action = {}) => {

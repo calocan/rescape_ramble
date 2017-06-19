@@ -28,17 +28,19 @@ describe('overpassHelpersUnmocked', () => {
         // Unmocked integration test
         const realBounds = [-118.24031352996826, 34.04298753935195, -118.21018695831297, 34.065209887879476];
         expectTask(
-            fetchTransit({realBounds}, realBounds).map(response => response.features.length)
-        ).resolves.toBeGreaterThan(500)
+            // We expect over 500 results. I'll leave it fuzzy in case the source dataset changes
+            fetchTransit({realBounds}, realBounds).map(response => response.features.length > 500)
+        ).resolves.toBe(true)
     });
     test('unmockedFetchTransitCelled', () => {
         const realBounds = [-118.24031352996826, 34.04298753935195, -118.21018695831297, 34.065209887879476];
         // Wrap the Task in a Promise for jest's sake
         return expectTask(
             fetchTransitCelled({cellSize: 2, bounds: realBounds, sleepBetweenCalls: 500}, realBounds).map(
-                response => response.features.length
+                 // We expect over 500 results. I'll leave it fuzzy in case the source dataset changes
+                response => response.features.length > 500
             )
-        ).resolves.toBeGreaterThan(500) // We expect over 500 results. I'll leave it fuzzy in case the source dataset changes
+        ).resolves.toBe(true)
     });
 });
 describe('overpassHelpers', () => {

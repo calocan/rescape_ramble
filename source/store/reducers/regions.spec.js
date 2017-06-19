@@ -22,7 +22,7 @@ describe('mabpox reducer', () => {
             reducer(
                 state.regions,
                 {
-                    type: geoJsonActions.FETCH_OSM_SUCCESS,
+                    type: geoJsonActions.FETCH_TRANSIT_SUCCESS,
                     value: {
                         'type': 'FeatureCollection',
                         'generator': 'overpass-turbo',
@@ -42,7 +42,7 @@ describe('mabpox reducer', () => {
             bearing: 0,
             isDragging: false,
             latitude: 5,
-            longitude:6,
+            longitude: 6,
             pitch: 40,
             startDragLngLat: null,
             zoom: 4

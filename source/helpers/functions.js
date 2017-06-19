@@ -189,7 +189,7 @@ export const capitalize = R.compose(
 /**
  * Merge a list of objects using the given concat function
  * [{k: v}] → {k: v}
- * (String → a → a → a) → [{a}] → {a}
+ * mergeAllWithKey:: (String → a → a → a) → [{a}] → {a}
  */
 export const mergeAllWithKey = R.curry((fn, [head, ...rest]) =>
     R.mergeWithKey(                     // call mergeWithKey on two objects at a time

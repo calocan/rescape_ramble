@@ -28,15 +28,12 @@ class Region extends React.Component {
             !(R.equals(...R.map(getRegionId, [this.props, nextProps]))) || // Region changed
             !getPath(['region', 'geojson', 'osm', 'requested'], nextProps) // or geojson not yet requested
         ) {
-            // TODO query_overpass is currently broken
-            if (false) {
-                this.props.fetchOsm(nextProps.settings.overpass, nextProps.region.geospatial.bounds).fork(
-                    error => this.props.fetchOsmFailure(error),
-                    osm => {
-                        // osm was set in store by action
-                    }
-                );
-            }
+            this.props.fetchTransit(nextProps.settings.overpass, nextProps.region.geospatial.bounds).fork(
+                error => this.props.fetchTransitFailure(error),
+                osm => {
+                    // osm was set in store by action
+                }
+            );
         }
         if (
             !(R.equals(...R.map(getRegionId, [this.props, nextProps]))) || // Region changed

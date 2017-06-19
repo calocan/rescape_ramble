@@ -11,8 +11,7 @@
 import testConfig from 'store/data/test/config';
 import initialState from 'store/data/initialState';
 import configureStore from 'redux-mock-store';
-import {fetchOsm} from 'store/reducers/geojson/openStreetMaps';
-import {actions} from 'store/reducers/geojson/geojsons';
+import {fetchTransit, actions } from 'store/reducers/geojson/openStreetMaps';
 import thunk from 'redux-thunk';
 import {expectTask} from 'helpers/jestHelpers';
 const middlewares = [thunk];
@@ -23,12 +22,12 @@ describe('geojson reducer', () => {
         const bounds = require('query-overpass').LA_BOUNDS;
         const store = mockStore(initialState(testConfig));
         const expectedActions = [
-            { type: actions.FETCH_OSM_DATA },
-            { type: actions.FETCH_OSM_SUCCESS, body: require('queryOverpassResponse').LA_SAMPLE}
+            { type: actions.FETCH_TRANSIT_DATA },
+            { type: actions.FETCH_TRANSIT_SUCCESS, body: require('queryOverpassResponse').LA_SAMPLE}
         ];
 
         // Pass bounds in the options. Our mock query-overpass uses is to avoid parsing the query
-        expectTask(store.dispatch(fetchOsm(
+        expectTask(store.dispatch(fetchTransit(
             {cellSize: store.getState().settings.overpass.cellSize, testBounds: bounds},
             bounds
         )).map(() => store.getActions())).resolves.toEqual(expectedActions)

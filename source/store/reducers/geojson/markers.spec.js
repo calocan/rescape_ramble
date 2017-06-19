@@ -23,8 +23,6 @@ const middlewares = [thunk];
 const mockStore = configureStore(middlewares);
 const toObjectKeyedById = mapPropValueAsIndex('id');
 
-jest.unmock('query-overpass');
-const DB_PATH = '__tests__/geojson/'
 describe('markers reducer', () => {
     const state = initialState(testConfig)
     it('should fetch markers', () => {
@@ -59,8 +57,8 @@ describe('markers reducer', () => {
                 {testBounds: bounds},
                 state.regions.currentKey))
                 .chain(response => store.dispatch(updateMarkers(
-                    {testBounds: bounds},
                     state.regions.currentKey,
+                    {testBounds: bounds},
                     markersSample.features)))
                 .map(() => {
                     console.log('Finished updateMarkers')

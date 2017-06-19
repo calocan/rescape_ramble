@@ -15,15 +15,18 @@ import Rx from 'rxjs';
 import squareGrid from '@turf/square-grid';
 import bbox from '@turf/bbox';
 import {mergeAllWithKey, removeDuplicateObjectsByProp} from 'helpers/functions';
+import {getDb} from "./pouchDb";
 
 /***
  * fetches transit data from OpenStreetMap using the Overpass API.
- * @param {Object} options Currently ununused. Options to pass to query-overpass, plus the following
+ * @param {String} The key of the region, used for database scope
+ * @param {Object} options Currently unused. Options to pass to query-overpass, plus the following
  * @param {Object} options.testBounds Used only for testing
  * @param {Array} bounds Currently unusued [lat_min, lon_min, lat_max, lon_max]
  */
-export const fetchMarkers = (db, options, bounds) => {
+export const fetchMarkers = (regionKey, options, bounds) => {
     return new Task(function(reject, resolve) {
+        const db = getDb(regionKey)
         console.log('Fetching records')
         db.allDocs({include_docs: true, descending: true}, function(err, doc) {
             if (!err) {
@@ -40,13 +43,14 @@ export const fetchMarkers = (db, options, bounds) => {
 
 /***
  * Removes the given markers or all markers if markers is null
- * @param db
+ * @param {String} regionKey
  * @param options
  * @param markers
  * @returns {*|Task}
  */
-export const removeMarkers = (db, options, markers) => {
+export const removeMarkers = (regionKey, options, markers) => {
     return new Task((reject, resolve) => {
+        const db = getDb(regionKey)
         // Get all markers or just those specified
         db.allDocs(markers ? { keys: R.map(R.prop('id'), markers) } : {}).then(function (result) {
             // Promise isn't supported by all browsers; you may want to use bluebird
@@ -64,26 +68,27 @@ export const removeMarkers = (db, options, markers) => {
 
 /***
  * Remove the given marker
- * @param db
+ * @param {String} regionKey
  * @param options Reserved for future use
  * @param marker Geojson feature representing the marker to delete
  */
-export function removeMarker(db, options, marker) {
-    removeMarkers(db, options, [marker])
+export function removeMarker(regionKey, options, marker) {
+    removeMarkers(regionKey, options, [marker])
 }
 
 /***
  * Persists a list of features that represent markers
- * @param {Object} db
+ * @param {String} regionKey
  * @param {Object} options Currently unused, reserved for future use
  * @param {Array} features Geojson features
  * @returns {Task} A Task that when forked executes the persistence
  */
-export const persistMarkers = (db, options, features) => {
+export const persistMarkers = (regionKey, options, features) => {
     const dateLens = R.lensProp('date');
     const _idLens = R.lensProp('_id');
     const featureIdLens = R.lensPath(['properties', '@id']);
     return new Task(function(reject, resolve) {
+        const db = getDb(regionKey)
         // Function that writes features to document store
         const writeFeature$ = feature => Rx.Observable.of(feature)
             .timestamp()
@@ -108,7 +113,7 @@ export const persistMarkers = (db, options, features) => {
                     resolve(features);
                 }
             );
-    }).chain(() => fetchMarkers(db, options, null))
+    }).chain(() => fetchMarkers(regionKey, options, null))
 };
 
 /***
@@ -126,7 +131,7 @@ export const persistMarkers = (db, options, features) => {
  * @param {Array} bounds [lat_min, lon_min, lat_max, lon_max]
  *
  */
-export const fetchMarkersCelled = (db, {name, cellSize = 1, sleepBetweenCalls, testBounds}, bounds) => {
+export const fetchMarkersCelled = (regionKey, {name, cellSize = 1, sleepBetweenCalls, testBounds}, bounds) => {
     const units = 'kilometers';
     // Use turf's squareGrid function to break up the bbox by cellSize squares
     const squares = R.map(
@@ -134,7 +139,7 @@ export const fetchMarkersCelled = (db, {name, cellSize = 1, sleepBetweenCalls, t
         squareGrid(bounds, cellSize, units).features);
 
     // fetchTasks :: Array (Task Object)
-    const fetchTasks = R.map(fetchMarkers({name, sleepBetweenCalls, testBounds}), squares);
+    const fetchTasks = R.map(fetchMarkers(regionKey, {name, sleepBetweenCalls, testBounds}), squares);
     // chainedTasks :: Array (Task Object) -> Task.chain(Task).chain(Task)...
     // We want each request to overpass to run after the previous is finished,
     // so as to not exceed the permitted request rate. Chain the tasks and reduce
