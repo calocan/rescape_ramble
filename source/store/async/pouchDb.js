@@ -8,8 +8,8 @@
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import PouchDB from 'pouchb'
-import Task from 'db.task'
+import PouchDB from 'pouchdb'
+import Task from 'data.task'
 
 // A reference to our PouchDb instances keyed by region name
 const dbs = {};
@@ -70,10 +70,10 @@ export const createDb = regionName => {
 export const startSync = (db, regionName) => {
     syncs[regionName] = sync({db, remoteUrl: createRemoteUrl(regionName)});
     return syncs[regionName]
-}
+};
 export const stopSync = (regionName) => {
     syncs[regionName].cancel()
-}
+};
 export const getDb = regionName => {
     return dbs[regionName]
-}
+};

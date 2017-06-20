@@ -12,13 +12,13 @@
 import Task from 'data.task'
 import R from 'ramda'
 import {fetchTransitCelled} from 'store/async/overpassIO'
-import {asyncActionIds, asyncActionHandlers} from 'store/reducers/reducerHelpers'
+import {asyncActions, asyncActionHandlers} from 'store/reducers/reducerHelpers'
 
 const scope = 'openStreetMaps';
 const action = 'transit';
 const makeAsyncActionHandlers = asyncActionHandlers(scope, action);
 let FETCHES;
-const {FETCH_TRANSIT, FETCH_TRANSIT_DATA, FETCH_TRANSIT_SUCCESS, FETCH_TRANSIT_FAILURE} = FETCHES = asyncActionIds(scope, action, 'FETCH');
+const {FETCH_TRANSIT, FETCH_TRANSIT_DATA, FETCH_TRANSIT_SUCCESS, FETCH_TRANSIT_FAILURE} = FETCHES = asyncActions(scope, action, 'FETCH');
 export const actions = [FETCHES];
 const {fetchTransit, fetchTransitData, fetchTransitSuccess, fetchTransitFailure} = makeAsyncActionHandlers('FETCH', fetchTransitCelled);
 export { fetchTransit, fetchTransitData, fetchTransitSuccess, fetchTransitFailure }

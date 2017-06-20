@@ -12,6 +12,7 @@
 import {fetchTransit, fetchTransitCelled} from './overpassIO';
 import {removeDuplicateObjectsByProp} from 'helpers/functions'
 import {expectTask} from 'helpers/jestHelpers'
+import jasmine from 'jasmine'
 
 // TODO use .resolves for all async tests whenever Jest 20 comes out, assuming it works with fork
 
@@ -23,7 +24,7 @@ describe('overpassHelpersUnmocked', () => {
     if (mock) {
         return
     }
-    window.jasmine.DEFAULT_TIMEOUT_INTERVAL = 100000000
+    jasmine.DEFAULT_TIMEOUT_INTERVAL = 100000000
     test('unmockedFetchTransit', () => {
         // Unmocked integration test
         const realBounds = [-118.24031352996826, 34.04298753935195, -118.21018695831297, 34.065209887879476];

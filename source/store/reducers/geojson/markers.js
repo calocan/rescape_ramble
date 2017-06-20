@@ -10,11 +10,11 @@
  */
 import R from 'ramda'
 import {persistMarkers, fetchMarkers as fetchMarkersIO, removeMarkers as removeMarkersIO} from 'store/async/markerIO'
-import {actionId, asyncActionIds, asyncActionHandlers} from 'store/reducers/reducerHelpers'
+import {actionId, asyncActions, asyncActionHandlers} from 'store/reducers/reducerHelpers'
 
 const SCOPE = 'geojson';
 const ACTION = 'markers';
-const makeAsyncActions = asyncActionIds(SCOPE, ACTION);
+const makeAsyncActions = asyncActions(SCOPE, ACTION);
 const makeAction = actionId(SCOPE);
 const makeAsyncActionHandlers = asyncActionHandlers(SCOPE, ACTION);
 

@@ -9,18 +9,18 @@
  * THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 import testConfig from 'store/data/test/config';
-import initialState from 'store/data/initialState';
 import configureStore from 'redux-mock-store';
 import {fetchTransit, actions } from 'store/reducers/geojson/openStreetMaps';
 import thunk from 'redux-thunk';
-import {expectTask} from 'helpers/jestHelpers';
+import {expectTask, testState} from 'helpers/jestHelpers';
 const middlewares = [thunk];
 const mockStore = configureStore(middlewares);
+const state = testState()
 
 describe('geojson reducer', () => {
     it('should fetch osm', () => {
         const bounds = require('query-overpass').LA_BOUNDS;
-        const store = mockStore(initialState(testConfig));
+        const store = mockStore(state);
         const expectedActions = [
             { type: actions.FETCH_TRANSIT_DATA },
             { type: actions.FETCH_TRANSIT_SUCCESS, body: require('queryOverpassResponse').LA_SAMPLE}

@@ -9,6 +9,8 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 import {taskToPromise} from './functions'
+import testConfig from 'store/data/test/config';
+import initialState from 'store/data/initialState';
 
 /***
  * Given a task, wraps it in promise and passes it to Jest's expect.
@@ -16,4 +18,11 @@ import {taskToPromise} from './functions'
  * expectTask(task).resolves|rejects
  * @param {Task} task: wrapped in a Promise and forked
  */
-export const expectTask = task => expect(taskToPromise(task))
+export const expectTask = task => expect(taskToPromise(task));
+
+/***
+ * Create an initial test state based on the testConfig for tests to use.
+ * This should only be used for sample configuration, unless store functionality is being tested
+ */
+export const testState = () => initialState(testConfig);
+

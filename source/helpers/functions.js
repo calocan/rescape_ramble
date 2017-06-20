@@ -227,11 +227,17 @@ export const taskToPromise = task => {
     if (!task.fork) {
         throw new TypeError(`Expected a Task, got ${typeof task}`);
     }
-    return new Promise((res, rej) => {
-        task.fork(reject=>{
-                console.error(reject.message)
-                return rej
-            }, ()=>res
+    return new Promise((res, rej) =>
+        task.fork(
+            reject => rej,
+            () => res
         )
-    });
+    );
 };
+
+/***
+ * From the cookbook: https://github.com/ramda/ramda/wiki/Cookbook#map-keys-of-an-object
+ * mapKeys :: (String -> String) -> Object -> Object
+*/
+export const mapKeys = R.curry((fn, obj) =>
+    R.fromPairs(R.map(R.adjust(fn, 0), R.toPairs(obj))));

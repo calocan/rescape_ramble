@@ -39,7 +39,7 @@ describe('markerHelpers', () => {
 
         // Populate the db
         expectTask(
-            persistMarkers(db, options, geojson.features)
+            persistMarkers(regionKey, options, geojson.features)
         ).resolves.toEqual(geojson.features);
     });
 

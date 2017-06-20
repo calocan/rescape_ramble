@@ -69,7 +69,12 @@ class MarkerList extends React.Component {
                 <div style={styles.instructionsLabel}>Choose a location and enter a name. Press enter on the name to submit</div>
                 <div className='add-marker-container' style={styles.addMarkerContainer}>
                     <div className='geocoder-container' style={styles.geocoderContainer} >
-                        <Geocode onSelect={this.onSelect} search={this.props.searchLocation} searchFailure={this.props.searchLocationFailure} accessToken={this.props.accessToken} />
+                        <Geocode
+                            onSelect={this.onSelect}
+                            search={this.props.searchLocation}
+                            searchFailure={this.props.searchLocationFailure}
+                            accessToken={this.props.accessToken}
+                        />
                     </div>
                     <div className='add-marker-item-container' style={styles.addItemContainer} >
                         <AddMarkerItem
