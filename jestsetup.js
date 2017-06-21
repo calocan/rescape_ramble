@@ -18,3 +18,7 @@ global.mount = mount;
 console.error = message => {
     throw new Error(message);
 };
+// https://github.com/facebook/jest/issues/3251
+process.on('unhandledRejection', (reason) => {
+    console.log('Unhandled Promise', reason)
+})

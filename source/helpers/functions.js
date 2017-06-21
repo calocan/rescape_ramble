@@ -10,6 +10,8 @@
  */
 import {fromJS, Iterable} from 'immutable';
 import R from 'ramda';
+import prettyFormat from 'pretty-format'
+import Task from 'data.task'
 
 /***
  * Return an empty string if the given entity is falsy
@@ -219,20 +221,44 @@ export const copy = R.compose(toJS, toImmutable);
 
 /***
  * Wraps a Task in a Promise.
- * For the other direction use the module promise-to-task
- * @param task
+ * @param {Task} task
+ * @param {boolean} expectReject Set true for testing when a rejection is expected
  * @return {Promise}
  */
-export const taskToPromise = task => {
+export const taskToPromise = (task, expectReject = false) => {
     if (!task.fork) {
         throw new TypeError(`Expected a Task, got ${typeof task}`);
     }
     return new Promise((res, rej) =>
         task.fork(
-            reject => rej,
-            () => res
+            reject => {
+                if (!expectReject) {
+                    console.log('Unhandled Promise', prettyFormat(reject))
+                    console.log(reject.stack)
+                }
+                return rej(reject);
+            },
+            resolve => res(resolve)
         )
     );
+};
+
+/***
+ * Wraps a Promise in a Task
+ * @param {Promise} promise
+ * @param {boolean} expectReject default false. Set true for testing to avoid logging rejects
+ */
+export const promiseToTask = (promise, expectReject = false) => {
+    if (!promise.then) {
+        throw new TypeError(`Expected a Promise, got ${typeof promise}`);
+    }
+    return new Task((rej, res) => promise.then(res).catch(reject => {
+        if (!expectReject) {
+            console.log('Unhandled Promise', prettyFormat(reject))
+            console.log(reject.stack)
+        }
+        return rej(reject);
+    }))
 };
 
 /***

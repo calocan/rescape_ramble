@@ -16,15 +16,35 @@ import {mergeAllWithKey, removeDuplicateObjectsByProp} from 'helpers/functions';
 import os from 'os';
 import squareGrid from '@turf/square-grid';
 import bbox from '@turf/bbox';
-import {concatFeatures} from '../../helpers/geojsonHelpers'
+import {concatFeatures} from 'helpers/geojsonHelpers'
+import {createLocalDb} from "./pouchDbIO";
+import {taskToPromise} from "../../helpers/functions";
+
+export const getLocalTransitOrFetch =  R.curry((options, dbName, regionName, bounds) => {
+    new Task((reject, response) => {
+        const db = createLocalDb(dbName);
+        db.find({
+            selector: {regionName: regionName},
+            fields: ['_id', 'regionName', 'gtfs']
+        })
+    }).chain(result => {
+        return result.docs.length === 1 ?
+            Task.of(R.head(result.docs).gtfs) :
+            fetchTransit(options, bounds);
+    });
+});
 
 /***
  * fetches transit data from OpenStreetMap using the Overpass API.
  * @param {Object} options Options to pass to query-overpass, plus the following:
  * @param {Object} options.testBounds Used only for testing
+ * @param {Object} options.cellSize If specified delegates to fetchTransitCelled
  * @param {Array} bounds [lat_min, lon_min, lat_max, lon_max]
  */
 export const fetchTransit = R.curry((options, bounds) => {
+    if (options.cellSize)
+        return fetchTransitCelled(options, bounds);
+
     const boundsAsString = R.pipe(
         list=>R.concat(
             R.reverse(R.slice(0, 2)(list)),

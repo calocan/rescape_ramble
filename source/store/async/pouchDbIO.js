@@ -10,51 +10,96 @@
  */
 import PouchDB from 'pouchdb'
 import Task from 'data.task'
+import prettyFormat from 'pretty-format'
 
 // A reference to our PouchDb instances keyed by region name
 const dbs = {};
 const syncs = {};
 PouchDB.plugin(require('pouchdb-erase'));
 
+
+/***
+ * Creates a local database synchronously. The database is cached so that getDb can access it
+ * @param name
+ * @returns {*}
+ */
+export const createLocalDb = name => {
+    dbs[name] = new PouchDB(name);
+    return dbs[name];
+};
+
 /***
  * Returns the remote URL for the given database
  * @param name
  */
-export const createRemoteUrl = name => `http://localhost:5984/${name}`;
+export const createRemoteUrl = name => `http://localhost:5984/${name}/`;
 
+/***
+ * Creates a remote database in a Task
+ * @param remoteUrl
+ * @returns {Task}
+ * createRemoteDb:: String -> Task {"error":"not_found","reason":"no_db_file"} PouchDb
+ */
+export const createRemoteDb = remoteUrl => {
+    return new Task((reject, response) => {
+        const db = dbs[remoteUrl] = new PouchDB(remoteUrl);
+        if (db.error) {
+            // Reject is {"error":"not_found","reason":"no_db_file"}
+            reject(db);
+        }
+        else {
+            // info Response contains {"doc_count":0,"update_seq":0,"db_name":"kittens"} and other fields:w
+            db.info().then(response(db)).catch(reject);
+        }
+    })
+};
+
+/***
+ * Sync a local database with a remote database at the given url.
+ * If the remote database does not exist it is created.
+ * @param db
+ * @param remoteUrl
+ */
 export const sync = ({db, remoteUrl}) => {
     return PouchDB.sync(db, remoteUrl, {
         live: true,
         retry: true
-    }).on('change', function (info) {
+    })
+}
+
+/***
+ * Add logging to all sync handlers
+ * @param sync
+ */
+export const logSync = sync =>
+    sync.on('change', function (info) {
         // handle change
-        console.info(`Sync Changed: ${info}`);
+        console.info(`Sync Changed: ${prettyFormat(info)}`);
     }).on('paused', function (err) {
         // replication paused (e.g. replication up to date, user went offline)
-        console.warn(`Sync Paused: ${err}`);
+        console.warn(`Sync Paused: ${prettyFormat(err)}`);
     }).on('active', function () {
         // replicate resumed (e.g. new changes replicating, user went back online)
         console.info('Sync Active');
     }).on('denied', function (err) {
         // a document failed to replicate (e.g. due to permissions)
-        console.warn(`Sync Denied: ${err}`);
+        console.warn(`Sync Denied: ${prettyFormat(err)}`);
     }).on('complete', function (info) {
         // handle complete
-        console.info(`Sync Completed: ${info}`);
+        console.info(`Sync Completed: ${prettyFormat(info)}`);
     }).on('error', function (err) {
-        console.warn(`Sync Erred: ${err}`);
+        console.warn(`Sync Erred: ${prettyFormat(err)}`);
         // handle error
     });
-}
 
 /***
- * Destroy the given database
- * @param dbName
+ * Destroy the given database, either local or remote
+ * @param dbNameOrUrl
  * @returns {Task}
  */
-export function destroy(dbName) {
+export function destroy(dbNameOrUrl) {
     return new Task((reject, resolve) => {
-        new PouchDB(dbName).destroy().then(function () {
+        (dbs[dbNameOrUrl] || new PouchDB(dbNameOrUrl)).destroy().then(function () {
             resolve()
         }).catch(function () {
             reject()
@@ -62,18 +107,21 @@ export function destroy(dbName) {
     });
 }
 
-export const createDb = regionName => {
-    const name = regionName;
-    dbs[regionName] = new PouchDB(name);
-    return dbs[regionName];
+
+export const startSync = (db, remoteUrl) => {
+    syncs[remoteUrl] = sync({db, remoteUrl});
+    return syncs[remoteUrl]
 };
-export const startSync = (db, regionName) => {
-    syncs[regionName] = sync({db, remoteUrl: createRemoteUrl(regionName)});
-    return syncs[regionName]
+
+export const stopSync = (remoteUrl) => {
+    syncs[remoteUrl].cancel()
 };
-export const stopSync = (regionName) => {
-    syncs[regionName].cancel()
-};
-export const getDb = regionName => {
-    return dbs[regionName]
+
+/***
+ * Returns cached local and remote PouchDb instances
+ * @param nameOrUrl
+ * @returns {*}
+ */
+export const getDb = nameOrUrl => {
+    return dbs[nameOrUrl]
 };

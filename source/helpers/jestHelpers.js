@@ -19,6 +19,11 @@ import initialState from 'store/data/initialState';
  * @param {Task} task: wrapped in a Promise and forked
  */
 export const expectTask = task => expect(taskToPromise(task));
+/***
+ * Same as expectTask but expects a rejects so diables debugging
+ * @param task
+ */
+export const expectTaskRejected = task => expect(taskToPromise(task, true));
 
 /***
  * Create an initial test state based on the testConfig for tests to use.
