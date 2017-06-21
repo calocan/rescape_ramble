@@ -234,7 +234,7 @@ export const taskToPromise = (task, expectReject = false) => {
             reject => {
                 if (!expectReject) {
                     console.log('Unhandled Promise', prettyFormat(reject))
-                    if (reject.stack)
+                    if (reject && reject.stack)
                         console.log(reject.stack)
                 }
                 return rej(reject);

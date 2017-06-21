@@ -19,20 +19,6 @@ import bbox from '@turf/bbox';
 import {concatFeatures} from 'helpers/geojsonHelpers'
 import {createLocalDb} from "./pouchDbIO";
 
-export const getLocalTransitOrFetch =  R.curry((options, dbName, regionName, bounds) => {
-    new Task((reject, response) => {
-        const db = createLocalDb(dbName);
-        db.find({
-            selector: {regionName: regionName},
-            fields: ['_id', 'regionName', 'gtfs']
-        })
-    }).chain(result => {
-        return result.docs.length === 1 ?
-            Task.of(R.head(result.docs).gtfs) :
-            fetchTransit(options, bounds);
-    });
-});
-
 /***
  * fetches transit data from OpenStreetMap using the Overpass API.
  * @param {Object} options Options to pass to query-overpass, plus the following:

@@ -12,19 +12,29 @@
 import {fetchTransit} from './overpassIO';
 import {removeDuplicateObjectsByProp} from 'helpers/functions'
 import {expectTask} from 'helpers/jestHelpers'
-import jasmine from 'jasmine'
+import {retrieveOrFetch} from "./storageIO";
+import {createLocalDb, cycleLocalDb, getDb} from "./pouchDbIO";
+import * as fs from 'fs';
+import {promiseToTask} from "../../helpers/functions";
+
+const name = 'overpass_io_spec';
+const PATH = `${__dirname}/__databases__/`;
+const DB = `${PATH}${name}`;
+if (!fs.existsSync(PATH))
+    fs.mkdirSync(PATH);
 
 // TODO use .resolves for all async tests whenever Jest 20 comes out, assuming it works with fork
-
-// Comment/Uncomment. Must be at top level
-const mock = false
+let mock;
 jest.unmock('query-overpass')
+// Comment/Uncomment. Must be at top level
+mock = false
+jasmine.DEFAULT_TIMEOUT_INTERVAL = 100000000
+
 // requires are used below since the jest includes aren't available at compile time
 describe('overpassHelpersUnmocked', () => {
     if (mock) {
         return
     }
-    jasmine.DEFAULT_TIMEOUT_INTERVAL = 100000000
     test('unmockedFetchTransit', () => {
         // Unmocked integration test
         const realBounds = [-118.24031352996826, 34.04298753935195, -118.21018695831297, 34.065209887879476];
@@ -37,12 +47,31 @@ describe('overpassHelpersUnmocked', () => {
         const realBounds = [-118.24031352996826, 34.04298753935195, -118.21018695831297, 34.065209887879476];
         // Wrap the Task in a Promise for jest's sake
         return expectTask(
-            fetchTransit({cellSize: 2, bounds: realBounds, sleepBetweenCalls: 500}, realBounds).map(
+            fetchTransit({cellSize: 2, bounds: realBounds, sleepBetweenCalls: 1000}, realBounds).map(
                  // We expect over 500 results. I'll leave it fuzzy in case the source dataset changes
                 response => response.features.length > 500
             )
         ).resolves.toBe(true)
     });
+    test('store fetch', () => {
+        // Unmocked integration test. Store the value in the local database
+        const realBounds = [-118.24031352996826, 34.04298753935195, -118.21018695831297, 34.065209887879476];
+        expectTask(
+            cycleLocalDb(DB)
+                .chain(db => {
+                    return retrieveOrFetch(
+                        fetchTransit({realBounds}, realBounds),
+                        db,
+                        'somewhere');
+                })
+                .chain(() => {
+                    return promiseToTask(getDb(DB).fetch('somewhere'))
+                })
+                .map(response => {
+                    return response.features.length > 500
+                })
+        ).resolves.toBe(true)
+    })
 });
 describe('overpassHelpers', () => {
     if (!mock) {
