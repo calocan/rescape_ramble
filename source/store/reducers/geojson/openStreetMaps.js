@@ -9,9 +9,8 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import Task from 'data.task'
 import R from 'ramda'
-import {fetchTransitCelled} from 'store/async/overpassIO'
+import {fetchTransitIO} from 'store/async/overpassIO'
 import {asyncActions, asyncActionHandlers} from 'store/reducers/reducerHelpers'
 
 const scope = 'openStreetMaps';
@@ -20,7 +19,7 @@ const makeAsyncActionHandlers = asyncActionHandlers(scope, action);
 let FETCHES;
 const {FETCH_TRANSIT, FETCH_TRANSIT_DATA, FETCH_TRANSIT_SUCCESS, FETCH_TRANSIT_FAILURE} = FETCHES = asyncActions(scope, action, 'FETCH');
 export const actions = [FETCHES];
-const {fetchTransit, fetchTransitData, fetchTransitSuccess, fetchTransitFailure} = makeAsyncActionHandlers('FETCH', fetchTransitCelled);
+const {fetchTransit, fetchTransitData, fetchTransitSuccess, fetchTransitFailure} = makeAsyncActionHandlers('FETCH', fetchTransitIO);
 export { fetchTransit, fetchTransitData, fetchTransitSuccess, fetchTransitFailure }
 
 export default (state = {}, action = {}) => {

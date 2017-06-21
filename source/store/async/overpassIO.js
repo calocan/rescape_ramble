@@ -18,7 +18,6 @@ import squareGrid from '@turf/square-grid';
 import bbox from '@turf/bbox';
 import {concatFeatures} from 'helpers/geojsonHelpers'
 import {createLocalDb} from "./pouchDbIO";
-import {taskToPromise} from "../../helpers/functions";
 
 export const getLocalTransitOrFetch =  R.curry((options, dbName, regionName, bounds) => {
     new Task((reject, response) => {
@@ -89,7 +88,7 @@ export const fetchTransit = R.curry((options, bounds) => {
 
 /***
  * fetches transit data in squares sequentially from OpenStreetMap using the Overpass API.
- * Concurrent calls were triggering API limits.
+ * (concurrent calls were triggering API throttle limits)
  * @param {Number} cellSize Splits query-overpass into separate requests, by splitting
  * the bounding box by the number of kilometers specified here. Example, if 200 is specified,
  * 200 by 200km bounding boxes will be created and sent to query-overpass. Any remainder will
@@ -102,7 +101,7 @@ export const fetchTransit = R.curry((options, bounds) => {
  * @param {Array} bounds [lat_min, lon_min, lat_max, lon_max]
  *
  */
-export const fetchTransitCelled = ({cellSize = 1, sleepBetweenCalls, testBounds}, bounds) => {
+const fetchTransitCelled = ({cellSize = 1, sleepBetweenCalls, testBounds}, bounds) => {
     const units = 'kilometers';
     // Use turf's squareGrid function to break up the bbox by cellSize squares
     const squares = R.map(

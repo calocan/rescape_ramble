@@ -9,7 +9,7 @@
  * THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import {fetchTransit, fetchTransitCelled} from './overpassIO';
+import {fetchTransit} from './overpassIO';
 import {removeDuplicateObjectsByProp} from 'helpers/functions'
 import {expectTask} from 'helpers/jestHelpers'
 import jasmine from 'jasmine'
@@ -37,7 +37,7 @@ describe('overpassHelpersUnmocked', () => {
         const realBounds = [-118.24031352996826, 34.04298753935195, -118.21018695831297, 34.065209887879476];
         // Wrap the Task in a Promise for jest's sake
         return expectTask(
-            fetchTransitCelled({cellSize: 2, bounds: realBounds, sleepBetweenCalls: 500}, realBounds).map(
+            fetchTransit({cellSize: 2, bounds: realBounds, sleepBetweenCalls: 500}, realBounds).map(
                  // We expect over 500 results. I'll leave it fuzzy in case the source dataset changes
                 response => response.features.length > 500
             )
@@ -58,7 +58,7 @@ describe('overpassHelpers', () => {
 
     test('fetchTransit in cells', () => {
         expectTask(
-            fetchTransitCelled({cellSize: 200, testBounds: bounds}, bounds).map(response => response.features)
+            fetchTransit({cellSize: 200, testBounds: bounds}, bounds).map(response => response.features)
         ).resolves.toEqual(
             // the sample can have duplicate ids
             removeDuplicateObjectsByProp('id', require('queryOverpassResponse').LA_SAMPLE.features)

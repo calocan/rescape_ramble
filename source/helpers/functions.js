@@ -234,7 +234,8 @@ export const taskToPromise = (task, expectReject = false) => {
             reject => {
                 if (!expectReject) {
                     console.log('Unhandled Promise', prettyFormat(reject))
-                    console.log(reject.stack)
+                    if (reject.stack)
+                        console.log(reject.stack)
                 }
                 return rej(reject);
             },
@@ -254,8 +255,8 @@ export const promiseToTask = (promise, expectReject = false) => {
     }
     return new Task((rej, res) => promise.then(res).catch(reject => {
         if (!expectReject) {
-            console.log('Unhandled Promise', prettyFormat(reject))
-            console.log(reject.stack)
+            console.warn('Unhandled Promise', prettyFormat(reject))
+            console.warn(reject.stack)
         }
         return rej(reject);
     }))

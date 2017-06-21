@@ -29,6 +29,17 @@ export const createLocalDb = name => {
 };
 
 /***
+ * Task to Create, destroy, and recreate the given local database. Used for tests
+ * @param {String} name The name of the local database to cycle
+ * @returns {Task} A Task what responds with the PouchDb
+ * cycleLocalDb:: String -> Task Error PouchDb
+ */
+export const cycleLocalDb = name => {
+    createLocalDb(name);
+    return destroy(name).map(() => createLocalDb(name));
+};
+
+/***
  * Returns the remote URL for the given database
  * @param name
  */

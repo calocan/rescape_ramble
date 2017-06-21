@@ -128,6 +128,7 @@
     "query-overpass": "^1.5.0",
     "ramda": "^0.24.1",
     "ramda-fantasy": "^0.8.0",
+    "ramda-maybe": "^0.18.0",
     "rbush": "^2.0.1",
     "react": "^15.5.4",
     "react-autobind": "^1.0.6",
