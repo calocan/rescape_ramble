@@ -15,9 +15,10 @@
 import 'babel-polyfill';
 import thunk from 'redux-thunk';
 import {applyMiddleware, compose, createStore} from 'redux';
-import {createCycleMiddleware} from 'redux-cycles';
+//import {createCycleMiddleware} from 'redux-cycles';
 import reducer from './store/reducers/reducer';
 import {persistentStore} from 'redux-pouchdb-plus';
+import {responsiveStoreEnhancer} from 'redux-responsive'
 import PouchDB from 'pouchdb';
 import R from 'ramda';
 const db = new PouchDB('default');
@@ -46,17 +47,18 @@ function main(sources) {
     }
 }
 
-const cycleMiddleware = createCycleMiddleware();
-const { makeActionDriver } = cycleMiddleware;
+//const cycleMiddleware = createCycleMiddleware();
+//const { makeActionDriver } = cycleMiddleware;
 
 // Use thunk and the persistentStore, the latter applies couchDB persistence to the store
 const applyMiddlewares = applyMiddleware(
     thunk,
-    applyMiddleware(cycleMiddleware),
+    //cycleMiddleware,
     ...environmentMiddlewares
 );
 
 const createStoreWithMiddleware = compose(
+    responsiveStoreEnhancer,
     applyMiddlewares,
     // Use the Chrome devToolsExtension
     typeof (window) !== 'undefined' && window.devToolsExtension ? window.devToolsExtension() : f => f,

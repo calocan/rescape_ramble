@@ -19,44 +19,18 @@ import React from 'react'
  * This might also be modified to display all available regions, perhaps on a continental map
  */
 class Current extends React.Component {
-
-        /***
-         * Updates the width and height property to match the window
-         */
-        updateDimensions() {
-            const w = window,
-                d = document,
-                documentElement = d.documentElement,
-                body = d.getElementsByTagName('body')[0],
-                width = styles.container.width * (w.innerWidth || documentElement.clientWidth || body.clientWidth),
-                height = styles.container.height * (w.innerHeight || documentElement.clientHeight || body.clientHeight);
-
-            this.setState({width, height});
-        }
-
-        componentWillMount() {
-            this.updateDimensions();
-        }
-
-        componentDidMount() {
-            window.addEventListener('resize', this.updateDimensions);
-        }
-
-        componentWillUnmount() {
-            window.removeEventListener('resize', this.updateDimensions);
-        }
-
-        render() {
-            // Pass the absolute width and height to give to the Mapbox viewport
-            return <div className='current'>
-                <Region region={this.props.region} style={{width: this.state.width, height: this.state.height}}/>
-            </div>
-        }
+    render() {
+        // Pass the absolute width and height to give to the Mapbox viewport
+        return <div className='current'>
+            <Region region={this.props.region} style={{width: this.props.style.width, height: this.props.style.height}}/>
+        </div>
+    }
 }
 
 const {
     string, object, number, func
 } = PropTypes;
+
 /***
  * Expect the current region
  * @type {{region: *}}
@@ -64,4 +38,5 @@ const {
 Current.propTypes = {
     region: object.isRequired,
 };
+
 export default Current;

@@ -12,7 +12,7 @@
 import {connect} from 'react-redux';
 import MarkerList from './MarkerList';
 import R from 'ramda';
-import * as geojsonActions from 'store/reducers/geojson/geojson';
+import {action as geojsonActions} from 'store/reducers/geojson/geojsons';
 
 /***
  * Merges state.mapbox with ownProps, but raises level of state

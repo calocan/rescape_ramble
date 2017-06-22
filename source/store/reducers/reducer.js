@@ -13,9 +13,16 @@ import { combineReducers } from 'redux';
 import settings from './settings.js'
 import regions from './regions.js'
 import { routerReducer as routing} from 'react-router-redux'
+import {createResponsiveStateReducer} from 'redux-responsive'
 
 export default combineReducers({
     settings,
     regions,
-    routing
+    browser: createResponsiveStateReducer(null, {
+        extraFields: () => ({
+            width: window.innerWidth || 0,
+            height: window.innerHeight || 0
+        }),
+    }),
+    routing,
 })

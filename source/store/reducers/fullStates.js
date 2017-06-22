@@ -13,8 +13,6 @@
  * Defines the all actions of the application used manipulate the DOM.
  */
 
-import {actionFetch} from 'store/async/requestHelpers';
-
 /*
  * Action types. See action definition for explanation
  * TODO nothing but setSTate is used below yet. The async stuff in the future

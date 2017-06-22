@@ -12,10 +12,7 @@
 import Task from 'data.task';
 import R from 'ramda';
 import Rx from 'rxjs';
-import squareGrid from '@turf/square-grid';
-import bbox from '@turf/bbox';
-import {mergeAllWithKey, removeDuplicateObjectsByProp} from 'helpers/functions';
-import {getDb} from "./pouchDb";
+import {getDb} from "./pouchDbIO";
 
 /***
  * fetches transit data from OpenStreetMap using the Overpass API.

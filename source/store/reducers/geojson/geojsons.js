@@ -14,7 +14,7 @@ import {combineReducers} from 'redux';
 import markers, {actions as markerActions} from 'store/reducers/geojson/markers'
 import openStreetMaps, {actions as openStreetMapActions} from 'store/reducers/geojson/openStreetMaps'
 import searches, {actions as searchesActions} from 'store/reducers/geojson/searches'
-import {createDb, startSync} from 'store/async/pouchDb';
+import {createLocalDb, startSync} from 'store/async/pouchDbIO';
 
 export const actions = R.flatten([markerActions, openStreetMapActions, searchesActions])
 
@@ -30,7 +30,7 @@ export const actions = R.flatten([markerActions, openStreetMapActions, searchesA
 // The reducer must be initialized with its region name to give it the correct db
 export default regionName => {
     // TODO move to async
-    const db = createDb(regionName);
+    const db = createLocalDb(regionName);
     startSync(db, regionName);
     return combineReducers({
         osm: openStreetMaps,

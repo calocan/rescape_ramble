@@ -1,12 +1,10 @@
 import React from 'react';
 import {shallow} from 'enzyme'
 
-import createCurrent from './Current';
+import Current from './Current';
 import testConfig from 'store/data/test/config'
 import initialState from 'store/data/initialState'
 import R from 'ramda'
-
-const Current = createCurrent(React);
 
 describe('The current application', () => {
 
@@ -14,11 +12,13 @@ describe('The current application', () => {
 
     const props = {
         region: R.prop(state.regions.currentKey, state.regions),
-        width: 500,
-        height: 500
+        style: {
+            width: 500,
+            height: 500
+        }
     };
 
-    it('Current can mount', () => {
+    test('Current can mount', () => {
         const wrapper = shallow(<Current {...props} />);
         expect(wrapper).toMatchSnapshot();
     });

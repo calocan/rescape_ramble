@@ -14,7 +14,7 @@ import PropTypes from 'prop-types';
 import autobind from 'autobind-decorator';
 import React from 'react';
 import {resolveSvgJsx} from 'helpers/svgHelpers';
-import {updateMarker} from 'store/async/markerHelpers';
+import {updateMarker} from 'store/async/markerIO';
 const ENTER_KEY = 13;
 const LIGHT_SETTINGS = {
     lightsPosition: [-125, 50.5, 5000, -122.8, 48.5, 8000],

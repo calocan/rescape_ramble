@@ -9,9 +9,7 @@ export default connect(
      * @param props
      * @returns {{}}
      */
-    (state)=>{
-        return {
-            ...state.settings
-        };
-    }
+    state => ({
+        ...state.settings
+    })
 )(createApplication(React));

@@ -23,7 +23,10 @@ import {setState} from './store/reducers/fullState'
 import initialState from './store/data/initialState'
 import makeStore from './store'
 import currentConfig from './store/data/current/config'
+import calculateResponsiveState from 'redux-responsive'
 const store = makeStore();
+// dispatch every time the window size changes
+window.addEventListener('resize', () => store.dispatch(calculateResponsiveState(window)));
 store.dispatch(setState(initialState(currentConfig)));
 // Create an enhanced history that syncs navigation events with the store
 const history = syncHistoryWithStore(browserHistory, store);

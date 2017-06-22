@@ -1,7 +1,7 @@
 import {connect} from 'react-redux';
 import R from 'ramda';
 import Region from './Region.js';
-import * as geojsonActions from 'store/reducers/geojson/geojson';
+import {action as geojsonActions} from 'store/reducers/geojson/geojsons';
 
 export const mapStateToProps = (state, ownProps) => {
     return R.merge(

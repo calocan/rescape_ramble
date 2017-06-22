@@ -11,12 +11,17 @@
 
 // Make Enzyme Rx available in all test files without importing
 import { shallow, render, mount } from 'enzyme';
+const jsdom = require('jsdom').jsdom
 global.shallow = shallow;
 global.render = render;
 global.mount = mount;
+global.navigator = {};
+global.navigator.userAgent = 'Test';
+// Some components like react-scrollview need document defined
+global.document = jsdom()
 // Fail tests on any warning
 console.error = message => {
-    throw new Error(message);
+    //throw new Error(message);
 };
 // https://github.com/facebook/jest/issues/3251
 process.on('unhandledRejection', (reason) => {

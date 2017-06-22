@@ -12,31 +12,10 @@
 /***
  * Application is our highest-level React component, displaying whatever compatible application
  * we are interested in.
- * TODO move this and rounting to a parent rescape repository since this isn't specific to the application of this repo
  */
-export default React => {
-
-    /*
-    const {
-        string, shape, func
-    } = PropTypes;
-    */
-
-    const application = (props) => {
-        return <div className='application'>
+export default React =>
+    (props) => (
+        <div className='application'>
             {props.children}
         </div>
-    }
-
-    /*
-    application.propTypes = {
-        helloClass: string.isRequired,
-        subject: string,
-        actions: shape({
-            setMode: func.isRequired
-        })
-    };
-    */
-
-    return application;
-}
+    )

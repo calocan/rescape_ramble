@@ -54,11 +54,11 @@ export const asyncActionsGenericKeys = R.curry((scope, action, crud = 'FETCH') =
  * Async operations have three standard actions for each crud type. Curryable.
  * @param {String} scope The scope of the reducer
  * @param {String} action The subject of the async operation, such as a User
- * @param {String} crud Default 'FETCH'. Or can be 'UPDATE', 'REMOVE' or anything else
+ * @param {String} crud Any Crud type label such as 'FETCH', 'UPDATE', 'REMOVE' or anything else
  * @returns {Object} where keys are CRUD_ACTION_(DATA|SUCCESS|FAILURE) and value is scope/ACTION/crud_(DATA|SUCCESS|FAILURE)
  * e.g. {FETCH_USER_DATA: person/user/FETCH_DATA, FETCH_USER_SUCCESS: person/user/FETCH_SUCCESS, FETCH_USER_ERROR: person/user/FETCH_ERROR}
  */
-export const asyncActions = R.curry((scope, action, crud = 'FETCH') => {
+export const asyncActions = R.curry((scope, action, crud) => {
     const keyMaker = actionKeys(action, crud);
     return mapKeys(phase => keyMaker(phase), asyncActionsGenericKeys(scope, action, crud));
 });

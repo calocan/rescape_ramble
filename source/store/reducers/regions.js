@@ -17,8 +17,8 @@ import {SET_STATE} from 'store/reducers/fullStates'
 
 /***
  * Only allow the region reducer to be created once for each Region
- * @param regionName
  * @returns {Function}
+ * once: () -> regionName -> () -> Reducer
  */
 const once = () => {
     let done = {};
