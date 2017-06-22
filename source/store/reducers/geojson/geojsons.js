@@ -26,12 +26,13 @@ export const actions = R.flatten([markerActions, openStreetMapActions, searchesA
  @property {geojson} markers Point data representing markers in geojson format
  */
 
+
 // Enhance the geojsonReducer with the persistentReducer
 // The reducer must be initialized with its region name to give it the correct db
-export default regionName => {
+export default regionDatabasePath => {
     // TODO move to async
-    const db = createLocalDb(regionName);
-    startSync(db, regionName);
+    const db = createLocalDb(regionDatabasePath);
+    startSync(db, regionDatabasePath);
     return combineReducers({
         osm: openStreetMaps,
         markers: markers,

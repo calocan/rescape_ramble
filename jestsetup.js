@@ -11,6 +11,7 @@
 
 // Make Enzyme Rx available in all test files without importing
 import { shallow, render, mount } from 'enzyme';
+import * as fs from 'fs';
 const jsdom = require('jsdom').jsdom
 global.shallow = shallow;
 global.render = render;
@@ -18,7 +19,14 @@ global.mount = mount;
 global.navigator = {};
 global.navigator.userAgent = 'Test';
 // Some components like react-scrollview need document defined
-global.document = jsdom()
+global.document = jsdom();
+
+// Make the __database__ dir to store local databases
+// Local databases are only need in Node since they are normally stored in the browser
+const PATH = global.NODE_POUCH_DB_PATH = `${__dirname}/source/store/data/__databases__/`;
+if (!fs.existsSync(PATH))
+    fs.mkdirSync(PATH);
+
 // Fail tests on any warning
 console.error = message => {
     //throw new Error(message);

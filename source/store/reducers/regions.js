@@ -35,7 +35,7 @@ const regionReducerOnce = once()
 const regionReducer = regionName => regionReducerOnce(regionName)(() =>
     combineReducers(R.merge(
         {
-            geojson: geojsonReducer(regionName),
+            geojson: geojsonReducer(`${NODE_POUCH_DB_PATH}${regionName}`),
             mapbox: createViewportReducer()
         },
         // Implement reducers for these as/if needed

@@ -21,7 +21,9 @@ import {persistentStore} from 'redux-pouchdb-plus';
 import {responsiveStoreEnhancer} from 'redux-responsive'
 import PouchDB from 'pouchdb';
 import R from 'ramda';
+
 const db = new PouchDB('default');
+
 
 const environmentMiddlewares = R.ifElse(
     R.equals('development'),
