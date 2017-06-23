@@ -16,10 +16,9 @@ import Current from 'views/current/CurrentContainer'
 import Application from 'views/application/ApplicationContainer'
 
 import {Provider} from 'react-redux'
-import { Router, Route, browserHistory } from 'react-router'
-import { syncHistoryWithStore } from 'react-router-redux'
+import { BrowserRouter as Router, Route } from 'react-router-dom'
 
-import {setState} from './store/reducers/fullState'
+import {setState} from './store/reducers/fullStates'
 import initialState from './store/data/initialState'
 import makeStore from './store'
 import currentConfig from './store/data/current/config'
@@ -28,15 +27,15 @@ const store = makeStore();
 // dispatch every time the window size changes
 window.addEventListener('resize', () => store.dispatch(calculateResponsiveState(window)));
 store.dispatch(setState(initialState(currentConfig)));
-// Create an enhanced history that syncs navigation events with the store
-const history = syncHistoryWithStore(browserHistory, store);
 
 /***
  * App is the common component for all of our routes
  */
-const routes = (<Route component={Application}>
-    <Route path="/*" component={Current} />
-</Route>);
+const routes = (
+    <Router>
+        <Route path="/*" component={Current} />
+    </Router>
+);
 
 ReactDOM.render(
     <Provider store={store}>

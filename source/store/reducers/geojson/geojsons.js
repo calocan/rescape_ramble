@@ -11,12 +11,13 @@
 
 import R from 'ramda';
 import {combineReducers} from 'redux';
-import markers, {actions as markerActions} from 'store/reducers/geojson/markers'
-import openStreetMaps, {actions as openStreetMapActions} from 'store/reducers/geojson/openStreetMaps'
-import searches, {actions as searchesActions} from 'store/reducers/geojson/searches'
+import markers, {actions as markerActions, actionCreators as markerActionCreators} from 'store/reducers/geojson/markers'
+import openStreetMaps, {actionCreators as openStreetMapActionCreators} from 'store/reducers/geojson/openStreetMaps'
+import searches, {actions as searchesActions, actionCreators as searchesActionCreators} from 'store/reducers/geojson/searches'
 import {createLocalDb, startSync} from 'store/async/pouchDbIO';
 
-export const actions = R.flatten([markerActions, openStreetMapActions, searchesActions])
+export const actions = R.mergeAll([markerActions, openStreetMapActions, searchesActions]);
+export const actionCreators = R.mergeAll([markerActionCreators, openStreetMapActionCreators, searchesActionCreators]);
 
 /**
  @typedef Geojson
@@ -26,13 +27,7 @@ export const actions = R.flatten([markerActions, openStreetMapActions, searchesA
  @property {geojson} markers Point data representing markers in geojson format
  */
 
-
-// Enhance the geojsonReducer with the persistentReducer
-// The reducer must be initialized with its region name to give it the correct db
-export default regionDatabasePath => {
-    // TODO move to async
-    const db = createLocalDb(regionDatabasePath);
-    startSync(db, regionDatabasePath);
+export default () => {
     return combineReducers({
         osm: openStreetMaps,
         markers: markers,

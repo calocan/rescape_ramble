@@ -10,12 +10,25 @@
  */
 import makeStore from './store'
 import R from 'ramda'
+import createInitialState from 'store/data/initialState'
+import testConfig from 'store/data/test/config';
+import {setState} from 'store/reducers/fullStates'
 const store = makeStore();
 
 describe('store', () => {
     test('makeStore', () => {
         const initialState = {settings: {}};
         const store = makeStore(initialState);
+        // Check for our expected state keys
+        expect(R.map(v => ({}), store.getState())).toEqual(
+            { browser: {}, regions: {}, routing: {}, settings: {} }
+        )
+    })
+
+    test('setState', () => {
+        const initialState = createInitialState(testConfig);
+        const store = makeStore();
+        store.dispatch(setState(initialState));
         // Check for our expected state keys
         expect(R.map(v => ({}), store.getState())).toEqual(
             { browser: {}, regions: {}, routing: {}, settings: {} }

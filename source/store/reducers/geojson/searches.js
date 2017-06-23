@@ -15,8 +15,8 @@ import {asyncActions, asyncActionHandlers} from 'store/reducers/reducerHelpers'
 const scope = 'searches';
 const action = 'location';
 const makeAsyncActionHandlers = asyncActionHandlers(scope, action);
-export const {SEARCH_LOCATION, SEARCH_LOCATION_DATA, SEARCH_LOCATION_SUCCESS, SEARCH_LOCATION_FAILURE} = asyncActions(scope, action, 'SEARCH');
-export const {searchLocation, searchLocationData, searchLocationSuccess, searchLocationFailure} = makeAsyncActionHandlers('SEARCH', searchLocationIO);
+export const actions = asyncActions(scope, action, 'SEARCH');
+export const actionCreators = makeAsyncActionHandlers('SEARCH', searchLocationIO);
 
 /***
  * Reduces a gelocation search. This currently doesn't store anything in the state,

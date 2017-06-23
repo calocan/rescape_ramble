@@ -23,19 +23,23 @@ let FETCHES, UPDATES, REMOVES;
 const {FETCH_MARKERS_DATA, FETCH_MARKERS_SUCCESS, FETCH_MARKERS_FAILURE} = FETCHES = makeAsyncActions('FETCH');
 const {UPDATE_MARKERS_DATA, UPDATE_MARKERS_SUCCESS, UPDATE_MARKERS_FAILURE} = UPDATES = makeAsyncActions('UPDATE');
 const {REMOVE_MARKERS_DATA, REMOVE_MARKERS_SUCCESS, REMOVE_MARKERS_FAILURE} = REMOVES = makeAsyncActions('REMOVE');
-const SELECT_MARKER = makeAction('SELECT_MARKER');
-const HOVER_MARKER = makeAction('HOVER_MARKER');
+
 // Export in actions object
-export const actions = R.flatten(R.map(R.values, [FETCHES, UPDATES, REMOVES, SELECT_MARKER, HOVER_MARKER]));
+export const actions = R.mergeAll([FETCHES, UPDATES, REMOVES, {
+    SELECT_MARKER: makeAction('SELECT_MARKER'),
+    HOVER_MARKER: makeAction('HOVER_MARKER')
+}]);
+
 // Define Action Handlers
 const {fetchMarkers, fetchMarkersData, fetchMarkersSuccess, fetchMarkersFailure} = makeAsyncActionHandlers('FETCH', fetchMarkersIO);
 const {updateMarkers, updateMarkersData, udpateMarkersSuccess, updateMarkersFailure} = makeAsyncActionHandlers('UPDATE', persistMarkers);
 const {removeMarkers, removeMarkersData, removeMarkersSuccess, removeMarkersFailure} = makeAsyncActionHandlers('REMOVE', removeMarkersIO);
 // Export all Action Handlers
-export {
+export const actionCreators = {
     fetchMarkers, fetchMarkersData, fetchMarkersSuccess, fetchMarkersFailure,
     updateMarkers, updateMarkersData, udpateMarkersSuccess, updateMarkersFailure,
-    removeMarkers, removeMarkersData, removeMarkersSuccess, removeMarkersFailure};
+    removeMarkers, removeMarkersData, removeMarkersSuccess, removeMarkersFailure
+};
 
 
 // TODO not wired up

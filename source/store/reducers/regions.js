@@ -35,7 +35,7 @@ const regionReducerOnce = once()
 const regionReducer = regionName => regionReducerOnce(regionName)(() =>
     combineReducers(R.merge(
         {
-            geojson: geojsonReducer(`${NODE_POUCH_DB_PATH}${regionName}`),
+            geojson: geojsonReducer(),
             mapbox: createViewportReducer()
         },
         // Implement reducers for these as/if needed
@@ -83,10 +83,7 @@ const regionsReducer = (
 ) => {
     switch (action.type) {
         case SET_STATE:
-            const fullState = R.merge(state, action.state.regions || {});
-            // Get the RegionReducer created for this region asap so the PouchDb is created
-            regionReducer(fullState.currentKey)
-            return fullState;
+            return R.merge(state, action.state.regions || {});
         default:
             // Delegate all other actions to the current Region's reducer
             // This lens points to the state of the current Region

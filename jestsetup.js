@@ -29,7 +29,7 @@ if (!fs.existsSync(PATH))
 
 // Fail tests on any warning
 console.error = message => {
-    //throw new Error(message);
+    throw new Error(message);
 };
 // https://github.com/facebook/jest/issues/3251
 process.on('unhandledRejection', (reason) => {

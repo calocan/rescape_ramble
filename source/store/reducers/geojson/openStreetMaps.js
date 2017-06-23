@@ -10,7 +10,7 @@
  */
 
 import R from 'ramda'
-import {fetchTransitIO} from 'store/async/overpassIO'
+import {fetchTransit} from 'store/async/overpassIO'
 import {asyncActions, asyncActionHandlers} from 'store/reducers/reducerHelpers'
 
 const scope = 'openStreetMaps';
@@ -18,9 +18,8 @@ const action = 'transit';
 const makeAsyncActionHandlers = asyncActionHandlers(scope, action);
 let FETCHES;
 const {FETCH_TRANSIT, FETCH_TRANSIT_DATA, FETCH_TRANSIT_SUCCESS, FETCH_TRANSIT_FAILURE} = FETCHES = asyncActions(scope, action, 'FETCH');
-export const actions = [FETCHES];
-const {fetchTransit, fetchTransitData, fetchTransitSuccess, fetchTransitFailure} = makeAsyncActionHandlers('FETCH', fetchTransitIO);
-export { fetchTransit, fetchTransitData, fetchTransitSuccess, fetchTransitFailure }
+export const actions = FETCHES;
+export const actionCreators = makeAsyncActionHandlers('FETCH', fetchTransit);
 
 export default (state = {}, action = {}) => {
     switch (action.type) {

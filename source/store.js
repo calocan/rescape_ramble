@@ -21,9 +21,13 @@ import {persistentStore} from 'redux-pouchdb-plus';
 import {responsiveStoreEnhancer} from 'redux-responsive'
 import PouchDB from 'pouchdb';
 import R from 'ramda';
+import {startSync} from "./store/async/pouchDbIO";
 
-const db = new PouchDB('default');
-
+// Use this synced db to store the state of the app
+// There might be no reason to sync the state to a remote db
+const dbName = 'default'
+const db = new PouchDB(dbName);
+startSync(db, `http://localhost:5984/${dbName}`);
 
 const environmentMiddlewares = R.ifElse(
     R.equals('development'),

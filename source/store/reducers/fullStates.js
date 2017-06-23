@@ -15,7 +15,7 @@
 
 /*
  * Action types. See action definition for explanation
- * TODO nothing but setSTate is used below yet. The async stuff in the future
+ * TODO nothing but setState is used below yet. The async stuff in the future
  * should be used in conjunction with PouchDb, cycle, etc
 */
 
