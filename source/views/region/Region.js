@@ -28,7 +28,7 @@ class Region extends React.Component {
             !(R.equals(...R.map(getRegionId, [this.props, nextProps]))) || // Region changed
             !getPath(['region', 'geojson', 'osm', 'requested'], nextProps) // or geojson not yet requested
         ) {
-            this.props.fetchTransit(nextProps.settings.overpass, nextProps.region.geospatial.bounds).fork(
+            this.props.onRegionIsChanged(nextProps.settings.overpass, nextProps.region.geospatial.bounds).fork(
                 error => this.props.fetchTransitFailure(error),
                 osm => {
                     // osm was set in store by action

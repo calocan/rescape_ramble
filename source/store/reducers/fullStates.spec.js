@@ -17,7 +17,7 @@ import nock from 'nock'
 const middlewares = [ thunk ]
 const mockStore = configureMockStore(middlewares)
 
-describe('full state actions', () => {
+describe('full state actionTypes', () => {
 
     it('SET_STATE sets the full state', () => {
         const state = {

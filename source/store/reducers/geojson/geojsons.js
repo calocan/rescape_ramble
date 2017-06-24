@@ -11,12 +11,12 @@
 
 import R from 'ramda';
 import {combineReducers} from 'redux';
-import markers, {actions as markerActions, actionCreators as markerActionCreators} from 'store/reducers/geojson/markers'
-import openStreetMaps, {actionCreators as openStreetMapActionCreators} from 'store/reducers/geojson/openStreetMaps'
-import searches, {actions as searchesActions, actionCreators as searchesActionCreators} from 'store/reducers/geojson/searches'
-import {createLocalDb, startSync} from 'store/async/pouchDbIO';
+import markers, {actionTypes as markerActionTypes, actionCreators as markerActionCreators} from 'store/reducers/geojson/markers'
+import openStreetMaps, {actionTypes as openStreetMapActionTypes, actionCreators as openStreetMapActionCreators} from 'store/reducers/geojson/openStreetMaps'
+import searches, {actionTypes as searchesActionTypes, actionCreators as searchesActionCreators} from 'store/reducers/geojson/searches'
 
-export const actions = R.mergeAll([markerActions, openStreetMapActions, searchesActions]);
+export const SCOPE = 'geojson';
+export const actionTypes = R.mergeAll([markerActionTypes, openStreetMapActionTypes, searchesActionTypes]);
 export const actionCreators = R.mergeAll([markerActionCreators, openStreetMapActionCreators, searchesActionCreators]);
 
 /**

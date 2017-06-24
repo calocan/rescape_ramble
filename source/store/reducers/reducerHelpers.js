@@ -34,7 +34,7 @@ const actionKeys = R.curry((action, crud, phase) =>`${crud}_${R.toUpper(action)}
 const actionValues = R.curry((scope, action, crud, phase) =>`${scope}/${action}/${crud}_${phase}`);
 
 /***
- * Async operations have three standard actions for each crud type. Curryable.
+ * Async operations have three standard actionTypes for each crud type. Curryable.
  * Use this when you need generic action keys. Probably just for testing
  * @param {String} scope The scope of the reducer
  * @param {String} action The subject of the async operation, such as a User
@@ -51,7 +51,7 @@ export const asyncActionsGenericKeys = R.curry((scope, action, crud = 'FETCH') =
 });
 
 /***
- * Async operations have three standard actions for each crud type. Curryable.
+ * Async operations have three standard actionTypes for each crud type. Curryable.
  * @param {String} scope The scope of the reducer
  * @param {String} action The subject of the async operation, such as a User
  * @param {String} crud Any Crud type label such as 'FETCH', 'UPDATE', 'REMOVE' or anything else
@@ -97,7 +97,7 @@ export const asyncActionHandlers = R.curry((scope, action, crud, asyncFunc) => {
             return dispatch => {
                 // Call the _data action
                 dispatch(handlers[crudAction('data')]());
-                // Call the asyncFunc
+                // Call the asyncFunc with whatever args are passed to the actionCreator
                 return asyncFunc(...args).chain(response =>
                     // Call the _success action with the response
                     // We can't call the _failure function, that must be wired up by the caller who forks

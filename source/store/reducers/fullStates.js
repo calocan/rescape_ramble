@@ -10,7 +10,7 @@
  */
 
 /***
- * Defines the all actions of the application used manipulate the DOM.
+ * Defines the all actionTypes of the application used manipulate the DOM.
  */
 
 /*

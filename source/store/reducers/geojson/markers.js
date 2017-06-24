@@ -11,25 +11,10 @@
 import R from 'ramda'
 import {persistMarkers, fetchMarkers as fetchMarkersIO, removeMarkers as removeMarkersIO} from 'store/async/markerIO'
 import {actionId, asyncActions, asyncActionHandlers} from 'store/reducers/reducerHelpers'
+import {SCOPE} from './geojsons'
+import {ACTION} from './markersActionTypes'
 
-const SCOPE = 'geojson';
-const ACTION = 'markers';
-const makeAsyncActions = asyncActions(SCOPE, ACTION);
-const makeAction = actionId(SCOPE);
 const makeAsyncActionHandlers = asyncActionHandlers(SCOPE, ACTION);
-
-let FETCHES, UPDATES, REMOVES;
-// Define Actions
-const {FETCH_MARKERS_DATA, FETCH_MARKERS_SUCCESS, FETCH_MARKERS_FAILURE} = FETCHES = makeAsyncActions('FETCH');
-const {UPDATE_MARKERS_DATA, UPDATE_MARKERS_SUCCESS, UPDATE_MARKERS_FAILURE} = UPDATES = makeAsyncActions('UPDATE');
-const {REMOVE_MARKERS_DATA, REMOVE_MARKERS_SUCCESS, REMOVE_MARKERS_FAILURE} = REMOVES = makeAsyncActions('REMOVE');
-
-// Export in actions object
-export const actions = R.mergeAll([FETCHES, UPDATES, REMOVES, {
-    SELECT_MARKER: makeAction('SELECT_MARKER'),
-    HOVER_MARKER: makeAction('HOVER_MARKER')
-}]);
-
 // Define Action Handlers
 const {fetchMarkers, fetchMarkersData, fetchMarkersSuccess, fetchMarkersFailure} = makeAsyncActionHandlers('FETCH', fetchMarkersIO);
 const {updateMarkers, updateMarkersData, udpateMarkersSuccess, updateMarkersFailure} = makeAsyncActionHandlers('UPDATE', persistMarkers);

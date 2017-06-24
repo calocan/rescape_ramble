@@ -1,0 +1,133 @@
+import {mockTimeSource} from '@cycle/time';
+
+// Modified from
+// https://github.com/cyclejs-community/redux-cycles/blob/master/example/cycle/test/helpers.js
+
+/***
+ *
+ * @param sources Diagram Mapping of the Cycle sources to assert in a form like this:
+ * {
+        ACTION: { 'ab|': actionSource },
+        HTTP:   { '--|': httpSource }
+   }
+    where the key matches the source/sinc Key, the inner key is the Time diagram string, and the inner
+    value is a Source representation in form like this:
+   {
+        a: actions.requestReposByUser(user1), // returns a {} or func
+        b: actions.requestReposByUser(user2)
+   }
+    where the key matches those in the diagram and the value is either a Redux action call
+    or a function that calls a Redux action call
+ * @param sinks A Diagram Mapping of expected Sinks in a form like:
+ * {
+ *  HTTP:   { 'xy|': httpSink }
+ * }
+ * where the key matches an expected sink key, the inner key is a diagram mapping keys to values
+ * in the inner value, which is a Sync representation in a form like this:
+ * {
+    x: {
+      url: `https://api.github.com/users/${user1}/repos`,
+      category: 'users'
+    },
+    y: {
+      url: `https://api.github.com/users/${user2}/repos`,
+      category: 'users'
+    }
+  };
+    where the keys match those in the diagram string, and the values are the expected sync value
+    to be produced by corresponding source
+ * @param main The Cycle main function, which is called with sources and a mock timeSource
+ * @param done Jest done() function to call after the assertion
+ * @param {Object} Optional timeOpts Supplied to mockTimeSource
+ */
+export function assertSourcesSinks(sources, sinks, main, done, timeOpts = {}) {
+    // Mock a Time Source
+    const timeSource = mockTimeSource(timeOpts);
+    const _sources = Object.keys(sources)
+    // e.g. sourceKey is 'ACTION' or 'HTTP'
+        .reduce((_sources, sourceKey) => {
+            // Extract the object, e.g.
+            // {
+            //  a: actions.requestReposByUser(user1), returns an {} or func
+            //  b: actions.requestReposByUser(user2)
+            //  }
+            const sourceObj = sources[sourceKey];
+            // Extract the source's only key to use in a Time diagram,
+            // e.g. 'ab|'
+            const diagram = Object.keys(sourceObj)[0];
+            // Get the value associated with that key to use as options
+            // e.g.
+            // {
+            //  a: actions.requestReposByUser(user1), (or () => actions.requestReposByUser(user1)),
+            //  b: actions.requestReposByUser(user2)
+            // }
+            const sourceOpts = sourceObj[diagram];
+
+            let obj = {};
+            // Take the first key of the sourceOpts
+            let firstKey = Object.keys(sourceOpts)[0];
+            if (typeof sourceOpts[firstKey] === 'function') {
+                // If the value returns a function then create a Time diagram with the single sourceObj key
+                // and map the sourceObj key to a function returning the call to sourceOpts[firstKey]
+                // e.g.
+                // {
+                //  ACTIONS: {
+                //      a: () => diagram('ab|', actions.requestReposByUser(user1)), <-- returns func
+                //  }
+                obj = {
+                    [sourceKey]: {
+                        [firstKey]: () => timeSource.diagram(diagram, sourceOpts[firstKey]())
+                    }
+                }
+            } else {
+                // Else the key is an object so create a Time diagram with the single sourceObj key
+                // and map the sourceObj key to the sourceOpts[firstKey] object
+                // e.g.
+                // {
+                //  ACTIONS: {
+                //      a: () => diagram('ab|', actions.requestReposByUser(user1)), <--- returns obj
+                //  }
+                obj = {
+                    [sourceKey]: timeSource.diagram(diagram, sourceOpts)
+                }
+            }
+
+            // Add each sourceKey to diagram object to the sources
+            // Thus we return something like
+            // {
+            //  sourceA: sourceOpts1stKey: () => diagram(sourceASource1stKey1, sourceOptions1stValue)
+            //  sourceB: sourceOpts1stKey: diagram(sourceASource1stKey1, sourceOptions)
+            // }
+            return Object.assign(_sources, obj);
+        }, {})
+
+    // Reduce the sinks into an object in the following format
+    // {
+    //  sinkA: diagram(sinkAObj1stKey, sinkAObj1stValue)
+    //  sinkB: diagram(sinkBkObj1stKey, sinkBObj1stValue)
+    // }
+    const _sinks = Object.keys(sinks)
+        .reduce((_sinks, sinkKey) => {
+            const sinkObj = sinks[sinkKey];
+            const diagram = Object.keys(sinkObj)[0];
+            const sinkOpts = sinkObj[diagram];
+
+            return Object.assign(_sinks, {[sinkKey]: timeSource.diagram(diagram, sinkOpts)});
+        }, {});
+
+    // Add TimeSource as a source
+    _sources.Time = timeSource;
+
+    // Give the sources to main
+    const _main = main(_sources);
+
+    // Assert that each sink Time diagram matches the source diagrams in main (?)
+    Object.keys(sinks)
+        .map(sinkKey => timeSource.assertEqual(_main[sinkKey], _sinks[sinkKey]));
+
+    // Run the time source and ensure no errors
+    timeSource.run(err => {
+        expect(err).toBeFalsy();
+        done();
+    });
+}

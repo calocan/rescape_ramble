@@ -1,7 +1,7 @@
 import {SET_CURRENT, setState, setCurrent} from './settings';
 import {SET_STATE} from 'store/reducers/fullStates';
 
-describe('settings actions', () => {
+describe('settings actionTypes', () => {
     it('should create an action to set the state', () =>{
         const state = {
             foo: 1,

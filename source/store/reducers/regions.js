@@ -85,7 +85,7 @@ const regionsReducer = (
         case SET_STATE:
             return R.merge(state, action.state.regions || {});
         default:
-            // Delegate all other actions to the current Region's reducer
+            // Delegate all other actionTypes to the current Region's reducer
             // This lens points to the state of the current Region
             const currentRegionLens = R.lensPath([state.currentKey]);
             return state.currentKey ? R.set(

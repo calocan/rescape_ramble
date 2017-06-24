@@ -1,6 +1,6 @@
 
 import reducer from 'store/reducers/regions'
-import {actions as geoJsonActions} from 'store/reducers/geojson/geojsons'
+import {actionTypes as geoJsonActions} from 'store/reducers/geojson/geojsons'
 import {Map} from 'immutable'
 import testConfig from 'store/data/test/config'
 import initialState from 'store/data/initialState'

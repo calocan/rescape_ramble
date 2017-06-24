@@ -12,8 +12,34 @@
 import Task from 'data.task';
 import R from 'ramda';
 import Rx from 'rxjs';
+import { combineCycles } from 'redux-cycles';
+import xs from 'xstream';
 import {getDb} from "./pouchDbIO";
+import { actionTypes } from 'store/reducers/geojson/markersActionTypes'
 
+export function fetchMarkers(sources) {
+    const region$ = sources.ACTION
+        .filter(action => action.type === actionTypes.FETCH_MARKERS)
+        .map(action => action.region);
+
+    const request$ = region$
+        .map(region => ({
+            id: region.id,
+            bounds: region.bounds
+        }));
+
+    const response$ = sources.HTTP
+        .select('users')
+        .flatten();
+
+    const action$ = xs.combine(response$, user$)
+        .map(arr => actionTypes.receiveUserRepos(arr[1], arr[0].body));
+
+    return {
+        ACTION: action$,
+        HTTP: request$
+    }
+}
 /***
  * fetches transit data from OpenStreetMap using the Overpass API.
  * @param {String} The key of the region, used for database scope
@@ -24,7 +50,6 @@ import {getDb} from "./pouchDbIO";
 export const fetchMarkers = (regionKey, options, bounds) => {
     return new Task(function(reject, resolve) {
         const db = getDb(regionKey)
-        console.log('Fetching records')
         db.allDocs({include_docs: true, descending: true}, function(err, doc) {
             if (!err) {
                 console.log('Fetched')

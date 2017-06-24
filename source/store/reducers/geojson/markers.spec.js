@@ -13,7 +13,7 @@ import testConfig from 'store/data/test/config';
 import initialState from 'store/data/initialState';
 import configureStore from 'redux-mock-store';
 import {mapPropValueAsIndex} from 'helpers/functions';
-import {actions} from './geojsons';
+import {actionTypes} from './geojsons';
 import {fetchMarkers, removeMarkers, updateMarkers} from 'store/reducers/geojson/markers';
 import {stopSync} from 'store/async/pouchDb';
 import {setState} from 'store/reducers/fullState';
@@ -31,8 +31,8 @@ describe('markers reducer', () => {
         store.dispatch(setState(initialState(testConfig)));
         const bounds = require('query-overpass').LA_BOUNDS;
         const expectedActions = [
-            { type: actions.FETCH_MARKERS_DATA },
-            { type: actions.FETCH_MARKERS_SUCCESS, body: markersSample}
+            { type: actionTypes.FETCH_MARKERS_DATA },
+            { type: actionTypes.FETCH_MARKERS_SUCCESS, body: markersSample}
         ]
 
         expectTask(store.dispatch(fetchMarkers(
@@ -48,8 +48,8 @@ describe('markers reducer', () => {
         store.dispatch(setState(initialState(testConfig)));
         const bounds = require('query-overpass').LA_BOUNDS;
         const expectedActions = [
-            { type: actions.UPDATE_MARKERS_DATA },
-            { type: actions.UPDATE_MARKERS_SUCCESS, body: markersSample}
+            { type: actionTypes.UPDATE_MARKERS_DATA },
+            { type: actionTypes.UPDATE_MARKERS_SUCCESS, body: markersSample}
         ];
 
         expectTask(

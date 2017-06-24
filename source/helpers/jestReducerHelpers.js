@@ -13,7 +13,7 @@ import {asyncActionsGenericKeys} from "store/reducers/reducerHelpers";
 import R from 'ramda'
 
 /***
- * Returns the expected sequence of successful actions
+ * Returns the expected sequence of successful actionTypes
  * {String} scope See asyncActionsGenericKeys
  * {String} action See asyncActionsGenericKeys
  * {String} crud See asyncActionsGenericKeys
@@ -28,7 +28,7 @@ export const expectedSuccessfulAsyncActions = R.curry((scope, action, crud, expe
 });
 
 /***
- * Returns the expected sequence of failed actions
+ * Returns the expected sequence of failed actionTypes
  * {String} scope See asyncActionsGenericKeys
  * {String} action See asyncActionsGenericKeys
  * {String} crud See asyncActionsGenericKeys
