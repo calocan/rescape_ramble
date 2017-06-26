@@ -11,11 +11,10 @@
 
 import React from 'react';
 import {shallow} from 'enzyme';
-import createMapLines from './MapLines';
+import MapLines from './MapLines';
 
 jest.mock('query-overpass')
 const geojson = require('queryOverpassResponse').LA_SAMPLE;
-const MapLines = createMapLines(React)
 
 describe('MapLines', () => {
     const props = {

@@ -13,18 +13,15 @@ import testConfig from 'store/data/test/config';
 import initialState from 'store/data/initialState';
 import {getPath, mapPropValueAsIndex} from 'helpers/functions';
 import R from 'ramda';
-import reducer, {actions, fetchMarkers, ftchOsm, removeMarkers, stopSync, updateMarkers} from './geojson';
-import {setState} from 'store/reducers/fullState';
-import thunk from 'redux-thunk';
-const middlewares = [thunk];
+import reducer, {actions, fetchMarkers, ftchOsm, removeMarkers, stopSync, updateMarkers} from './geojsons';
+import {setState} from 'store/reducers/fullStates';
 const toObjectKeyedById = mapPropValueAsIndex('id');
 
-const DB_PATH = '__tests__/geojson/'
 describe('geojson reducer', () => {
     const state = initialState(testConfig)
     it('should return the initial state', () => {
         expect(
-            Map(reducer(testConfig.id, DB_PATH, 'initial_state')(
+            Map(reducer()(
                 getPath(['regions', state.regions.currentKey, 'geojson'], state),
                 {})
             ).toJS()

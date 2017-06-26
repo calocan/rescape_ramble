@@ -3,7 +3,7 @@ import Mapbox from './Mapbox';
 import React from 'react';
 import {shallow} from 'enzyme';
 import {getPath} from 'helpers/functions';
-import {mapStateToProps} from './MapboxContainer';
+import {mapStateToProps, mapDispatchToProps} from './MapboxContainer';
 import {geojsonByType} from 'helpers/geojsonHelpers';
 
 import config from 'store/data/test/config';
@@ -15,17 +15,20 @@ const state = initialState(config);
 const currentKey = getPath(['regions', 'currentKey'], state);
 const geojson = require('queryOverpassResponse').LA_SAMPLE;
 
-const props = mapStateToProps(state, {
-    region: R.set(
-        R.lensProp('geojson'),
-        geojsonByType(geojson),
-        getPath(['regions', currentKey], state)
-    ),
-    style: {
-        width: 500,
-        height: 500
-    }
-});
+const props = R.merge(
+    mapStateToProps(state, {
+        // Put geojson in the Region since that is normally loaded asyncronously
+        region: R.set(
+            R.lensProp('geojson'),
+            geojsonByType(geojson),
+            getPath(['regions', currentKey], state)
+        ),
+        style: {
+            width: 500,
+            height: 500
+        }
+    }),
+    mapDispatchToProps(state));
 
 describe('Mapbox', () => {
     it('MapGL can mount', () => {

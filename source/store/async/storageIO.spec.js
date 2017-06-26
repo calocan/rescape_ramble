@@ -9,17 +9,15 @@
  * THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-const {createLocalDb, cycleLocalDb, destroy, getDb} = require('./pouchDbIO');
-import * as fs from 'fs';
-const {retrieveOrFetch} = require('./storageIO');
-import prettyFormat from 'pretty-format'
-const {expectTask} = require('helpers/jestHelpers');
-const Maybe = require('data.maybe');
-import {taskToPromise} from "../../helpers/functions";
-const R = require('ramda');
-const Rm = require('ramda-maybe');
-const Task = require('data.task');
-const {promiseToTask} = require('helpers/functions');
+import {cycleLocalDb, getDb} from "./pouchDbIO";
+import * as fs from "fs";
+import {retrieveOrFetch} from "./storageIO";
+import {expectTask} from "helpers/jestHelpers";
+import Maybe from "data.maybe";
+import {promiseToTask} from "helpers/functions";
+import R from "ramda";
+import Rm from "ramda-maybe";
+import Task from "data.task";
 
 const name = 'storage_io_spec';
 const PATH = `${__dirname}/__databases__/`;

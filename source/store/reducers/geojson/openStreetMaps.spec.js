@@ -8,28 +8,37 @@
  *
  * THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import testConfig from 'store/data/test/config';
 import configureStore from 'redux-mock-store';
-import {fetchTransit, actions } from 'store/reducers/geojson/openStreetMaps';
+import {actions, actionCreators} from 'store/reducers/geojson/openStreetMaps';
 import thunk from 'redux-thunk';
 import {expectTask, testState} from 'helpers/jestHelpers';
+import {removeDuplicateObjectsByProp} from "helpers/functions";
+import R from 'ramda'
 const middlewares = [thunk];
 const mockStore = configureStore(middlewares);
 const state = testState()
+jest.mock('query-overpass')
 
 describe('geojson reducer', () => {
-    it('should fetch osm', () => {
+    test('should fetch osm', async () => {
         const bounds = require('query-overpass').LA_BOUNDS;
         const store = mockStore(state);
         const expectedActions = [
             { type: actions.FETCH_TRANSIT_DATA },
-            { type: actions.FETCH_TRANSIT_SUCCESS, body: require('queryOverpassResponse').LA_SAMPLE}
+            {
+                type: actions.FETCH_TRANSIT_SUCCESS,
+                body: R.over(                         // remove features with the same id
+                    R.lens(R.prop('features'), R.assoc('features')),
+                    removeDuplicateObjectsByProp('id'))(require('queryOverpassResponse').LA_SAMPLE)
+            }
         ];
 
         // Pass bounds in the options. Our mock query-overpass uses is to avoid parsing the query
-        expectTask(store.dispatch(fetchTransit(
-            {cellSize: store.getState().settings.overpass.cellSize, testBounds: bounds},
-            bounds
-        )).map(() => store.getActions())).resolves.toEqual(expectedActions)
+        await expectTask(
+            store.dispatch(actionCreators.fetchTransit(
+                {cellSize: store.getState().settings.overpass.cellSize, testBounds: bounds},
+                bounds
+            )).map(() => store.getActions())
+        ).resolves.toEqual(expectedActions)
     })
 });

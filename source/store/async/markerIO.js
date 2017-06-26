@@ -15,11 +15,13 @@ import Rx from 'rxjs';
 import { combineCycles } from 'redux-cycles';
 import xs from 'xstream';
 import {getDb} from "./pouchDbIO";
-import { actionTypes } from 'store/reducers/geojson/markersActionTypes'
+import { actions } from 'store/reducers/geojson/markers'
+import { actionsCreators } from 'store/reducers/geojson/markerActions'
+const resolveDb = (regionKey, options) => getDb(options && options.dbName || regionKey);
 
-export function fetchMarkers(sources) {
+export function cycleFetchMarkers(sources) {
     const region$ = sources.ACTION
-        .filter(action => action.type === actionTypes.FETCH_MARKERS)
+        .filter(action => action.type === actions.FETCH_MARKERS)
         .map(action => action.region);
 
     const request$ = region$
@@ -33,7 +35,7 @@ export function fetchMarkers(sources) {
         .flatten();
 
     const action$ = xs.combine(response$, user$)
-        .map(arr => actionTypes.receiveUserRepos(arr[1], arr[0].body));
+        .map(arr => actionCreators.receiveUserRepos(arr[1], arr[0].body));
 
     return {
         ACTION: action$,
@@ -49,7 +51,7 @@ export function fetchMarkers(sources) {
  */
 export const fetchMarkers = (regionKey, options, bounds) => {
     return new Task(function(reject, resolve) {
-        const db = getDb(regionKey)
+        const db = resolveDb(regionKey, options)
         db.allDocs({include_docs: true, descending: true}, function(err, doc) {
             if (!err) {
                 console.log('Fetched')
@@ -72,7 +74,7 @@ export const fetchMarkers = (regionKey, options, bounds) => {
  */
 export const removeMarkers = (regionKey, options, markers) => {
     return new Task((reject, resolve) => {
-        const db = getDb(regionKey)
+        const db = resolveDb(regionKey, options)
         // Get all markers or just those specified
         db.allDocs(markers ? { keys: R.map(R.prop('id'), markers) } : {}).then(function (result) {
             // Promise isn't supported by all browsers; you may want to use bluebird
@@ -102,6 +104,7 @@ export function removeMarker(regionKey, options, marker) {
  * Persists a list of features that represent markers
  * @param {String} regionKey
  * @param {Object} options Currently unused, reserved for future use
+ * @param {Object} options.dbName Optional name for the database for testing. Defaults to regionKey
  * @param {Array} features Geojson features
  * @returns {Task} A Task that when forked executes the persistence
  */
@@ -110,7 +113,7 @@ export const persistMarkers = (regionKey, options, features) => {
     const _idLens = R.lensProp('_id');
     const featureIdLens = R.lensPath(['properties', '@id']);
     return new Task(function(reject, resolve) {
-        const db = getDb(regionKey)
+        const db = resolveDb(regionKey, options)
         // Function that writes features to document store
         const writeFeature$ = feature => Rx.Observable.of(feature)
             .timestamp()

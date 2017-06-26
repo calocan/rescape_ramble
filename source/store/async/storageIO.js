@@ -10,6 +10,7 @@
  */
 import R from 'ramda'
 import Task from 'data.task'
+import {promiseToTask} from "helpers/functions";
 
 /****
  * Curryable function returning a Task to seek data from a PouchDb with a given id.
@@ -31,10 +32,13 @@ export const retrieveOrFetch = R.curry((fetchTask, db, id) => {
             }
         })
     }).chain(response => {
-        // If no response chain fetchTask, otherwise just return the doc
+        // If no response chain fetchTask and then store its result at the given in,
+        // otherwise just return the doc
         return R.ifElse(
                 R.isNil,
-                () => fetchTask,
+                () => fetchTask.chain(
+                    result => promiseToTask(db.put(R.merge(result, {_id: id})))
+                ),
                 doc => Task.of(doc)
             )(response)
         }

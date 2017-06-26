@@ -16,6 +16,7 @@ import {retrieveOrFetch} from "./storageIO";
 import {createLocalDb, cycleLocalDb, getDb} from "./pouchDbIO";
 import * as fs from 'fs';
 import {promiseToTask} from "../../helpers/functions";
+import R from 'ramda';
 
 const name = 'overpass_io_spec';
 const PATH = `${__dirname}/__databases__/`;
@@ -23,11 +24,10 @@ const DB = `${PATH}${name}`;
 if (!fs.existsSync(PATH))
     fs.mkdirSync(PATH);
 
-// TODO use .resolves for all async tests whenever Jest 20 comes out, assuming it works with fork
 let mock;
-jest.unmock('query-overpass')
+//jest.unmock('query-overpass')
 // Comment/Uncomment. Must be at top level
-mock = false
+mock = true
 jasmine.DEFAULT_TIMEOUT_INTERVAL = 100000000
 
 // requires are used below since the jest includes aren't available at compile time
@@ -35,63 +35,61 @@ describe('overpassHelpersUnmocked', () => {
     if (mock) {
         return
     }
-    test('unmockedFetchTransit', () => {
+    test('unmockedFetchTransit', async() => {
         // Unmocked integration test
         const realBounds = [-118.24031352996826, 34.04298753935195, -118.21018695831297, 34.065209887879476];
-        expectTask(
+        await expectTask(
             // We expect over 500 results. I'll leave it fuzzy in case the source dataset changes
             fetchTransit({realBounds}, realBounds).map(response => response.features.length > 500)
         ).resolves.toBe(true)
     });
-    test('unmockedFetchTransitCelled', () => {
+    test('unmockedFetchTransitCelled', async() => {
         const realBounds = [-118.24031352996826, 34.04298753935195, -118.21018695831297, 34.065209887879476];
         // Wrap the Task in a Promise for jest's sake
-        return expectTask(
+        await expectTask(
             fetchTransit({cellSize: 2, bounds: realBounds, sleepBetweenCalls: 1000}, realBounds).map(
                  // We expect over 500 results. I'll leave it fuzzy in case the source dataset changes
                 response => response.features.length > 500
             )
         ).resolves.toBe(true)
     });
-    test('store fetch', () => {
-        // Unmocked integration test. Store the value in the local database
-        const realBounds = [-118.24031352996826, 34.04298753935195, -118.21018695831297, 34.065209887879476];
-        expectTask(
-            cycleLocalDb(DB)
-                .chain(db => {
-                    return retrieveOrFetch(
-                        fetchTransit({realBounds}, realBounds),
-                        db,
-                        'somewhere');
-                })
-                .chain(() => {
-                    return promiseToTask(getDb(DB).fetch('somewhere'))
-                })
-                .map(response => {
-                    return response.features.length > 500
-                })
-        ).resolves.toBe(true)
-    })
+
 });
-describe('overpassHelpers', () => {
+describe('overpassHelpers', async() => {
     if (!mock) {
         return
     }
     const bounds = require('query-overpass').LA_BOUNDS;
-    test('fetchTransit', () => {
+    test('fetchTransit', async() => {
         // Pass bounds in the options. Our mock query-overpass uses is to avoid parsing the query
-        expectTask(
+        await expectTask(
             fetchTransit({testBounds: bounds}, bounds)
         ).resolves.toEqual(require('queryOverpassResponse').LA_SAMPLE);
     });
 
-    test('fetchTransit in cells', () => {
-        expectTask(
+    test('fetchTransit in cells', async() => {
+        await expectTask(
             fetchTransit({cellSize: 200, testBounds: bounds}, bounds).map(response => response.features)
         ).resolves.toEqual(
             // the sample can have duplicate ids
             removeDuplicateObjectsByProp('id', require('queryOverpassResponse').LA_SAMPLE.features)
         )
+    })
+    test('store fetch', async() => {
+        const bounds = require('query-overpass').LA_BOUNDS;
+        await expectTask(
+            cycleLocalDb(DB)
+                .chain(db =>
+                    retrieveOrFetch(
+                        fetchTransit({testBounds: bounds}, bounds),
+                        db,
+                        'somewhere')
+                )
+                // Fetch the geojson, now expected to be in the DB
+                .chain(() => promiseToTask(getDb(DB).get('somewhere')))
+                // Remove the db fields for comparison
+                .map(res => R.omit(['_id', '_rev'], res))
+        ).resolves.toEqual(require('queryOverpassResponse').LA_SAMPLE);
     })
 });
 

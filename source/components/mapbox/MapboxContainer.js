@@ -11,49 +11,40 @@
 
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import {hoverMarker, selectMarker} from 'store/reducers/geojson/geojsons';
+import {actionCreators} from 'store/reducers/geojson/geojsons';
 import {onChangeViewport} from 'redux-map-gl';
 import Mapbox from './Mapbox';
 import R from 'ramda';
 import {toJS} from 'helpers/functions';
+const {hoverMarker, selectMarker} = actionCreators;
 
 /***
  * Raises viewport, mapboxApiAccessToken, geojson, and gtfs to top level
  * @param state
- * @param ownProps
+ * @param {Region} region The Region object
+ * @param {Object} style A style object with the width and height
  */
-export const mapStateToProps = (state, ownProps) => {
-    return R.merge(
-        {
+export const mapStateToProps = (state, {region, style}) => {
+    const mapbox = region.mapbox;
+    return {
+            region,
             viewport: R.merge(
-                toJS(ownProps.region.mapbox.viewport),
+                toJS(mapbox.viewport),
                 // viewport needs absolute width and height from parent
-                R.pick(['width', 'height'], ownProps.style)),
-            mapboxApiAccessToken: ownProps.region.mapbox.mapboxApiAccessToken,
-            iconAtlas: ownProps.region.mapbox.iconAtlas,
+                R.pick(['width', 'height'], style)),
+            mapboxApiAccessToken: mapbox.mapboxApiAccessToken,
+            iconAtlas: mapbox.iconAtlas,
             // TODO showCluster should come in as bool
-            showCluster: ownProps.region.mapbox.showCluster === 'true'
-        },
-        // include geojson and gtfs data of the region
-        R.pick(['geojson', 'gtfs'], ownProps.region),
-    );
+            showCluster: mapbox.showCluster === 'true',
+    };
 }
 
 
-// This is just an example of what mapDispatchToProps does.
-const mapDispatchToProps = (dispatch, ownProps) => {
+export const mapDispatchToProps = (dispatch, ownProps) => {
     return bindActionCreators({
-        /*
-        doFooThingInComponent: () => {
-            dispatch(someImportedAction(
-                ownProps.somePropertyOfContainerOrParent,
-                ownProps.someOtherPropertyOfContainerOrParent
-            ));
-        },
-        */
-        // Pass this straight through
         onChangeViewport,
-        hoverMarker, selectMarker
+        hoverMarker,
+        selectMarker
     }, dispatch);
 };
 

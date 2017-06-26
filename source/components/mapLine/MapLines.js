@@ -27,18 +27,19 @@ class MapLines extends React.Component {
     }
 
     render() {
+        /*
         return <LineLayer
             data={[
                 {sourcePosition: [-122.41669, 37.7883], targetPosition: [-122.41669, 37.781]}
             ]}
-            strokeWidth={5}/>
-        /*
+            strokeWidth={5}
+        />
+        */
         return <SVGOverlay
             className='map-lines'
             key='svg-overlay'
             { ...this.props.viewport }
             redraw={ this._redrawSVGOverlay } />
-            */
     }
 }
 

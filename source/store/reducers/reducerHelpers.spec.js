@@ -9,7 +9,7 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import {asyncActionHandlers, asyncActions, asyncActionsGenericKeys} from "./reducerHelpers";
+import {asyncActionCreators, asyncActions, asyncActionsGenericKeys} from "./reducerHelpers";
 import Task from 'data.task'
 import {expectTask} from "helpers/jestHelpers";
 
@@ -20,15 +20,19 @@ describe('reducerHelpers', () => {
     test('asyncActionsGenericKeys', () => {
         expect(asyncActions('person', 'user', 'FETCH')).toMatchSnapshot();
     });
-    test('asyncActionsGenericKeys', () => {
-        const actionHandlers = asyncActionHandlers('person', 'user', 'FETCH', (someArg) => new Task((reject, response) => {
-            response(someArg)
-        }));
+    test('asyncActionsGenericKeys', async () => {
+        const actionCreators = asyncActionCreators(
+            'person', 'user', 'FETCH',
+            (someArg) => new Task((reject, response) => response(someArg)
+        ));
         // Use a => a as a mock dispatch function
-        expectTask(actionHandlers.fetchUser('someArg')(a => a)).resolves.toEqual('someArg');
-        expect(actionHandlers.fetchUserData()).toEqual({type: 'person/user/FETCH_DATA'});
-        expect(actionHandlers.fetchUserSuccess('floopy')).toEqual({type: 'person/user/FETCH_SUCCESS', body: 'floopy'});
-        expect(actionHandlers.fetchUserFailure(new Error('flop'))).toEqual({type: 'person/user/FETCH_FAILURE', error: new Error('flop')});
+        await expectTask(actionCreators.fetchUser('someArg')(a => a)).resolves.toEqual({
+            body: 'someArg',
+            type: 'person/user/FETCH_SUCCESS'
+        });
+        expect(actionCreators.fetchUserData()).toEqual({type: 'person/user/FETCH_DATA'});
+        expect(actionCreators.fetchUserSuccess('floopy')).toEqual({type: 'person/user/FETCH_SUCCESS', body: 'floopy'});
+        expect(actionCreators.fetchUserFailure(new Error('flop'))).toEqual({type: 'person/user/FETCH_FAILURE', error: new Error('flop')});
     });
 
 })

@@ -9,19 +9,22 @@
  * THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import PouchDB from 'store/async/pouchDb'
-import {removeMarkers, removeMarker, fetchMarkers, fetchMarkersCelled, persistMarkers} from './markerIO';
-import {sync, destroy} from './pouchDb'
-import {expectTask} from '../../helpers/jestHelpers'
+import {removeMarker, fetchMarkers, persistMarkers} from './markerIO';
+import {cycleLocalDb} from './pouchDbIO'
+import config from 'store/data/test/config';
+import {expectTask} from 'helpers/jestHelpers'
 import {PARIS_SAMPLE, LA_SAMPLE} from './markerIO.sample'
-import {mergeAllWithKey} from '../../helpers/functions'
-import {concatFeatures} from '../../helpers/geojsonHelpers'
+import {getPath, mergeAllWithKey} from 'helpers/functions'
+import {concatFeatures} from 'helpers/geojsonHelpers'
 import R from 'ramda'
+import initialState from "store/data/initialState";
 
 // combine the samples into one obj with concatinated features
 const geojson = mergeAllWithKey(concatFeatures)([PARIS_SAMPLE, LA_SAMPLE]);
+const state = initialState(config);
+const currentKey = getPath(['regions', 'currentKey'], state);
+const testDbName = name => `${__dirname}/__databases__/${name}`
 
-// TODO use .resolves for all async tests whenever Jest 20 comes out, assuming it works with fork
 
 describe('markerHelpers', () => {
 
@@ -32,45 +35,42 @@ describe('markerHelpers', () => {
     // const syncObject = sync({db, createRemoteUrl});
 
     test('Persist MarkerList', () => {
-        const name = 'PersistMarkers';
-        const options = {};
-        destroy(name);
-        const db = new PouchDB(path + name);
+        const dbName = testDbName('PersistMarkers');
+
+        const options = {dbName};
 
         // Populate the db
         expectTask(
-            persistMarkers(regionKey, options, geojson.features)
+            cycleLocalDb(dbName).chain(() => persistMarkers(currentKey, options, geojson.features))
         ).resolves.toEqual(geojson.features);
     });
 
     test('Query MarkerList', () => {
-        const name = 'QueryMarkers';
-        const options = {};
-        destroy(name);
-        const db = new PouchDB(path + name);
+        const dbName = testDbName('QueryMarkers');
+        const options = {dbName};
 
         // Query the db
         expectTask(
-            persistMarkers(db, options, geojson.features).chain(
+            cycleLocalDb(dbName).chain(() => persistMarkers(currentKey, options, geojson.features)).chain(
                 response => fetchMarkers(db, options, bounds)
             ).map(response => response.rows.length)
         ).resolves.toEqual(geojson.features.length);
     });
 
     test('Remove Marker', () => {
-        const name = 'RemoveMarker';
-        const options = {};
-        destroy(name);
-        const db = new PouchDB(path + name);
+        const dbName = testDbName('RemoveMarkers');
+        const options = {dbName};
 
         expectTask(
-                console.log('Persist') || persistMarkers(db, options, geojson.features)
+            cycleLocalDb(dbName).chain(
+                console.log('Persist') || persistMarkers(currentKey, options, geojson.features)
+            )
             .chain(
-                response => console.log('Fetch') || fetchMarkers(db, {testBounds: bounds}, bounds)
+                response => console.log('Fetch') || fetchMarkers(currentKey, {testBounds: bounds}, bounds)
             ).chain(
-                response => console.log('Remove') || removeMarker(db, {testBounds: bounds}, R.head(response.rows))
+                response => console.log('Remove') || removeMarker(currentKey, {testBounds: bounds}, R.head(response.rows))
             ).chain(
-                response => console.log('Fetch') || fetchMarkers(db, {testBounds: bounds}, bounds)
+                response => console.log('Fetch') || fetchMarkers(currentKey, {testBounds: bounds}, bounds)
             ).map(response => R.head(response.rows))
         ).resolves.toEqual(geojson.features.length - 1);
     })

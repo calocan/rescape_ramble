@@ -11,23 +11,21 @@
 
 import R from 'ramda'
 import {fetchTransit} from 'store/async/overpassIO'
-import {asyncActions, asyncActionHandlers} from 'store/reducers/reducerHelpers'
+import {asyncActions, asyncActionCreators} from 'store/reducers/reducerHelpers'
 
 const scope = 'openStreetMaps';
 const action = 'transit';
-const makeAsyncActionHandlers = asyncActionHandlers(scope, action);
-let FETCHES;
-const {FETCH_TRANSIT, FETCH_TRANSIT_DATA, FETCH_TRANSIT_SUCCESS, FETCH_TRANSIT_FAILURE} = FETCHES = asyncActions(scope, action, 'FETCH');
-export const actions = FETCHES;
-export const actionCreators = makeAsyncActionHandlers('FETCH', fetchTransit);
+const makeAsyncActionCreators = asyncActionCreators(scope, action);
+export const actions = asyncActions(scope, action, 'FETCH');
+export const actionCreators = makeAsyncActionCreators('FETCH', fetchTransit);
 
 export default (state = {}, action = {}) => {
     switch (action.type) {
-        case FETCH_TRANSIT_DATA:
+        case actions.FETCH_TRANSIT_DATA:
             // TODO handle with reselect in containers instead
             // Indicate that the geojson has been requested so that it never tries to lad again
             return R.merge(state, {requested: true});
-        case FETCH_TRANSIT_SUCCESS:
+        case actions.FETCH_TRANSIT_SUCCESS:
             // Merge the returned geojson into the state
             return R.merge(state, action.body);
         default:

@@ -10,43 +10,40 @@
  */
 import R from 'ramda'
 import {persistMarkers, fetchMarkers as fetchMarkersIO, removeMarkers as removeMarkersIO} from 'store/async/markerIO'
-import {actionId, asyncActions, asyncActionHandlers} from 'store/reducers/reducerHelpers'
+import {actionId, asyncActions, asyncActionCreators} from 'store/reducers/reducerHelpers'
 import {SCOPE} from './geojsons'
-import {ACTION} from './markersActionTypes'
+import actions, {ACTION_NAME} from './markerActions'
 
-const makeAsyncActionHandlers = asyncActionHandlers(SCOPE, ACTION);
-// Define Action Handlers
-const {fetchMarkers, fetchMarkersData, fetchMarkersSuccess, fetchMarkersFailure} = makeAsyncActionHandlers('FETCH', fetchMarkersIO);
-const {updateMarkers, updateMarkersData, udpateMarkersSuccess, updateMarkersFailure} = makeAsyncActionHandlers('UPDATE', persistMarkers);
-const {removeMarkers, removeMarkersData, removeMarkersSuccess, removeMarkersFailure} = makeAsyncActionHandlers('REMOVE', removeMarkersIO);
-// Export all Action Handlers
-export const actionCreators = {
-    fetchMarkers, fetchMarkersData, fetchMarkersSuccess, fetchMarkersFailure,
-    updateMarkers, updateMarkersData, udpateMarkersSuccess, updateMarkersFailure,
-    removeMarkers, removeMarkersData, removeMarkersSuccess, removeMarkersFailure
-};
-
-
-// TODO not wired up
-export const selectMarker = info => ({ type: SELECT_MARKER, info });
-export const hoverMarker = info => ({ type: HOVER_MARKER, info });
+export {actions};
+const makeAsyncActionCreators = asyncActionCreators(SCOPE, ACTION_NAME);
+// Define Action Creators
+export const actionCreators = R.mergeAll([
+    makeAsyncActionCreators('FETCH', fetchMarkersIO),
+    makeAsyncActionCreators('UPDATE', persistMarkers),
+    makeAsyncActionCreators('REMOVE', removeMarkersIO),
+    // TODO not wired up
+    {
+        selectMarker: info => ({type: actions.SELECT_MARKER, info}),
+        hoverMarker: info => ({type: actions.HOVER_MARKER, info})
+    }
+]);
 
 export default (state = {}, action = {}) => {
 
     const sortById = R.sortBy(R.prop('id'));
     const merge = R.merge(state);
     switch (action.type) {
-        case FETCH_MARKERS_DATA:
+        case actions.FETCH_MARKERS_DATA:
             // Indicate that the geojson has been requested so that it never tries to lad again
             // TODO use reselect in container instead of this silly state management
             return R.merge(state, {markersRequested: true});
-        case FETCH_MARKERS_SUCCESS:
+        case actions.FETCH_MARKERS_SUCCESS:
             // Merge the returned geojson into the state
             return merge({markers: R.map(R.prop('doc'), sortById(action.body.rows))});
-        case UPDATE_MARKERS_SUCCESS:
+        case actions.UPDATE_MARKERS_SUCCESS:
             // Merge the returned geojson into the state
             return merge({markers: R.map(R.prop('doc'), sortById(action.body.rows))});
-        case REMOVE_MARKERS_SUCCESS:
+        case actions.REMOVE_MARKERS_SUCCESS:
             // Merge the returned geojson into the state
             return merge({markers: R.map(R.prop('doc'), sortById(action.body.rows))});
         default:

@@ -10,14 +10,17 @@ import {mockTimeSource} from '@cycle/time';
         ACTION: { 'ab|': actionSource },
         HTTP:   { '--|': httpSource }
    }
-    where the key matches the source/sinc Key, the inner key is the Time diagram string, and the inner
-    value is a Source representation in form like this:
+    where the key matches the source/sink Key, the inner key is the Time diagram string, and the inner
+    value is a sourceOpts representation in form like this:
    {
         a: actions.requestReposByUser(user1), // returns a {} or func
         b: actions.requestReposByUser(user2)
    }
-    where the key matches those in the diagram and the value is either a Redux action call
-    or a function that calls a Redux action call
+    where the key matches those in the diagram and the value an object result based
+    on calling a Redux action or a func result like this for HTTP:
+        () => ({
+          r: xs.of({ body: { items: ['foo'] } })
+        })
  * @param sinks A Diagram Mapping of expected Sinks in a form like:
  * {
  *  HTTP:   { 'xy|': httpSink }
@@ -47,10 +50,15 @@ export function assertSourcesSinks(sources, sinks, main, done, timeOpts = {}) {
     // e.g. sourceKey is 'ACTION' or 'HTTP'
         .reduce((_sources, sourceKey) => {
             // Extract the object, e.g.
-            // {
-            //  a: actions.requestReposByUser(user1), returns an {} or func
+            // {'ab|': {
+            //  a: actions.requestReposByUser(user1),
             //  b: actions.requestReposByUser(user2)
-            //  }
+            //  }} or
+            //  '--|': {
+            //      select: () => ({
+            //          r: xs.of(response)
+            //      })
+            //  }}
             const sourceObj = sources[sourceKey];
             // Extract the source's only key to use in a Time diagram,
             // e.g. 'ab|'
@@ -58,41 +66,45 @@ export function assertSourcesSinks(sources, sinks, main, done, timeOpts = {}) {
             // Get the value associated with that key to use as options
             // e.g.
             // {
-            //  a: actions.requestReposByUser(user1), (or () => actions.requestReposByUser(user1)),
+            //  a: actions.requestReposByUser(user1), (returns obj)
             //  b: actions.requestReposByUser(user2)
             // }
+            // or
+            // select: () => ({
+            //  r: xs.of(response)
+            // })
             const sourceOpts = sourceObj[diagram];
 
             let obj = {};
-            // Take the first key of the sourceOpts
+            // Take the first key of the sourceOpts e.g. 'a' or 'select'
             let firstKey = Object.keys(sourceOpts)[0];
             if (typeof sourceOpts[firstKey] === 'function') {
-                // If the value returns a function then create a Time diagram with the single sourceObj key
-                // and map the sourceObj key to a function returning the call to sourceOpts[firstKey]
+                // If the action call returns a function return an object with the Source key
+                // valued by the single key/func, the first sourceOpts key and valued by the Diagram call,
+                // which itself is called with the Diagram key and key mappings
                 // e.g.
                 // {
-                //  ACTIONS: {
-                //      a: () => diagram('ab|', actions.requestReposByUser(user1)), <-- returns func
-                //  }
+                //  HTTP:
+                //      {select: () => diagram('--|', {r: xs.of()response)}}
+                //  })
                 obj = {
                     [sourceKey]: {
                         [firstKey]: () => timeSource.diagram(diagram, sourceOpts[firstKey]())
                     }
                 }
             } else {
-                // Else the key is an object so create a Time diagram with the single sourceObj key
-                // and map the sourceObj key to the sourceOpts[firstKey] object
+                // Else the action call returns an object make an object keyed by the Source key and valued
+                // by the Time Diagram, which itself is called with the Diagram key and key mappings
                 // e.g.
                 // {
-                //  ACTIONS: {
-                //      a: () => diagram('ab|', actions.requestReposByUser(user1)), <--- returns obj
+                //  ACTIONS: diagram('ab|', {a: actions.requestReposByUser(user1)), b: actions.requestReposByUser(user2)})
                 //  }
                 obj = {
                     [sourceKey]: timeSource.diagram(diagram, sourceOpts)
                 }
             }
 
-            // Add each sourceKey to diagram object to the sources
+            // Reduce each Source object
             // Thus we return something like
             // {
             //  sourceA: sourceOpts1stKey: () => diagram(sourceASource1stKey1, sourceOptions1stValue)

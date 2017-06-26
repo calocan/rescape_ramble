@@ -78,7 +78,7 @@ export const asyncActions = R.curry((scope, action, crud) => {
  *  CrudActionFailure: trivial action handler indicating crud failure, returns object with exception in 'error'
  * }
  */
-export const asyncActionHandlers = R.curry((scope, action, crud, asyncFunc) => {
+export const asyncActionCreators = R.curry((scope, action, crud, asyncFunc) => {
     const valueMaker = actionValues(scope, action, crud);
     // Creates action values (e.g. FETCH_USER_DATA)
     const {DATA, SUCCESS, FAILURE} = R.compose(

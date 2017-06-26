@@ -1,11 +1,9 @@
 import React from 'react';
 import {shallow} from 'enzyme'
-import createRegion from './Region';
+import Region from './Region';
 import testConfig from 'store/data/test/config'
 import initialState from 'store/data/initialState'
 import R from 'ramda'
-
-const Region = createRegion(React);
 
 test('Region', () => {
     const state = initialState(testConfig);

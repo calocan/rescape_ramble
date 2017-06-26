@@ -81,13 +81,13 @@ export const fetchTransit = R.curry((options, bounds) => {
  * be queried separately. The results from all queries are merged by feature id so that no
  * duplicates are returned.
  * @param {Object} options Options to pass to query-overpass, plus the following:
- * @param {Number} options.cellSize Size of cells to request in kilometers, defaults to 1 km
+ * @param {Number} options.cellSize Size of cells to request in kilometers
  * @param {Number} options.sleepBetweenCalls Pause this many milliseconds between calls to avoid the request rate limit
  * @param {Object} options.testBounds Used only for testing
  * @param {Array} bounds [lat_min, lon_min, lat_max, lon_max]
  *
  */
-const fetchTransitCelled = ({cellSize = 1, sleepBetweenCalls, testBounds}, bounds) => {
+const fetchTransitCelled = ({cellSize, sleepBetweenCalls, testBounds}, bounds) => {
     const units = 'kilometers';
     // Use turf's squareGrid function to break up the bbox by cellSize squares
     const squares = R.map(

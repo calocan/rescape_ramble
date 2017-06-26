@@ -11,17 +11,12 @@
 
 import testConfig from 'store/data/test/config';
 import initialState from 'store/data/initialState';
-import configureStore from 'redux-mock-store';
-import {mapPropValueAsIndex} from 'helpers/functions';
 import {actionTypes} from './geojsons';
 import {fetchMarkers, removeMarkers, updateMarkers} from 'store/reducers/geojson/markers';
-import {stopSync} from 'store/async/pouchDb';
-import {setState} from 'store/reducers/fullState';
-import thunk from 'redux-thunk';
+import {stopSync} from 'store/async/pouchDbIO';
+import {setState} from 'store/reducers/fullStates';
 import {expectTask} from 'helpers/jestHelpers';
-const middlewares = [thunk];
-const mockStore = configureStore(middlewares);
-const toObjectKeyedById = mapPropValueAsIndex('id');
+import makeStore from 'store'
 
 describe('markers reducer', () => {
     const state = initialState(testConfig)

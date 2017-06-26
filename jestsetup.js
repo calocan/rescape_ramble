@@ -20,6 +20,7 @@ global.navigator = {};
 global.navigator.userAgent = 'Test';
 // Some components like react-scrollview need document defined
 global.document = jsdom();
+global.window = global
 
 // Make the __database__ dir to store local databases
 // Local databases are only need in Node since they are normally stored in the browser
@@ -28,6 +29,7 @@ if (!fs.existsSync(PATH))
     fs.mkdirSync(PATH);
 
 // Fail tests on any warning
+/*
 console.error = message => {
     throw new Error(message);
 };
@@ -35,3 +37,4 @@ console.error = message => {
 process.on('unhandledRejection', (reason) => {
     console.log('Unhandled Promise', reason)
 })
+*/

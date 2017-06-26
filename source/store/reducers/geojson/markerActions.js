@@ -11,19 +11,16 @@
 
 import {actionId, asyncActions} from "../reducerHelpers";
 import {SCOPE} from './geojsons'
+import R from 'ramda'
 
-export const ACTION = 'markers';
-const makeAsyncActions = asyncActions(SCOPE, ACTION);
-const makeAction = actionId(SCOPE);
-
-let FETCHES, UPDATES, REMOVES;
-// Define Actions
-const {FETCH_MARKERS_DATA, FETCH_MARKERS_SUCCESS, FETCH_MARKERS_FAILURE} = FETCHES = makeAsyncActions('FETCH');
-const {UPDATE_MARKERS_DATA, UPDATE_MARKERS_SUCCESS, UPDATE_MARKERS_FAILURE} = UPDATES = makeAsyncActions('UPDATE');
-const {REMOVE_MARKERS_DATA, REMOVE_MARKERS_SUCCESS, REMOVE_MARKERS_FAILURE} = REMOVES = makeAsyncActions('REMOVE');
-
-// Export in actionTypes object too
-export const actionTypes = R.mergeAll([FETCHES, UPDATES, REMOVES, {
-    SELECT_MARKER: makeAction('SELECT_MARKER'),
-    HOVER_MARKER: makeAction('HOVER_MARKER')
-}]);
+export const ACTION_NAME = 'markers';
+const makeAsyncActions = asyncActions(SCOPE, ACTION_NAME);
+const makeAction = name => ({name: actionId(SCOPE, name)});
+// Make and export all actions
+export default R.mergeAll([
+    makeAsyncActions('FETCH'),
+    makeAsyncActions('UPDATE'),
+    makeAsyncActions('REMOVE'),
+    makeAction('SELECT_MARKER'),
+    makeAction('HOVER_MARKER')
+]);

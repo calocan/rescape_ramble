@@ -24,16 +24,14 @@ const MapStops = createMapStops(React);
 class Mapbox extends React.Component {
 
     componentWillReceiveProps(nextProps) {
-        const osmLens = R.lensPath(['geojson', 'osm', 'features', 'length']);
-        const markersLens = R.lensPath(['geojson', 'markers']);
-        const widthLens = R.lensPath(['viewport', 'width']);
-        const heightLens = R.lensPath(['viewport', 'height']);
+        const osmLens = R.lensPath(['region', 'geojson', 'osm', 'features', 'length']);
+        const markersLens = R.lensPath(['region', 'geojson', 'markers']);
         // Features have changed
         if (R.view(osmLens, this.props) !== R.view(osmLens, nextProps)) {
-            this.setState({osmByType: geojsonByType(nextProps.geojson.osm)});
+            this.setState({osmByType: geojsonByType(nextProps.region.geojson.osm)});
         }
         if (R.view(markersLens, this.props) !== R.view(markersLens, nextProps)) {
-            this.setState({markers: nextProps.geojson.markers});
+            this.setState({markers: nextProps.region.geojson.markers});
         }
     }
 
@@ -52,7 +50,6 @@ class Mapbox extends React.Component {
 
         return (
             <MapGL
-                style={styles.container}
                 mapboxApiAccessToken = { mapboxApiAccessToken }
                 { ...viewport }
                 showZoomControls={ true }
@@ -78,9 +75,9 @@ const {
 Mapbox.propTypes = {
     viewport: object.isRequired,
     mapboxApiAccessToken: string.isRequired,
-    geojson: object.isRequired,
     iconAtlas: string.isRequired,
     showCluster: bool.isRequired,
+    region: object.isRequired
 };
 
 export default Mapbox;

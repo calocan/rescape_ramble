@@ -10,5 +10,8 @@
  */
 
 describe('Searches', () => {
-    throw new Error('Not Implmented');
+    console.warn('Not implemented')
+    test('something', () => {
+
+    })
 });

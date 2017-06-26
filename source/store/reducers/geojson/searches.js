@@ -10,11 +10,11 @@
  */
 
 import {searchLocation as searchLocationIO} from 'store/async/searchIO'
-import {asyncActions, asyncActionHandlers} from 'store/reducers/reducerHelpers'
+import {asyncActions, asyncActionCreators} from 'store/reducers/reducerHelpers'
 
 const scope = 'searches';
 const action = 'location';
-const makeAsyncActionHandlers = asyncActionHandlers(scope, action);
+const makeAsyncActionHandlers = asyncActionCreators(scope, action);
 export const actions = asyncActions(scope, action, 'SEARCH');
 export const actionCreators = makeAsyncActionHandlers('SEARCH', searchLocationIO);
 

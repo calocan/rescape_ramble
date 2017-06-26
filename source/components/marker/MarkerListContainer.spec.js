@@ -10,7 +10,7 @@
  */
 
 import thunk from 'redux-thunk'
-import {mapStateToProps} from 'components/mapbox/MapboxContainer'
+import {mapStateToProps} from 'components/marker/MarkerListContainer'
 import configureStore from 'redux-mock-store';
 
 import testConfig from 'store/data/test/config'
