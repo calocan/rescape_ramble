@@ -23,6 +23,9 @@ export default mergeDeep(privateConfig, {
         routeTypes: routeTypes
     },
     geojson: {
+        markers: {},
+        osm: {},
+        searches: {}
     },
     mapbox: {
         mapStyle: 'mapbox://styles/mapbox/streets-v8',

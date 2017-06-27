@@ -20,7 +20,7 @@ import {getPath} from 'helpers/functions'
 const middlewares = [thunk];
 const mockStore = configureStore(middlewares);
 
-describe('MarkersContainer', () => {
+describe('MarkerListContainer', () => {
     test('mapStateToProps flattens viewport props', () => {
         const store = mockStore(initialState(testConfig));
         const state = store.getState();

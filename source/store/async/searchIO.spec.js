@@ -11,6 +11,6 @@
 
 describe("searchIO", () => {
     test("something", () => {
-        console.warning("Not Implemented")
+        console.warn("Not Implemented")
     })
 })

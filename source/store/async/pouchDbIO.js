@@ -112,9 +112,7 @@ export function destroy(dbNameOrUrl) {
     return new Task((reject, resolve) => {
         (dbs[dbNameOrUrl] || new PouchDB(dbNameOrUrl)).destroy().then(function () {
             resolve()
-        }).catch(function () {
-            reject()
-        })
+        }).catch(e => reject(e))
     });
 }
 

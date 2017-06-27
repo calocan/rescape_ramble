@@ -12,6 +12,7 @@ import {fromJS, Iterable} from 'immutable';
 import R from 'ramda';
 import prettyFormat from 'pretty-format'
 import Task from 'data.task'
+import stackTrace from 'stack-trace'
 
 /***
  * Return an empty string if the given entity is falsy
@@ -234,8 +235,9 @@ export const taskToPromise = (task, expectReject = false) => {
             reject => {
                 if (!expectReject) {
                     console.log('Unhandled Promise', prettyFormat(reject))
-                    if (reject && reject.stack)
-                        console.log(reject.stack)
+                    if (reject && reject.stack) {
+                        console.log(stackTrace.parse(reject));
+                    }
                 }
                 return rej(reject);
             },

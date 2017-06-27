@@ -13,10 +13,12 @@ import {fetchTransit} from './overpassIO';
 import {removeDuplicateObjectsByProp} from 'helpers/functions'
 import {expectTask} from 'helpers/jestHelpers'
 import {retrieveOrFetch} from "./storageIO";
-import {createLocalDb, cycleLocalDb, getDb} from "./pouchDbIO";
+import {createLocalDb, cycleLocalDb, destroy, getDb} from "./pouchDbIO";
 import * as fs from 'fs';
 import {promiseToTask} from "../../helpers/functions";
 import R from 'ramda';
+import Task from 'data.task'
+
 
 const name = 'overpass_io_spec';
 const PATH = `${__dirname}/__databases__/`;
@@ -56,9 +58,15 @@ describe('overpassHelpersUnmocked', () => {
 
 });
 describe('overpassHelpers', async() => {
+
     if (!mock) {
         return
     }
+
+    afterEach(() => {
+        destroy(DB)
+    });
+
     const bounds = require('query-overpass').LA_BOUNDS;
     test('fetchTransit', async() => {
         // Pass bounds in the options. Our mock query-overpass uses is to avoid parsing the query
@@ -75,7 +83,7 @@ describe('overpassHelpers', async() => {
             removeDuplicateObjectsByProp('id', require('queryOverpassResponse').LA_SAMPLE.features)
         )
     })
-    test('store fetch', async() => {
+    test('store fetch', async () => {
         const bounds = require('query-overpass').LA_BOUNDS;
         await expectTask(
             cycleLocalDb(DB)

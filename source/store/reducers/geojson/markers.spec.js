@@ -12,11 +12,18 @@
 import testConfig from 'store/data/test/config';
 import initialState from 'store/data/initialState';
 import {actionTypes} from './geojsons';
-import {fetchMarkers, removeMarkers, updateMarkers} from 'store/reducers/geojson/markers';
 import {stopSync} from 'store/async/pouchDbIO';
 import {setState} from 'store/reducers/fullStates';
 import {expectTask} from 'helpers/jestHelpers';
 import makeStore from 'store'
+import {LA_SAMPLE} from 'store/async/markerIO.sample'
+import {SCOPE} from './geojsons'
+import ACTION_NAME from 'store/reducers/geojson/markerActions'
+import {asyncActionCreators} from "store/reducers/reducerHelpers";
+// Mock the asyncronous actionCreator
+const {fetchMarkers} = asyncActionCreators(SCOPE, ACTION_NAME, 'FETCH', () => LA_SAMPLE);
+const {removeMarkers} = asyncActionCreators(SCOPE, ACTION_NAME, 'REMOVE', () => LA_SAMPLE);
+const {updateMarkers} = asyncActionCreators(SCOPE, ACTION_NAME, 'UPDATE', () => LA_SAMPLE);
 
 describe('markers reducer', () => {
     const state = initialState(testConfig)
@@ -27,8 +34,8 @@ describe('markers reducer', () => {
         const bounds = require('query-overpass').LA_BOUNDS;
         const expectedActions = [
             { type: actionTypes.FETCH_MARKERS_DATA },
-            { type: actionTypes.FETCH_MARKERS_SUCCESS, body: markersSample}
-        ]
+            { type: actionTypes.FETCH_MARKERS_SUCCESS, body: LA_SAMPLE}
+        ];
 
         expectTask(store.dispatch(fetchMarkers(
             {testBounds: bounds},
@@ -44,21 +51,21 @@ describe('markers reducer', () => {
         const bounds = require('query-overpass').LA_BOUNDS;
         const expectedActions = [
             { type: actionTypes.UPDATE_MARKERS_DATA },
-            { type: actionTypes.UPDATE_MARKERS_SUCCESS, body: markersSample}
+            { type: actionTypes.UPDATE_MARKERS_SUCCESS, body: LA_SAMPLE}
         ];
 
         expectTask(
-            store.dispatch(removeMarkers(
+            store.dispatch(updateMarkers(
                 {testBounds: bounds},
-                state.regions.currentKey))
-                .chain(response => store.dispatch(updateMarkers(
-                    state.regions.currentKey,
-                    {testBounds: bounds},
-                    markersSample.features)))
-                .map(() => {
-                    console.log('Finished updateMarkers')
-                    stopSync(state.regions.currentKey)
-                    return store.getActions()
-                })).resolves.toEqual(expectedActions)
+                markersSample.features))
+            .chain(response => store.dispatch(updateMarkers(
+                state.regions.currentKey,
+                {testBounds: bounds},
+                state.regions.currentKey)))
+            .map(() => {
+                console.log('Finished updateMarkers')
+                stopSync(state.regions.currentKey)
+                return store.getActions()
+            })).resolves.toEqual(expectedActions)
     })
 });
