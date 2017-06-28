@@ -19,8 +19,8 @@ const mockStore = configureStore(middlewares);
 const state = testState()
 jest.mock('query-overpass')
 
-describe('geojson reducer', () => {
-    test('should fetch osm', async () => {
+describe('openStreetMaps', () => {
+    test('fetchTransit', async () => {
         const bounds = require('query-overpass').LA_BOUNDS;
         const store = mockStore(state);
         const expectedActions = [

@@ -13,7 +13,10 @@ import * as ActionTypes from '../ActionTypes';
 
 import { combineCycles } from 'redux-cycles';
 import xs from 'xstream';
+import cycleMarkers from './markerIO'
+export default cycleMarkers;
 
+/*
 export function fetchReposByUser(sources) {
     const user$ = sources.ACTION
         .filter(action => action.type === ActionTypes.REQUESTED_USER_REPOS)
@@ -82,6 +85,6 @@ function clearSearchResults(sources) {
         ACTION: clear$
     }
 }
+*/
 
-export default combineCycles(fetchReposByUser, searchUsers, clearSearchResults);
 

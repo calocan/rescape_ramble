@@ -3,8 +3,6 @@ import {shallow} from 'enzyme';
 import {getPath} from 'helpers/functions';
 import {mapStateToProps} from './MarkerListContainer';
 import {geojsonByType} from 'helpers/geojsonHelpers';
-import Mapbox from 'components/mapbox/Mapbox'
-import MapGL from 'react-map-gl'
 
 import config from 'store/data/test/config';
 import initialState from 'store/data/initialState';

@@ -12,36 +12,99 @@
 import Task from 'data.task';
 import R from 'ramda';
 import Rx from 'rxjs';
-import { combineCycles } from 'redux-cycles';
-import xs from 'xstream';
+import { from, fromPromise, combine } from 'most'
 import {getDb} from "./pouchDbIO";
-import { actions } from 'store/reducers/geojson/markers'
-import { actionsCreators } from 'store/reducers/geojson/markerActions'
+import { actions, actionCreators } from 'store/reducers/geojson/markers'
 const resolveDb = (regionKey, options) => getDb(options && options.dbName || regionKey);
 
-export function cycleFetchMarkers(sources) {
-    const region$ = sources.ACTION
+// Map an ACTION fetch source to a POUCHDB request sync
+// Map a POUCHDB response source to an ACTION success/error sync
+export function cycleMarkers({ACTION, POUCHDB}) {
+    // Intent------------
+
+    // Resolve the requested region to know what markers we need
+    const fetchMarkers$ = ACTION
         .filter(action => action.type === actions.FETCH_MARKERS)
         .map(action => action.region);
 
-    const request$ = region$
-        .map(region => ({
-            id: region.id,
-            bounds: region.bounds
-        }));
+    // Model--------------
 
-    const response$ = sources.HTTP
-        .select('users')
-        .flatten();
+    // Resolve a design doc id based on the region
+    const viewName = 'allMarkers'
+    const designDocId = regionId => `_design/${regionId}`;
+    const designDocViewId = regionId => `${regionId}/${viewName}`;
+    const actionCreatorSuccess = actionCreators.fetchMarkersSuccess;
+    const actionUpdate = actionCreators.updateMarkers;
 
-    const action$ = xs.combine(response$, user$)
-        .map(arr => actionCreators.receiveUserRepos(arr[1], arr[0].body));
+    // Create the query action$ sink from the region$
+    const action$ = fetchMarkers$
+        .map(region =>
+            POUCHDB
+                .query(designDocViewId(region.id), {
+                    include_docs: true,
+                    descending: true,
+                })
+                .map(res => res.rows.map(r => r.doc))
+        )
+        // Map the database response to the actionCreator success function
+        .map(res => actionCreatorSuccess(
+            res.rows.map(r => r.doc),
+        ));
+
+    const dateLens = R.lensProp('date');
+    const _idLens = R.lensProp('_id');
+    const recordIdLens = R.lensPath(['properties', '@id']);
+    const recordsName = 'features';
+    const createDesignDoc = (regionId) => {
+        return {
+            _id: `${designDocId(regionId)}`,
+            views: {
+                [viewName]: {
+                    map: `function (doc) {
+                    if (doc.type === 'item') {
+                        emit(doc);
+                    }
+                }.toString()`
+                }
+            }
+        };
+    };
+
+    // Function that writes features to document store
+    const writeRecords$ = record => from(record)
+        .timestamp()
+        // Add a timestamp and _id to the feature for storing
+        .map(obj => R.compose(R.set(dateLens, obj.timestamp), R.set(_idLens, obj.value.id))(obj.value))
+        .do(theRecord => console.log(`Add/Update feature for: ${R.view(recordIdLens, theRecord)}`))
+        .map(theRecord => POUCHDB.put(theRecord));
+
+    const pouchDbDesignDoc$ = $region.map(region =>
+        POUCHDB.put(createDesignDoc(designDocId(${region.id})))
+    );
+
+    const pouchDb$ = ACTION
+        .filter(action => action.type === actionUpdate)
+        .map(action => action[recordsName])
+        // Run through all Records in the array
+        .concatMap(writeRecords$)
+        .subscribe(
+            rec => console.log(`New record created: ${rec.id}`),
+            err => {
+                console.log('Rejected update', err);
+            },
+            () => {
+                console.log('Finished update');
+            }
+        );
 
     return {
         ACTION: action$,
-        HTTP: request$
+        POUCHDB: combine(pouchDbDesignDoc$, pouchDb$)
     }
 }
+
+
+
 /***
  * fetches transit data from OpenStreetMap using the Overpass API.
  * @param {String} The key of the region, used for database scope

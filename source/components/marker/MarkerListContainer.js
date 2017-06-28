@@ -21,7 +21,12 @@ import {action as geojsonActions} from 'store/reducers/geojson/geojsons';
  */
 export const mapStateToProps = (state, ownProps) => {
     // include geojson data of the region
-    return R.pick(['geojson', 'id'], ownProps.region);
+    return R.merge(
+        R.pick(['geojson', 'id'], ownProps.region),
+        {
+            mapboxApiAccessToken: ownProps.region.mapbox.mapboxApiAccessToken,
+        }
+    );
 }
 
 export default connect(mapStateToProps, geojsonActions)(MarkerList);

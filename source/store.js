@@ -15,13 +15,15 @@
 import 'babel-polyfill';
 import thunk from 'redux-thunk';
 import {applyMiddleware, compose, createStore} from 'redux';
-//import {createCycleMiddleware} from 'redux-cycles';
+import {createCycleMiddleware} from 'redux-cycles';
 import reducer from './store/reducers/reducer';
 import {persistentStore} from 'redux-pouchdb-plus';
 import {responsiveStoreEnhancer} from 'redux-responsive'
 import PouchDB from 'pouchdb';
 import R from 'ramda';
 import {startSync} from "./store/async/pouchDbIO";
+import {sources} from 'store/async/cycle';
+import {run} from '@cycle/run'
 
 // Use this synced db to store the state of the app
 // There might be no reason to sync the state to a remote db
@@ -42,24 +44,13 @@ const environmentMiddlewares = R.ifElse(
     () => []
 )(process.env.NODE_ENV);
 
-// Redux-cyles
-function main(sources) {
-    const pong$ = sources.ACTION
-        .filter(action => action.type === 'PING')
-        .mapTo({ type: 'PONG' });
-
-    return {
-        ACTION: pong$
-    }
-}
-
-//const cycleMiddleware = createCycleMiddleware();
-//const { makeActionDriver } = cycleMiddleware;
+const cycleMiddleware = createCycleMiddleware();
+const { makeActionDriver, makeStateDriver } = cycleMiddleware;
 
 // Use thunk and the persistentStore, the latter applies couchDB persistence to the store
 const applyMiddlewares = applyMiddleware(
     thunk,
-    //cycleMiddleware,
+    cycleMiddleware,
     ...environmentMiddlewares
 );
 
@@ -70,5 +61,10 @@ const createStoreWithMiddleware = compose(
     typeof (window) !== 'undefined' && window.devToolsExtension ? window.devToolsExtension() : f => f,
     persistentStore({db})
 )(createStore);
+
+run(sources, {
+    ACTION: makeActionDriver(),
+    STATE: makeStateDriver(),
+})
 
 export default (initialState = {}) => createStoreWithMiddleware(reducer, initialState);

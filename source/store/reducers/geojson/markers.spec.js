@@ -18,18 +18,23 @@ import {expectTask} from 'helpers/jestHelpers';
 import makeStore from 'store'
 import {LA_SAMPLE} from 'store/async/markerIO.sample'
 import {SCOPE} from './geojsons'
-import ACTION_NAME from 'store/reducers/geojson/markerActions'
+import {ACTION_NAME} from 'store/reducers/geojson/markerActions'
 import {asyncActionCreators} from "store/reducers/reducerHelpers";
-// Mock the asyncronous actionCreator
-const {fetchMarkers} = asyncActionCreators(SCOPE, ACTION_NAME, 'FETCH', () => LA_SAMPLE);
-const {removeMarkers} = asyncActionCreators(SCOPE, ACTION_NAME, 'REMOVE', () => LA_SAMPLE);
-const {updateMarkers} = asyncActionCreators(SCOPE, ACTION_NAME, 'UPDATE', () => LA_SAMPLE);
+import Task from 'data.task';
+import thunk from 'redux-thunk'
+import configureMockStore from 'redux-mock-store'
+const middlewares = [ thunk ]
+const mockStore = configureMockStore(middlewares)
+// Mock the asynchronous actionCreator
+const {fetchMarkers} = asyncActionCreators(SCOPE, ACTION_NAME, 'FETCH', () => Task.of(LA_SAMPLE));
+const {removeMarkers} = asyncActionCreators(SCOPE, ACTION_NAME, 'REMOVE', () => Task.of(LA_SAMPLE));
+const {updateMarkers} = asyncActionCreators(SCOPE, ACTION_NAME, 'UPDATE', () => Task.of(LA_SAMPLE));
 
 describe('markers reducer', () => {
     const state = initialState(testConfig)
     it('should fetch markers', () => {
         // We need a real store to test PouchDb
-        const store = makeStore();
+        const store = mockStore();
         store.dispatch(setState(initialState(testConfig)));
         const bounds = require('query-overpass').LA_BOUNDS;
         const expectedActions = [
@@ -45,8 +50,7 @@ describe('markers reducer', () => {
     })
 
     it('should update markers', () => {
-        // We need a real store to test PouchDb
-        const store = makeStore();
+        const store = mockStore()
         store.dispatch(setState(initialState(testConfig)));
         const bounds = require('query-overpass').LA_BOUNDS;
         const expectedActions = [
@@ -56,16 +60,13 @@ describe('markers reducer', () => {
 
         expectTask(
             store.dispatch(updateMarkers(
-                {testBounds: bounds},
-                markersSample.features))
-            .chain(response => store.dispatch(updateMarkers(
                 state.regions.currentKey,
                 {testBounds: bounds},
-                state.regions.currentKey)))
+                LA_SAMPLE)))
             .map(() => {
                 console.log('Finished updateMarkers')
                 stopSync(state.regions.currentKey)
                 return store.getActions()
-            })).resolves.toEqual(expectedActions)
+            }).resolves.toEqual(expectedActions)
     })
 });

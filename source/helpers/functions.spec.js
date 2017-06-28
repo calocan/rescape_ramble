@@ -111,6 +111,6 @@ describe('helperFunctions', () => {
         }))).resolves.toBe('donut')
         expect(f.taskToPromise(new Task(function(reject) {
             reject(new Error('octopus'))
-        }), true)).rejects.toThrow()
+        }), true)).rejects.toThrow(Error)
     })
 });

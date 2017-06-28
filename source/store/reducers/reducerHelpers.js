@@ -79,6 +79,8 @@ export const asyncActions = R.curry((scope, action, crud) => {
  * }
  */
 export const asyncActionCreators = R.curry((scope, action, crud, asyncFunc) => {
+    if (typeof(action) === 'object')
+        throw new Error();
     const valueMaker = actionValues(scope, action, crud);
     // Creates action values (e.g. FETCH_USER_DATA)
     const {DATA, SUCCESS, FAILURE} = R.compose(
@@ -87,7 +89,7 @@ export const asyncActionCreators = R.curry((scope, action, crud, asyncFunc) => {
     )(PHASES);
     const crudAction = phase => `${R.toLower(crud)}${capitalize(action)}${capitalize(phase)}`;
     const handlers = {
-        [crudAction('data')]: () => ({type: DATA}),
+        [crudAction('data')]: (args) => R.merge({type: DATA}, args),
         [crudAction('success')]: (body) => ({type: SUCCESS, body}),
         [crudAction('failure')]: (error) => ({type: FAILURE, error}),
     };
@@ -96,7 +98,7 @@ export const asyncActionCreators = R.curry((scope, action, crud, asyncFunc) => {
             const args = arguments;
             return dispatch => {
                 // Call the _data action
-                dispatch(handlers[crudAction('data')]());
+                dispatch(handlers[crudAction('data')](args));
                 // Call the asyncFunc with whatever args are passed to the actionCreator
                 return asyncFunc(...args).chain(response =>
                     // Call the _success action with the response

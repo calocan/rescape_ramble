@@ -184,10 +184,10 @@ export const mergeDeep = R.mergeWith((l, r) =>
  * Capitalize the first letter
  * capitalize:: String -> String
  */
-export const capitalize = R.compose(
+export const capitalize = obj => R.compose(
     R.join(''),
     R.juxt([R.compose(R.toUpper, R.head), R.tail])
-);
+)(obj);
 
 /**
  * Merge a list of objects using the given concat function

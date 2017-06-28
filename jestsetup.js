@@ -12,6 +12,7 @@
 // Make Enzyme Rx available in all test files without importing
 import { shallow, render, mount } from 'enzyme';
 import * as fs from 'fs';
+import stackTrace from "stack-trace";
 const jsdom = require('jsdom').jsdom
 global.shallow = shallow;
 global.render = render;
@@ -21,6 +22,10 @@ global.navigator.userAgent = 'Test';
 // Some components like react-scrollview need document defined
 global.document = jsdom();
 global.window = global
+// Have exceptions traces traverse async processes
+if (process.env.NODE_ENV !== 'production'){
+    require('longjohn');
+}
 
 // Make the __database__ dir to store local databases
 // Local databases are only need in Node since they are normally stored in the browser
@@ -33,8 +38,8 @@ if (!fs.existsSync(PATH))
 console.error = message => {
     throw new Error(message);
 };
+ */
 // https://github.com/facebook/jest/issues/3251
 process.on('unhandledRejection', (reason) => {
     console.log('Unhandled Promise', reason)
 })
-*/
