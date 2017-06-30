@@ -11,7 +11,7 @@
 
 import R from 'ramda'
 import {fetchTransit} from 'store/async/overpassIO'
-import {asyncActions, asyncActionCreators} from 'store/reducers/reducerHelpers'
+import {asyncActions, asyncActionCreators} from 'store/reducers/actionHelpers'
 
 const scope = 'openStreetMaps';
 const action = 'transit';

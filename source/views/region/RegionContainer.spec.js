@@ -14,7 +14,7 @@ import configureStore from 'redux-mock-store';
 
 import testConfig from 'store/data/test/config'
 import initialState from 'store/data/initialState'
-import {getPath} from 'helpers/functions'
+import {getRequiredPath} from 'helpers/functions'
 
 const middlewares = [thunk];
 const mockStore = configureStore(middlewares);
@@ -22,10 +22,10 @@ const mockStore = configureStore(middlewares);
 describe('RegionContainer', () => {
     test('mapStateToProps returns regions and current of state.settings', () => {
         const store = mockStore(initialState(testConfig));
-        const currentKey = getPath(['regions', 'currentKey'], store.getState());
+        const currentKey = getRequiredPath(['regions', 'currentKey'], store.getState());
 
         const ownProps = {
-            region: getPath(['regions', currentKey], store.getState()),
+            region: getRequiredPath(['regions', currentKey], store.getState()),
             width: 500,
             height: 500
         };

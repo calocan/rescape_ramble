@@ -14,38 +14,19 @@ import {cycleLocalDb} from './pouchDbIO'
 import config from 'store/data/test/config';
 import {expectTask} from 'helpers/jestHelpers'
 import {PARIS_SAMPLE, LA_SAMPLE} from './markerIO.sample'
-import {getPath, mergeAllWithKey} from 'helpers/functions'
+import {getRequiredPath, mergeAllWithKey} from 'helpers/functions'
 import {concatFeatures} from 'helpers/geojsonHelpers'
 import R from 'ramda'
 import initialState from "store/data/initialState";
-import testConfig from 'store/data/test/config'
-import assert from 'assert';
-import xs from 'xstream';
 
 import { assertSourcesSinks } from './jestCycleHelpers'
-import { fetchReposByUser, searchUsers } from '../';
-import {asyncActionCreators} from "store/reducers/reducerHelpers";
-import { SCOPE, ACTION_NAME, actions} from 'store/reducers/markers'
-
-export {actions};
-const makeAsyncActionCreators = asyncActionCreators(SCOPE, ACTION_NAME);
-// Define Action Creators
-export const actionCreators = R.mergeAll([
-    makeAsyncActionCreators('FETCH', fetchMarkersIO),
-    makeAsyncActionCreators('UPDATE', persistMarkers),
-    makeAsyncActionCreators('REMOVE', removeMarkersIO),
-    // TODO not wired up
-    {
-        selectMarker: info => ({type: actions.SELECT_MARKER, info}),
-        hoverMarker: info => ({type: actions.HOVER_MARKER, info})
-    }
-]);
+import { SCOPE, ACTION_NAME, actions, actionCreators } from 'store/reducers/geojson/markerActions'
 
 // combine the samples into one obj with concatinated features
 const geojson = mergeAllWithKey(concatFeatures)([PARIS_SAMPLE, LA_SAMPLE]);
 const state = initialState(config);
-const currentRegionKey = getPath(['regions', 'currentKey'], state);
-const region = testConfig.regions[currentRegionKey];
+const currentRegionKey = getRequiredPath(['regions', 'currentKey'], state);
+const region = getRequiredPath(['state', currentRegionKey], state);
 const testDbName = name => `${__dirname}/__databases__/${name}`
 
 describe('markerHelpers', () => {
@@ -98,9 +79,6 @@ describe('markerHelpers', () => {
     })
 
     test('cycleMarkers emits pouchDb query given ACTION', function(done) {
-        const user1 = 'lmatteis';
-        const user2 = 'luca';
-
         const actionSource = {
             a: actions.fetchMarkers(currentRegionKey, {}, region.geospatial.bounds),
         };
@@ -124,34 +102,5 @@ describe('markerHelpers', () => {
         }, {
             POUCHDB:   { 'x|': pouchDbSink }
         }, cycleMarkers, done);
-    });
-
-    test('should emit ACTION given PouchDb response', function(done) {
-        const user1 = 'lmatteis';
-        const user2 = 'luca';
-
-        const response = { body: { foo: 'bar' } };
-
-        const actionSource = {
-            a: actions.requestReposByUser(user1)
-        };
-
-        const httpSource = {
-            select: () => ({
-                r: xs.of(response)
-            })
-        };
-
-        const actionSink = {
-            a: actions.receiveUserRepos(user1, response.body)
-        };
-
-        assertSourcesSinks({
-            ACTION: { 'a|': actionSource },
-            HTTP:   { 'r|': httpSource }
-        }, {
-            ACTION: { 'a|': actionSink }
-        }, fetchReposByUser, done);
-
     });
 });

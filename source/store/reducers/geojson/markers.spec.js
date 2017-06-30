@@ -19,7 +19,7 @@ import makeStore from 'store'
 import {LA_SAMPLE} from 'store/async/markerIO.sample'
 import {SCOPE} from './geojsons'
 import {ACTION_NAME} from 'store/reducers/geojson/markerActions'
-import {asyncActionCreators} from "store/reducers/reducerHelpers";
+import {asyncActionCreators} from "store/reducers/actionHelpers";
 import Task from 'data.task';
 import thunk from 'redux-thunk'
 import configureMockStore from 'redux-mock-store'

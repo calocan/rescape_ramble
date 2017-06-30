@@ -92,9 +92,9 @@ describe('helperFunctions', () => {
                 [{a: [1], b: 2}, {a: [2], c: 3}, {a: [3]}]
         )).toEqual({a: [1, 2, 3], b: 2, c: 3});
     })
-    test('Should getPath of object', () => {
+    test('Should getRequiredPath of object', () => {
         expect(
-            f.getPath(['a', 'b', 1, 'c'], {a: {b: [null, {c: 2}]}})
+            f.getRequiredPath(['a', 'b', 1, 'c'], {a: {b: [null, {c: 2}]}})
         ).toEqual(2)
     })
     test('Should copy an object', () => {

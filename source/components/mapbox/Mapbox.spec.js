@@ -2,7 +2,7 @@ import MapGL from 'react-map-gl';
 import Mapbox from './Mapbox';
 import React from 'react';
 import {shallow} from 'enzyme';
-import {getPath} from 'helpers/functions';
+import {getRequiredPath} from 'helpers/functions';
 import {mapStateToProps, mapDispatchToProps} from './MapboxContainer';
 import {geojsonByType} from 'helpers/geojsonHelpers';
 
@@ -12,7 +12,7 @@ import R from 'ramda';
 
 jest.mock('query-overpass')
 const state = initialState(config);
-const currentKey = getPath(['regions', 'currentKey'], state);
+const currentKey = getRequiredPath(['regions', 'currentKey'], state);
 const geojson = require('queryOverpassResponse').LA_SAMPLE;
 
 const props = R.merge(
@@ -21,7 +21,7 @@ const props = R.merge(
         region: R.set(
             R.lensProp('geojson'),
             geojsonByType(geojson),
-            getPath(['regions', currentKey], state)
+            getRequiredPath(['regions', currentKey], state)
         ),
         style: {
             width: 500,

@@ -11,7 +11,6 @@
 
 import Task from 'data.task';
 import R from 'ramda';
-import Rx from 'rxjs';
 import { from, fromPromise, combine } from 'most'
 import {getDb} from "./pouchDbIO";
 import { actions, actionCreators } from 'store/reducers/geojson/markers'
@@ -79,7 +78,7 @@ export function cycleMarkers({ACTION, POUCHDB}) {
         .map(theRecord => POUCHDB.put(theRecord));
 
     const pouchDbDesignDoc$ = $region.map(region =>
-        POUCHDB.put(createDesignDoc(designDocId(${region.id})))
+        POUCHDB.put(createDesignDoc(designDocId(region.id)))
     );
 
     const pouchDb$ = ACTION
@@ -178,17 +177,17 @@ export const persistMarkers = (regionKey, options, features) => {
     return new Task(function(reject, resolve) {
         const db = resolveDb(regionKey, options)
         // Function that writes features to document store
-        const writeFeature$ = feature => Rx.Observable.of(feature)
+        const writeFeature$ = feature => from(feature)
             .timestamp()
             // Add a timestamp and _id to the feature for storing
             .map(obj => R.compose(R.set(dateLens, obj.timestamp), R.set(_idLens, obj.value.id))(obj.value))
             .do(theFeature => console.log(`Add/Update feature for: ${R.view(featureIdLens, theFeature)}`))
-            .mergeMap(datedFeature => Rx.Observable.fromPromise(
+            .mergeMap(datedFeature => fromPromise(
                 db.put(datedFeature)
             ));
 
         // Run through all Features in the array
-        Rx.Observable.from(features)
+        from(features)
             .concatMap(writeFeature$) // Map the writeFeatures$ to each Feature object
             .subscribe(
                 rec => console.log(`New record created: ${rec.id}`),

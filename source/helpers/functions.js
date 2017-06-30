@@ -10,9 +10,11 @@
  */
 import {fromJS, Iterable} from 'immutable';
 import R from 'ramda';
+import Rm from 'ramda-maybe';
 import prettyFormat from 'pretty-format'
 import Task from 'data.task'
 import stackTrace from 'stack-trace'
+import {Maybe} from 'data.maybe'
 
 /***
  * Return an empty string if the given entity is falsy
@@ -207,12 +209,25 @@ export const mergeAllWithKey = R.curry((fn, [head, ...rest]) =>
 )
 
 /***
- * Shortcut to get the value of an object at the given lensPath
+ * Get a required path or return a helpful Error if it fails
  * @param {String} path A lensPath, e.g. ['a', 'b'] or ['a', 2, 'b']
  * @param {Object} obj The object to inspect
- * getPath:: String -> {k: v} → v
+ * getRequiredPath:: String -> {k: v} → v Error
  */
-export const getPath = R.curry((path, obj) => R.pipe(R.lensPath, R.view)(path)(obj))
+export const getRequiredPath = R.curry((path, obj) => R.compose(
+    R.when(
+        R.isNil,
+        new Error(`Found a value only up to these path segments ${R.reduceWhile(
+            // Stop if the accumulated segments can't be resolved
+            (segments, segment) => R.not(R.isNil(R.path(segments, obj))),
+            // Accumulate segments
+            (segments, segment) => R.concat(segments, [segment]),
+            [],
+            path
+        )}`)
+    ),
+    Rm.path(path).value)(obj)
+);
 
 /***
  * Use immutable to make a deep copy of an object

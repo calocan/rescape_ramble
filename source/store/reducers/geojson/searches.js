@@ -10,7 +10,7 @@
  */
 
 import {searchLocation as searchLocationIO} from 'store/async/searchIO'
-import {asyncActions, asyncActionCreators} from 'store/reducers/reducerHelpers'
+import {asyncActions, asyncActionCreators} from 'store/reducers/actionHelpers'
 
 const scope = 'searches';
 const action = 'location';
