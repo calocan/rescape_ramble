@@ -14,7 +14,7 @@ import Rm from 'ramda-maybe';
 import prettyFormat from 'pretty-format'
 import Task from 'data.task'
 import stackTrace from 'stack-trace'
-import {Maybe} from 'data.maybe'
+import {Maybe, Either} from 'ramda-fantasy'
 
 /***
  * Return an empty string if the given entity is falsy
@@ -212,22 +212,28 @@ export const mergeAllWithKey = R.curry((fn, [head, ...rest]) =>
  * Get a required path or return a helpful Error if it fails
  * @param {String} path A lensPath, e.g. ['a', 'b'] or ['a', 2, 'b']
  * @param {Object} obj The object to inspect
- * getRequiredPath:: String -> {k: v} → v Error
+ * reqPath:: String -> {k: v} → Either
  */
-export const getRequiredPath = R.curry((path, obj) => R.compose(
-    R.when(
-        R.isNil,
-        new Error(`Found a value only up to these path segments ${R.reduceWhile(
-            // Stop if the accumulated segments can't be resolved
-            (segments, segment) => R.not(R.isNil(R.path(segments, obj))),
-            // Accumulate segments
-            (segments, segment) => R.concat(segments, [segment]),
-            [],
-            path
-        )}`)
-    ),
-    Rm.path(path).value)(obj)
-);
+export const reqPath = R.curry((path, obj) => {
+    return R.compose(
+            R.ifElse(
+                Maybe.isNothing,
+                () => Either.Left({
+                    resolved: R.reduceWhile(
+                        // Stop if the accumulated segments can't be resolved
+                        (segments, segment) => R.not(R.isNil(R.path(R.concat(segments, [segment]), obj))),
+                        // Accumulate segments
+                        (segments, segment) => R.concat(segments, [segment]),
+                        [],
+                        path
+                    ),
+                    path: path
+                }),
+                res => Either.Right(res.value)
+            ),
+            Rm.path(path))(obj)
+    }
+)
 
 /***
  * Use immutable to make a deep copy of an object

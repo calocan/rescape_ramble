@@ -11,7 +11,8 @@
 import {Map} from 'immutable';
 import testConfig from 'store/data/test/config';
 import initialState from 'store/data/initialState';
-import {getRequiredPath, mapPropValueAsIndex} from 'helpers/functions';
+import {reqPath} from 'helpers/throwingFunctions'
+import {mapPropValueAsIndex} from 'helpers/functions';
 import R from 'ramda';
 import reducer, {actions, fetchMarkers, ftchOsm, removeMarkers, stopSync, updateMarkers} from './geojsons';
 import {setState} from 'store/reducers/fullStates';
@@ -22,7 +23,7 @@ describe('geojson reducer', () => {
     it('should return the initial state', () => {
         expect(
             Map(reducer()(
-                getRequiredPath(['regions', state.regions.currentKey, 'geojson'], state),
+                reqPath(['regions', state.regions.currentKey, 'geojson'], state),
                 {})
             ).toJS()
         ).toEqual(R.map(toObjectKeyedById, testConfig.geojson))

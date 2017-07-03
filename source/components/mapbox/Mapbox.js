@@ -14,7 +14,7 @@ import MapGL from 'react-map-gl';
 import React from 'react';
 import createMapStops from 'components/mapStop/mapStops';
 import MapMarkers from 'components/mapMarker/MapMarkers';
-import {getRequiredPath} from 'helpers/functions';
+import {reqPath} from 'helpers/throwingFunctions';
 import {geojsonByType} from 'helpers/geojsonHelpers';
 import Deck from './Deck';
 import R from 'ramda';
@@ -37,8 +37,8 @@ class Mapbox extends React.Component {
 
     render() {
         const { viewport, mapboxApiAccessToken, iconAtlas, showCluster, hoverMarker, selectMarker } = this.props;
-        const {node, way} = getRequiredPath(['state', 'osmByType'], this) || {};
-        const markers = {type: 'FeatureCollection', features: getRequiredPath(['state', 'markers'], this) || []};
+        const {node, way} = reqPath(['state', 'osmByType'], this) || {};
+        const markers = {type: 'FeatureCollection', features: reqPath(['state', 'markers'], this) || []};
 
         //<MapStops geojson={node || {}} viewport={viewport}/>,
         //<MapLines geojson={way || {}} viewport={viewport}/>,

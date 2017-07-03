@@ -85,6 +85,13 @@ describe('helperFunctions', () => {
     test('Should capitalize first letter', () => {
         expect(f.capitalize('good grief')).toEqual('Good grief')
     })
+    test('Required path', () => {
+        expect(f.reqPath(['a'], {a: 1}).value).toBe(1)
+        expect(f.reqPath(['a', 'b'], {a: {c: 1}}).value).toEqual({
+            resolved: ['a'],
+            path: ['a', 'b']
+        })
+    })
     test('Should merge all with key', () => {
         expect(
             f.mergeAllWithKey(
@@ -92,9 +99,9 @@ describe('helperFunctions', () => {
                 [{a: [1], b: 2}, {a: [2], c: 3}, {a: [3]}]
         )).toEqual({a: [1, 2, 3], b: 2, c: 3});
     })
-    test('Should getRequiredPath of object', () => {
+    test('Should reqPath of object', () => {
         expect(
-            f.getRequiredPath(['a', 'b', 1, 'c'], {a: {b: [null, {c: 2}]}})
+            f.reqPath(['a', 'b', 1, 'c'], {a: {b: [null, {c: 2}]}})
         ).toEqual(2)
     })
     test('Should copy an object', () => {

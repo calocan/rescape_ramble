@@ -4,7 +4,7 @@ import {actionTypes as geoJsonActions} from 'store/reducers/geojson/geojsons'
 import {Map} from 'immutable'
 import testConfig from 'store/data/test/config'
 import initialState from 'store/data/initialState'
-import {getRequiredPath} from 'helpers/functions'
+import {reqPath} from 'helpers/throwingFunctions'
 
 describe('mabpox reducer', () => {
     it('should return the initial state', () => {
@@ -48,8 +48,8 @@ describe('mabpox reducer', () => {
             zoom: 4
         }
         expect(
-            getRequiredPath(
-                [getRequiredPath(['regions', 'currentKey'], state), 'mapbox', 'viewport'],
+            reqPath(
+                [reqPath(['regions', 'currentKey'], state), 'mapbox', 'viewport'],
                 reducer(
                     state.regions,
                     {

@@ -1,6 +1,6 @@
 import React from 'react';
 import {shallow} from 'enzyme';
-import {getRequiredPath} from 'helpers/functions';
+import {reqPath} from 'helpers/throwingFunctions';
 import {mapStateToProps} from './MarkerListContainer';
 import {geojsonByType} from 'helpers/geojsonHelpers';
 
@@ -10,14 +10,14 @@ import R from 'ramda';
 import MarkerList from './MarkerList'
 jest.mock('query-overpass')
 const state = initialState(config);
-const currentKey = getRequiredPath(['regions', 'currentKey'], state);
+const currentKey = reqPath(['regions', 'currentKey'], state);
 const geojson = require('queryOverpassResponse').LA_SAMPLE;
 
 const props = mapStateToProps(state, {
     region: R.set(
         R.lensProp('geojson'),
         geojsonByType(geojson),
-        getRequiredPath(['regions', currentKey], state)
+        reqPath(['regions', currentKey], state)
     )
 });
 

@@ -13,7 +13,7 @@ import MarkerList from 'components/marker/MarkerListContainer';
 import styles from './Region.style.js';
 import R from 'ramda';
 import React from 'react';
-import {getRequiredPath} from 'helpers/functions'
+import {reqPath} from 'helpers/functions'
 import PropTypes from 'prop-types'
 
 /***
@@ -23,10 +23,10 @@ import PropTypes from 'prop-types'
 class Region extends React.Component {
 
     componentWillReceiveProps(nextProps) {
-        const getRegionId = getRequiredPath(['region', 'id'])
+        const getRegionId = reqPath(['region', 'id'])
         if (
             !(R.equals(...R.map(getRegionId, [this.props, nextProps]))) || // Region changed
-            !getRequiredPath(['region', 'geojson', 'osm', 'requested'], nextProps) // or geojson not yet requested
+            !reqPath(['region', 'geojson', 'osm', 'requested'], nextProps) // or geojson not yet requested
         ) {
             this.props.onRegionIsChanged(nextProps.settings.overpass, nextProps.region.geospatial.bounds).fork(
                 error => this.props.fetchTransitFailure(error),
@@ -37,7 +37,7 @@ class Region extends React.Component {
         }
         if (
             !(R.equals(...R.map(getRegionId, [this.props, nextProps]))) || // Region changed
-            !getRequiredPath(['region', 'geojson', 'markers', 'requested'], nextProps) // or markers not yet requested
+            !reqPath(['region', 'geojson', 'markers', 'requested'], nextProps) // or markers not yet requested
         ) {
             this.props.fetchMarkers({}, nextProps.region.id).fork(
                 error => this.props.fetchMarkersFailure(error),

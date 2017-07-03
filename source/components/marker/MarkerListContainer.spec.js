@@ -15,7 +15,7 @@ import configureStore from 'redux-mock-store';
 
 import testConfig from 'store/data/test/config'
 import initialState from 'store/data/initialState'
-import {getRequiredPath} from 'helpers/functions'
+import {reqPath} from 'helpers/throwingFunctions'
 
 const middlewares = [thunk];
 const mockStore = configureStore(middlewares);
@@ -26,7 +26,7 @@ describe('MarkerListContainer', () => {
         const state = store.getState();
 
         const ownProps = {
-            region: getRequiredPath(['regions', getRequiredPath(['regions', 'currentKey'], state)], state),
+            region: reqPath(['regions', reqPath(['regions', 'currentKey'], state)], state),
         };
 
         expect(mapStateToProps(store.getState(), ownProps)).toMatchSnapshot()

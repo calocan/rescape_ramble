@@ -14,7 +14,8 @@ import {cycleLocalDb} from './pouchDbIO'
 import config from 'store/data/test/config';
 import {expectTask} from 'helpers/jestHelpers'
 import {PARIS_SAMPLE, LA_SAMPLE} from './markerIO.sample'
-import {getRequiredPath, mergeAllWithKey} from 'helpers/functions'
+import {reqPath} from 'helpers/throwingFunctions'
+import {mergeAllWithKey} from 'helpers/functions'
 import {concatFeatures} from 'helpers/geojsonHelpers'
 import R from 'ramda'
 import initialState from "store/data/initialState";
@@ -25,8 +26,8 @@ import { SCOPE, ACTION_NAME, actions, actionCreators } from 'store/reducers/geoj
 // combine the samples into one obj with concatinated features
 const geojson = mergeAllWithKey(concatFeatures)([PARIS_SAMPLE, LA_SAMPLE]);
 const state = initialState(config);
-const currentRegionKey = getRequiredPath(['regions', 'currentKey'], state);
-const region = getRequiredPath(['state', currentRegionKey], state);
+const currentRegionKey = reqPath(['regions', 'currentKey'], state);
+const region = reqPath(['state', currentRegionKey], state);
 const testDbName = name => `${__dirname}/__databases__/${name}`
 
 describe('markerHelpers', () => {
@@ -80,7 +81,7 @@ describe('markerHelpers', () => {
 
     test('cycleMarkers emits pouchDb query given ACTION', function(done) {
         const actionSource = {
-            a: actions.fetchMarkers(currentRegionKey, {}, region.geospatial.bounds),
+            a: actions.fetchMarkers(currentRegionKey, {}, reqPath(['geospatial', 'bounds'], region)),
         };
 
         const pouchDbSource = {

@@ -11,7 +11,7 @@
 
 import React from 'react';
 import autobind from 'autobind-decorator';
-import {getRequiredPath} from 'helpers/functions';
+import {reqPath} from 'helpers/throwingFunctions';
 import {AddMarkerItem, MarkerItem} from './MarkerItem';
 import R from 'ramda';
 import styles from './MarkerList.style.js';
@@ -54,7 +54,7 @@ class MarkerList extends React.Component {
     }
 
     render() {
-        const markers = getRequiredPath(['state', 'markers'], this) || []
+        const markers = reqPath(['state', 'markers'], this) || []
         const markerItems = R.map(
             marker => <MarkerItem
                 regionId={this.props.id}

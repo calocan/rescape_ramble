@@ -12,7 +12,6 @@
 // Make Enzyme Rx available in all test files without importing
 import { shallow, render, mount } from 'enzyme';
 import * as fs from 'fs';
-import stackTrace from "stack-trace";
 const jsdom = require('jsdom').jsdom
 global.shallow = shallow;
 global.render = render;
@@ -22,6 +21,7 @@ global.navigator.userAgent = 'Test';
 // Some components like react-scrollview need document defined
 global.document = jsdom();
 global.window = global
+Error.stackTraceLimit = Infinity;
 // Have exceptions traces traverse async processes
 if (process.env.NODE_ENV !== 'production'){
     require('longjohn');
