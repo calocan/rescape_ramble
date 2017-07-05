@@ -22,7 +22,7 @@ import {mergeDeep} from 'helpers/functions'
  * California configuration
  * @type {*}
  */
-export default mergeDeep(defaultConfig, {
+export default mergeDeep(defaultConfig, {regions: [{
     id: 'california',
 
     gtfs: {
@@ -49,4 +49,4 @@ export default mergeDeep(defaultConfig, {
             zoom: 5
         }
     }
-});
+}]});

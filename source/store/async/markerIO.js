@@ -23,8 +23,12 @@ export function cycleMarkers({ACTION, POUCHDB}) {
 
     // Resolve the requested region to know what markers we need
     const fetchMarkers$ = ACTION
-        .filter(action => action.type === actions.FETCH_MARKERS)
-        .map(action => action.region);
+        .filter(action => {
+            return action.type === actions.FETCH_MARKERS_DATA
+        })
+        .map(action => {
+            return action.region;
+        })
 
     // Model--------------
 
@@ -35,15 +39,18 @@ export function cycleMarkers({ACTION, POUCHDB}) {
     const actionCreatorSuccess = actionCreators.fetchMarkersSuccess;
     const actionUpdate = actionCreators.updateMarkers;
 
-    // Create the query action$ sink from the region$
-    const action$ = fetchMarkers$
-        .map(region =>
-            POUCHDB
+    // In response to a query ACTION, create the query action$ sink from the region$
+    const pouchDbRequest$ = fetchMarkers$
+        .map(region => {
+           return POUCHDB
                 .query(designDocViewId(region.id), {
                     include_docs: true,
                     descending: true,
                 })
-                .map(res => res.rows.map(r => r.doc))
+                .map(res => {
+                    return res.rows.map(r => r.doc)
+                })
+            }
         )
         // Map the database response to the actionCreator success function
         .map(res => actionCreatorSuccess(
@@ -77,11 +84,13 @@ export function cycleMarkers({ACTION, POUCHDB}) {
         .do(theRecord => console.log(`Add/Update feature for: ${R.view(recordIdLens, theRecord)}`))
         .map(theRecord => POUCHDB.put(theRecord));
 
-    const pouchDbDesignDoc$ = $region.map(region =>
-        POUCHDB.put(createDesignDoc(designDocId(region.id)))
+    const pouchDbDesignDoc$ = ACTION.
+        filter(action => action.key).map(regionId =>
+        POUCHDB.put(createDesignDoc(designDocId(regionId)))
     );
 
-    const pouchDb$ = ACTION
+    // If we receive an update ACTION, create a pouchDb sync that puts each record in the action
+    const pouchDbUpdate$ = ACTION
         .filter(action => action.type === actionUpdate)
         .map(action => action[recordsName])
         // Run through all Records in the array
@@ -95,10 +104,12 @@ export function cycleMarkers({ACTION, POUCHDB}) {
                 console.log('Finished update');
             }
         );
+    // This needs to syn a success action when the query finishes
+    const action$ = ACTION
 
     return {
         ACTION: action$,
-        POUCHDB: combine(pouchDbDesignDoc$, pouchDb$)
+        POUCHDB: combine(combine(pouchDbDesignDoc$, pouchDbUpdate$), pouchDbRequest$)
     }
 }
 

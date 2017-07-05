@@ -8,9 +8,11 @@
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import {taskToPromise} from './functions'
+import {promiseToTask, taskToPromise} from './functions'
 import testConfig from 'store/data/test/config';
 import initialState from 'store/data/initialState';
+import streamLength from 'stream-length';
+import Task from "data.task";
 
 /***
  * Given a task, wraps it in promise and passes it to Jest's expect.
@@ -31,3 +33,5 @@ export const expectTaskRejected = task => expect(taskToPromise(task, true));
  */
 export const testState = () => initialState(testConfig);
 
+
+export const testStreamLength = stream$ => promiseToTask(streamLength(stream$))

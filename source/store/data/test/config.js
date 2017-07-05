@@ -9,4 +9,19 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-export default require(`store/data/california/config`).default;
+import {mergeDeep} from "helpers/functions";
+import californiaConfig from 'store/data/california/config'
+import parisConfig from 'store/data/test/paris-sample/config'
+import R from 'ramda'
+
+const testConfigs = [californiaConfig, parisConfig]
+export default R.merge(
+        // Combine everything but the regions key
+        mergeDeep(...R.map(R.omit('regions'), testConfigs)),
+        // Combine the region array of each config
+        {regions: R.reduce(
+            R.concat,
+            [],
+            R.map(R.prop('regions'), testConfigs)
+        )}
+    )

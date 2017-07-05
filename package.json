@@ -80,6 +80,7 @@
     "shebang-loader": "^0.0.1",
     "sinon": "^2.3.2",
     "source-map-support": "^0.4.15",
+    "stream-length": "^1.0.2",
     "style-loader": "^0.18.1",
     "typescript": "^2.3.4",
     "updtr": "^2.0.0",

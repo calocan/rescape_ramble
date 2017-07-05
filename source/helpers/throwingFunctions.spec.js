@@ -13,6 +13,6 @@ import {reqPath} from "./throwingFunctions";
 describe('throwingFunctions', () => {
     test('reqPath', () => {
         expect(reqPath(['a'], {a: 1})).toBe(1)
-        expect(reqPath(['a', 'b'], {a: {c: 1}})).toThrow()
+        expect(() => reqPath(['a', 'b'], {a: {c: 1}})).toThrow()
     })
 })

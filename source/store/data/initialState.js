@@ -43,24 +43,25 @@ const toObjectKeyedByIdWithCurrent = R.curry((currentKey, object) => {
 export default (config) => {
     return {
         settings: config.settings,
-        // An object keyed by region id, valued by the Region object
-        regions: toObjectKeyedByIdWithCurrent(config.id, [
-            {
-                id: config.id,
-                geospatial: config.geospatial,
+        // regions maps to an object keyed by region id, valued by the Region object
+        regions: toObjectKeyedByIdWithCurrent(config.settings.defaultRegion, R.map(region =>
+            ({
+                id: region.id,
+                geospatial: region.geospatial,
                 // make each array of objects in travel to an object by array object id
                 // An object of user travel data, such as journeys and locations, each of which
                 // is an object keyed by id (e.g. journey id)
-                travel: R.map(toObjectKeyedByGeneratedId, config.travel),
+                travel: R.map(toObjectKeyedByGeneratedId, region.travel),
                 // geojson data from OpenStreetMap
-                geojson: config.geojson,
+                geojson: region.geojson,
                 // make each array of objects in gtfs, such as routes, an object by id (e.g. by route id)
-                gtfs: R.map(toObjectKeyedById, config.gtfs),
+                gtfs: R.map(toObjectKeyedById, region.gtfs),
                 // The viewport must be an Immutable to satisfied the redux-map-gl reducer
                 // Apply toImmutable to the viewport of config.mapbox
-                mapbox: R.over(R.lensProp('viewport'), toImmutable, config.mapbox)
-            }
-        ])
+                mapbox: R.over(R.lensProp('viewport'), toImmutable, region.mapbox)
+            }),
+            config.regions
+        ))
     }
 };
 

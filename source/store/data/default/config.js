@@ -14,7 +14,7 @@ import * as routeTypes from './routeTypes';
 import {DEFAULT_SERVICE, WEEKEND_SERVICE} from './services';
 import {mergeDeep} from 'helpers/functions'
 
-export default mergeDeep(privateConfig, {
+export default mergeDeep(privateConfig, {regions: [{
     gtfs: {
         calendar: [
             DEFAULT_SERVICE,
@@ -40,4 +40,4 @@ export default mergeDeep(privateConfig, {
             zoom: 1
         },
     }
-});
+}]});

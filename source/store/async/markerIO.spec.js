@@ -27,13 +27,13 @@ import { SCOPE, ACTION_NAME, actions, actionCreators } from 'store/reducers/geoj
 const geojson = mergeAllWithKey(concatFeatures)([PARIS_SAMPLE, LA_SAMPLE]);
 const state = initialState(config);
 const currentRegionKey = reqPath(['regions', 'currentKey'], state);
-const region = reqPath(['state', currentRegionKey], state);
+const region = reqPath(['regions', currentRegionKey], state);
 const testDbName = name => `${__dirname}/__databases__/${name}`
+const bounds = require('query-overpass').LA_BOUNDS;
 
 describe('markerHelpers', () => {
 
     //PouchDB.debug.enable('*');
-    const bounds = require('query-overpass').LA_BOUNDS;
     const path = '__db__/tests/markerHelpers.';
     // const createRemoteUrl = `http://localhost:5984/${name}`;
     // const syncObject = sync({db, createRemoteUrl});
@@ -80,19 +80,26 @@ describe('markerHelpers', () => {
     })
 
     test('cycleMarkers emits pouchDb query given ACTION', function(done) {
+        // Fire the fetchMarkers action
         const actionSource = {
-            a: actions.fetchMarkers(currentRegionKey, {}, reqPath(['geospatial', 'bounds'], region)),
+            a: actionCreators.fetchMarkersData(
+                currentRegionKey,
+                {
+                    region
+                }
+            ),
         };
 
+        // Mock the PouchDb response, we don't care
         const pouchDbSource = {
             query: () => null
         };
 
+        // Expect that the cycle components emits a pouchDb query in response to the action
         const pouchDbSink = {
             x: {
-                url: `https://api.github.com/users/${user1}/repos`,
-                category: 'users'
-            },
+                feature: geojson.features[0].id
+            }
         };
 
         // Asserts that the sources, trigger the provided sinks,

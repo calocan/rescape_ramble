@@ -1,4 +1,6 @@
-import {mockTimeSource} from '@cycle/time';
+import {mockTimeSource} from '@cycle/time/most';
+import {testStreamLength} from "../../helpers/jestHelpers";
+import {combine, from} from "most";
 
 // Modified from
 // https://github.com/cyclejs-community/redux-cycles/blob/master/example/cycle/test/helpers.js
@@ -89,7 +91,12 @@ export function assertSourcesSinks(sources, sinks, main, done, timeOpts = {}) {
                 //  })
                 obj = {
                     [sourceKey]: {
-                        [firstKey]: () => timeSource.diagram(diagram, sourceOpts[firstKey]())
+                        [firstKey]: () => {
+                            const diagram = timeSource.diagram(diagram, sourceOpts[firstKey]());
+                            diagram.subscribe(i => console.log(sourceKey, i));
+                            return diagram;
+                        }
+
                     }
                 }
             } else {
@@ -102,6 +109,7 @@ export function assertSourcesSinks(sources, sinks, main, done, timeOpts = {}) {
                 obj = {
                     [sourceKey]: timeSource.diagram(diagram, sourceOpts)
                 }
+                obj[sourceKey].subscribe(i => console.log(sourceKey, i))
             }
 
             // Reduce each Source object
@@ -130,12 +138,16 @@ export function assertSourcesSinks(sources, sinks, main, done, timeOpts = {}) {
     // Add TimeSource as a source
     _sources.Time = timeSource;
 
-    // Give the sources to main
+    // Run the sources through _main. This gives us the actual sink results
     const _main = main(_sources);
 
-    // Assert that each sink Time diagram matches the source diagrams in main (?)
+
+    // Assert that each expected sink Time diagram matches
+    // the actual sync results produced by main
     Object.keys(sinks)
-        .map(sinkKey => timeSource.assertEqual(_main[sinkKey], _sinks[sinkKey]));
+        .map(sinkKey => {
+            timeSource.assertEqual(_main[sinkKey], _sinks[sinkKey])
+        });
 
     // Run the time source and ensure no errors
     timeSource.run(err => {
