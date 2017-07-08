@@ -11,7 +11,7 @@
 
 import Task from 'data.task';
 import R from 'ramda';
-import { from, fromPromise, combine } from 'most'
+import { from, fromPromise, combine, merge } from 'most'
 import {getDb} from "./pouchDbIO";
 import { actions, actionCreators } from 'store/reducers/geojson/markers'
 const resolveDb = (regionKey, options) => getDb(options && options.dbName || regionKey);
@@ -20,15 +20,6 @@ const resolveDb = (regionKey, options) => getDb(options && options.dbName || reg
 // Map a POUCHDB response source to an ACTION success/error sync
 export function cycleMarkers({ACTION, POUCHDB}) {
     // Intent------------
-
-    // Resolve the requested region to know what markers we need
-    const fetchMarkers$ = ACTION
-        .filter(action => {
-            return action.type === actions.FETCH_MARKERS_DATA
-        })
-        .map(action => {
-            return action.region;
-        })
 
     // Model--------------
 
@@ -40,22 +31,32 @@ export function cycleMarkers({ACTION, POUCHDB}) {
     const actionUpdate = actionCreators.updateMarkers;
 
     // In response to a query ACTION, create the query action$ sink from the region$
-    const pouchDbRequest$ = fetchMarkers$
-        .map(region => {
+    // Resolve the requested region to know what markers we need
+    const actionFetch$ = ACTION
+        .filter(action => {
+            return action.type === actions.FETCH_MARKERS_DATA
+        })
+        .tap(action => console.log('pouchDbRequest', action.region.id))
+        .map(action => {
+            return action.region;
+        })
+        // Map the region to a POUCHDB query stream and concat the
+        // single stream result. In otherwords, create a stream from a stream and flatten the result
+        .concatMap(region => {
            return POUCHDB
                 .query(designDocViewId(region.id), {
                     include_docs: true,
                     descending: true,
                 })
-                .map(res => {
-                    return res.rows.map(r => r.doc)
-                })
             }
         )
+        .tap(res => console.log('pouchDbRequest results', res.rows.map(r => r_id).join(', ') ))
         // Map the database response to the actionCreator success function
-        .map(res => actionCreatorSuccess(
-            res.rows.map(r => r.doc),
-        ));
+        .map(res => {
+            return actionCreatorSuccess(
+                res.rows.map(r => r.doc)
+            )
+        });
 
     const dateLens = R.lensProp('date');
     const _idLens = R.lensProp('_id');
@@ -77,17 +78,15 @@ export function cycleMarkers({ACTION, POUCHDB}) {
     };
 
     // Function that writes features to document store
-    const writeRecords$ = record => from(record)
+    const writeRecords$ = record => from([record])
         .timestamp()
         // Add a timestamp and _id to the feature for storing
         .map(obj => R.compose(R.set(dateLens, obj.timestamp), R.set(_idLens, obj.value.id))(obj.value))
         .do(theRecord => console.log(`Add/Update feature for: ${R.view(recordIdLens, theRecord)}`))
-        .map(theRecord => POUCHDB.put(theRecord));
+        .map(theRecord => {
+            return POUCHDB.put(theRecord)
+        });
 
-    const pouchDbDesignDoc$ = ACTION.
-        filter(action => action.key).map(regionId =>
-        POUCHDB.put(createDesignDoc(designDocId(regionId)))
-    );
 
     // If we receive an update ACTION, create a pouchDb sync that puts each record in the action
     const pouchDbUpdate$ = ACTION
@@ -95,8 +94,10 @@ export function cycleMarkers({ACTION, POUCHDB}) {
         .map(action => action[recordsName])
         // Run through all Records in the array
         .concatMap(writeRecords$)
+
+    pouchDbUpdate$
         .subscribe(
-            rec => console.log(`New record created: ${rec.id}`),
+            rec => console.log(`Update/Create record: ${rec.id}`),
             err => {
                 console.log('Rejected update', err);
             },
@@ -104,12 +105,17 @@ export function cycleMarkers({ACTION, POUCHDB}) {
                 console.log('Finished update');
             }
         );
-    // This needs to syn a success action when the query finishes
-    const action$ = ACTION
+
+    const pouchDbDesignDoc$ = ACTION.
+        filter(action => action.region).map(action => {
+            return POUCHDB.put(createDesignDoc(designDocId(action.region.id)))
+        });
 
     return {
-        ACTION: action$,
-        POUCHDB: combine(combine(pouchDbDesignDoc$, pouchDbUpdate$), pouchDbRequest$)
+        // merge all action sinks
+        ACTION: actionFetch$, //merge(actionFetch$, actionUpdate$),
+        // merge the design doc put with other updates
+        POUCHDB: merge(pouchDbDesignDoc$, pouchDbUpdate$)
     }
 }
 
@@ -187,9 +193,11 @@ export const persistMarkers = (regionKey, options, features) => {
     const featureIdLens = R.lensPath(['properties', '@id']);
     return new Task(function(reject, resolve) {
         const db = resolveDb(regionKey, options)
+
         // Function that writes features to document store
-        const writeFeature$ = feature => from(feature)
+        const writeFeature$ = feature => from([feature])
             .timestamp()
+            .tap(val => console.log('writeFeature', feature.id))
             // Add a timestamp and _id to the feature for storing
             .map(obj => R.compose(R.set(dateLens, obj.timestamp), R.set(_idLens, obj.value.id))(obj.value))
             .do(theFeature => console.log(`Add/Update feature for: ${R.view(featureIdLens, theFeature)}`))
@@ -199,7 +207,7 @@ export const persistMarkers = (regionKey, options, features) => {
 
         // Run through all Features in the array
         from(features)
-            .concatMap(writeFeature$) // Map the writeFeatures$ to each Feature object
+            .concatMap(writeFeature$) // Map each Feature to writeFeatures$, and concat the resultant single item stream
             .subscribe(
                 rec => console.log(`New record created: ${rec.id}`),
                 err => {

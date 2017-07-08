@@ -1,6 +1,7 @@
 import {mockTimeSource} from '@cycle/time/most';
 import {testStreamLength} from "../../helpers/jestHelpers";
 import {combine, from} from "most";
+import R from 'ramda'
 
 // Modified from
 // https://github.com/cyclejs-community/redux-cycles/blob/master/example/cycle/test/helpers.js
@@ -64,7 +65,7 @@ export function assertSourcesSinks(sources, sinks, main, done, timeOpts = {}) {
             const sourceObj = sources[sourceKey];
             // Extract the source's only key to use in a Time diagram,
             // e.g. 'ab|'
-            const diagram = Object.keys(sourceObj)[0];
+            const diagramStr = Object.keys(sourceObj)[0];
             // Get the value associated with that key to use as options
             // e.g.
             // {
@@ -75,7 +76,7 @@ export function assertSourcesSinks(sources, sinks, main, done, timeOpts = {}) {
             // select: () => ({
             //  r: xs.of(response)
             // })
-            const sourceOpts = sourceObj[diagram];
+            const sourceOpts = sourceObj[diagramStr];
 
             let obj = {};
             // Take the first key of the sourceOpts e.g. 'a' or 'select'
@@ -90,14 +91,12 @@ export function assertSourcesSinks(sources, sinks, main, done, timeOpts = {}) {
                 //      {select: () => diagram('--|', {r: xs.of()response)}}
                 //  })
                 obj = {
-                    [sourceKey]: {
-                        [firstKey]: () => {
-                            const diagram = timeSource.diagram(diagram, sourceOpts[firstKey]());
-                            diagram.subscribe(i => console.log(sourceKey, i));
-                            return diagram;
-                        }
-
-                    }
+                    [sourceKey]:
+                        R.map(
+                            value => () => timeSource.diagram(diagramStr, value()),
+                                //.tap( i => console.log(`Source: ${sourceKey}`, i) );
+                            sourceOpts
+                        )
                 }
             } else {
                 // Else the action call returns an object make an object keyed by the Source key and valued
@@ -108,8 +107,8 @@ export function assertSourcesSinks(sources, sinks, main, done, timeOpts = {}) {
                 //  }
                 obj = {
                     [sourceKey]: timeSource.diagram(diagram, sourceOpts)
+                    //.tap( i => console.log(`Source: ${sourceKey}`, i) );
                 }
-                obj[sourceKey].subscribe(i => console.log(sourceKey, i))
             }
 
             // Reduce each Source object

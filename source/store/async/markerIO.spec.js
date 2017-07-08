@@ -92,7 +92,11 @@ describe('markerHelpers', () => {
 
         // Mock the PouchDb response, we don't care
         const pouchDbSource = {
-            query: () => null
+            query: () => null,
+            put: (doc) => ({
+                op: 'put',
+                doc
+            })
         };
 
         // Expect that the cycle components emits a pouchDb query in response to the action
@@ -102,8 +106,11 @@ describe('markerHelpers', () => {
             }
         };
 
-        // Asserts that the sources, trigger the provided sinks,
+        // Asserts that the sources trigger the provided sinks
         // when executing the fetchReposByUser function
+        // The sources are run through main according to the source
+        // diagrams. The sinks that main produces must match the sink
+        // diagram provided here
         assertSourcesSinks({
             ACTION: { 'a|': actionSource },
             POUCHDB:   { '-|': pouchDbSource }
