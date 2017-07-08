@@ -90,9 +90,9 @@ describe('markerHelpers', () => {
             ),
         };
 
-        // Mock the PouchDb response, we don't care
+        // Mock the PouchDb response to return something like a PouchDb response
         const pouchDbSource = {
-            query: () => null,
+            query: () => {rows: R.map(feature => ({doc: feature}), geojson.features)},
             put: (doc) => ({
                 op: 'put',
                 doc
@@ -115,6 +115,7 @@ describe('markerHelpers', () => {
             ACTION: { 'a|': actionSource },
             POUCHDB:   { '-|': pouchDbSource }
         }, {
+            // Expect this sink, the
             POUCHDB:   { 'x|': pouchDbSink }
         }, cycleMarkers, done);
     });

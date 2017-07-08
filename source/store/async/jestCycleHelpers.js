@@ -106,7 +106,7 @@ export function assertSourcesSinks(sources, sinks, main, done, timeOpts = {}) {
                 //  ACTIONS: diagram('ab|', {a: actions.requestReposByUser(user1)), b: actions.requestReposByUser(user2)})
                 //  }
                 obj = {
-                    [sourceKey]: timeSource.diagram(diagram, sourceOpts)
+                    [sourceKey]: timeSource.diagram(diagramStr, sourceOpts)
                     //.tap( i => console.log(`Source: ${sourceKey}`, i) );
                 }
             }

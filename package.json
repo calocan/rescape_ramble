@@ -28,7 +28,7 @@
     "webpack-profile": "webpack --profile --json > webpack-stats.json"
   },
   "jest": {
-    "testEnvironment": "node",
+    "testEnvironment": "jest-sourcemaps/lib/jsdom-env",
     "setupFiles": [
       "<rootDir>/jestsetup.js"
     ],
@@ -43,6 +43,10 @@
       "webworkify": "<rootDir>/node_modules/webworkify-webpack",
       "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/__mocks__/fileMock.js",
       "\\.(css|less)$": "identity-obj-proxy"
+    },
+    "setupTestFrameworkScriptFile": "<rootDir>/node_modules/jest-sourcemaps/lib/testEnvSetup.js",
+    "transform": {
+      "\\.jsx?$": "<rootDir>/node_modules/jest-sourcemaps/lib/transformer.js"
     }
   },
   "author": "",
@@ -70,6 +74,7 @@
     "jasmine": "^2.6.0",
     "jest": "^20.0.4",
     "jest-cli": "^20.0.4",
+    "jest-sourcemaps": "^1.0.1",
     "json-loader": "^0.5.4",
     "most": "^1.5.0",
     "nock": "^9.0.13",

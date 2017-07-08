@@ -1,5 +1,5 @@
 {
   "plugins": ["transform-class-properties", "transform-decorators-legacy", "transform-object-rest-spread", "transform-async-to-generator"],
   "presets": ["env", "react"],
-  "sourceMap" : "inline"
+  "sourceMap" : "both"
 }

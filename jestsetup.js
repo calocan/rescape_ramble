@@ -10,6 +10,7 @@
  */
 
 // Make Enzyme Rx available in all test files without importing
+import 'babel-polyfill'
 import { shallow, render, mount } from 'enzyme';
 import * as fs from 'fs';
 const jsdom = require('jsdom').jsdom
@@ -17,7 +18,7 @@ global.shallow = shallow;
 global.render = render;
 global.mount = mount;
 global.navigator = {};
-global.navigator.userAgent = 'Test';
+//global.navigator.userAgent = 'Test';
 // Some components like react-scrollview need document defined
 global.document = jsdom();
 global.window = global

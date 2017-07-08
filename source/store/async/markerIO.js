@@ -41,7 +41,7 @@ export function cycleMarkers({ACTION, POUCHDB}) {
             return action.region;
         })
         // Map the region to a POUCHDB query stream and concat the
-        // single stream result. In otherwords, create a stream from a stream and flatten the result
+        // single stream result. In other words, create a stream from a stream and flatten the result
         .concatMap(region => {
            return POUCHDB
                 .query(designDocViewId(region.id), {
