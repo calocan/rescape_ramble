@@ -19,29 +19,33 @@ const resolveDb = (regionKey, options) => getDb(options && options.dbName || reg
 // Map an ACTION fetch source to a POUCHDB request sync
 // Map a POUCHDB response source to an ACTION success/error sync
 export function cycleMarkers({ACTION, POUCHDB}) {
-    // Intent------------
-
-    // Model--------------
-
     // Resolve a design doc id based on the region
     const viewName = 'allMarkers'
     const designDocId = regionId => `_design/${regionId}`;
     const designDocViewId = regionId => `${regionId}/${viewName}`;
     const actionCreatorSuccess = actionCreators.fetchMarkersSuccess;
     const actionUpdate = actionCreators.updateMarkers;
+    const dateLens = R.lensProp('date');
+    const _idLens = R.lensProp('_id');
+    const recordIdLens = R.lensPath(['properties', '@id']);
+    const recordsName = 'features';
 
-    // In response to a query ACTION, create the query action$ sink from the region$
-    // Resolve the requested region to know what markers we need
-    const actionFetch$ = ACTION
+    // Intent------------
+
+    // In response to ACTION.fetchMarkersData resolve the region
+    const requestedRegion$ = ACTION
         .filter(action => {
             return action.type === actions.FETCH_MARKERS_DATA
         })
-        .tap(action => console.log('pouchDbRequest', action.region.id))
+        .tap(action => console.log('requestedRegion', action.region.id))
         .map(action => {
             return action.region;
-        })
-        // Map the region to a POUCHDB query stream and concat the
-        // single stream result. In other words, create a stream from a stream and flatten the result
+        });
+
+    // Model--------------
+
+    const pouchQueryResponse$ = requestedRegion$
+        // Map the region to a POUCHDB.query response source for the region
         .concatMap(region => {
            return POUCHDB
                 .query(designDocViewId(region.id), {
@@ -50,19 +54,19 @@ export function cycleMarkers({ACTION, POUCHDB}) {
                 })
             }
         )
-        .tap(res => console.log('pouchDbRequest results', res.rows.map(r => r_id).join(', ') ))
-        // Map the database response to the actionCreator success function
+        .tap(res => console.log('pouchQueryResponse', res.rows.map(r => r.doc.id).join(', ') ))
+
+    // Map the database response to the actionCreator success function
+    const actionSuccess$ = pouchQueryResponse$
         .map(res => {
             return actionCreatorSuccess(
                 res.rows.map(r => r.doc)
             )
-        });
+        })
+        .tap(action => console.log('actionSuccess$', action.type));
 
-    const dateLens = R.lensProp('date');
-    const _idLens = R.lensProp('_id');
-    const recordIdLens = R.lensPath(['properties', '@id']);
-    const recordsName = 'features';
-    const createDesignDoc = (regionId) => {
+    /*
+    const createDesignDoc = regionId => {
         return {
             _id: `${designDocId(regionId)}`,
             views: {
@@ -87,7 +91,6 @@ export function cycleMarkers({ACTION, POUCHDB}) {
             return POUCHDB.put(theRecord)
         });
 
-
     // If we receive an update ACTION, create a pouchDb sync that puts each record in the action
     const pouchDbUpdate$ = ACTION
         .filter(action => action.type === actionUpdate)
@@ -107,15 +110,15 @@ export function cycleMarkers({ACTION, POUCHDB}) {
         );
 
     const pouchDbDesignDoc$ = ACTION.
-        filter(action => action.region).map(action => {
+        filter(action => action.region).concatMap(action => {
             return POUCHDB.put(createDesignDoc(designDocId(action.region.id)))
         });
+     */
 
     return {
         // merge all action sinks
-        ACTION: actionFetch$, //merge(actionFetch$, actionUpdate$),
-        // merge the design doc put with other updates
-        POUCHDB: merge(pouchDbDesignDoc$, pouchDbUpdate$)
+        ACTION: actionSuccess$,
+        //POUCHDB: [pouchDbDesignDoc$, pouchDbUpdate$])
     }
 }
 

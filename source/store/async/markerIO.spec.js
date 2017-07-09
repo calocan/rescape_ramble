@@ -19,7 +19,6 @@ import {mergeAllWithKey} from 'helpers/functions'
 import {concatFeatures} from 'helpers/geojsonHelpers'
 import R from 'ramda'
 import initialState from "store/data/initialState";
-
 import { assertSourcesSinks } from './jestCycleHelpers'
 import { SCOPE, ACTION_NAME, actions, actionCreators } from 'store/reducers/geojson/markerActions'
 
@@ -38,6 +37,7 @@ describe('markerHelpers', () => {
     // const createRemoteUrl = `http://localhost:5984/${name}`;
     // const syncObject = sync({db, createRemoteUrl});
 
+    /*
     test('Persist MarkerList', () => {
         const dbName = testDbName('PersistMarkers');
 
@@ -78,8 +78,9 @@ describe('markerHelpers', () => {
             ).map(response => R.head(response.rows))
         ).resolves.toEqual(geojson.features.length - 1);
     })
+    */
 
-    test('cycleMarkers emits pouchDb query given ACTION', function(done) {
+    test('should emit sink ACTION.fetchMarkersSuccess given sources ACTION.fetchMarkerData and POUCHDB.query response', function(done) {
         // Fire the fetchMarkers action
         const actionSource = {
             a: actionCreators.fetchMarkersData(
@@ -90,19 +91,24 @@ describe('markerHelpers', () => {
             ),
         };
 
-        // Mock the PouchDb response to return something like a PouchDb response
+        // Ignore the particular query parameters and return features as rows
         const pouchDbSource = {
-            query: () => {rows: R.map(feature => ({doc: feature}), geojson.features)},
-            put: (doc) => ({
-                op: 'put',
-                doc
+            query: () =>
+            ({
+                a: {
+                    rows: R.map(
+                        feature => ({doc: feature}),
+                        geojson.features
+                    )
+                }
             })
         };
 
         // Expect that the cycle components emits a pouchDb query in response to the action
-        const pouchDbSink = {
+        const actionSink = {
             x: {
-                feature: geojson.features[0].id
+                type: actions.FETCH_MARKERS_SUCCESS,
+                body: geojson.features
             }
         };
 
@@ -113,10 +119,10 @@ describe('markerHelpers', () => {
         // diagram provided here
         assertSourcesSinks({
             ACTION: { 'a|': actionSource },
-            POUCHDB:   { '-|': pouchDbSource }
+            POUCHDB:   { 'a|': pouchDbSource }
         }, {
             // Expect this sink, the
-            POUCHDB:   { 'x|': pouchDbSink }
+            ACTION:   { 'x|': actionSink }
         }, cycleMarkers, done);
     });
 });

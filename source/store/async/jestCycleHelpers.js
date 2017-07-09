@@ -81,14 +81,15 @@ export function assertSourcesSinks(sources, sinks, main, done, timeOpts = {}) {
             let obj = {};
             // Take the first key of the sourceOpts e.g. 'a' or 'select'
             let firstKey = Object.keys(sourceOpts)[0];
-            if (typeof sourceOpts[firstKey] === 'function') {
+            if (typeof sourceOpts[firstKey] === 'function') { // assume if one is func they all are
                 // If the action call returns a function return an object with the Source key
-                // valued by the single key/func, the first sourceOpts key and valued by the Diagram call,
+                // valued by each key/func, the first sourceOpts key and valued by the Diagram call,
                 // which itself is called with the Diagram key and key mappings
                 // e.g.
                 // {
                 //  HTTP:
-                //      {select: () => diagram('--|', {r: xs.of()response)}}
+                //      {select: () => diagram('r-|', {r: xs.of(response)}}
+                //      {put: () => diagram('r-|', {r: xs.of(response)}}
                 //  })
                 obj = {
                     [sourceKey]:
@@ -123,7 +124,7 @@ export function assertSourcesSinks(sources, sinks, main, done, timeOpts = {}) {
     // Reduce the sinks into an object in the following format
     // {
     //  sinkA: diagram(sinkAObj1stKey, sinkAObj1stValue)
-    //  sinkB: diagram(sinkBkObj1stKey, sinkBObj1stValue)
+    //  sinkB: diagram(sinkBObj1stKey, sinkBObj1stValue)
     // }
     const _sinks = Object.keys(sinks)
         .reduce((_sinks, sinkKey) => {
@@ -137,18 +138,17 @@ export function assertSourcesSinks(sources, sinks, main, done, timeOpts = {}) {
     // Add TimeSource as a source
     _sources.Time = timeSource;
 
-    // Run the sources through _main. This gives us the actual sink results
+    // Call main with the mock sources to set up a main that
+    // we can execute the time diagrams on
     const _main = main(_sources);
 
-
-    // Assert that each expected sink Time diagram matches
-    // the actual sync results produced by main
+    // Assert that the time diagram streams of the main sink and the expect sink are equivalent
     Object.keys(sinks)
         .map(sinkKey => {
             timeSource.assertEqual(_main[sinkKey], _sinks[sinkKey])
         });
 
-    // Run the time source and ensure no errors
+    // Execute the schedule and ensure no errors
     timeSource.run(err => {
         expect(err).toBeFalsy();
         done();
