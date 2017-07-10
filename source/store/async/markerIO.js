@@ -11,32 +11,31 @@
 
 import Task from 'data.task';
 import R from 'ramda';
-import { from, fromPromise, combine, merge } from 'most'
+import { from, fromPromise, combine, merge, concat } from 'most'
 import {getDb} from "./pouchDbIO";
 import { actions, actionCreators } from 'store/reducers/geojson/markers'
 const resolveDb = (regionKey, options) => getDb(options && options.dbName || regionKey);
 
+// Constants for naming PouchDb Views
+// (Exported for testing purposes)
+export const viewName = 'allMarkers'
+export const designDocId = regionId => `_design/${regionId}`;
+export const designDocViewId = regionId => `${regionId}/${viewName}`;
+
 // Map an ACTION fetch source to a POUCHDB request sync
 // Map a POUCHDB response source to an ACTION success/error sync
 export function cycleMarkers({ACTION, POUCHDB}) {
-    // Resolve a design doc id based on the region
-    const viewName = 'allMarkers'
-    const designDocId = regionId => `_design/${regionId}`;
-    const designDocViewId = regionId => `${regionId}/${viewName}`;
-    const actionCreatorSuccess = actionCreators.fetchMarkersSuccess;
-    const actionUpdate = actionCreators.updateMarkers;
+    const actionUpdate = actions.UPDATE_MARKERS_DATA
+    const actionFetch = actions.FETCH_MARKERS_DATA
     const dateLens = R.lensProp('date');
     const _idLens = R.lensProp('_id');
     const recordIdLens = R.lensPath(['properties', '@id']);
-    const recordsName = 'features';
 
     // Intent------------
 
     // In response to ACTION.fetchMarkersData resolve the region
     const requestedRegion$ = ACTION
-        .filter(action => {
-            return action.type === actions.FETCH_MARKERS_DATA
-        })
+        .filter(action => action.type === actionFetch)
         .tap(action => console.log('requestedRegion', action.region.id))
         .map(action => {
             return action.region;
@@ -65,37 +64,27 @@ export function cycleMarkers({ACTION, POUCHDB}) {
         })
         .tap(action => console.log('actionSuccess$', action.type));
 
-    /*
-    const createDesignDoc = regionId => {
-        return {
-            _id: `${designDocId(regionId)}`,
-            views: {
-                [viewName]: {
-                    map: `function (doc) {
-                    if (doc.type === 'item') {
-                        emit(doc);
-                    }
-                }.toString()`
-                }
-            }
-        };
-    };
 
     // Function that writes features to document store
     const writeRecords$ = record => from([record])
-        .timestamp()
         // Add a timestamp and _id to the feature for storing
-        .map(obj => R.compose(R.set(dateLens, obj.timestamp), R.set(_idLens, obj.value.id))(obj.value))
-        .do(theRecord => console.log(`Add/Update feature for: ${R.view(recordIdLens, theRecord)}`))
-        .map(theRecord => {
+        .timestamp()
+        .map(obj => {
+            return R.compose(R.set(dateLens, obj.time), R.set(_idLens, obj.value.id))(obj.value)
+        })
+        .concatMap(theRecord => {
             return POUCHDB.put(theRecord)
-        });
+        })
+        .tap(put => console.log(put))
 
-    // If we receive an update ACTION, create a pouchDb sync that puts each record in the action
+    // map the ACTION update source to POUCHDB update sink to POUCHDB.put each record in the action
     const pouchDbUpdate$ = ACTION
         .filter(action => action.type === actionUpdate)
-        .map(action => action[recordsName])
-        // Run through all Records in the array
+        // Make a stream of records events
+        .concatMap(action => {
+            return from(action.payload);
+        })
+        // Map all records in action[recordsName] to a POUCHDB.put stream
         .concatMap(writeRecords$)
 
     pouchDbUpdate$
@@ -109,16 +98,30 @@ export function cycleMarkers({ACTION, POUCHDB}) {
             }
         );
 
+    // PouchDb Design Doc view definition for querying
+    // Note that the function must be a for the POUCHDB driver
+    // TODO this stream should only accept each unique regionId once
+    const createDesignDoc = regionId => {
+        return {
+            _id: `${designDocId(regionId)}`,
+            views: {
+                [viewName]: {
+                    map: `function (doc) { if (doc.type === 'item') { emit(doc); } }.toString()`
+                }
+            }
+        };
+    };
     const pouchDbDesignDoc$ = ACTION.
         filter(action => action.region).concatMap(action => {
-            return POUCHDB.put(createDesignDoc(designDocId(action.region.id)))
-        });
-     */
+            return POUCHDB.put(createDesignDoc(action.region.id))
+        }).tap(doc => console.log('doc', doc.id));
 
+    const pouchDb$ = concat(pouchDbDesignDoc$, pouchDbUpdate$)
+        .tap(doc => console.log('doc', doc.id));
     return {
-        // merge all action sinks
+        // TODO add put success action
         ACTION: actionSuccess$,
-        //POUCHDB: [pouchDbDesignDoc$, pouchDbUpdate$])
+        POUCHDB: pouchDb$
     }
 }
 
@@ -129,9 +132,9 @@ export function cycleMarkers({ACTION, POUCHDB}) {
  * @param {String} The key of the region, used for database scope
  * @param {Object} options Currently unused. Options to pass to query-overpass, plus the following
  * @param {Object} options.testBounds Used only for testing
- * @param {Array} bounds Currently unusued [lat_min, lon_min, lat_max, lon_max]
+ * @param {Array} options.bounds Currently unusued [lat_min, lon_min, lat_max, lon_max]
  */
-export const fetchMarkers = (regionKey, options, bounds) => {
+export const fetchMarkers = (regionKey, options) => {
     return new Task(function(reject, resolve) {
         const db = resolveDb(regionKey, options)
         db.allDocs({include_docs: true, descending: true}, function(err, doc) {
@@ -191,6 +194,7 @@ export function removeMarker(regionKey, options, marker) {
  * @returns {Task} A Task that when forked executes the persistence
  */
 export const persistMarkers = (regionKey, options, features) => {
+    /*
     const dateLens = R.lensProp('date');
     const _idLens = R.lensProp('_id');
     const featureIdLens = R.lensPath(['properties', '@id']);
@@ -202,8 +206,8 @@ export const persistMarkers = (regionKey, options, features) => {
             .timestamp()
             .tap(val => console.log('writeFeature', feature.id))
             // Add a timestamp and _id to the feature for storing
-            .map(obj => R.compose(R.set(dateLens, obj.timestamp), R.set(_idLens, obj.value.id))(obj.value))
-            .do(theFeature => console.log(`Add/Update feature for: ${R.view(featureIdLens, theFeature)}`))
+            .map(obj => R.compose(R.set(dateLens, obj.time), R.set(_idLens, obj.value.id))(obj.value))
+            .tap(theFeature => console.log(`Add/Update feature for: ${R.view(featureIdLens, theFeature)}`))
             .mergeMap(datedFeature => fromPromise(
                 db.put(datedFeature)
             ));
@@ -223,4 +227,5 @@ export const persistMarkers = (regionKey, options, features) => {
                 }
             );
     }).chain(() => fetchMarkers(regionKey, options, null))
+    */
 };

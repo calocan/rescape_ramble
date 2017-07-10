@@ -89,7 +89,8 @@ export const asyncActionCreators = R.curry((scope, action, crud, asyncFunc) => {
     )(PHASES);
     const crudAction = phase => `${R.toLower(crud)}${capitalize(action)}${capitalize(phase)}`;
     const handlers = {
-        [crudAction('data')]: (key, options) => R.merge({type: DATA, key}, options),
+        // Create a CRUD action that has key and whatever params are passed in
+        [crudAction('data')]: (key, params) => R.merge({type: DATA, key}, params),
         [crudAction('success')]: (body) => ({type: SUCCESS, body}),
         [crudAction('failure')]: (error) => ({type: FAILURE, error}),
     };

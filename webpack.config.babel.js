@@ -45,7 +45,7 @@ export default {
                 test: /\.js$/,
                 loader: 'babel-loader',
                 include: [resolve('.')],
-                exclude: [/node_modules/],
+                exclude: /node_modules\/(?!cycle-pouchdb-most-driver)/,
                 options: {
                     babelrc: false,
                     presets: ['env', 'react'],

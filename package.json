@@ -47,7 +47,8 @@
     "setupTestFrameworkScriptFile": "<rootDir>/node_modules/jest-sourcemaps/lib/testEnvSetup.js",
     "transform": {
       "\\.jsx?$": "<rootDir>/node_modules/jest-sourcemaps/lib/transformer.js"
-    }
+    },
+    "bail": true
   },
   "author": "",
   "license": "ISC",

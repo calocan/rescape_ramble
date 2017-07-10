@@ -89,13 +89,15 @@ export function assertSourcesSinks(sources, sinks, main, done, timeOpts = {}) {
                 // {
                 //  HTTP:
                 //      {select: () => diagram('r-|', {r: xs.of(response)}}
-                //      {put: () => diagram('r-|', {r: xs.of(response)}}
+                //      {put: () => diagram('--|', {r: xs.of(response)}}
                 //  })
                 obj = {
                     [sourceKey]:
                         R.map(
-                            value => () => timeSource.diagram(diagramStr, value()),
-                                //.tap( i => console.log(`Source: ${sourceKey}`, i) );
+                            value => function() {
+                                return timeSource.diagram(diagramStr, value(...arguments))
+                                    //.tap( i => console.log(`Source: ${sourceKey}`, i) );
+                            },
                             sourceOpts
                         )
                 }
