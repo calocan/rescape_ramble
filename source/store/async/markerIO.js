@@ -24,7 +24,7 @@ export const designDocViewId = regionId => `${regionId}/${viewName}`;
 
 // Map an ACTION fetch source to a POUCHDB request sync
 // Map a POUCHDB response source to an ACTION success/error sync
-export function cycleMarkers({ACTION, POUCHDB}) {
+export function cycleMarkers({ACTION, POUCHDB, Time}) {
     const actionUpdate = actions.UPDATE_MARKERS_DATA
     const actionFetch = actions.FETCH_MARKERS_DATA
     const dateLens = R.lensProp('date');
@@ -75,7 +75,6 @@ export function cycleMarkers({ACTION, POUCHDB}) {
         .concatMap(theRecord => {
             return POUCHDB.put(theRecord)
         })
-        .tap(put => console.log(put))
 
     // map the ACTION update source to POUCHDB update sink to POUCHDB.put each record in the action
     const pouchDbUpdate$ = ACTION
@@ -116,8 +115,8 @@ export function cycleMarkers({ACTION, POUCHDB}) {
             return POUCHDB.put(createDesignDoc(action.region.id))
         }).tap(doc => console.log('doc', doc.id));
 
-    const pouchDb$ = concat(pouchDbDesignDoc$, pouchDbUpdate$)
-        .tap(doc => console.log('doc', doc.id));
+    const pouchDb$ = pouchDbUpdate$ // concat(pouchDbDesignDoc$, pouchDbUpdate$)
+        //.tap(doc => console.log('doc', doc.id));
     return {
         // TODO add put success action
         ACTION: actionSuccess$,

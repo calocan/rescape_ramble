@@ -129,7 +129,9 @@ describe('markerHelpers', () => {
             ACTION:   { 'x|': actionSink }
         }, cycleMarkers, done);
     });
-    */
+
+     */
+
 
     test('should emit sink POUCHDB.update given sources ACTION.updateMarkerData', function(done) {
         // Fire the fetchMarkersData action
@@ -187,10 +189,10 @@ describe('markerHelpers', () => {
         // diagram provided here
         assertSourcesSinks({
             ACTION: { 'a-|': actionSource },
-            POUCHDB:   { '-|': pouchDbSource }
+            POUCHDB:   { 'a-|': pouchDbSource }
         }, {
-            // Expect the view and each feature to be put
-            POUCHDB:   { [`${R.keys(pouchDbSink)}|`]: pouchDbSink }
+            // Expect the view and each feature to be put simulataneously
+            POUCHDB:   { [`(${R.keys(pouchDbSink)})|`]: pouchDbSink }
         }, cycleMarkers, done);
     }, 10000);
 });
