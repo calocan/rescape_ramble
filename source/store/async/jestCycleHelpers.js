@@ -96,7 +96,7 @@ export function assertSourcesSinks(sources, sinks, main, done, timeOpts = {}) {
                         R.map(
                             value => function() {
                                 return timeSource.diagram(diagramStr, value(...arguments))
-                                    .tap( i => console.log(`Source: ${sourceKey}`, R.keys(i).join(',')) );
+                                    //.tap( i => console.log(`Source: ${sourceKey}`, R.keys(i).join(',')) );
                             },
                             sourceOpts
                         )
@@ -110,7 +110,7 @@ export function assertSourcesSinks(sources, sinks, main, done, timeOpts = {}) {
                 //  }
                 obj = {
                     [sourceKey]: timeSource.diagram(diagramStr, sourceOpts)
-                        .tap( i => console.log(`Source: ${sourceKey}`, R.keys(i).join(',')) )
+                        //.tap( i => console.log(`Source: ${sourceKey}`, R.keys(i).join(',')) )
                 }
             }
 

@@ -21,72 +21,135 @@ const resolveDb = (regionKey, options) => getDb(options && options.dbName || reg
 export const viewName = 'allMarkers'
 export const designDocId = regionId => `_design/${regionId}`;
 export const designDocViewId = regionId => `${regionId}/${viewName}`;
+// Constants specific to markers to make the cycle more generic
+const actionUpdate = actions.UPDATE_MARKERS_DATA
+const actionFetch = actions.FETCH_MARKERS_DATA
+const actionFetchSuccess = actions.FETCH_MARKERS_SUCCESS
+const actionUpdateSuccess = actions.UPDATE_MARKERS_SUCCESS
+// Ramda lens to get at properties of the marker objects
+const dateLens = R.lensProp('date');
+const _idLens = R.lensProp('_id');
+const recordIdLens = R.lensPath(['properties', '@id']);
 
-// Map an ACTION fetch source to a POUCHDB request sync
-// Map a POUCHDB response source to an ACTION success/error sync
-export function cycleMarkers({ACTION, POUCHDB, Time}) {
-    const actionUpdate = actions.UPDATE_MARKERS_DATA
-    const actionFetch = actions.FETCH_MARKERS_DATA
-    const dateLens = R.lensProp('date');
-    const _idLens = R.lensProp('_id');
-    const recordIdLens = R.lensPath(['properties', '@id']);
+/***
+ * Filter for fetch actions to create a stream of fetch actions.
+ * @param ACTION
+ * @returns {{fetchAction$}}
+ */
+const fetchIntent = ({ACTION}) => {
+    return fetchAction$: ACTION
+            // Respond to only actionFetch
+            .filter(action => action.type === actionFetch)
+            .tap(action => console.log('Fetch records of region', action.region.id))
+            // Map to the action's region
+            .map(action => {
+                return action.region;
+            })
+    }
+}
 
-    // Intent------------
 
-    // In response to ACTION.fetchMarkersData resolve the region
-    const requestedRegion$ = ACTION
-        .filter(action => action.type === actionFetch)
-        .tap(action => console.log('requestedRegion', action.region.id))
-        .map(action => {
-            return action.region;
-        });
-
-    // Model--------------
-
-    const pouchQueryResponse$ = requestedRegion$
-        // Map the region to a POUCHDB.query response source for the region
-        .concatMap(region => {
-           return POUCHDB
+/***
+ * Convert fetchActions to success/error result actions
+ * @param fetchAction$
+ * @returns A fetch result stream of success/error REACT actions
+ */
+const fetchResult = ({fetchAction$}) => {
+    // Map the region to a POUCHDB.query response source for the region
+    // (think of the POUCHDB source of having the whole db available, just query for what we need)
+    fetchAction$.concatMap(region => {
+            return POUCHDB
                 .query(designDocViewId(region.id), {
                     include_docs: true,
                     descending: true,
                 })
-            }
+        }
+    )
+    //
+    .map(res => {
+        return actionFetchSuccess(
+            res.rows.map(r => r.doc)
         )
-        .tap(res => console.log('pouchQueryResponse', res.rows.map(r => r.doc.id).join(', ') ))
+    })
+    .tap(res => console.log('pouchQueryResponse', res.rows.map(r => r.doc.id).join(', ')))
+}
 
-    // Map the database response to the actionCreator success function
-    const actionSuccess$ = pouchQueryResponse$
+/***
+ * Filter for update actions to create a stream of update actions.
+ * @param ACTION
+ * @returns {{fetchAction$}}
+ */
+const updateIntent = ({ACTION}) => {
+    return {
+        updateAction$: ACTION
+            // Respond to only actionUpdate
+            .filter(action => action.type === actionUpdate)
+            .tap(action => console.log('update for region', action.region.id))
+            // Make a stream of records to be updated
+            .concatMap(action => {
+                return from(action.payload);
+            })
+    }
+}
+
+/***
+ * Convert updateActions to success/error result actions
+ * @param updateAction$
+ * @returns An update result stream of success/error REACT actions
+ */
+const updateResult = ({updateAction$}) => {
+    // Map all records in action[recordsName] to a POUCHDB.put stream
+    updateAction$.concatMap(record => from([record])
+        // Map to {value: record, time: timestamp}
+        .timestamp()
+        // Add a timestamp and _id to the record to prep for database storage
+        // TODO _id should only be set if it doesn't already exist (i.e. a create vs an update)
+        .map(obj => {
+            return R.compose(
+                R.set(dateLens, obj.time),
+                R.set(_idLens, obj.value.id)
+            )(obj.value)
+        })
+        // Map the record to the POUCHDB.put stream
+        .concatMap(theRecord => {
+            return POUCHDB.put(theRecord)
+        })
         .map(res => {
-            return actionCreatorSuccess(
+            return actionFetchSuccess(
+                res.rows.map(r => r.doc)
+            )
+        })
+    )
+};
+// Map an ACTION fetch source to a POUCHDB request sync
+// Map a POUCHDB response source to an ACTION success/error sync
+export function cycleMarkers({ACTION, POUCHDB, Time}) {
+
+    // Intent------------
+
+    const {fetchAction$} = fetchIntent({ACTION})
+    const {updateAction$} = updateIntent({ACTION})
+    const actions = merge(fetchIntent({ACTION}, updateIntent({ACTION}))
+
+    // Result REACT actions
+
+    const results =  merge(fetchResult()
+    // Model--------------
+    const
+
+
+    const actionSuccess$ = actions.queryResponse$
+        // Map the pouchDb docs to the action fetch success function
+        .map(res => {
+            return actionFetchSuccess(
                 res.rows.map(r => r.doc)
             )
         })
         .tap(action => console.log('actionSuccess$', action.type));
 
 
-    // Function that writes features to document store
-    const writeRecords$ = record => from([record])
-        // Add a timestamp and _id to the feature for storing
-        .timestamp()
-        .map(obj => {
-            return R.compose(R.set(dateLens, obj.time), R.set(_idLens, obj.value.id))(obj.value)
-        })
-        .concatMap(theRecord => {
-            return POUCHDB.put(theRecord)
-        })
-
-    // map the ACTION update source to POUCHDB update sink to POUCHDB.put each record in the action
-    const pouchDbUpdate$ = ACTION
-        .filter(action => action.type === actionUpdate)
-        // Make a stream of records events
-        .concatMap(action => {
-            return from(action.payload);
-        })
-        // Map all records in action[recordsName] to a POUCHDB.put stream
-        .concatMap(writeRecords$)
-
-    pouchDbUpdate$
+    // Subscribe
+    action.updateResponse$
         .subscribe(
             rec => console.log(`Update/Create record: ${rec.id}`),
             err => {
