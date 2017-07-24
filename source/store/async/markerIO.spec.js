@@ -9,7 +9,7 @@
  * THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import {removeMarker, fetchMarkers, persistMarkers, cycleMarkers, viewName, designDocId, designDocViewId} from './markerIO';
+import {removeMarker, fetchMarkers, persistMarkers, cycleRecords, viewName, designDocId, designDocViewId} from './markerIO';
 import config from 'store/data/test/config';
 import {PARIS_SAMPLE, LA_SAMPLE} from './markerIO.sample'
 import {reqPath} from 'helpers/throwingFunctions'
@@ -127,7 +127,7 @@ describe('markerHelpers', () => {
         }, {
             // Expect this sink, the
             ACTION:   { 'x|': actionSink }
-        }, cycleMarkers, done);
+        }, cycleRecords, done);
     });
 
      */
@@ -193,6 +193,6 @@ describe('markerHelpers', () => {
         }, {
             // Expect the view and each feature to be put simulataneously
             POUCHDB:   { [`(${R.keys(pouchDbSink)})|`]: pouchDbSink }
-        }, cycleMarkers, done);
+        }, cycleRecords, done);
     }, 10000);
 });
