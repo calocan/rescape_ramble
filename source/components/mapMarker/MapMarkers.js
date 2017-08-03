@@ -143,3 +143,4 @@ MapMarkers.propTypes = {
     geojson: object.isRequired,
 };
 export default MapMarkers;
+

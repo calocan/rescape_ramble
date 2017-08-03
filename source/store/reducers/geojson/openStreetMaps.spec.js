@@ -12,7 +12,7 @@ import configureStore from 'redux-mock-store';
 import {actions, actionCreators} from 'store/reducers/geojson/openStreetMaps';
 import thunk from 'redux-thunk';
 import {expectTask, testState} from 'helpers/jestHelpers';
-import {removeDuplicateObjectsByProp} from "helpers/functions";
+import {removeDuplicateObjectsByProp} from 'helpers/functions';
 import R from 'ramda'
 const middlewares = [thunk];
 const mockStore = configureStore(middlewares);

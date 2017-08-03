@@ -12,11 +12,10 @@
 import R from 'ramda'
 import {fetchTransit} from 'store/async/overpassIO'
 import {asyncActions, asyncActionCreators} from 'store/reducers/actionHelpers'
-
-const scope = 'openStreetMaps';
-const action = 'transit';
-const makeAsyncActionCreators = asyncActionCreators(scope, action);
-export const actions = asyncActions(scope, action, 'FETCH');
+import {SCOPE} from './geojsons'
+const ACTION_KEY = 'transit';
+const makeAsyncActionCreators = asyncActionCreators(SCOPE, ACTION_KEY);
+export const actions = asyncActions(SCOPE, ACTION_KEY, 'FETCH');
 export const actionCreators = makeAsyncActionCreators('FETCH', fetchTransit);
 
 export default (state = {}, action = {}) => {

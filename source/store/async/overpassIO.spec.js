@@ -12,25 +12,24 @@
 import {fetchTransit} from './overpassIO';
 import {removeDuplicateObjectsByProp} from 'helpers/functions'
 import {expectTask} from 'helpers/jestHelpers'
-import {retrieveOrFetch} from "./storageIO";
-import {createLocalDb, cycleLocalDb, destroy, getDb} from "./pouchDbIO";
+import {retrieveOrFetch} from './storageIO';
+import {createLocalDb, cycleLocalDb, destroy, getDb} from './pouchDbIO';
 import * as fs from 'fs';
-import {promiseToTask} from "../../helpers/functions";
+import {promiseToTask} from '../../helpers/functions';
 import R from 'ramda';
-import Task from 'data.task'
-
 
 const name = 'overpass_io_spec';
 const PATH = `${__dirname}/__databases__/`;
 const DB = `${PATH}${name}`;
-if (!fs.existsSync(PATH))
+if (!fs.existsSync(PATH)) {
     fs.mkdirSync(PATH);
+}
 
 let mock;
 //jest.unmock('query-overpass')
 // Comment/Uncomment. Must be at top level
 mock = true
-jasmine.DEFAULT_TIMEOUT_INTERVAL = 100000000
+global.jasmine.DEFAULT_TIMEOUT_INTERVAL = 100000000
 
 // requires are used below since the jest includes aren't available at compile time
 describe('overpassHelpersUnmocked', () => {
@@ -84,7 +83,6 @@ describe('overpassHelpers', async() => {
         )
     })
     test('store fetch', async () => {
-        const bounds = require('query-overpass').LA_BOUNDS;
         await expectTask(
             cycleLocalDb(DB)
                 .chain(db =>

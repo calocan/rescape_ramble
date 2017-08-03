@@ -49,20 +49,20 @@ export const resolveSvgJsx = (opt, features) => {
         },
         features);
 
-    const paths = R.map(({key, pointData}) => {
-        switch (pointData.type) {
+    const paths = R.map(({key, thePointData}) => {
+        switch (thePointData.type) {
             case 'Point':
-                const [cx, cy] = R.head(pointData.points);
+                const [cx, cy] = R.head(thePointData.points);
                 return <circle key={key} cx={cx} cy={cy} r="10" fill="red" stroke="blue" strokeWidth="1" />
             case 'LineString':
                 return <polyline key={key} fill="none" stroke="blue" strokeWidth="10"
-                    points={pointData.points.map(point => point.join(',')).join(' ')} />
+                    points={thePointData.points.map(point => point.join(',')).join(' ')} />
             case 'Polygon':
                 // TODO might need to remove a last redundant point here
                 return <polygon key={key} fill="red" stroke="blue" strokeWidth="10"
-                    points={pointData.points.map(point => point.join(',')).join(' ')} />
+                    points={thePointData.points.map(point => point.join(',')).join(' ')} />
             default:
-                throw new Error(`Unexpected type ${pointData.type}`)
+                throw new Error(`Unexpected type ${thePointData.type}`)
         }
     },
     /*

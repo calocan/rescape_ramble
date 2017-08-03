@@ -1,6 +1,4 @@
 import {mockTimeSource} from '@cycle/time/most';
-import {testStreamLength} from "../../helpers/jestHelpers";
-import {combine, from} from "most";
 import R from 'ramda'
 
 // Modified from
@@ -40,7 +38,7 @@ import R from 'ramda'
       category: 'users'
     }
   };
-    where the keys match those in the diagram string, and the values are the expected sync value
+    where the keys match those in the diagram string, and the values are the expected doSync value
     to be produced by corresponding source
  * @param main The Cycle main function, which is called with sources and a mock timeSource
  * @param done Jest done() function to call after the assertion
@@ -51,7 +49,7 @@ export function assertSourcesSinks(sources, sinks, main, done, timeOpts = {}) {
     const timeSource = mockTimeSource(timeOpts)
     const _sources = Object.keys(sources)
     // e.g. sourceKey is 'ACTION' or 'HTTP'
-        .reduce((_sources, sourceKey) => {
+        .reduce((_theSources, sourceKey) => {
             // Extract the object, e.g.
             // {'ab|': {
             //  a: actions.requestReposByUser(user1),
@@ -120,7 +118,7 @@ export function assertSourcesSinks(sources, sinks, main, done, timeOpts = {}) {
             //  sourceA: sourceOpts1stKey: () => diagram(sourceASource1stKey1, sourceOptions1stValue)
             //  sourceB: sourceOpts1stKey: diagram(sourceASource1stKey1, sourceOptions)
             // }
-            return Object.assign(_sources, obj);
+            return Object.assign(_theSources, obj);
         }, {})
 
     // Reduce the sinks into an object in the following format
@@ -129,12 +127,12 @@ export function assertSourcesSinks(sources, sinks, main, done, timeOpts = {}) {
     //  sinkB: diagram(sinkBObj1stKey, sinkBObj1stValue)
     // }
     const _sinks = Object.keys(sinks)
-        .reduce((_sinks, sinkKey) => {
+        .reduce((allSinks, sinkKey) => {
             const sinkObj = sinks[sinkKey];
             const diagram = Object.keys(sinkObj)[0];
             const sinkOpts = sinkObj[diagram];
 
-            return Object.assign(_sinks, {[sinkKey]: timeSource.diagram(diagram, sinkOpts)});
+            return Object.assign(allSinks, {[sinkKey]: timeSource.diagram(diagram, sinkOpts)});
         }, {});
 
     // Add TimeSource as a source
@@ -146,7 +144,7 @@ export function assertSourcesSinks(sources, sinks, main, done, timeOpts = {}) {
 
     // Assert that the time diagram streams of the main sink and the expect sink are equivalent
     Object.keys(sinks)
-        .filter(key => key=='POUCHDB')
+        .filter(key => key === 'POUCHDB')
         .map(sinkKey => {
             timeSource.assertEqual(_main[sinkKey], _sinks[sinkKey])
         });

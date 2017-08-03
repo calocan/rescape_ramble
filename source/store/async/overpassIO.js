@@ -17,7 +17,6 @@ import os from 'os';
 import squareGrid from '@turf/square-grid';
 import bbox from '@turf/bbox';
 import {concatFeatures} from 'helpers/geojsonHelpers'
-import {createLocalDb} from "./pouchDbIO";
 
 /***
  * fetches transit data from OpenStreetMap using the Overpass API.
@@ -27,8 +26,9 @@ import {createLocalDb} from "./pouchDbIO";
  * @param {Array} bounds [lat_min, lon_min, lat_max, lon_max]
  */
 export const fetchTransit = R.curry((options, bounds) => {
-    if (options.cellSize)
+    if (options.cellSize) {
         return fetchTransitCelled(options, bounds);
+    }
 
     const boundsAsString = R.pipe(
         list=>R.concat(

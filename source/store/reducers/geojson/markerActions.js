@@ -11,14 +11,15 @@
 
 import {SCOPE} from './geojsons'
 import R from 'ramda'
-import {actionId, asyncActions, asyncActionCreators} from 'store/reducers/actionHelpers'
-import {persistMarkers, fetchMarkers as fetchMarkersIO, removeMarkers as removeMarkersIO} from 'store/async/markerIO'
+import {actionId, actionPath, asyncActions, asyncActionCreators} from 'store/reducers/actionHelpers'
+//import {persistMarkers, fetchMarkers as fetchMarkersIO, removeMarkers as removeMarkersIO} from 'store/async/markerIO'
 
-export const ACTION_NAME = 'markers';
-const makeAsyncActionCreators = asyncActionCreators(SCOPE, ACTION_NAME);
-const makeAsyncActions = asyncActions(SCOPE, ACTION_NAME);
-export {SCOPE};
-const makeAction = name => ({name: actionId(SCOPE, name)});
+export {SCOPE}
+export const ACTION_KEY = 'markers';
+export const ACTION_PATH = actionPath(SCOPE, ACTION_KEY)
+const makeAsyncActionCreators = asyncActionCreators(SCOPE, ACTION_KEY);
+const makeAsyncActions = asyncActions(SCOPE, ACTION_KEY);
+const makeAction = name => ({name: actionId(SCOPE, ACTION_KEY, name)});
 // Make and export all actions
 export const actions = R.mergeAll([
     makeAsyncActions('FETCH'),
@@ -27,11 +28,12 @@ export const actions = R.mergeAll([
     makeAction('SELECT_MARKER'),
     makeAction('HOVER_MARKER')
 ]);
+
 // Define Action Creators
 export const actionCreators = R.mergeAll([
-    makeAsyncActionCreators('FETCH', fetchMarkersIO),
-    makeAsyncActionCreators('UPDATE', persistMarkers),
-    makeAsyncActionCreators('REMOVE', removeMarkersIO),
+    makeAsyncActionCreators('FETCH'),
+    makeAsyncActionCreators('UPDATE'),
+    makeAsyncActionCreators('REMOVE'),
     // TODO not wired up
     {
         selectMarker: info => ({type: actions.SELECT_MARKER, info}),

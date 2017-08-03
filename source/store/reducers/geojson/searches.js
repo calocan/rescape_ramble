@@ -12,10 +12,10 @@
 import {searchLocation as searchLocationIO} from 'store/async/searchIO'
 import {asyncActions, asyncActionCreators} from 'store/reducers/actionHelpers'
 
-const scope = 'searches';
-const action = 'location';
-const makeAsyncActionHandlers = asyncActionCreators(scope, action);
-export const actions = asyncActions(scope, action, 'SEARCH');
+export const ACTION_KEY = 'location';
+import {SCOPE} from './geojsons'
+const makeAsyncActionHandlers = asyncActionCreators(SCOPE, ACTION_KEY);
+export const actions = asyncActions(SCOPE, ACTION_KEY, 'SEARCH');
 export const actionCreators = makeAsyncActionHandlers('SEARCH', searchLocationIO);
 
 /***

@@ -14,13 +14,21 @@ import {capitalize, mapKeys} from 'helpers/functions'
 import Task from 'data.task'
 
 /***
+ * The path of an action
+ * @param {String} scope The reducer scope (e.g. geojson)
+ * @param {String} actionKey The key of the action (e.g. markers)
+ * @returns {String} /scope/actionKey/
+ */
+export const actionPath = R.curry((scope, actionKey) => `/${scope}/${actionKey}/`)
+/***
  * Create a standard action value. Curryable
- * @param {String} scope The reducer scope
- * @param {String} action The name of the action
- * @returns {String} /scope/ACTION/
+ * @param {String} scope The reducer scope (e.g. geojson)
+ * @param {String} actionKey The key of the action (e.g. markers)
+ * @param {String} action The name of the action (e.g. fetch)
+ * @returns {String} /scope/actionKey/ACTION/
  * actionId:: String -> String -> String
 */
-export const actionId = R.curry((scope, action) => `/${scope}/${R.toUpper(action)}`);
+export const actionId = R.curry((scope, actionKey, action) => `${actionPath(scope, actionKey)}${R.toUpper(action)}/`);
 
 const PHASES = ['DATA', 'SUCCESS', 'FAILURE'];
 
@@ -64,23 +72,22 @@ export const asyncActions = R.curry((scope, action, crud) => {
 });
 
 /***
- * Returns standard async action handler functions, one to initiate an async call,
- * one to crud the data, one to handle success, one to handle failure 
+ * Returns standard async action handler functions,
+ * one to crud the data, one to handle success, one to handle failure
  * @param {String} scope The scope of the reducer
  * @param {String} action The subject of the async operation, such as a User
  * @param {String} crud Default 'FETCH'. Or can be 'UPDATE', 'REMOVE' or anything else
  * @param {Function} asyncFunc The asyncFunc to call. Must return a Task
  * @returns {Object} {
- *  CrudAction: dispatch -> func The main action that must be called with a dispatch and returns a handler
- *  function that calls the asyncFun
  *  CrudActionData: trivial action handler indicating crud call
  *  CrudActionSuccess: trivial action handler indicating crud success, returns object with response body in 'body'
  *  CrudActionFailure: trivial action handler indicating crud failure, returns object with exception in 'error'
  * }
  */
-export const asyncActionCreators = R.curry((scope, action, crud, asyncFunc) => {
-    if (typeof(action) === 'object')
+export const asyncActionCreators = R.curry((scope, action, crud) => {
+    if (typeof (action) === 'object') {
         throw new Error();
+    }
     const valueMaker = actionValues(scope, action, crud);
     // Creates action values (e.g. FETCH_USER_DATA)
     const {DATA, SUCCESS, FAILURE} = R.compose(
@@ -88,26 +95,11 @@ export const asyncActionCreators = R.curry((scope, action, crud, asyncFunc) => {
         R.map(phase => R.pair(phase, valueMaker(phase))),
     )(PHASES);
     const crudAction = phase => `${R.toLower(crud)}${capitalize(action)}${capitalize(phase)}`;
-    const handlers = {
+    return {
         // Create a CRUD action that has key and whatever params are passed in
         [crudAction('data')]: (key, params) => R.merge({type: DATA, key}, params),
         [crudAction('success')]: (body) => ({type: SUCCESS, body}),
         [crudAction('failure')]: (error) => ({type: FAILURE, error}),
     };
-    return R.merge(handlers, {
-        [crudAction('')]: function() {
-            const args = arguments;
-            return dispatch => {
-                // Call the _data action
-                dispatch(handlers[crudAction('data')](...args));
-                // Call the asyncFunc with whatever args are passed to the actionCreator
-                return asyncFunc(...args).chain(response =>
-                    // Call the _success action with the response
-                    // We can't call the _failure function, that must be wired up by the caller who forks
-                    // this Task
-                    Task.of(dispatch(handlers[crudAction('success')](response)))
-                )
-            }
-        }
-    });
 });
+

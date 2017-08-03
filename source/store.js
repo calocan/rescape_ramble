@@ -21,12 +21,12 @@ import {persistentStore} from 'redux-pouchdb-plus';
 import {responsiveStoreEnhancer} from 'redux-responsive'
 import PouchDB from 'pouchdb';
 import R from 'ramda';
-import {startSync} from "./store/async/pouchDbIO";
-import {sources} from 'store/async/cycle';
+import {startSync} from './store/async/pouchDbIO';
+import {main} from 'store/async/cycle';
 import {run} from '@cycle/run'
 
 // Use this synced db to store the state of the app
-// There might be no reason to sync the state to a remote db
+// There might be no reason to doSync the state to a remote db
 const dbName = 'default'
 const db = new PouchDB(dbName);
 startSync(db, `http://localhost:5984/${dbName}`);
@@ -62,7 +62,7 @@ const createStoreWithMiddleware = compose(
     persistentStore({db})
 )(createStore);
 
-run(sources, {
+run(main, {
     ACTION: makeActionDriver(),
     STATE: makeStateDriver(),
 })

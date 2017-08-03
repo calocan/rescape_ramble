@@ -12,196 +12,36 @@
 import Task from 'data.task';
 import R from 'ramda';
 import { from, fromPromise, combine, merge, concat } from 'most'
-import {getDb} from "./pouchDbIO";
-import { actions, actionCreators } from 'store/reducers/geojson/markers'
+import {getDb} from './pouchDbIO';
+import { actions, actionCreators, actionPath } from 'store/reducers/geojson/markerActions'
+import { cycleRecords } from './cycleHelpers'
 const resolveDb = (regionKey, options) => getDb(options && options.dbName || regionKey);
 
-// Constants for naming PouchDb Views
-// (Exported for testing purposes)
-export const viewName = 'allMarkers'
-export const designDocId = regionId => `_design/${regionId}`;
-export const designDocViewId = regionId => `${regionId}/${viewName}`;
+
 // Constants specific to markers to make the cycle more generic
-const actionUpdate = actions.UPDATE_MARKERS_DATA
-const actionFetch = actions.FETCH_MARKERS_DATA
-const actionFetchSuccess = actions.FETCH_MARKERS_SUCCESS
-const actionUpdateSuccess = actions.UPDATE_MARKERS_SUCCESS
-// Ramda lens to get at properties of the marker objects
-const dateLens = R.lensProp('date');
-const _idLens = R.lensProp('_id');
-const recordIdLens = R.lensPath(['properties', '@id']);
-
-// PouchDb Design Doc view definition for querying
-// Note that the function must be a for the POUCHDB driver
-// TODO this stream should only accept each unique regionId once
-const createDesignDoc = regionId => {
-    return {
-        _id: `${designDocId(regionId)}`,
-        views: {
-            [viewName]: {
-                map: `function (doc) { if (doc.type === 'item') { emit(doc); } }.toString()`
-            }
-        }
-    };
-};
-
-/*********
- * Intents
- *********/
+const actionUpdateName = actions.UPDATE_MARKERS_DATA
+const actionFetchName = actions.FETCH_MARKERS_DATA
+const actionFetchSuccess = actionCreators.FETCH_MARKERS_SUCCESS
+const actionUpdateSuccess = actionCreators.UPDATE_MARKERS_SUCCESS
+const actionFetchFailure = actionCreators.FETCH_MARKERS_FAILURE
+const actionUpdateFailure = actionCreators.UPDATE_MARKERS_FAILURE
 
 /***
- * Filter for fetch actions to create a stream of fetch actions.
- * @param ACTION
- * @returns {{fetchAction$}}
+ * A cycle.js component that processes async Marker sources/sinks
  */
-const fetchRecordIntent = ({ACTION}) => ({
-    fetchAction$: ACTION
-        // Respond to only actionFetch
-        .filter(action => action.type === actionFetch)
-        // Map to the action's region
-        .map(action => action.region)
-        .tap(action => console.log('Fetch records of region', action.region.id))
+export const cycleMarkers = sources => cycleRecords({
+    // ACTION_CONFIG configures the generic cycleRecords to call/match the correct actions
+    ACTION_CONFIG: {
+        actionPath,
+        actionFetchName,
+        actionUpdateName,
+        actionFetchSuccess,
+        actionUpdateSuccess,
+        actionFetchFailure,
+        actionUpdateFailure
+    },
+    ...sources
 })
-
-/***
- * Filter for update actions to create a stream of update actions.
- * @param ACTION
- * @returns {{fetchAction$}}
- */
-const updateRecordIntent = ({ACTION}) => ({
-    updateAction$: ACTION
-        // Respond to only actionUpdate
-        .filter(action => action.type === actionUpdate)
-        // Make a stream of records to be updated
-        .concatMap(action => from(action.payload))
-        .tap(action => console.log('update for region', action.region.id))
-})
-
-/********
- * React Result Actions
- ********/
-
-/***
- * Convert fetchActions to success/error result actions
- * @param fetchAction$
- * @param POUCHDB
- * @returns A fetch result stream of success/error REACT actions
- */
-const fetchResultInstruction = ({fetchAction$, POUCHDB}) => ({
-    // Map the region to a POUCHDB.query source for the region
-    // (think of the POUCHDB source of having the whole db available, just query for what we need)
-    fetchResultAction$: fetchAction$.concatMap(region => {
-            return POUCHDB
-                .query(designDocViewId(region.id), {
-                    include_docs: true,
-                    descending: true,
-                })
-        }
-    )
-    // Map the result rows to each pouchdb doc
-    .map(res => {
-        return actionFetchSuccess(
-            res.rows.map(r => r.doc)
-        )
-    })
-    .tap(res => console.log('pouchQueryResponse', res.rows.map(r => r.doc.id).join(', ')))
-})
-
-/***
- * Convert updateActions to a PouchDb update stream
- * @param updateAction$
- * @returns An update result stream of success/error REACT actions
- */
-const updatePouchDbInstruction = ({updateAction$, POUCHDB}) => ({
-    // Map all records in action[recordsName] to a POUCHDB.put stream and combine results into a stream
-    updatePouchDb$: updateAction$.concatMap(record =>
-        // Stream from each record
-        from([record])
-        // Map to {value: record, time: timestamp}
-        .timestamp()
-        // Add a timestamp and _id to the record to prep for database storage
-        // TODO _id should only be set if it doesn't already exist (i.e. a create vs an update)
-        .map(obj => {
-            return R.compose(
-                R.set(dateLens, obj.time),
-                R.set(_idLens, obj.value.id)
-            )(obj.value)
-        })
-        // Map the record to the POUCHDB.put stream and combine the put streams into one
-        .concatMap(theRecord => {
-            return POUCHDB.put(theRecord)
-        })
-    )
-})
-
-
-const updateResultInstruction = ({updatePouchDb$}) => ({
-    updateResultAction$:
-        // Map the resulting PouchDb rows to the Pouchdb docs
-        updatePouchDb$.changes().map(res => {
-            return actionFetchSuccess(
-                res.rows.map(r => r.doc)
-            )
-        })
-})
-
-// Map an ACTION fetch source to a POUCHDB request sync
-// Map a POUCHDB response source to an ACTION success/error sync
-export function cycleRecords({ACTION, POUCHDB}) {
-
-    // Input intent of user, drivers, etc into internal actions
-
-    // Stream of fetch record intentions
-    const {fetchAction$} = fetchRecordIntent({ACTION})
-    // Stream of update record intentions
-    const {updateAction$} = updateRecordIntent({ACTION})
-
-
-    // Output instructions to drivers
-
-    // Output a stream of PouchDB updates
-    const {updatePouchDb$} = updatePouchDbInstruction({updateAction$, POUCHDB})
-    // Output a stream of React fetch result actions (success/failure)
-    const {fetchResultAction$} = fetchResultInstruction({fetchAction$, POUCHDB})
-    // Output a stream of React update result actions (success/failure)
-    const {updateResultAction$} = updateResultInstruction({updatection$})
-
-    // Subscribe
-    updateResultAction$
-        .subscribe(
-            rec => console.log(`Update/Create record: ${rec.id}`),
-            err => {
-                console.log('Rejected update', err);
-            },
-            () => {
-                console.log('Finished update');
-            }
-        );
-
-    // Create a PouchDb design doc instruction stream
-    const createPouchDbDesignDoc$ = ACTION.
-        filter(action => action.region).
-        // Only take each region once
-        distinct(action => action.region.id).
-        concatMap(action => {
-            return POUCHDB.put(createDesignDoc(action.region.id))
-        }).tap(doc => console.log('doc', doc.id));
-
-    // Merge the create design doc stream with the record update stream,
-    // always creating the design doc for the region before doing any updates to its records
-    const pouchDb$ = createPouchDbDesignDoc$
-        .merge(updatePouchDb$)
-        .tap(doc => console.log('doc', doc.id));
-
-    const resultAction$ = fetchResultAction$.merge(updateResultAction$);
-
-    return {
-        ACTION: resultAction$,
-        POUCHDB: pouchDb$
-    }
-}
-
-
 
 /***
  * fetches transit data from OpenStreetMap using the Overpass API.
@@ -244,11 +84,11 @@ export const removeMarkers = (regionKey, options, markers) => {
                 return db.remove(row.id, row.value.rev);
             }));
         }).then(function () {
-            resolve();
+            resolve(db);
         }).catch(function (err) {
             reject(err);
         });
-    }).chain(() => fetchMarkers(db, options, null))
+    }).chain(db => fetchMarkers(db, options, null))
 }
 
 /***

@@ -16,7 +16,7 @@ import {reqPath} from 'helpers/throwingFunctions'
 import {mergeAllWithKey} from 'helpers/functions'
 import {concatFeatures} from 'helpers/geojsonHelpers'
 import R from 'ramda'
-import initialState from "store/data/initialState";
+import initialState from 'store/data/initialState';
 import { assertSourcesSinks } from './jestCycleHelpers'
 import { actions, actionCreators } from 'store/reducers/geojson/markerActions'
 
@@ -40,7 +40,7 @@ describe('markerHelpers', () => {
     //PouchDB.debug.enable('*');
     const path = '__db__/tests/markerHelpers.';
     // const createRemoteUrl = `http://localhost:5984/${name}`;
-    // const syncObject = sync({db, createRemoteUrl});
+    // const syncObject = doSync({db, createRemoteUrl});
 
     /*
     test('Persist MarkerList', () => {
@@ -189,10 +189,10 @@ describe('markerHelpers', () => {
         // diagram provided here
         assertSourcesSinks({
             ACTION: { 'a-|': actionSource },
-            POUCHDB:   { 'a-|': pouchDbSource }
+            POUCHDB: { 'a-|': pouchDbSource }
         }, {
             // Expect the view and each feature to be put simulataneously
-            POUCHDB:   { [`(${R.keys(pouchDbSink)})|`]: pouchDbSink }
+            POUCHDB: { [`(${R.keys(pouchDbSink)})|`]: pouchDbSink }
         }, cycleRecords, done);
     }, 10000);
 });

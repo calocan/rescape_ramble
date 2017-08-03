@@ -18,17 +18,17 @@ import {expectTask} from 'helpers/jestHelpers';
 import makeStore from 'store'
 import {LA_SAMPLE} from 'store/async/markerIO.sample'
 import {SCOPE} from './geojsons'
-import {ACTION_NAME} from 'store/reducers/geojson/markerActions'
-import {asyncActionCreators} from "store/reducers/actionHelpers";
+import {ACTION_KEY} from 'store/reducers/geojson/markerActions'
+import {asyncActionCreators} from 'store/reducers/actionHelpers';
 import Task from 'data.task';
 import thunk from 'redux-thunk'
 import configureMockStore from 'redux-mock-store'
 const middlewares = [ thunk ]
 const mockStore = configureMockStore(middlewares)
 // Mock the asynchronous actionCreator
-const {fetchMarkers} = asyncActionCreators(SCOPE, ACTION_NAME, 'FETCH', () => Task.of(LA_SAMPLE));
-const {removeMarkers} = asyncActionCreators(SCOPE, ACTION_NAME, 'REMOVE', () => Task.of(LA_SAMPLE));
-const {updateMarkers} = asyncActionCreators(SCOPE, ACTION_NAME, 'UPDATE', () => Task.of(LA_SAMPLE));
+const {fetchMarkers} = asyncActionCreators(SCOPE, ACTION_KEY, 'FETCH', () => Task.of(LA_SAMPLE));
+const {removeMarkers} = asyncActionCreators(SCOPE, ACTION_KEY, 'REMOVE', () => Task.of(LA_SAMPLE));
+const {updateMarkers} = asyncActionCreators(SCOPE, ACTION_KEY, 'UPDATE', () => Task.of(LA_SAMPLE));
 
 describe('markers reducer', () => {
     const state = initialState(testConfig)

@@ -9,21 +9,22 @@
  * THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import {cycleLocalDb, getDb} from "./pouchDbIO";
-import * as fs from "fs";
-import {retrieveOrFetch} from "./storageIO";
-import {expectTask} from "helpers/jestHelpers";
-import Maybe from "data.maybe";
-import {promiseToTask} from "helpers/functions";
-import R from "ramda";
-import Rm from "ramda-maybe";
-import Task from "data.task";
+import {cycleLocalDb, getDb} from './pouchDbIO';
+import * as fs from 'fs';
+import {retrieveOrFetch} from './storageIO';
+import {expectTask} from 'helpers/jestHelpers';
+import Maybe from 'data.maybe';
+import {promiseToTask} from 'helpers/functions';
+import R from 'ramda';
+import Rm from 'ramda-maybe';
+import Task from 'data.task';
 
 const name = 'storage_io_spec';
 const PATH = `${__dirname}/__databases__/`;
 const DB = `${PATH}${name}`;
-if (!fs.existsSync(PATH))
+if (!fs.existsSync(PATH)) {
     fs.mkdirSync(PATH);
+}
 
 describe('storageIO', () => {
     test('retrieveOrFetch', () => {
@@ -51,3 +52,4 @@ describe('storageIO', () => {
         ).resolves.toEqual([Maybe.Just(HIT_ID), Maybe.Just(MISS_ID)]);
     })
 })
+

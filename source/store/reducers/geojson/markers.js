@@ -10,7 +10,6 @@
  */
 import R from 'ramda'
 import {actions, actionCreators} from './markerActions'
-export {actions, actionCreators};
 
 export default (state = {}, action = {}) => {
 

@@ -3,9 +3,9 @@
  */
 const R = require('ramda');
 const Task = require('data.task')
-import {from} from "most";
-import {mockTimeSource} from "@cycle/time/most";
-import {expectTask} from "./jestHelpers";
+import {from} from 'most';
+import {mockTimeSource} from '@cycle/time/most';
+import {expectTask} from './jestHelpers';
 
 describe('research', () => {
     test('lift can be used with Task', async () => {
@@ -24,7 +24,7 @@ describe('research', () => {
         const Time = mockTimeSource();
 
         Time.assertEqual(
-            Time.diagram('1---3---|').concatMap(i => from([i, i+1])),
+            Time.diagram('1---3---|').concatMap(i => from([i, i + 1])),
             Time.diagram('(12)(34)|')
         );
 

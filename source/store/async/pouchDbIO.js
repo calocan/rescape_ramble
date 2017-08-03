@@ -71,7 +71,7 @@ export const createRemoteDb = remoteUrl => {
  * @param db
  * @param remoteUrl
  */
-export const sync = ({db, remoteUrl}) => {
+export const doSync = ({db, remoteUrl}) => {
     return PouchDB.sync(db, remoteUrl, {
         live: true,
         retry: true
@@ -79,7 +79,7 @@ export const sync = ({db, remoteUrl}) => {
 }
 
 /***
- * Add logging to all sync handlers
+ * Add logging to all doSync handlers
  * @param sync
  */
 export const logSync = sync =>
@@ -118,7 +118,7 @@ export function destroy(dbNameOrUrl) {
 
 
 export const startSync = (db, remoteUrl) => {
-    syncs[remoteUrl] = sync({db, remoteUrl});
+    syncs[remoteUrl] = doSync({db, remoteUrl});
     return syncs[remoteUrl]
 };
 

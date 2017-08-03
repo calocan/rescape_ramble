@@ -10,20 +10,21 @@
  */
 
 import {getDb, createLocalDb, createRemoteDb, createRemoteUrl, destroy, startSync, stopSync, logSync} from './pouchDbIO'
-import {expectTask, expectTaskRejected} from "helpers/jestHelpers";
+import {expectTask, expectTaskRejected} from 'helpers/jestHelpers';
 import {promiseToTask} from 'helpers/functions'
 import * as fs from 'fs';
-import moment from "moment";
+import moment from 'moment';
 import Task from 'data.task'
 const name = 'pouch_db_io_spec';
 const PATH = `${__dirname}/__databases__/`;
 const DB = `${PATH}${name}`;
 const REMOTE_DB_URL = createRemoteUrl(name);
-if (!fs.existsSync(PATH))
+if (!fs.existsSync(PATH)) {
     fs.mkdirSync(PATH);
+}
 
-describe("pouchDbIO", () => {
-    test("Create a local pouchdDb", () => {
+describe('pouchDbIO', () => {
+    test('Create a local pouchdDb', () => {
         const db = createLocalDb(DB);
         // Make sure it's a db
         expectTask(promiseToTask(db.info()).map(response => response.db_name)).resolves.toBe(DB);
@@ -31,16 +32,16 @@ describe("pouchDbIO", () => {
         expectTask(promiseToTask(getDb(DB).info()).map(response => response.db_name)).resolves.toBe(DB);
     });
 
-    test("Destroy a local pouchdDb", () => {
+    test('Destroy a local pouchdDb', () => {
         createLocalDb(DB);
         expectTaskRejected(destroy(DB)
-            .chain(() =>  {
+            .chain(() => {
                 return promiseToTask(getDb(DB).info(), true)
             })
         ).rejects.toMatch(Error)
     });
 
-    test("Create a remote pouchdDb", () => {
+    test('Create a remote pouchdDb', () => {
         expectTask(createRemoteDb(REMOTE_DB_URL)
             .chain(db => promiseToTask(db.info()))
             .map(response => {
@@ -49,7 +50,7 @@ describe("pouchDbIO", () => {
         ).resolves.toBe(REMOTE_DB_URL);
     })
 
-    test("Destroy a remote pouchdDb", () => {
+    test('Destroy a remote pouchdDb', () => {
         let remoteDb
         expectTaskRejected(createRemoteDb(REMOTE_DB_URL)
             .chain(db => {
@@ -63,23 +64,23 @@ describe("pouchDbIO", () => {
         ).rejects.toMatch(Error)
     });
 
-    test("Sync", () => {
+    test('Sync', () => {
         const db = createLocalDb(DB);
         const doc = {
-            "_id": moment.now().toString(),
-            "name": "Mittens",
-            "occupation": "kitten",
-            "age": 3,
-            "hobbies": [
-                "playing with balls of yarn",
-                "chasing laser pointers",
+            '_id': moment.now().toString(),
+            'name': 'Mittens',
+            'occupation': 'kitten',
+            'age': 3,
+            'hobbies': [
+                'playing with balls of yarn',
+                'chasing laser pointers',
                 "lookin' hella cute"
             ]
         };
         expectTask(promiseToTask(db.put(doc)).chain(
             () => new Task((reject, response) => {
                 startSync(db, REMOTE_DB_URL)
-                    .on('change', doc => {
+                    .on('change', theDoc => {
                         // Wait for the change event from syncing the doc to the remote Db
                         response()
                     })
