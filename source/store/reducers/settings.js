@@ -12,6 +12,7 @@
 import {SET_STATE} from 'store/reducers/fullStates'
 import R from 'ramda'
 export const SET_CURRENT = '/settings/SET_CURRENT';
+import {restartCycle} from 'store.js'
 
 /***
  * Reduces the state of the settings
@@ -39,5 +40,8 @@ export function setState(state) {
 }
 
 export function setCurrent(value) {
+    // Restart cycle.js with an updated PouchDb driver for this region
+    // TODO I'm not sure where to put this, or if restarting cycle this way is reasonable
+    restartCycle(value)
     return { type: SET_CURRENT, value }
 }

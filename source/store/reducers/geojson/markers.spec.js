@@ -15,7 +15,6 @@ import {actionTypes} from './geojsons';
 import {stopSync} from 'store/async/pouchDbIO';
 import {setState} from 'store/reducers/fullStates';
 import {expectTask} from 'helpers/jestHelpers';
-import makeStore from 'store'
 import {LA_SAMPLE} from 'store/async/markerIO.sample'
 import {SCOPE} from './geojsons'
 import {ACTION_KEY} from 'store/reducers/geojson/markerActions'
@@ -26,9 +25,9 @@ import configureMockStore from 'redux-mock-store'
 const middlewares = [ thunk ]
 const mockStore = configureMockStore(middlewares)
 // Mock the asynchronous actionCreator
-const {fetchMarkers} = asyncActionCreators(SCOPE, ACTION_KEY, 'FETCH', () => Task.of(LA_SAMPLE));
-const {removeMarkers} = asyncActionCreators(SCOPE, ACTION_KEY, 'REMOVE', () => Task.of(LA_SAMPLE));
-const {updateMarkers} = asyncActionCreators(SCOPE, ACTION_KEY, 'UPDATE', () => Task.of(LA_SAMPLE));
+const {fetchMarkersData} = asyncActionCreators(SCOPE, ACTION_KEY, 'FETCH', () => Task.of(LA_SAMPLE));
+const {removeMarkersData} = asyncActionCreators(SCOPE, ACTION_KEY, 'REMOVE', () => Task.of(LA_SAMPLE));
+const {updateMarkersData} = asyncActionCreators(SCOPE, ACTION_KEY, 'UPDATE', () => Task.of(LA_SAMPLE));
 
 describe('markers reducer', () => {
     const state = initialState(testConfig)
@@ -42,7 +41,7 @@ describe('markers reducer', () => {
             { type: actionTypes.FETCH_MARKERS_SUCCESS, body: LA_SAMPLE}
         ];
 
-        expectTask(store.dispatch(fetchMarkers(
+        expectTask(store.dispatch(fetchMarkersData(
             {testBounds: bounds},
             state.regions.currentKey,
             bounds
@@ -59,7 +58,7 @@ describe('markers reducer', () => {
         ];
 
         expectTask(
-            store.dispatch(updateMarkers(
+            store.dispatch(updateMarkersData(
                 state.regions.currentKey,
                 {testBounds: bounds},
                 LA_SAMPLE)))

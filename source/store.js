@@ -24,6 +24,7 @@ import R from 'ramda';
 import {startSync} from './store/async/pouchDbIO';
 import {main} from 'store/async/cycle';
 import {run} from '@cycle/run'
+import {makePouchDBDriver} from 'cycle-pouchdb-most-driver';
 
 // Use this synced db to store the state of the app
 // There might be no reason to doSync the state to a remote db
@@ -47,24 +48,39 @@ const environmentMiddlewares = R.ifElse(
 const cycleMiddleware = createCycleMiddleware();
 const { makeActionDriver, makeStateDriver } = cycleMiddleware;
 
-// Use thunk and the persistentStore, the latter applies couchDB persistence to the store
-const applyMiddlewares = applyMiddleware(
-    thunk,
-    cycleMiddleware,
-    ...environmentMiddlewares
-);
 
-const createStoreWithMiddleware = compose(
-    responsiveStoreEnhancer,
-    applyMiddlewares,
-    // Use the Chrome devToolsExtension
-    typeof (window) !== 'undefined' && window.devToolsExtension ? window.devToolsExtension() : f => f,
-    persistentStore({db})
-)(createStore);
-
-run(main, {
+const runCycle = dbName => run(main, {
     ACTION: makeActionDriver(),
     STATE: makeStateDriver(),
-})
+    POUCHDB: makePouchDBDriver(PouchDB, dbName)
+});
+let dispose = null;
+export const restartCycle = (dbName) => {
+    if (dispose) {
+        dispose();
+    }
+    dispose = runCycle(dbName);
+    return dispose;
+};
 
-export default (initialState = {}) => createStoreWithMiddleware(reducer, initialState);
+/***
+ * Function to create a store that accepts an initial state for testing
+ * @param initialState
+ */
+export default (initialState = {}) => createStore(
+    reducer,
+    initialState,
+    // In addition to Middleware, compose state with PouchDb, devTools, and Redux Responsive
+    compose(
+        responsiveStoreEnhancer,
+        // Use thunk and the persistentStore, the latter applies couchDB persistence to the store
+        applyMiddleware(
+            thunk,
+            cycleMiddleware,
+            environmentMiddlewares
+        ),
+        // Use the Chrome devToolsExtension
+        typeof (window) !== 'undefined' && window.devToolsExtension ? window.devToolsExtension() : f => f,
+        persistentStore({db})
+    )
+);

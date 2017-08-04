@@ -9,7 +9,9 @@
  * THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import {removeMarker, fetchMarkers, persistMarkers, cycleRecords, viewName, designDocId, designDocViewId} from './markerIO';
+import {createDesignDoc} from './cycleHelpers'
+import {removeMarker, fetchMarkers, persistMarkers, cycleMarkers} from './markerIO';
+import { actions, actionCreators, ACTION_PATH } from 'store/reducers/geojson/markerActions'
 import config from 'store/data/test/config';
 import {PARIS_SAMPLE, LA_SAMPLE} from './markerIO.sample'
 import {reqPath} from 'helpers/throwingFunctions'
@@ -18,7 +20,6 @@ import {concatFeatures} from 'helpers/geojsonHelpers'
 import R from 'ramda'
 import initialState from 'store/data/initialState';
 import { assertSourcesSinks } from './jestCycleHelpers'
-import { actions, actionCreators } from 'store/reducers/geojson/markerActions'
 
 // combine the samples into one obj with concatinated features
 const geojson = mergeAllWithKey(concatFeatures)([PARIS_SAMPLE, LA_SAMPLE]);
@@ -127,7 +128,7 @@ describe('markerHelpers', () => {
         }, {
             // Expect this sink, the
             ACTION:   { 'x|': actionSink }
-        }, cycleRecords, done);
+        }, cycleMarkers, done);
     });
 
      */
@@ -145,36 +146,48 @@ describe('markerHelpers', () => {
             ),
         };
 
+        const sourceGen = letterGen('b')
         const pouchDbSource = {
             // Mimic the actual driver
-            put: (doc) =>
-                ({
-                    a: {
-                        op: 'put',
-                        doc
+            // The driver simply returns the put op with given doc
+            put: (doc) => ({
+                a: {
+                    op: 'put',
+                    doc
+                }
+            }),
+            // When we check for changes
+            changes: (change) => {
+                const key = sourceGen.next().value;
+                // letter: {op: put, doc} for each feature
+                R.fromPairs(R.map(feature =>
+                [key,
+                    {
+                        id: feature.id,
+                        changes: [ { rev: '1-9152679630cc461b9477792d93b83eae' } ],
+                        doc: {
+                            _id: feature.id,
+                            _rev: '1-9152679630cc461b9477792d93b83eae'
+                        },
+                        seq: key.charCodeAt(0)
                     }
-                })
+                ], geojson.features))
+            }
         };
 
 
+
         // Ignore the particular query parameters and return features as rows
-        const gen = letterGen('b')
+        const sinkGen = letterGen('b')
         const pouchDbSink = R.merge(
             {a: {
                     op: 'put',
-                    doc: {
-                        _id: designDocId(region.id),
-                        views: {
-                            [viewName]: {
-                                map: `function (doc) { if (doc.type === 'item') { emit(doc); } }.toString()`
-                            }
-                        }
-                    }
+                    doc: createDesignDoc(ACTION_PATH, region.id)
                 }
             },
             // letter: {op: put, doc} for each feature
             R.fromPairs(R.map(doc =>
-                [gen.next().value,
+                [sinkGen.next().value,
                 {
                     op: 'put',
                     doc
@@ -191,8 +204,8 @@ describe('markerHelpers', () => {
             ACTION: { 'a-|': actionSource },
             POUCHDB: { 'a-|': pouchDbSource }
         }, {
-            // Expect the view and each feature to be put simulataneously
+            // Expect the doc view and each feature to be put simulataneously
             POUCHDB: { [`(${R.keys(pouchDbSink)})|`]: pouchDbSink }
-        }, cycleRecords, done);
+        }, cycleMarkers, done);
     }, 10000);
 });

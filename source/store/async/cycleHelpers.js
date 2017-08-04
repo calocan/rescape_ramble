@@ -9,23 +9,24 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 import R from 'ramda'
+import Rx from 'rxjs/Rx';
 
 // Ramda lens to get at properties of the marker objects
 const dateLens = R.lensProp('date');
 const _idLens = R.lensProp('_id');
 // Constants for naming PouchDb Views
-// (Exported for testing purposes)
-export const designDocId = regionId => `_design/${regionId}`;
-const designDocViewId = (regionId, viewName) => `${regionId}/ACTION_CONFIG.${viewName}`;
+const designDocId = regionId => `_design/${regionId}`;
+const designDocViewId = (actionPath, regionId) => `${actionPath}/${regionId}`;
 
 // PouchDb Design Doc view definition for querying
 // Note that the function must be a for the POUCHDB driver
+// (Exported for testing purposes)
 // TODO this stream should only accept each unique regionId once
-const createDesignDoc = regionId => {
+export const createDesignDoc = (actionPath, regionId) => {
     return {
         _id: `${designDocId(regionId)}`,
         views: {
-            [viewName]: {
+            [actionPath]: {
                 map: `function (doc) { if (doc.type === 'item') { emit(doc); } }.toString()`
             }
         }
@@ -79,7 +80,7 @@ const fetchResultInstruction = ({ACTION_CONFIG, POUCHDB, fetchAction$}) => ({
     // (think of the POUCHDB source of having the whole db available, just query for what we need)
     fetchResultAction$: fetchAction$.concatMap(region => {
             return POUCHDB
-                .query(designDocViewId(region.id, ACTION_CONFIG.actionId), {
+                .query(designDocViewId(ACTION_CONFIG.actionPath, region.id), {
                     include_docs: true,
                     descending: true,
                 })
@@ -122,12 +123,14 @@ const updatePouchDbInstruction = ({updateAction$, POUCHDB}) => ({
 })
 
 
-const updateResultInstruction = ({ACTION_CONFIG, updatePouchDb$}) => ({
+const updateResultInstruction = ({ACTION_CONFIG, POUCHDB}) => ({
     updateResultAction$:
-    // Map the resulting PouchDb rows to the Pouchdb docs
-        updatePouchDb$.changes().map(res => {
+        // Tap into the PouchDb changes stream
+        // Map the resulting PouchDb changes to the Pouchdb docs
+        // The change has more stuff in it: https://pouchdb.com/api.html#changes
+        POUCHDB.changes().map(change => {
             return ACTION_CONFIG.actionUpdateSuccess(
-                res.rows.map(r => r.doc)
+                change.doc
             )
         })
 })
@@ -166,7 +169,7 @@ export function cycleRecords({ACTION_CONFIG, ACTION, POUCHDB}) {
     // Output a stream of React fetch result actions (success/failure)
     const {fetchResultAction$} = fetchResultInstruction({fetchAction$, ACTION_CONFIG, POUCHDB})
     // Output a stream of React update result actions (success/failure)
-    const {updateResultAction$} = updateResultInstruction({updatePouchDb$})
+    const {updateResultAction$} = updateResultInstruction({POUCHDB})
 
     // Subscribe
     updateResultAction$
@@ -181,12 +184,14 @@ export function cycleRecords({ACTION_CONFIG, ACTION, POUCHDB}) {
         );
 
     // Create a PouchDb design doc instruction stream
-    const createPouchDbDesignDoc$ = ACTION.
-    filter(action => action.region).
-    // Only take each region once
-    distinct(action => action.region.id).
-    concatMap(action => {
-        return POUCHDB.put(createDesignDoc(action.region.id))
+    const pouchDbDesignDoc$ = ACTION.filter(action => action.region)
+    // Only take each region once. Use Rx js since Most doesn't seem
+    // to support a distinct function
+    const distinctDesignDoc$ = Rx.Observable.from(pouchDbDesignDoc$).
+        distinct(action => action.region.id)
+
+    const createPouchDbDesignDoc$ = from(distinctDesignDoc$).concatMap(action => {
+        return POUCHDB.put(createDesignDoc(ACTION_CONFIG.actionPath, action.region.id))
     }).tap(doc => console.log('doc', doc.id));
 
     // Merge the create design doc stream with the record update stream,

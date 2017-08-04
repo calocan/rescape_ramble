@@ -11,7 +11,6 @@
 
 import Task from 'data.task';
 import R from 'ramda';
-import { from, fromPromise, combine, merge, concat } from 'most'
 import {getDb} from './pouchDbIO';
 import { actions, actionCreators, actionPath } from 'store/reducers/geojson/markerActions'
 import { cycleRecords } from './cycleHelpers'

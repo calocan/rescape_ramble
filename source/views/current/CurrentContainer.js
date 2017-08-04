@@ -1,13 +1,14 @@
 import {connect} from 'react-redux';
 import Current from './Current.js';
 import R from 'ramda';
+import {currentRegion} from 'helpers/stateHelpers'
 
 /***
  * The CurrentContainer and all children are scoped to a single Region
  * @param state
  */
 export const mapStateToProps = state => ({
-    region: R.prop(state.regions.currentKey, state.regions),
+    region: currentRegion(state),
     style: R.fromPairs(R.map(
         // Pass the current window width and height
         // This could be scaled here if we don't want the CurrentContainer to be the full window width/height
