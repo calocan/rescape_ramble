@@ -49,7 +49,7 @@ export default {
                 options: {
                     babelrc: false,
                     presets: ['env', 'react'],
-                    plugins: ["transform-class-properties", "transform-decorators-legacy", "transform-object-rest-spread"],
+                    plugins: ["transform-object-rest-spread"],
                 }
             },
             {

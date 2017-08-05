@@ -18,7 +18,6 @@ import PropTypes from 'prop-types';
 
 class MapLines extends React.Component {
 
-    @autobind
     _redrawSVGOverlay(opt) {
         if (!this.props.geojson || !this.props.geojson.features) {
             return null;
@@ -39,7 +38,7 @@ class MapLines extends React.Component {
             className='map-lines'
             key='svg-overlay'
             { ...this.props.viewport }
-            redraw={ this._redrawSVGOverlay } />
+            redraw={ this._redrawSVGOverlay.bind(this) } />
     }
 }
 

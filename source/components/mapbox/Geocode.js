@@ -20,7 +20,6 @@ class Geocode extends React.Component {
         };
     }
 
-    @autobind
     onInput(e) {
         this.setState({ loading: true });
         var value = e.target.value;
@@ -114,7 +113,7 @@ class Geocode extends React.Component {
             ref={(input) => { this.textInput = input; }}
             style={styles.inputContainer}
             className={this.props.inputClass}
-            onInput={this.onInput}
+            onInput={this.onInput.bind(this)}
             onKeyDown={this.onKeyDown}
             placeholder={this.props.inputPlaceholder}
             type='text' />;

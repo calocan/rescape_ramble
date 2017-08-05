@@ -18,7 +18,6 @@ import R from 'ramda';
 
 export class MarkerItem extends React.Component {
 
-    @autobind
     _handleRemove() {
         this.props.removeMarkers({}, this.props.regionId, [this.props.locationFeature]).fork(
             () => {
@@ -37,7 +36,7 @@ export class MarkerItem extends React.Component {
                     {this.props.locationFeature.place_name || this.props.locationFeature.geometry.coordinates}
                 </div>
                 <div className='remove' style={styles.removeContainer}
-                     onClick={this._handleRemove}
+                     onClick={this._handleRemove.bind(this)}
                 >
                     x
                 </div>
@@ -55,7 +54,6 @@ export class AddMarkerItem extends React.Component {
         }
     }
 
-    @autobind
     _handleKeyPress(e) {
         if (e.key === 'Enter') {
             if (this.props.locationFeature.geometry && this.textInput.value) {
@@ -90,7 +88,7 @@ export class AddMarkerItem extends React.Component {
         return (
             <div className='add-marker-container' style={styles.container}>
                 <div style={styles.nameLabel}>Name</div>
-                <input className='add-marker' style={styles.addNameContainer} onKeyPress={this._handleKeyPress}
+                <input className='add-marker' style={styles.addNameContainer} onKeyPress={this._handleKeyPress.bind(this)}
                        ref={(input) => { this.textInput = input; }}
                 />
                 <div ref='warn' className='warn' style={{display: this.state.warn ? 'block' : 'none', ...styles.warnContainer}} >

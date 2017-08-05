@@ -29,7 +29,6 @@ let mock;
 //jest.unmock('query-overpass')
 // Comment/Uncomment. Must be at top level
 mock = true
-global.jasmine.DEFAULT_TIMEOUT_INTERVAL = 100000000
 
 // requires are used below since the jest includes aren't available at compile time
 describe('overpassHelpersUnmocked', () => {

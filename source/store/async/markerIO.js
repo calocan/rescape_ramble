@@ -11,9 +11,9 @@
 
 import Task from 'data.task';
 import R from 'ramda';
+import { cycleRecords } from './cycleHelpers'
 import {getDb} from './pouchDbIO';
 import { actions, actionCreators, actionPath } from 'store/reducers/geojson/markerActions'
-import { cycleRecords } from './cycleHelpers'
 const resolveDb = (regionKey, options) => getDb(options && options.dbName || regionKey);
 
 

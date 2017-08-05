@@ -207,5 +207,5 @@ describe('markerHelpers', () => {
             // Expect the doc view and each feature to be put simulataneously
             POUCHDB: { [`(${R.keys(pouchDbSink)})|`]: pouchDbSink }
         }, cycleMarkers, done);
-    }, 10000);
+    }, 100000);
 });

@@ -10,6 +10,7 @@
  */
 import R from 'ramda'
 import Rx from 'rxjs/Rx';
+import { from } from 'most'
 
 // Ramda lens to get at properties of the marker objects
 const dateLens = R.lensProp('date');
@@ -169,7 +170,7 @@ export function cycleRecords({ACTION_CONFIG, ACTION, POUCHDB}) {
     // Output a stream of React fetch result actions (success/failure)
     const {fetchResultAction$} = fetchResultInstruction({fetchAction$, ACTION_CONFIG, POUCHDB})
     // Output a stream of React update result actions (success/failure)
-    const {updateResultAction$} = updateResultInstruction({POUCHDB})
+    const {updateResultAction$} = updateResultInstruction({ACTION_CONFIG, POUCHDB})
 
     // Subscribe
     updateResultAction$

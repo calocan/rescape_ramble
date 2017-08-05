@@ -48,7 +48,6 @@ class MarkerList extends React.Component {
         }
     }
 
-    @autobind
     onSelect(locationFeature) {
         this.setState({ locationFeature: locationFeature });
     }
@@ -70,7 +69,7 @@ class MarkerList extends React.Component {
                 <div className='add-marker-container' style={styles.addMarkerContainer}>
                     <div className='geocoder-container' style={styles.geocoderContainer} >
                         <Geocode
-                            onSelect={this.onSelect}
+                            onSelect={this.onSelect.bind(this)}
                             search={this.props.searchLocation}
                             searchFailure={this.props.searchLocationFailure}
                             accessToken={this.props.accessToken}
