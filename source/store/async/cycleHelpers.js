@@ -175,7 +175,9 @@ export function cycleRecords({ACTION_CONFIG, ACTION, POUCHDB}) {
     // Subscribe
     updateResultAction$
         .subscribe(
-            rec => console.log(`Update/Create record: ${rec.id}`),
+            rec => {
+                console.log(`Update/Create record: ${rec.id}`);
+            },
             err => {
                 console.log('Rejected update', err);
             },
