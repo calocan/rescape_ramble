@@ -11,10 +11,10 @@
 
 import {DraggablePointsOverlay, SVGOverlay} from 'react-map-gl';
 import PropTypes from 'prop-types';
-import autobind from 'autobind-decorator';
 import React from 'react';
 import {resolveSvgJsx} from 'helpers/svgHelpers';
 import {updateMarker} from 'store/async/markerIO';
+const e = React.createElement;
 const ENTER_KEY = 13;
 const LIGHT_SETTINGS = {
     lightsPosition: [-125, 50.5, 5000, -122.8, 48.5, 8000],
@@ -121,11 +121,12 @@ class MapMarkers extends React.Component {
     }
 
     render() {
-        return <SVGOverlay
-            className='map-markers'
-            key='svg-overlay'
-            { ...this.props.viewport }
-            redraw={ this._redrawSVGOverlay.bind(this) } />
+        return e('SVGOverlay',  {
+            className: 'map-markers',
+            key: 'svg-overlay',
+            redraw: this._redrawSVGOverlay.bind(this),
+            ...this.props.viewport
+        })
     }
 }
 

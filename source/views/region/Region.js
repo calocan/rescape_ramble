@@ -15,6 +15,7 @@ import R from 'ramda';
 import React from 'react';
 import {reqPath} from 'helpers/functions'
 import PropTypes from 'prop-types'
+const e = React.createElement;
 
 /***
  * The View for a Region, such as California. Theoretically we could display multiple regions at once
@@ -52,22 +53,35 @@ class Region extends React.Component {
         // applies parent container width/height to mapboxContainer width/height
         const multiplyByPercent = R.compose((percent, num) => num * parseFloat(percent) / 100.0);
         const styleMultiplier = prop => R.apply(multiplyByPercent, R.map(R.prop(prop), [styles.mapboxContainer, this.props.style]));
-        return (
-            <div className='region' style={R.merge(this.props.style, styles.container)}>
-                {/* We additionally give Mapbox the container width and height so the map can track changes to these
-                    We have to apply the width and height fractions of this container to them.
-                */}
-                <div className='mapboxContainer' style={styles.mapboxContainer}>
-                    <Mapbox region={this.props.region} style={{
+        return e('div', {
+            className: 'region',
+            style: R.merge(this.props.style, styles.container)
+        },
+            /* We additionally give Mapbox the container width and height so the map can track changes to these
+             We have to apply the width and height fractions of this container to them.
+            */
+            e('div', {
+                className: 'mapboxContainer',
+                style: styles.mapboxContainer,
+            },
+                e(Mapbox, {
+                    region: this.props.region,
+                    style: {
                         width: styleMultiplier('width'),
                         height: styleMultiplier('height')
-                    }} />
-                </div>
-                <div className='markersContainer' style={styles.markersContainer}>
-                    <MarkerList region={this.props.region} accessToken={this.props.accessToken} />
-                </div>
-            </div>
-        );
+                    }
+                })
+            ),
+            e('div', {
+                    className: 'markersContainer',
+                    style: styles.markersContainer
+                },
+                e(MarkerList, {
+                    region: this.props.region,
+                    accessToken: this.props.accessToken
+                })
+            )
+        )
     }
 }
 

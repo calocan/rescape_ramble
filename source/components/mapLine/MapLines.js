@@ -15,6 +15,7 @@ import autobind from 'autobind-decorator';
 import {resolveSvgJsx} from 'helpers/svgHelpers';
 import {LineLayer} from 'deck.gl';
 import PropTypes from 'prop-types';
+const e = React.createElement;
 
 class MapLines extends React.Component {
 
@@ -34,11 +35,12 @@ class MapLines extends React.Component {
             strokeWidth={5}
         />
         */
-        return <SVGOverlay
-            className='map-lines'
-            key='svg-overlay'
-            { ...this.props.viewport }
-            redraw={ this._redrawSVGOverlay.bind(this) } />
+        return e(SVGOverlay, {
+            className: 'map-lines',
+            key: 'svg-overlay',
+            redraw: this._redrawSVGOverlay.bind(this),
+            ...this.props.viewport
+        })
     }
 }
 

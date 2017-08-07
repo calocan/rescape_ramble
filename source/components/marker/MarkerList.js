@@ -18,6 +18,7 @@ import styles from './MarkerList.style.js';
 import Geocode from 'components/mapbox/Geocode';
 import ScrollArea from 'react-scrollbar';
 import PropTypes from 'prop-types';
+const e = React.createElement;
 
 class MarkerList extends React.Component {
 
@@ -53,7 +54,7 @@ class MarkerList extends React.Component {
     }
 
     render() {
-        const markers = reqPath(['state', 'markers'], this) || []
+        const markers = reqPath(['state', 'markers'], this) || [];
         const markerItems = R.map(
             marker => <MarkerItem
                 regionId={this.props.id}
@@ -64,38 +65,55 @@ class MarkerList extends React.Component {
             markers || []);
 
         return (
-            <div className='marker-list' style={styles.container}>
-                <div style={styles.instructionsLabel}>Choose a location and enter a name. Press enter on the name to submit</div>
-                <div className='add-marker-container' style={styles.addMarkerContainer}>
-                    <div className='geocoder-container' style={styles.geocoderContainer} >
-                        <Geocode
-                            onSelect={this.onSelect.bind(this)}
-                            search={this.props.searchLocation}
-                            searchFailure={this.props.searchLocationFailure}
-                            accessToken={this.props.accessToken}
-                        />
-                    </div>
-                    <div className='add-marker-item-container' style={styles.addItemContainer} >
-                        <AddMarkerItem
-                            regionId={this.props.id}
-                            locationFeature={this.state.locationFeature}
-                            updateMarkers={this.props.updateMarkers}
-                        />
-                    </div>
-                </div>
-                <ScrollArea
-                    speed={0.8}
-                    className='marker-tims-scoll-area'
-                    contentClassName='content'
-                    contentStyle={{height: '100%'}}
-                    horizontal={false}
-                    style={styles.scrollContainer}
-                >
-                    <div className='marker-items-container' style={styles.itemsContainer} >
-                        {markerItems}
-                    </div>
-                </ScrollArea>
-            </div>
+            e('div', {
+                className: 'marker-list',
+                style: styles.container
+            },
+                e('div', {
+                    style: styles.instructionsLabel
+                }, 'Choose a location and enter a name. Press enter on the name to submit'),
+                e('div', {
+                    className: 'add-marker-container',
+                    style: styles.addMarkerContainer
+                },
+                    e('div', {
+                        className: 'geocoder-container',
+                        style: styles.geocoderContainer
+                    },
+                        e(Geocode, {
+                            onSelect: this.onSelect.bind(this),
+                            search: this.props.searchLocation,
+                            searchFailure: this.props.searchLocationFailure,
+                            accessToken: this.props.accessToken
+                        })
+                    ),
+                    e('div', {
+                        className: 'add-marker-item-container',
+                        style: styles.addItemContainer
+                    },
+                        e(AddMarkerItem, {
+                            regionId: this.props.id,
+                            locationFeature: this.state.locationFeature,
+                            updateMarkers: this.props.updateMarkers
+                        })
+                    ),
+                ),
+                e(ScrollArea, {
+                    speed: 0.8,
+                    className: 'marker-tims-scoll-area',
+                    contentClassName: 'content',
+                    contentStyle: {height: '100%'},
+                    horizontal: false,
+                    style: styles.scrollContainer,
+                },
+                    e('div', {
+                        className: 'marker-items-container',
+                        style: styles.itemsContainer
+                        },
+                        markerItems
+                    )
+                )
+            )
         );
     }
 }

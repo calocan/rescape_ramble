@@ -42,17 +42,6 @@ export default {
     module: {
         loaders: [
             {
-                test: /\.js$/,
-                loader: 'babel-loader',
-                include: [resolve('.')],
-                exclude: /node_modules\/(?!cycle-pouchdb-most-driver)/,
-                options: {
-                    babelrc: false,
-                    presets: ['env', 'react'],
-                    plugins: ["transform-object-rest-spread"],
-                }
-            },
-            {
                 test: /node_modules[\/\\]react-geocoder[\/\\].*\.js/,
                 loader: 'babel-loader',
                 query: { presets:['env', 'react'] }

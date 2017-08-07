@@ -15,6 +15,7 @@ import autobind from 'autobind-decorator';
 import styles from './MarkerItem.style.js';
 import moment from 'moment';
 import R from 'ramda';
+const e = React.createElement;
 
 export class MarkerItem extends React.Component {
 
@@ -85,16 +86,27 @@ export class AddMarkerItem extends React.Component {
     }
 
     render() {
-        return (
-            <div className='add-marker-container' style={styles.container}>
-                <div style={styles.nameLabel}>Name</div>
-                <input className='add-marker' style={styles.addNameContainer} onKeyPress={this._handleKeyPress.bind(this)}
-                       ref={(input) => { this.textInput = input; }}
-                />
-                <div ref='warn' className='warn' style={{display: this.state.warn ? 'block' : 'none', ...styles.warnContainer}} >
-                    Please select a location, enter a name, and click enter on the name.
-                </div>
-            </div>
+        return e('div', {
+            className: 'add-marker-container',
+            style: styles.container
+        },
+            e('div', { style: styles.nameLabel }, 'Name'),
+            e('input', {
+                className: 'add-marker',
+                style: styles.addNameContainer,
+                onKeyPress: this._handleKeyPress.bind(this),
+                ref: (input) => { this.textInput = input; }
+            }),
+            e('div' , {
+                ref: 'warn',
+                className: 'warn',
+                style: {
+                    display: this.state.warn ? 'block' : 'none'
+                },
+                ...styles.warnContainer
+            },
+               'Please select a location, enter a name, and click enter on the name.'
+            )
         );
     }
 }

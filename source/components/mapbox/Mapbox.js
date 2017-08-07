@@ -20,6 +20,7 @@ import Deck from './Deck';
 import R from 'ramda';
 import styles from './Mapbox.style.js';
 const MapStops = createMapStops(React);
+const e = React.createElement;
 
 class Mapbox extends React.Component {
 
@@ -42,25 +43,31 @@ class Mapbox extends React.Component {
 
         //<MapStops geojson={node || {}} viewport={viewport}/>,
         //<MapLines geojson={way || {}} viewport={viewport}/>,
-        const mapMarkers = <MapMarkers geojson={markers} viewport={viewport} regionId={this.props.region.id}/>
-        const deck = <Deck
-            viewport={viewport} geojson={markers} iconAtlas={iconAtlas} showCluster={showCluster}
-            onHover={hoverMarker} onClick={selectMarker}
-        />
+        const mapMarkers = e(MapMarkers, {
+            geojson: markers,
+            viewport,
+            regionId: this.props.region.id
+        })
+        const deck = e(Deck, {
+            viewport,
+            geojson: markers,
+            iconAtlas,
+            showCluster,
+            onHover: hoverMarker,
+            onClick: selectMarker
+        })
 
-        return (
-            <MapGL
-                mapboxApiAccessToken = { mapboxApiAccessToken }
-                { ...viewport }
-                showZoomControls={ true }
-                perspectiveEnabled={ true }
-                // setting to `true` should cause the map to flicker because all sources
-                // and layers need to be reloaded without diffing enabled.
-                preventStyleDiffing={ false }
-                onChangeViewport={this.props.onChangeViewport}
-            >
-                {deck}
-            </MapGL>
+        return e(MapGL, {
+            mapboxApiAccessToken,
+            showZoomControls: true,
+            perspectiveEnabled: true,
+            // setting to `true` should cause the map to flicker because all sources
+            // and layers need to be reloaded without diffing enabled.
+            preventStyleDiffing: false,
+            onChangeViewport: this.props.onChangeViewport,
+            ...viewport
+        },
+            deck
         );
     }
 }

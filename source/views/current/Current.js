@@ -13,6 +13,7 @@ import PropTypes from 'prop-types'
 import Region from 'views/region/RegionContainer'
 import styles from './Current.style.js';
 import React from 'react'
+const e = React.createElement;
 
 /***
  * Displays the Region of the current state and eventually a Region selector.
@@ -21,9 +22,18 @@ import React from 'react'
 class Current extends React.Component {
     render() {
         // Pass the absolute width and height to give to the Mapbox viewport
-        return <div className='current'>
-            <Region region={this.props.region} style={{width: this.props.style.width, height: this.props.style.height}}/>
-        </div>
+        return e('div',
+            {className: 'current'},
+            e(Region, {
+                    region: this.props.region,
+                    style: {
+                        width: this.props.style.width,
+                        height: this.props.style.height
+                    },
+                },
+                null
+            )
+        )
     }
 }
 

@@ -1,7 +1,7 @@
 import React from 'react'
-import autobind from 'autobind-decorator';
 import styles from './Geocode.style'
 import PropTypes from 'prop-types'
+const e = React.createElement;
 
 /**
  * Moderinzied from broken react-geocode project
@@ -109,32 +109,39 @@ class Geocode extends React.Component {
         return false;
     }
     render() {
-        const inputJsx = <input
-            ref={(input) => { this.textInput = input; }}
-            style={styles.inputContainer}
-            className={this.props.inputClass}
-            onInput={this.onInput.bind(this)}
-            onKeyDown={this.onKeyDown}
-            placeholder={this.props.inputPlaceholder}
-            type='text' />;
-        return (
-            <div>
-                {this.props.inputPosition === 'top' && inputJsx}
-                {this.state.results.length > 0 && (
-                    <ul className={`${this.props.showLoader && this.state.loading ? 'loading' : ''} ${this.props.resultsClass}`}>
-                        {this.state.results.map((result, i) => (
-                            <li key={result.id}>
-                                <a href='#'
-                                   onClick={this.clickOption.bind(this, result, i)}
-                                   className={this.props.resultClass + ' ' + (i === this.state.focus ? this.props.resultFocusClass : '')}
-                                   key={result.id}>{result.place_name}</a>
-                            </li>
-                        ))}
-                    </ul>
-                )}
-                {this.props.inputPosition === 'bottom' && inputJsx}
-            </div>
-        );
+        const inputElem = e('input', {
+            ref: (input) => { this.textInput = input; },
+            style: styles.inputContainer,
+            className: this.props.inputClass,
+            onInput: this.onInput.bind(this),
+            onKeyDown: this.onKeyDown,
+            placeholder: this.props.inputPlaceholder,
+            type:'text'
+        });
+
+        return e('div', {
+        },
+            this.props.inputPosition === 'top' && inputElem,
+            this.state.results.length > 0 &&
+            e('ul', {
+                className: `${this.props.showLoader && this.state.loading ? 'loading' : ''} ${this.props.resultsClass}`
+            },
+            this.state.results.map((result, i) => (
+                e('li', {
+                    key: result.id,
+                },
+                    e('a', {
+                        href:'#',
+                        onClick: this.clickOption.bind(this, result, i),
+                        className: this.props.resultClass + ' ' + (i === this.state.focus ? this.props.resultFocusClass : ''),
+                        key: result.id
+                    },
+                        result.place_name
+                    )
+                )
+            ))),
+            this.props.inputPosition === 'bottom' && inputElem
+        )
     }
 }
 

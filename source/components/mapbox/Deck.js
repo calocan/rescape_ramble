@@ -15,6 +15,7 @@ import rbush from 'rbush';
 import R from 'ramda';
 import locationIconMapping from './locationIconMapping';
 import PropTypes from 'prop-types';
+const e = React.createElement;
 
 const ICON_SIZE = 60;
 
@@ -154,11 +155,14 @@ class Deck extends React.Component {
             }
         })] : [];
 
-        return (
-            <DeckGL
-                {...viewport} layers={layers} iconAtlas={iconAtlas} showCluster={showCluster} locationIconMapping={locationIconMapping} debug>
-            </DeckGL>
-        );
+        return e(DeckGL, {
+            layers,
+            iconAtlas,
+            showCluster,
+            locationIconMapping,
+            debug: true,
+            ...viewport
+        });
     }
 }
 
