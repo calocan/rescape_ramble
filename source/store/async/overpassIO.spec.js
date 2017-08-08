@@ -17,6 +17,7 @@ import {createLocalDb, cycleLocalDb, destroy, getDb} from './pouchDbIO';
 import * as fs from 'fs';
 import {promiseToTask} from '../../helpers/functions';
 import R from 'ramda';
+import {LA_SAMPLE, LA_BOUNDS} from 'store/async/queryOverpass.sample'
 
 const name = 'overpass_io_spec';
 const PATH = `${__dirname}/__databases__/`;
@@ -65,12 +66,12 @@ describe('overpassHelpers', async() => {
         destroy(DB)
     });
 
-    const bounds = require('query-overpass').LA_BOUNDS;
+    const bounds = LA_BOUNDS;
     test('fetchTransit', async() => {
         // Pass bounds in the options. Our mock query-overpass uses is to avoid parsing the query
         await expectTask(
             fetchTransit({testBounds: bounds}, bounds)
-        ).resolves.toEqual(require('queryOverpassResponse').LA_SAMPLE);
+        ).resolves.toEqual(LA_SAMPLE);
     });
 
     test('fetchTransit in cells', async() => {
@@ -78,7 +79,7 @@ describe('overpassHelpers', async() => {
             fetchTransit({cellSize: 200, testBounds: bounds}, bounds).map(response => response.features)
         ).resolves.toEqual(
             // the sample can have duplicate ids
-            removeDuplicateObjectsByProp('id', require('queryOverpassResponse').LA_SAMPLE.features)
+            removeDuplicateObjectsByProp('id', LA_SAMPLE.features)
         )
     })
     test('store fetch', async () => {
@@ -94,7 +95,7 @@ describe('overpassHelpers', async() => {
                 .chain(() => promiseToTask(getDb(DB).get('somewhere')))
                 // Remove the db fields for comparison
                 .map(res => R.omit(['_id', '_rev'], res))
-        ).resolves.toEqual(require('queryOverpassResponse').LA_SAMPLE);
+        ).resolves.toEqual(LA_SAMPLE);
     })
 });
 

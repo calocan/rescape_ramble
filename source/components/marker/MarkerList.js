@@ -56,12 +56,12 @@ class MarkerList extends React.Component {
     render() {
         const markers = reqPath(['state', 'markers'], this) || [];
         const markerItems = R.map(
-            marker => <MarkerItem
-                regionId={this.props.id}
-                key={marker.id}
-                locationFeature={marker}
-                removeMarkers={this.props.removeMarkers}
-            />,
+            marker => e(MarkerItem, {
+                regionId: this.props.id,
+                key: marker.id,
+                locationFeature: marker,
+                removeMarkers: this.props.removeMarkers
+            }),
             markers || []);
 
         return (

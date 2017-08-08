@@ -30,7 +30,7 @@ const actionUpdateFailure = actionCreators.UPDATE_MARKERS_FAILURE
  */
 export const cycleMarkers = sources => cycleRecords({
     // ACTION_CONFIG configures the generic cycleRecords to call/match the correct actions
-    ACTION_CONFIG: {
+    ACTION_CONFIG: R.merge(sources, {
         actionPath,
         actionFetchName,
         actionUpdateName,
@@ -38,8 +38,7 @@ export const cycleMarkers = sources => cycleRecords({
         actionUpdateSuccess,
         actionFetchFailure,
         actionUpdateFailure
-    },
-    ...sources
+    })
 })
 
 /***

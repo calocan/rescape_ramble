@@ -81,10 +81,9 @@ class Deck extends React.Component {
 
         const tree = this._tree;
 
-        const transform = new WebMercatorViewport({
-            ...viewport,
+        const transform = new WebMercatorViewport(R.merge(viewport, {
             zoom: 0
-        });
+        }));
 
         data.features.forEach(p => {
             const screenCoords = transform.project(p.geometry.coordinates);
@@ -155,14 +154,13 @@ class Deck extends React.Component {
             }
         })] : [];
 
-        return e(DeckGL, {
+        return e(DeckGL, R.merge(viewport, {
             layers,
             iconAtlas,
             showCluster,
             locationIconMapping,
             debug: true,
-            ...viewport
-        });
+        }));
     }
 }
 

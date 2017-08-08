@@ -1,11 +1,9 @@
-/**
- *
- */
-const R = require('ramda');
-const Task = require('data.task')
 import {from} from 'most';
 import {mockTimeSource} from '@cycle/time/most';
 import {expectTask} from './jestHelpers';
+
+const R = require('ramda');
+const Task = require('data.task')
 
 describe('research', () => {
     test('lift can be used with Task', async () => {
@@ -35,5 +33,4 @@ describe('research', () => {
         })
     });
 })
-
 

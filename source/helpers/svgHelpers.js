@@ -10,6 +10,7 @@
  */
 import React from 'react'
 import R from 'ramda'
+const e = React.createElement;
 
 /***
  * Inspects a feature and returns its type and projected point representation
@@ -53,14 +54,14 @@ export const resolveSvgJsx = (opt, features) => {
         switch (thePointData.type) {
             case 'Point':
                 const [cx, cy] = R.head(thePointData.points);
-                return <circle key={key} cx={cx} cy={cy} r="10" fill="red" stroke="blue" strokeWidth="1" />
+                return e(circle, { key, cx, cy, r: "10", fill: "red", stroke: "blue", strokeWidth: "1" });
             case 'LineString':
-                return <polyline key={key} fill="none" stroke="blue" strokeWidth="10"
-                    points={thePointData.points.map(point => point.join(',')).join(' ')} />
+                return e(polyline, { key, fill: "none", stroke: "blue", strokeWidth:"10",
+                    points: thePointData.points.map(point => point.join(',')).join(' ')});
             case 'Polygon':
                 // TODO might need to remove a last redundant point here
-                return <polygon key={key} fill="red" stroke="blue" strokeWidth="10"
-                    points={thePointData.points.map(point => point.join(',')).join(' ')} />
+                return e(polygon, { key, fill: "red", stroke: "blue", strokeWidth: "10",
+                    points: thePointData.points.map(point => point.join(',')).join(' ')});
             default:
                 throw new Error(`Unexpected type ${thePointData.type}`)
         }
@@ -75,8 +76,8 @@ export const resolveSvgJsx = (opt, features) => {
         */
     pointData);
 
-    return <g>
-        {paths}
-    </g>
+    return e(g,
+        paths
+    );
 };
 

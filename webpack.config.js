@@ -1,6 +1,6 @@
-import {resolve} from 'path';
-import webpack from 'webpack';
-import ExtractTextPlugin from 'extract-text-webpack-plugin';
+const resolve = require('path').resolve;
+const webpack = require('webpack');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 /**
  * brew services start couchdb
@@ -8,7 +8,7 @@ import ExtractTextPlugin from 'extract-text-webpack-plugin';
  * npm install -g add-cors-to-couchdb
  * add-cors-to-couchdb
  */
-export default {
+module.exports = {
     devtool: 'inline-source-map',
     /*
     node: {
@@ -25,7 +25,7 @@ export default {
             'node_modules'
         ],
         alias: {
-            'mapbox-gl$': resolve('node_modules/mapbox-gl/dist/mapbox-gl.js'),
+            'mapbox-gl$': resolve('./node_modules/mapbox-gl/dist/mapbox-gl.js'),
             //'webworkify': 'webworkify-webpack'
         },
     },
@@ -40,12 +40,8 @@ export default {
         publicPath: '/static/'
     },
     module: {
+        noParse: /(mapbox-gl)\.js$/,
         loaders: [
-            {
-                test: /node_modules[\/\\]react-geocoder[\/\\].*\.js/,
-                loader: 'babel-loader',
-                query: { presets:['env', 'react'] }
-            },
             {
                 test: /node_modules\/JSONStream\/index\.js$/,
                 loaders: ['shebang-loader', 'babel-loader'],

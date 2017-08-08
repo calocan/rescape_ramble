@@ -22,6 +22,7 @@ import {asyncActionCreators} from 'store/reducers/actionHelpers';
 import Task from 'data.task';
 import thunk from 'redux-thunk'
 import configureMockStore from 'redux-mock-store'
+import {LA_BOUNDS} from 'store/async/queryOverpass.sample'
 const middlewares = [ thunk ]
 const mockStore = configureMockStore(middlewares)
 // Mock the asynchronous actionCreator
@@ -35,7 +36,7 @@ describe('markers reducer', () => {
         // We need a real store to test PouchDb
         const store = mockStore();
         store.dispatch(setState(initialState(testConfig)));
-        const bounds = require('query-overpass').LA_BOUNDS;
+        const bounds = LA_BOUNDS;
         const expectedActions = [
             { type: actionTypes.FETCH_MARKERS_DATA },
             { type: actionTypes.FETCH_MARKERS_SUCCESS, body: LA_SAMPLE}
@@ -51,7 +52,7 @@ describe('markers reducer', () => {
     it('should update markers', () => {
         const store = mockStore()
         store.dispatch(setState(initialState(testConfig)));
-        const bounds = require('query-overpass').LA_BOUNDS;
+        const bounds = LA_BOUNDS;
         const expectedActions = [
             { type: actionTypes.UPDATE_MARKERS_DATA },
             { type: actionTypes.UPDATE_MARKERS_SUCCESS, body: LA_SAMPLE}

@@ -28,10 +28,9 @@ const toObjectKeyedById = mapPropValueAsIndex('id');
 // toObjectKeyedByIdWithCurrent:: String -> [{k,v}] -> {j|currentKey, {k, v}}
 const toObjectKeyedByIdWithCurrent = R.curry((currentKey, object) => {
     const obj = toObjectKeyedById(object);
-    return {
+    return R.merge(obj, {
         currentKey: currentKey,
-        ...obj
-    }
+    })
 });
 
 /***

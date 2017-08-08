@@ -12,6 +12,7 @@
 import {DraggablePointsOverlay, SVGOverlay} from 'react-map-gl';
 import PropTypes from 'prop-types';
 import React from 'react';
+import R from 'ramda';
 import {resolveSvgJsx} from 'helpers/svgHelpers';
 import {updateMarker} from 'store/async/markerIO';
 const e = React.createElement;
@@ -121,12 +122,11 @@ class MapMarkers extends React.Component {
     }
 
     render() {
-        return e('SVGOverlay',  {
+        return e('SVGOverlay',  R.merge(this.props.viewport, {
             className: 'map-markers',
             key: 'svg-overlay',
-            redraw: this._redrawSVGOverlay.bind(this),
-            ...this.props.viewport
-        })
+            redraw: this._redrawSVGOverlay.bind(this)
+        }))
     }
 }
 

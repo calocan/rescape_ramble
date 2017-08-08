@@ -27,7 +27,7 @@ const state = initialState(config);
 const currentRegionKey = reqPath(['regions', 'currentKey'], state);
 const region = reqPath(['regions', currentRegionKey], state);
 const testDbName = name => `${__dirname}/__databases__/${name}`
-const bounds = require('query-overpass').LA_BOUNDS;
+import {LA_BOUNDS as bounds} from 'queryOverpass.sample'
 
 function* letterGen (letter) {
     let index = letter.charCodeAt(0)

@@ -13,7 +13,6 @@ import 'babel-polyfill'
 import React from 'react'
 import ReactDOM from 'react-dom'
 import Current from 'views/current/CurrentContainer'
-import Application from 'views/application/ApplicationContainer'
 
 import {Provider} from 'react-redux'
 import { BrowserRouter as Router, Route } from 'react-router-dom'
@@ -27,20 +26,21 @@ const store = makeStore();
 // dispatch every time the window size changes
 window.addEventListener('resize', () => store.dispatch(calculateResponsiveState(window)));
 store.dispatch(setState(initialState(currentConfig)));
+const e = React.createElement;
 
 /***
  * App is the common component for all of our routes
  */
 const routes = (
-    <Router>
-        <Route path="/*" component={Current} />
-    </Router>
+    e(Router, {},
+        e(Route, {path: "/*",  component: Current})
+    )
 );
 
 ReactDOM.render(
-    <Provider store={store}>
-        <Router history={history}>{routes}</Router>
-    </Provider>,
+    e(Provider, { store },
+        e(Router, { history }, routes),
+    ),
     document.getElementById('root')
 );
 

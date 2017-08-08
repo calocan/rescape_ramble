@@ -31,17 +31,28 @@ export class MarkerItem extends React.Component {
 
     render() {
         return (
-            <div className='marker-container' style={styles.container}>
-                <div className='marker-name' style={styles.nameContainer}>{this.props.locationFeature.properties.name}</div>
-                <div className='marker-location-name' style={styles.locationContainer}>
-                    {this.props.locationFeature.place_name || this.props.locationFeature.geometry.coordinates}
-                </div>
-                <div className='remove' style={styles.removeContainer}
-                     onClick={this._handleRemove.bind(this)}
-                >
-                    x
-                </div>
-            </div>
+            e('div', {
+                className: 'marker-container',
+                style: styles.container
+            },
+                e('div', {
+                    className: 'marker-name',
+                    style: styles.nameContainer
+                },
+                    this.props.locationFeature.properties.name),
+                e('div', {
+                    className: 'marker-location-name',
+                    style: styles.locationContainer
+                },
+                    this.props.locationFeature.place_name || this.props.locationFeature.geometry.coordinates),
+                e('div', {
+                    className: 'remove',
+                    style: styles.removeContainer,
+                    onClick: this._handleRemove.bind(this)
+                },
+                    'x'
+                )
+            )
         );
     }
 }
@@ -97,14 +108,13 @@ export class AddMarkerItem extends React.Component {
                 onKeyPress: this._handleKeyPress.bind(this),
                 ref: (input) => { this.textInput = input; }
             }),
-            e('div' , {
+            e('div' , R.merge(styles.warnContainer, {
                 ref: 'warn',
                 className: 'warn',
                 style: {
                     display: this.state.warn ? 'block' : 'none'
                 },
-                ...styles.warnContainer
-            },
+            }),
                'Please select a location, enter a name, and click enter on the name.'
             )
         );

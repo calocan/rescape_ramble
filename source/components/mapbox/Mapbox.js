@@ -57,16 +57,15 @@ class Mapbox extends React.Component {
             onClick: selectMarker
         })
 
-        return e(MapGL, {
+        return e(MapGL, R.merge(viewport, {
             mapboxApiAccessToken,
             showZoomControls: true,
             perspectiveEnabled: true,
             // setting to `true` should cause the map to flicker because all sources
             // and layers need to be reloaded without diffing enabled.
             preventStyleDiffing: false,
-            onChangeViewport: this.props.onChangeViewport,
-            ...viewport
-        },
+            onChangeViewport: this.props.onChangeViewport
+        }),
             deck
         );
     }
