@@ -99,7 +99,7 @@ class Deck extends React.Component {
             const radius = ICON_SIZE / 2 / Math.pow(2, z);
 
             data.features.forEach(p => {
-                if (p.zoomLevels[z] === undefined) {
+                if (typeof (p.zoomLevels[z]) === 'undefined') {
                     // this point does not belong to a cluster
                     const {x, y} = p;
 
@@ -110,7 +110,7 @@ class Deck extends React.Component {
                         maxX: x + radius,
                         maxY: y + radius
                     })
-                        .filter(neighbor => neighbor.zoomLevels[z] === undefined);
+                        .filter(neighbor => typeof (neighbor.zoomLevels[z]) === 'undefined');
 
                     // only show the center point at this zoom level
                     neighbors.forEach(neighbor => {
@@ -169,11 +169,16 @@ const {
     string,
     object,
     bool,
-    array
+    array,
+    func
 } = PropTypes;
 
 Deck.propTypes = {
     viewport: object.isRequired,
-    geojson: object.isRequired
+    geojson: object.isRequired,
+    showCluster: func.isRequired,
+    onHover: func.isRequired,
+    onClick: func.isRequired,
+    iconAtlas: string.isRequired
 };
 module.exports.default = Deck;

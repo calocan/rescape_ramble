@@ -11,21 +11,14 @@
 
 const R = require('ramda');
 const {combineReducers} = require('redux');
+const {mapDefault} = require('helpers/functions');
 
-const markersImport = require('store/reducers/geojson/markers').default;
-const markers = markersImport.default;
-const [markerActionTypes, markerActionCreators] = [markersImport.actions, markersImport.actionCreators];
-
-const openStreetMapsImport = require('store/reducers/geojson/openStreetMaps').default;
-const openStreetMaps = markersImport.default;
-const [openStreetMapActionTypes, openStreetMapActionCreators] = [openStreetMapsImport.actions, openStreetMapsImport.actionCreators];
-
-const searchesImport = require('store/reducers/geojson/searches').default;
-const searches = searchesImport.default;
-const [searchesActionTypes, searchesActionCreators] = [searchesImport.actions, searchesImport.actionCreators];
+const {markers, actions, actionCreators} = mapDefaultAndPrefix('markers', require('store/reducers/geojson/markers'));
+const {openStreetMaps, openStreetMapActions, openStreetMapActionCreators} = mapDefault('openStreetMaps',  require('store/reducers/geojson/openStreetMaps'));
+const {searches, searchesActions, searchesActionCreators} = mapDefault('searches', require('store/reducers/geojson/searches'));
 
 module.exports.SCOPE = 'geojson';
-module.exports.actions = R.mergeAll([markerActionTypes, openStreetMapActionTypes, searchesActionTypes]);
+module.exports.actions = R.mergeAll([markerActions, openStreetMapActions, searchesActions]);
 module.exports.actionCreators = R.mergeAll([markerActionCreators, openStreetMapActionCreators, searchesActionCreators]);
 
 /**

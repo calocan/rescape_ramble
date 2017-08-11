@@ -10,9 +10,9 @@
  */
 
 const {createRoute} = require('../dataCreationHelpers');
-const places = require('./places').default;
-const regions = require('./regions').default;
-const routeTypes = require('../default/routeTypes').default;
+const places = require('./places');
+const regions = require('./regions');
+const routeTypes = require('../default/routeTypes');
 
 const defaultRouteType = routeTypes.INTER_REGIONAL_RAIL_SERVICE.id;
 

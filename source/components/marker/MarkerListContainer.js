@@ -16,8 +16,9 @@ const {actionCreators} = require('store/reducers/geojson/geojsons');
 
 /**
  * Merges state.mapbox with ownProps, but raises level of state
- * @param state
- * @param ownProps
+ * @param {Object} state The Redux State
+ * @param {Object} ownProps The props of the parent
+ * @returns {Object} The props
  */
 const mapStateToProps = module.exports.mapStateToProps = (state, ownProps) => {
     // include geojson data of the region

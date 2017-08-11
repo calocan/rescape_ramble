@@ -181,13 +181,13 @@ module.exports.cycleRecords = function cycleRecords({ACTION_CONFIG, ACTION, POUC
     updateResultAction$
         .subscribe(
             rec => {
-                //console.log(`Update/Create record: ${rec.id}`);
+                // console.log(`Update/Create record: ${rec.id}`);
             },
             err => {
-                //console.log('Rejected update', err);
+                // console.log('Rejected update', err);
             },
             () => {
-                //console.log('Finished update');
+                // console.log('Finished update');
             }
         );
 
@@ -201,14 +201,14 @@ module.exports.cycleRecords = function cycleRecords({ACTION_CONFIG, ACTION, POUC
     const createPouchDbDesignDoc$ = from(distinctDesignDoc$)
         .concatMap(action => {
             return POUCHDB.put(createDesignDoc(ACTION_CONFIG.actionPath, action.region.id));
-        })
-        //.tap(doc => console.log('doc', doc.id));
+        });
+        // .tap(doc => console.log('doc', doc.id));
 
     // Merge the create design doc stream with the record update stream,
     // always creating the design doc for the region before doing any updates to its records
     const pouchDb$ = createPouchDbDesignDoc$
-        .merge(updatePouchDb$)
-        //.tap(doc => console.log('doc', doc.id));
+        .merge(updatePouchDb$);
+        // .tap(doc => console.log('doc', doc.id));
 
     const resultAction$ = fetchResultAction$.merge(updateResultAction$);
 

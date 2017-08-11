@@ -12,7 +12,7 @@
 const {SET_STATE} = require('store/reducers/fullStates');
 const R = require('ramda');
 const SET_CURRENT = module.exports.SET_CURRENT = '/settings/SET_CURRENT';
-const {restartCycle} = require('store.js');
+const {restartCycle} = require('store/store.js');
 
 /**
  * Reduces the state of the settings

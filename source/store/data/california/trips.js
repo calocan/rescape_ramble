@@ -18,8 +18,8 @@ const w = require('./stops').default;
 const routes = require('./routes').default;
 const {createTripWithStopTimesPair, orderStops, stopTimeGenerator} = require('../dataCreationHelpers');
 const {stopResolver, routeResolver} = require('../dataQueryHelpers');
-const places = require('./places').default;
-const regions = require('./regions').default;
+const places = require('./places');
+const regions = require('./regions');
 const {DEFAULT_SERVICE} = require('../default/services');
 
 const resolveStop = stopResolver(stops);

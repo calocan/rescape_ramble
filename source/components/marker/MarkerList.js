@@ -120,14 +120,20 @@ const {
     number,
     string,
     object,
-    bool
+    bool,
+    func
 } = PropTypes;
 
 MarkerList.propTypes = {
     geojson: object.isRequired,
     accessToken: string.isRequired,
     // Region id
-    id: string.isRequired
+    id: string.isRequired,
+    db: object.isRequired,
+    removeMarkers: func.isRequired,
+    updateMarkers: func.isRequired,
+    searchLocation: func.isRequired,
+    searchLocationFailure: func.isRequired
 };
 
 module.exports.default = MarkerList;

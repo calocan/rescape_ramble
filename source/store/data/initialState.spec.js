@@ -44,9 +44,9 @@ describe('Initial State', () => {
             }
         );
     });
-    test('matchs the current configuration', () => {
-        const toObjectKeyedById = mapPropValueAsIndex('id');
-        R.map(toObjectKeyedById, config.gtfs);
+    test('matches the current configuration', () => {
+        //const toObjectKeyedById = mapPropValueAsIndex('id');
+        //R.map(toObjectKeyedById, config.gtfs);
         expect(createInitialState(config)).toMatchSnapshot();
     });
 });

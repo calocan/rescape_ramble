@@ -16,8 +16,8 @@ describe('jestHelpers', () => {
     test('expectTask', () => {
         expectTask(new Task((reject, resolve) => resolve('apple'))).resolves.toEqual('apple');
         expectTask(new Task((reject, resolve) => {
- throw new Error('snapple');
-})).rejects.toEqual(new Error('snapple'));
+            throw new Error('snapple');
+        })).rejects.toEqual(new Error('snapple'));
     });
 
     test('testState', () =>

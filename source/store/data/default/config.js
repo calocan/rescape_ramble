@@ -9,12 +9,36 @@
  * THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+const R = require('ramda');
 const privateConfig = require('config.json');
-const routeTypes = require('./routeTypes').default;
+const routeTypes = require('./routeTypes');
 const {DEFAULT_SERVICE, WEEKEND_SERVICE} = require('./services');
-const {mergeDeep} = require('helpers/functions');
+const {mergeDeep, mapPropValueAsIndex} = require('helpers/functions');
+const {reqPath} = require('helpers/throwingFunctions');
+
+/***
+ * Extract a template from the default config
+ * @param {String} templateId The templateId in the config
+ * @param {Lens} lens A Ramda lens into the config
+ * @param {Object} config The config whence to extract
+ * @returns {Object} The extracted template
+ */
+const extractTemplate = module.exports.extractTemplate = (templateId, lens, config) =>
+    // Remove the templateId from the config
+    R.omit(
+        ['templateId'],
+        reqPath(
+            [templateId],
+            // Convert the array of regions to an object keyed by templateId
+            mapPropValueAsIndex(
+                'templateId',
+                reqPath(['regions'], config))
+        )
+    );
 
 module.exports.default = mergeDeep(privateConfig, {regions: [{
+    // This region should be extracted and deep merged with real region configurations
+    templateId: 'default',
     gtfs: {
         calendar: [
             DEFAULT_SERVICE,

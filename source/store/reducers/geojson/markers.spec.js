@@ -12,17 +12,17 @@
 const testConfig = require('store/data/test/config').default;
 const initialState = require('store/data/initialState').default;
 const {actionTypes} = require('./geojsons');
-const {stopSync} = require('store/async/pouchDbIO');
+const {stopSync} = require('async/pouchDbIO');
 const {setState} = require('store/reducers/fullStates');
 const {expectTask} = require('helpers/jestHelpers');
-const {LA_SAMPLE} = require('store/async/markerIO.sample');
+const {LA_SAMPLE} = require('async/markerIO.sample');
 const {SCOPE} = require('./geojsons');
 const {ACTION_KEY} = require('store/reducers/geojson/markerActions');
 const {asyncActionCreators} = require('store/reducers/actionHelpers');
 const Task = require('data.task');
 const thunk = require('redux-thunk');
 const configureMockStore = require('redux-mock-store');
-const {LA_BOUNDS} = require('store/async/queryOverpass.sample');
+const {LA_BOUNDS} = require('async/queryOverpass.sample');
 const middlewares = [ thunk ];
 const mockStore = configureMockStore(middlewares);
 // Mock the asynchronous actionCreator
@@ -32,7 +32,7 @@ const {updateMarkersData} = asyncActionCreators(SCOPE, ACTION_KEY, 'UPDATE', () 
 
 describe('markers reducer', () => {
     const state = initialState(testConfig);
-    it('should fetch markers', () => {
+    test('should fetch markers', () => {
         // We need a real store to test PouchDb
         const store = mockStore();
         store.dispatch(setState(initialState(testConfig)));
@@ -49,7 +49,7 @@ describe('markers reducer', () => {
         )).map(() => store.getActions())).resolves.toEqual(expectedActions);
     });
 
-    it('should update markers', () => {
+    test('should update markers', () => {
         const store = mockStore();
         store.dispatch(setState(initialState(testConfig)));
         const bounds = LA_BOUNDS;

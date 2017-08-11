@@ -26,11 +26,11 @@ describe('helperFunctions', () => {
         expect(f.compactEmpty(['', null, []])).
         toEqual([]);
     });
-    test('Should filter out null and empty values', () => {
+    test('emptyToNull', () => {
         expect(f.emptyToNull('')).
         toEqual(null);
     });
-    test('Should filter out null and empty values', () => {
+    test('compactJoin should compact and join', () => {
         expect(f.compactJoin('-', ['', 'a', null, 'b'])).
         toEqual('a-b');
         expect(f.compactJoin('-', ['', null])).
@@ -121,5 +121,33 @@ describe('helperFunctions', () => {
         await expect(f.taskToPromise(new Task(function (reject) {
             reject(err);
         }), true)).rejects.toBe(err);
+    });
+    test('mapKeys', () => {
+        expect(f.mapKeys(
+            key => `${f.capitalize(key)} Taco`,
+            {fish: 'good', puppy: 'bad'})
+        ).toEqual(
+            {['Fish Taco']: 'good', ['Puppy Taco']: 'bad'}
+        )
+    });
+    test('mapKeysForLens', () => {
+        expect(f.mapKeysForLens(
+            R.lensPath(['x', 1, 'y']),
+            key => `${f.capitalize(key)} Taco`,
+            {x: [null, {y: {fish: 'good', puppy: 'bad'} } ] }
+        )
+        ).toEqual(
+            {x: [null, {y: {['Fish Taco']: 'good', ['Puppy Taco']: 'bad'} } ] }
+        )
+    });
+    test('mapDefault should rename the default import', () => {
+       expect(f.mapDefault('friend', {default: 'foo', other: 'boo'})).toEqual(
+           {friend: 'foo', other: 'boo'}
+       );
+    });
+    test('mapDefaultAndPrefixOthers should rename the default and prefix others', () => {
+       expect(f.mapDefaultAndPrefixOthers('friend', 'prefix', {default: 'foo', other: 'boo'})).toEqual(
+           {friend: 'foo', prefixOther: 'boo'}
+       );
     });
 });

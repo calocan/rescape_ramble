@@ -9,7 +9,7 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-const searchLocationIO = require('store/async/searchIO').searchLocation.default;
+const searchLocationIO = require('async/searchIO').searchLocation.default;
 const {asyncActions, asyncActionCreators} = require('store/reducers/actionHelpers');
 
 const ACTION_KEY = module.exports.ACTION_KEY = 'location';
@@ -26,9 +26,13 @@ const actionCreators = module.exports.actionCreators = makeAsyncActionHandlers('
  * @param {Object} action The action
  * @returns {Object} the reduced state
  */
-module.exports.default = (state = {}, action = {}) => {
-    switch (action.type) {
-        default:
-            return state;
+module.exports = {
+    actions,
+    actionCreators,
+    default: (state = {}, action = {}) => {
+        switch (action.type) {
+            default:
+                return state;
+        }
     }
 };

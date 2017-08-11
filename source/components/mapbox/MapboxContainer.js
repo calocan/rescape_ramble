@@ -20,9 +20,10 @@ const {hoverMarker, selectMarker} = actionCreators;
 
 /**
  * Raises viewport, mapboxApiAccessToken, geojson, and gtfs to top level
- * @param state
+ * @param {Object} state The Redux state
  * @param {Region} region The Region object
  * @param {Object} style A style object with the width and height
+ * @returns {Object} The props
  */
 const mapStateToProps = module.exports.mapStateToProps = (state, {region, style}) => {
     const mapbox = region.mapbox;

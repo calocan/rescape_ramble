@@ -11,24 +11,29 @@
 const R = require('ramda');
 const {actions, actionCreators} = require('./markerActions');
 
-module.exports.default = (state = {}, action = {}) => {
-    const sortById = R.sortBy(R.prop('id'));
-    const merge = R.merge(state);
-    switch (action.type) {
-        case actions.FETCH_MARKERS_DATA:
-            // Indicate that the geojson has been requested so that it never tries to lad again
-            // TODO use reselect in container instead of this silly state management
-            return R.merge(state, {markersRequested: true});
-        case actions.FETCH_MARKERS_SUCCESS:
-            // Merge the returned geojson into the state
-            return merge({markers: R.map(R.prop('doc'), sortById(action.body.rows))});
-        case actions.UPDATE_MARKERS_SUCCESS:
-            // Merge the returned geojson into the state
-            return merge({markers: R.map(R.prop('doc'), sortById(action.body.rows))});
-        case actions.REMOVE_MARKERS_SUCCESS:
-            // Merge the returned geojson into the state
-            return merge({markers: R.map(R.prop('doc'), sortById(action.body.rows))});
-        default:
-            return state;
+
+module.exports = {
+    actions,
+    actionCreators,
+    default: (state = {}, action = {}) => {
+        const sortById = R.sortBy(R.prop('id'));
+        const merge = R.merge(state);
+        switch (action.type) {
+            case actions.FETCH_MARKERS_DATA:
+                // Indicate that the geojson has been requested so that it never tries to lad again
+                // TODO use reselect in container instead of this silly state management
+                return R.merge(state, {markersRequested: true});
+            case actions.FETCH_MARKERS_SUCCESS:
+                // Merge the returned geojson into the state
+                return merge({markers: R.map(R.prop('doc'), sortById(action.body.rows))});
+            case actions.UPDATE_MARKERS_SUCCESS:
+                // Merge the returned geojson into the state
+                return merge({markers: R.map(R.prop('doc'), sortById(action.body.rows))});
+            case actions.REMOVE_MARKERS_SUCCESS:
+                // Merge the returned geojson into the state
+                return merge({markers: R.map(R.prop('doc'), sortById(action.body.rows))});
+            default:
+                return state;
+        }
     }
 };

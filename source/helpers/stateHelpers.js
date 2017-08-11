@@ -12,7 +12,7 @@ const R = require('ramda');
 
 /**
  * Returns the current Region of the state
- * @param state The Redux state
+ * @param {Object} state The Redux state
  * @returns {Region} The Current Region
  */
 module.exports.currentRegion = state => R.prop(state.regions.currentKey, state.regions);

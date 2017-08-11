@@ -13,7 +13,7 @@ const {SCOPE} = require('./geojsons');
 module.exports.SCOPE = SCOPE;
 const R = require('ramda');
 const {actionId, actionPath, asyncActions, asyncActionCreators} = require('store/reducers/actionHelpers');
-// const {persistMarkers, fetchMarkers as fetchMarkersIO, removeMarkers as removeMarkersIO} = require('store/async/markerIO')
+// const {persistMarkers, fetchMarkers as fetchMarkersIO, removeMarkers as removeMarkersIO} = require('async/markerIO')
 const ACTION_KEY = module.exports.ACTION_KEY = 'markers';
 module.exports.ACTION_PATH = actionPath(SCOPE, ACTION_KEY);
 const makeAsyncActionCreators = asyncActionCreators(SCOPE, ACTION_KEY);

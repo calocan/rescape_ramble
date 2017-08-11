@@ -11,7 +11,6 @@
       "sleepBetweenCalls": 1000
     },
     "markers": {
-
     },
     "regions": [
       {
@@ -19,11 +18,11 @@
         "label": "California"
       }
     ],
-    "defaultRegion": "california"
-  },
-  "mapbox": {
-    "mapboxApiAccessToken": "pk.eyJ1IjoiY2Fsb2NhbiIsImEiOiJjaXl1aXkxZjkwMG15MndxbmkxMHczNG50In0.07Zu3XXYijL6GJMuxFtvQg",
-    "iconAtlas": "data/location-icon-atlas.png",
-    "showCluster": "true"
+    "defaultRegion": "california",
+    "mapbox": {
+      "mapboxApiAccessToken": "pk.eyJ1IjoiY2Fsb2NhbiIsImEiOiJjaXl1aXkxZjkwMG15MndxbmkxMHczNG50In0.07Zu3XXYijL6GJMuxFtvQg",
+      "iconAtlas": "data/location-icon-atlas.png",
+      "showCluster": "true"
+    }
   }
 }

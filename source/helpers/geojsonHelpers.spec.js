@@ -11,7 +11,7 @@
 
 const {geojsonByType} = require('./geojsonHelpers');
 jest.mock('query-overpass');
-const osm = require('store/async/queryOverpass.sample').LA_SAMPLE;
+const osm = require('async/queryOverpass.sample').LA_SAMPLE;
 describe('geojsonHelpers', () => {
     test('geojsonByType', () => {
         expect(geojsonByType(osm)).toMatchSnapshot();

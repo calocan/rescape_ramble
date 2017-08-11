@@ -16,11 +16,11 @@ const moment = require('moment');
 const R = require('ramda');
 const e = React.createElement;
 
-export class MarkerItem extends React.Component {
+module.exports.MarkerItem = class MarkerItem extends React.Component {
     _handleRemove() {
         this.props.removeMarkers({}, this.props.regionId, [this.props.locationFeature]).fork(
             () => {
-                console.error('Error removing marker');
+                // console.error('Error removing marker');
             },
             () => {
             }
@@ -78,7 +78,7 @@ export class AddMarkerItem extends React.Component {
                 });
                 this.props.updateMarkers({}, this.props.regionId, [marker]).fork(
                     () => {
-                        console.error('Error adding marker');
+                        // console.error('Error adding marker');
                     },
                     () => {
                         this.textInput.value = null;
@@ -88,7 +88,7 @@ export class AddMarkerItem extends React.Component {
                 // Warn user to set a location
                 this.setState({warn: true});
             }
-            console.log('do validate');
+            // console.log('do validate');
         }
     }
 
@@ -124,16 +124,19 @@ const {
     string,
     object,
     bool,
-    arrayOf
+    arrayOf,
+    func
 } = PropTypes;
 
 MarkerItem.propTypes = {
     locationFeature: object.isRequired,
-    regionId: string.isRequired
+    regionId: string.isRequired,
+    removeMarkers: func.isRequired
 };
 
 AddMarkerItem.propTypes = {
     locationFeature: object.isRequired,
     coordinates: arrayOf(number),
-    regionId: string.isRequired
+    regionId: string.isRequired,
+    updateMarkers: func.isRequired
 };

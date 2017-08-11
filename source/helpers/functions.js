@@ -18,7 +18,8 @@ const {Maybe, Either} = require('ramda-fantasy');
 
 /**
  * Return an empty string if the given entity is falsy
- * @param entity
+ * @param {Object} entity The entity to check
+ * @returns {String|Object} The empty string or the Object
  * orEmpty:: a -> a
  *        :: a -> String
  */
@@ -27,6 +28,7 @@ const orEmpty = module.exports.orEmpty = entity => entity || '';
 /**
  * Removed null or undefined items from an iterable
  * @param [a] items Items that might have falsy values to remove
+ * @returns The compacted items
  * compact:: [a] -> [a]
  * compact:: {k,v} -> {k,v}
  */
@@ -35,6 +37,7 @@ const compact = module.exports.compact = R.reject(R.isNil);
 /**
  * Remove empty strings
  * @param [a] items Items that might have empty or null strings to remove
+ * @returns The compacted items
  * compactEmpty:: [a] -> [a]
  */
 const compactEmpty = module.exports.compactEmpty = R.reject(R.either(R.isNil, R.isEmpty));
@@ -42,6 +45,7 @@ const compactEmpty = module.exports.compactEmpty = R.reject(R.either(R.isNil, R.
 /**
  * Convert an empty value to null
  * @param a item Item that might be empty according to isEmpty
+ * @returns the
  * emptyToNull:: a -> a
  *            :: a -> null
  */
@@ -60,7 +64,8 @@ const compactJoin = module.exports.compactJoin = R.compose(
 
 /**
  * Convert the obj to an Immutable if it is not.
- * @param {a} a An Immutable or anything else
+ * @param {Object} obj a An Immutable or anything else
+ * @returns {Immutable} An Immutable
  * toImmutable:: Immutable b = a -> b
  *            :: Immutable b = b -> b
  */
@@ -68,14 +73,16 @@ const toImmutable = module.exports.toImmutable = obj => Iterable.isIterable(obj)
 
 /**
  * Converts an Immutable to javascript if it's an Immutable
- * @param {Map|Object} obj
+ * @param {Map|Object} obj The object to convert
+ * @returns {Object} a plain javascript object, array, etc
  * toJS:: Immutable a = a -> b
  */
 const toJS = module.exports.toJS = obj => obj.toJS ? obj.toJS() : obj;
 
 /**
  * Convert the Immutable to plain JS if it is not
- * @param obj
+ * @param {Object} obj The object to convert
+ * @returns {Object} a plain javascript object
  * fromImmutable:: Immutable b = b -> a
  *              :: a-> a
  */
@@ -90,6 +97,7 @@ const fromImmutable = module.exports.fromImmutable = obj =>
  * Creates a partial mapping function that expects an iterable and maps each item of the iterable to the given property
  * @param {String} prop The prop of each object to map
  * @param {[Object]} items The objects to map
+ * @returns {[Object]} The mapped objects
  * mapProp :: String -> [{k, v}] -> [a]
  */
 const mapProp = module.exports.mapProp = R.curry((prop, objs) => R.pipe(R.prop, R.map)(prop)(objs));
@@ -99,6 +107,7 @@ const mapProp = module.exports.mapProp = R.curry((prop, objs) => R.pipe(R.prop, 
  * of the array, valued by the item. If the item is not an array, it leaves it alone, assuming it is already indexed
  * @param {String} prop The prop of each object to use as the key
  * @param {[Object]} items The items to map
+ * @returns {Object} The returned object
  * mapPropValueAsIndex:: String -> [{k, v}] -> {j, {k, v}}
  * mapPropValueAsIndex:: String -> {k, v} -> {k, v}
  */
@@ -112,6 +121,7 @@ const mapPropValueAsIndex = module.exports.mapPropValueAsIndex = R.curry((prop, 
  * Merges a list of objects by the given key and returns the values, meaning all items that are
  * duplicate prop key value are removed from the final list
  * removeDuplicateObjectsByProp:: String -> [{k, v}] -> [{k, v}]
+ * @returns {[Object]} The items without the duplicates
  */
 const removeDuplicateObjectsByProp = module.exports.removeDuplicateObjectsByProp = R.curry((prop, list) =>
     R.pipe(
@@ -126,6 +136,7 @@ const removeDuplicateObjectsByProp = module.exports.removeDuplicateObjectsByProp
  * If listOrObj is not already object, the function converts an array to an Immutable keyed by each array items id.
  * If already an object, it just makes it immutable
  * @param listOrObj
+ * @returns {Immutable} The transformed immutable object
  * mapPropValueAsIndex:: Immutable m = {j, {k, v}} -> m {j, {k, v}}
  *                    :: Immutable m = [{k, v}] -> m {j, {k, v}}
  */
@@ -139,7 +150,7 @@ const toImmutableKeyedByProp = module.exports.toImmutableKeyedByProp = R.curry((
 /**
  * Returns the id of the given value if it is an object or the value itself if it is not.
  * @param {Object|String|Number} objOrId
- * @param {String|Number}
+ * @returns {String|Number} an id
  * idOrIdFromObj:: a -> a
  *              :: {k, v} -> a
  */
@@ -150,14 +161,15 @@ const idOrIdFromObj = module.exports.idOrIdFromObj = R.when(
 
 /**
  * Reduces with the current and next value of a list. The reducer is called n-1 times for a list of n length
- * @param {callWithNext} fn reducer
- * @param {Object} head first item of the list
- * @param {Object} next remaining items
- * @param {Object} previous initial reduction value
- * @return {Object} the reduction
+ * @param {callWithNext} fn The reducer
+ * @param {Object} head The first item of the list
+ * @param {Object} previous The initial reduction value
+ * @param {Object} next The next item
+ * @param {Object} tail The remaining items
+ * @returns {Object} the reduction
  */
 const reduceWithNext = module.exports.reduceWithNext = (fn, [head, next, ...tail], previous) =>
-    next === undefined ?
+    typeof (next) === 'undefined' ?
         previous :
         reduceWithNext(fn, [next, ...tail], fn(previous, head, next));
 
@@ -172,28 +184,66 @@ const reduceWithNext = module.exports.reduceWithNext = (fn, [head, next, ...tail
 /**
  * Deep merge values that are objects but not arrays
  * based on https://github.com/ramda/ramda/pull/1088
+ * @params {Object} l the 'left' side object to merge
+ * @params {Object} r the 'right' side object to merge
  * @type {Immutable.Map<string, V>|__Cursor.Cursor|List<T>|Map<K, V>|*}
+ * @returns {Object} The deep-merged object
  * mergeDeep:: (<k, v>, <k, v>) -> <k, v>
  */
-const mergeDeep = module.exports.mergeDeep = R.mergeWith((l, r) =>
-    (l.concat || r.concat) || !(R.is(Object, l) && R.is(Object, r)) ?
+const mergeDeep = module.exports.mergeDeep = R.mergeWith((l, r) => {
+    // If either (hopefully both) items are arrays or not both objects
+    // accept the right value
+    return ((l && l.concat) || (r && r.concat)) || !(R.is(Object, l) && R.is(Object, r)) ?
         r :
         mergeDeep(l, r) // tail recursive
-);
+});
+
+/***
+ * Deep merge values with a custom function that are objects or arrays
+ * based on https://github.com/ramda/ramda/pull/1088
+ * @params {Function} fn The merge function Left l, Right r:: l -> r -> a
+ * @params {Object} l the 'left' side object to merge
+ * @params {Object} r the 'right' side object to merge
+ * @type {Immutable.Map<string, V>|__Cursor.Cursor|List<T>|Map<K, V>|*}
+ * @returns {Object} The deep-merged object
+ * mergeDeep:: (<k, v>, <k, v>) -> <k, v>
+ */
+const mergeDeepWith = module.exports.mergeDeepWith = R.curry((fn, l, r) => R.mergeWith((l, r) => {
+    // If both objects are arrays or both objects run the merge function
+    // Otherwise return r, assuming no l exists
+    return ((l && l.concat) && (r && r.concat)) || (R.is(Object, l) && R.is(Object, r)) ?
+        mergeDeep(l, r) : // tail recursive
+        r
+}));
 
 /**
  * http://stackoverflow.com/questions/40011725/point-free-style-capitalize-function-with-ramda
  * Capitalize the first letter
+ * @param {String} str The string to capitalize
+ * @returns {String} The capitalized string
  * capitalize:: String -> String
  */
-const capitalize = module.exports.capitalize = obj => R.compose(
+const capitalize = module.exports.capitalize = str => R.compose(
     R.join(''),
     R.juxt([R.compose(R.toUpper, R.head), R.tail])
-)(obj);
+)(str);
+
+/**
+ * http://stackoverflow.com/questions/40011725/point-free-style-capitalize-function-with-ramda
+ * Lowercase the first letter
+ * @param {String} str The string to lowercase
+ * @returns {String} The capitalized string
+ * capitalize:: String -> String
+ */
+const lowercase = module.exports.lowercase = str => R.compose(
+    R.join(''),
+    R.juxt([R.compose(R.toLower, R.head), R.tail])
+)(str);
 
 /**
  * Merge a list of objects using the given concat function
  * [{k: v}] → {k: v}
+ * @returns {Object} The merged object
  * mergeAllWithKey:: (String → a → a → a) → [{a}] → {a}
  */
 const mergeAllWithKey = module.exports.mergeAllWithKey = R.curry((fn, [head, ...rest]) =>
@@ -212,12 +262,15 @@ const mergeAllWithKey = module.exports.mergeAllWithKey = R.curry((fn, [head, ...
  * Get a required path or return a helpful Error if it fails
  * @param {String} path A lensPath, e.g. ['a', 'b'] or ['a', 2, 'b']
  * @param {Object} obj The object to inspect
+ * @returns {Either} Either the resolved value or an Error
  * reqPath:: String -> {k: v} → Either
  */
 const reqPath = module.exports.reqPath = R.curry((path, obj) => {
     return R.compose(
             R.ifElse(
+                // If path doesn't resolve
                 Maybe.isNothing,
+                // Create a useful Error message
                 () => Either.Left({
                     resolved: R.reduceWhile(
                         // Stop if the accumulated segments can't be resolved
@@ -229,23 +282,26 @@ const reqPath = module.exports.reqPath = R.curry((path, obj) => {
                     ),
                     path: path
                 }),
+                // Return the resolved value
                 res => Either.Right(res.value)
             ),
+            // Try to resolve the value using the path and obj, returning Maybe
             Rm.path(path))(obj);
     }
 );
 
 /**
  * Use immutable to make a deep copy of an object
+ * @returns A copy of the given object
  * copy:: a -> a
  */
 const copy = module.exports.copy = R.compose(toJS, toImmutable);
 
 /**
  * Wraps a Task in a Promise.
- * @param {Task} task
+ * @param {Task} task The Task
  * @param {boolean} expectReject Set true for testing when a rejection is expected
- * @return {Promise}
+ * @returns {Promise} The Task as a Promise
  */
 const taskToPromise = module.exports.taskToPromise = (task, expectReject = false) => {
     if (!task.fork) {
@@ -255,9 +311,9 @@ const taskToPromise = module.exports.taskToPromise = (task, expectReject = false
         task.fork(
             reject => {
                 if (!expectReject) {
-                    console.log('Unhandled Promise', prettyFormat(reject));
+                    // console.log('Unhandled Promise', prettyFormat(reject));
                     if (reject && reject.stack) {
-                        console.log(stackTrace.parse(reject));
+                        // console.log(stackTrace.parse(reject));
                     }
                 }
                 return rej(reject);
@@ -269,8 +325,9 @@ const taskToPromise = module.exports.taskToPromise = (task, expectReject = false
 
 /**
  * Wraps a Promise in a Task
- * @param {Promise} promise
+ * @param {Promise} promise The promise
  * @param {boolean} expectReject default false. Set true for testing to avoid logging rejects
+ * @returns {Task} The promise as a Task
  */
 const promiseToTask = module.exports.promiseToTask = (promise, expectReject = false) => {
     if (!promise.then) {
@@ -287,7 +344,45 @@ const promiseToTask = module.exports.promiseToTask = (promise, expectReject = fa
 
 /**
  * From the cookbook: https://github.com/ramda/ramda/wiki/Cookbook#map-keys-of-an-object
+ * Maps keys according to the given function
+ * @returns {Object} The mapped keys of the object
  * mapKeys :: (String -> String) -> Object -> Object
 */
 const mapKeys = module.exports.mapKeys = R.curry((fn, obj) =>
     R.fromPairs(R.map(R.adjust(fn, 0), R.toPairs(obj))));
+
+
+/***
+ * Uses a lens to map keys that are embedded in a data structure
+ * The lens must indicate an object whose keys shall be mapped
+ * @returns {Object} Object with the keys indicated by the given lens mapped
+ * mapKeysForLens :: Lens -> ((String -> String) -> Object -> Object
+ */
+const mapKeysForLens = module.exports.mapKeysForLens = R.curry((lens, fn, obj) =>
+    // Sets the lens-focused objects to a new object with keys mapped according to the function
+    R.set(lens, mapKeys(fn, R.view(lens, obj)), obj)
+);
+
+/**
+ * Converts default to desired name. Used for requiring defaults
+ * @param {Object} module A required module with a default key
+ * @param {String} keyName The desired rename of 'default'
+ * @returns {Object} The import module with key default changed to keyName
+ * mapDefault :: String -> <k,v> -> <k,v>
+ */
+const mapDefault = module.exports.mapDefault = (keyName, module) => mapKeys(key => key === 'default' ? keyName : key, module);
+/**
+ * Converts default to desired name and prefixes others.
+ * Used for requiring defaults and renaming others
+ * @param {Object} module A required module with a default key
+ * @param {String} defaultName The desired rename of 'default'
+ * @param {String} prefixName The desired prefix for others. Camel Case maintained
+ * @returns {Object} The import module with key default changed to keyName
+ * mapDefault :: String -> <k,v> -> <k,v>
+ */
+const mapDefaultAndPrefixOthers = module.exports.mapDefaultAndPrefixOthers = (defaultName, prefix, module) =>
+    mapKeys(
+        key => (key === 'default') ? defaultName : `${prefix}${capitalize(key)}`,
+        module
+    );
+

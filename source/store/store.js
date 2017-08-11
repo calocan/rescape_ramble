@@ -15,13 +15,13 @@
 const thunk = require('redux-thunk');
 const {applyMiddleware, compose, createStore} = require('redux');
 const {createCycleMiddleware} = require('redux-cycles');
-const reducer = require('./store/reducers/reducer').default;
+const reducer = require('./reducers/reducer').default;
 const {persistentStore} = require('redux-pouchdb-plus');
 const {responsiveStoreEnhancer} = require('redux-responsive');
 const PouchDB = require('pouchdb');
 const R = require('ramda');
-const {startSync} = require('./store/async/pouchDbIO');
-const {main} = require('store/async/cycle');
+const {startSync} = require('./async/pouchDbIO');
+const {main} = require('async/cycle');
 const {run} = require('@cycle/run');
 const {makePouchDBDriver} = require('cycle-pouchdb-most-driver');
 

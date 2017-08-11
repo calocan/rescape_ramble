@@ -74,7 +74,8 @@ const {
     number,
     string,
     object,
-    bool
+    bool,
+    func
 } = PropTypes;
 
 Mapbox.propTypes = {
@@ -82,7 +83,10 @@ Mapbox.propTypes = {
     mapboxApiAccessToken: string.isRequired,
     iconAtlas: string.isRequired,
     showCluster: bool.isRequired,
-    region: object.isRequired
+    region: object.isRequired,
+    hoverMarker: func.isRequired,
+    selectMarker: func.isRequired,
+    onChangeViewport: func.isRequired
 };
 
 module.exports.default = Mapbox;

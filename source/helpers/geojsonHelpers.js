@@ -20,7 +20,7 @@ const featureByType = module.exports.featureByType = reduceFeaturesBy(feature =>
  * Split geojson by feature type
  * @param {Object} geojson
  * @param {[Feature]} osm.features Features that are way, node, or route according to their id
- * @return {Object} Copies of the gtfs with a single type of Feature
+ * @returns {Object} Copies of the gtfs with a single type of Feature
  * geojsonByType:: geojson g = g -> <String, g>
  */
 module.exports.geojsonByType = R.curry((geojson) => R.map(
@@ -32,8 +32,9 @@ module.exports.geojsonByType = R.curry((geojson) => R.map(
 /**
  * Fetch each square of transit and merge the results by feature id
  * concatValues combines are results sets when they return
- * @param k.
- * @param l
- * @param r
+ * @param {String} k The key of the object being tested.
+ * @param {[Feature]} l The left side Features
+ * @param {[Feature]} r The right side Features
+ * @returns {Object} The concatted features
  */
 module.exports.concatFeatures = (k, l, r) => k === 'features' ? R.concat(l, r) : r;

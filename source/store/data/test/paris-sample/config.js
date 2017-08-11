@@ -10,7 +10,7 @@
  */
 
 const defaultConfig = require('store/data/default/config').default;
-const routeTypes = require('store/data/default/routeTypes').default;
+const routeTypes = require('store/data/default/routeTypes');
 const {mergeDeep} = require('helpers/functions');
 
 /**

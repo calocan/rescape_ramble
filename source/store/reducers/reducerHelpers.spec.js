@@ -20,16 +20,10 @@ describe('actionHelpers', () => {
     test('asyncActions', () => {
         expect(asyncActions('person', 'user', 'FETCH')).toMatchSnapshot();
     });
-    test('asyncActionCreators', async () => {
+    test('asyncActionCreators', () => {
         const actionCreators = asyncActionCreators(
-            'person', 'user', 'FETCH',
-            (someArg) => new Task((reject, response) => response(someArg)
-        ));
-        // Use a => a as a mock dispatch function
-        await expectTask(actionCreators.fetchUser('someArg')(a => a)).resolves.toEqual({
-            body: 'someArg',
-            type: 'person/user/FETCH_SUCCESS'
-        });
+            'person', 'user', 'FETCH'
+        );
         expect(actionCreators.fetchUserData()).toEqual({type: 'person/user/FETCH_DATA'});
         expect(actionCreators.fetchUserSuccess('floopy')).toEqual({type: 'person/user/FETCH_SUCCESS', body: 'floopy'});
         expect(actionCreators.fetchUserFailure(new Error('flop'))).toEqual({type: 'person/user/FETCH_FAILURE', error: new Error('flop')});

@@ -14,7 +14,7 @@ const PropTypes = require('prop-types');
 const React = require('react');
 const R = require('ramda');
 const {resolveSvgJsx} = require('helpers/svgHelpers');
-const {updateMarker} = require('store/async/markerIO');
+const {updateMarker} = require('async/markerIO');
 const e = React.createElement;
 const ENTER_KEY = 13;
 const LIGHT_SETTINGS = {
@@ -27,6 +27,12 @@ const LIGHT_SETTINGS = {
 };
 
 class MapMarkers extends React.Component {
+    /**
+     * Called when SVG neeeds to be redrawn
+     * @param {Object} opt Options from React SVG Shapes
+     * @returns {undefined}
+     * @private
+     */
     _redrawSVGOverlay(opt) {
         if (!this.props.geojson || !this.props.geojson.features) {
             return null;
@@ -34,18 +40,31 @@ class MapMarkers extends React.Component {
         return resolveSvgJsx(opt, this.props.geojson.features);
     }
 
+    /**
+     * Called when a marker is added
+     * @param {Object} value The geojson Marker
+     * @returns {undefined}
+     */
     markerAdded(value) {
         this.markerUpdated(value);
     }
+
+    /**
+     * Called when a marker changes
+     * @param {Object} event The javscript event
+     * @returns {undefined}
+     */
     markerChanged(event) {
         this.markerUpdated(event.target.value);
     }
+
     /**
      * Update or creates a new marker as a geojson Feature and persists it
-     * @param {Object} value
+     * @param {Object} value The Marker geojson
      * @param {String} value.name The name of the marker
      * @param {String} value.id The id of the marker
      * @param {Array} value.location The lon, lat pair of the marker
+     * @returns {undefined}
      */
      markerUpdated(value) {
         const id = `node/${value.id}`;
@@ -65,14 +84,18 @@ class MapMarkers extends React.Component {
         this.props.updateMarkers({}, [marker]);
     }
 
-    // Show the current markers
+    /**
+     * Show the Markers
+     * @returns {undefined}
+     */
     showMarkers() {
         this.props.fetchMarkers({});
     }
 
     /**
      * Marker clicked to edit the name
-     * @param todo
+     * @param {Object} marker The geojson Marker
+     * @returns {undefined}
      */
     markerClicked(marker) {
         // TODO
@@ -88,8 +111,9 @@ class MapMarkers extends React.Component {
      *
      * The input box when editing a marker has blurred, we should save
      * the new marker or delete the marker if the name is empty
-     * @param marker
-     * @param event
+     * @param {Object} marker The geojson Marker
+     * @param {Object} event The javascript event
+     * @returns {undefined}
     */
     markerBlurred(marker, event) {
         // TODO
@@ -107,8 +131,9 @@ class MapMarkers extends React.Component {
     /**
      *
      * If they press enter while editing the name, blur it to trigger save (or delete)
-     * @param marker
-     * @param event
+     * @param {Object} marker The geojson Marker
+     * @param {Object} event The javascript event
+     * @returns {undefined}
      */
     markerKeyPressed(marker, event) {
         // TODO
@@ -134,12 +159,15 @@ const {
     string,
     object,
     bool,
-    array
+    array,
+    func
 } = PropTypes;
 
 MapMarkers.propTypes = {
     viewport: object.isRequired,
-    geojson: object.isRequired
+    geojson: object.isRequired,
+    updateMarkers: func.isRequired,
+    fetchMarkers: func.isRequired
 };
 module.exports.default = MapMarkers;
 

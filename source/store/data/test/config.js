@@ -14,7 +14,7 @@ const californiaConfig = require('store/data/california/config').default;
 const parisConfig = require('store/data/test/paris-sample/config').default;
 const R = require('ramda');
 
-const testConfigs = [californiaConfig, parisConfig];
+const testConfigs = module.exports.testConfigs = [californiaConfig, parisConfig];
 module.exports.default = R.merge(
         // Combine everything but the regions key
         mergeDeep(...R.map(R.omit('regions'), testConfigs)),

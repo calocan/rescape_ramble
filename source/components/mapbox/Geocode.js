@@ -160,7 +160,7 @@ Geocode.defaultProps = {
     onSuggest: function () {}
 };
 
-Geocode.proptypes = {
+Geocode.propTypes = {
     endpoint: PropTypes.string,
     source: PropTypes.string,
     inputClass: PropTypes.string,
@@ -174,6 +174,8 @@ Geocode.proptypes = {
     accessToken: PropTypes.string.isRequired,
     proximity: PropTypes.string,
     showLoader: PropTypes.bool,
-    focusOnMount: PropTypes.bool
+    focusOnMount: PropTypes.bool,
+    search: PropTypes.func.isRequired,
+    searchFailure: PropTypes.func.isRequired
 };
 module.exports.default = Geocode;

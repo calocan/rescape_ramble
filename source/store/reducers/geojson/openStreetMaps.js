@@ -10,13 +10,13 @@
  */
 
 const R = require('ramda');
-const {fetchTransit} = require('store/async/overpassIO');
+const {fetchTransit} = require('async/overpassIO');
 const {asyncActions, asyncActionCreators} = require('store/reducers/actionHelpers');
 const {SCOPE} = require('./geojsons');
 const ACTION_KEY = 'transit';
 const makeAsyncActionCreators = asyncActionCreators(SCOPE, ACTION_KEY);
-const actions = module.exports.actions = asyncActions(SCOPE, ACTION_KEY, 'FETCH');
-const actionCreators = module.exports.actionCreators = makeAsyncActionCreators('FETCH', fetchTransit);
+const actions = asyncActions(SCOPE, ACTION_KEY, 'FETCH');
+const actionCreators = makeAsyncActionCreators('FETCH', fetchTransit);
 
 /**
  * Reduces openStreetMaps state
@@ -24,16 +24,20 @@ const actionCreators = module.exports.actionCreators = makeAsyncActionCreators('
  * @param {Object} action The action
  * @returns {Object} the reduced state
  */
-module.exports.default = (state = {}, action = {}) => {
-    switch (action.type) {
-        case actions.FETCH_TRANSIT_DATA:
-            // TODO handle with reselect in containers instead
-            // Indicate that the geojson has been requested so that it never tries to lad again
-            return R.merge(state, {requested: true});
-        case actions.FETCH_TRANSIT_SUCCESS:
-            // Merge the returned geojson into the state
-            return R.merge(state, action.body);
-        default:
-            return state;
+module.exports = {
+    actions,
+    actionCreators,
+    default: (state = {}, action = {}) => {
+        switch (action.type) {
+            case actions.FETCH_TRANSIT_DATA:
+                // TODO handle with reselect in containers instead
+                // Indicate that the geojson has been requested so that it never tries to lad again
+                return R.merge(state, {requested: true});
+            case actions.FETCH_TRANSIT_SUCCESS:
+                // Merge the returned geojson into the state
+                return R.merge(state, action.body);
+            default:
+                return state;
+        }
     }
 };

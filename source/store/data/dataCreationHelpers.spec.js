@@ -1,12 +1,12 @@
 
-const places = require('./california/places').default;
-const helper = require('./dataCreationHelpers').default;
-const w = require('./california/stops').default;
-const regions = require('./california/regions').default;
-const routeTypes = require('./default/routeTypes').default;
+const places = require('./california/places');
+const helper = require('./dataCreationHelpers');
+const w = require('./california/stops');
+const regions = require('./california/regions');
+const routeTypes = require('./default/routeTypes');
 const {DEFAULT_SERVICE} = require('./default/services');
-const query = require('./dataQueryHelpers').default;
-const stopTypes = require('./default/stopTypes').default;
+const query = require('./dataQueryHelpers');
+const stopTypes = require('./default/stopTypes');
 
 describe('Data Creation Helpers', () => {
     test('Creates a Stop id from a Place and Stop location', () => {

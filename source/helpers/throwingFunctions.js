@@ -15,6 +15,9 @@ const prettyFormat = require('pretty-format');
 
 /**
  * Calls functions.reqPath and throws if the reqPath does not resolve to a non-nil
+ * @params {[String]} Path the Ramda lens style path, e.g. ['x', 1, 'y']
+ * @params {Object} obj The obj to query
+ * @returns {Object|Exception} The value of the sought path or throws
  * reqPath:: string -> obj -> a or throws
  */
 module.exports.reqPath = R.curry((path, obj) =>

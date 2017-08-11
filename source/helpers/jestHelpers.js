@@ -18,13 +18,13 @@ const Task = require('data.task');
  * Given a task, wraps it in promise and passes it to Jest's expect.
  * With this you can call resolves or rejects depending on whether success or failure is expected:
  * expectTask(task).resolves|rejects
- * @param {Task} task wrapped in a Promise and forked
+ * @param {Task} task Task wrapped in a Promise and forked
  * @returns {undefined}
  */
 module.exports.expectTask = task => expect(taskToPromise(task));
 /**
  * Same as expectTask but expects a rejects so diables debugging
- * @param {Task} The Task
+ * @param {Task} task The Task
  * @returns {undefined}
  */
 module.exports.expectTaskRejected = task => expect(taskToPromise(task, true));

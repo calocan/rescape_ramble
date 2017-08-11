@@ -27,6 +27,9 @@
     "webpack-profile": "webpack --profile --json > webpack-stats.json"
   },
   "jest": {
+    "modulePaths": [
+      "<rootDir>/source"
+    ],
     "setupFiles": [
       "<rootDir>/jestsetup.js"
     ],

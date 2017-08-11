@@ -17,7 +17,7 @@ const {createLocalDb, cycleLocalDb, destroy, getDb} = require('./pouchDbIO');
 const fs = require('fs');
 const {promiseToTask} = require('../../helpers/functions');
 const R = require('ramda');
-const {LA_SAMPLE, LA_BOUNDS} = require('store/async/queryOverpass.sample');
+const {LA_SAMPLE, LA_BOUNDS} = require('async/queryOverpass.sample');
 
 const name = 'overpass_io_spec';
 const PATH = `${__dirname}/__databases__/`;

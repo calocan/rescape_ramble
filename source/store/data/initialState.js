@@ -44,7 +44,9 @@ module.exports.default = (config) => {
     return {
         settings: config.settings,
         // regions maps to an object keyed by region id, valued by the Region object
-        regions: toObjectKeyedByIdWithCurrent(config.settings.defaultRegion, R.map(region =>
+        regions: toObjectKeyedByIdWithCurrent(
+            config.settings.defaultRegion,
+            R.map(region =>
             ({
                 id: region.id,
                 geospatial: region.geospatial,
@@ -58,7 +60,16 @@ module.exports.default = (config) => {
                 gtfs: R.map(toObjectKeyedById, region.gtfs),
                 // The viewport must be an Immutable to satisfied the redux-map-gl reducer
                 // Apply toImmutable to the viewport of config.mapbox
-                mapbox: R.over(R.lensProp('viewport'), toImmutable, region.mapbox)
+                mapbox:
+                    R.over(
+                        R.lensProp('viewport'),
+                        toImmutable,
+                        // Merge the initial mapbox configuration into each region
+                        R.merge(
+                            config.settings.mapbox,
+                            region.mapbox
+                        )
+                    )
             }),
             config.regions
         ))

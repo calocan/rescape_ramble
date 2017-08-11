@@ -11,15 +11,15 @@
 
 const React = require('react');
 const ReactDOM = require('react-dom');
-const Current = require('views/current/CurrentContainer').default;
+const Current = require('components/current/CurrentContainer').default;
 
 const {Provider} = require('react-redux');
 const { BrowserRouter, Route } = require('react-router-dom');
 
-const {setState} = require('./store/reducers/fullStates');
-const initialState = require('./store/data/initialState').default;
-const makeStore = require('./store').default;
-const currentConfig = require('./store/data/current/config').default;
+const {setState} = require('store/reducers/fullStates');
+const initialState = require('store/data/initialState').default;
+const makeStore = require('store/store').default;
+const currentConfig = require('store/data/current/config').default;
 const calculateResponsiveState = require('redux-responsive');
 const store = makeStore();
 // dispatch every time the window size changes

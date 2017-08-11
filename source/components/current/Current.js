@@ -10,7 +10,7 @@
  */
 
 const PropTypes = require('prop-types');
-const Region = require('views/region/RegionContainer').default;
+const Region = require('components/region/RegionContainer').default;
 const styles = require('./Current.style.js').default;
 const React = require('react');
 const e = React.createElement;

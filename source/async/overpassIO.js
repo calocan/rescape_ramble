@@ -79,9 +79,9 @@ const fetchTransit = module.exports.fetchTransit = R.curry((options, bounds) => 
  * 200 by 200km bounding boxes will be created and sent to query-overpass. Any remainder will
  * be queried separately. The results from all queries are merged by feature id so that no
  * duplicates are returned.
+ * @param {[Number]} bounds [lat_min, lon_min, lat_max, lon_max]
  * @param {Number} sleepBetweenCalls Pause this many milliseconds between calls to avoid the request rate limit
  * @param {Object} testBounds Used only for testing
- * @param {[Number]} bounds [lat_min, lon_min, lat_max, lon_max]
  * @returns {Object} Chained Tasks to fetch the data
  */
 const fetchTransitCelled = ({cellSize, sleepBetweenCalls, testBounds}, bounds) => {

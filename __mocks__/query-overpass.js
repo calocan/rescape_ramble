@@ -10,7 +10,7 @@
  */
 
 const {Map, fromJS} = require('immutable');
-const {PARIS_BOUNDS, LA_BOUNDS, PARIS_SAMPLE, LA_SAMPLE} = require('store/async/queryOverpass.sample')
+const {PARIS_BOUNDS, LA_BOUNDS, PARIS_SAMPLE, LA_SAMPLE} = require('async/queryOverpass.sample')
 
 // Use Map for equality matching of keys
 const responses = Map([

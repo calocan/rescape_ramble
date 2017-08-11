@@ -2,14 +2,14 @@
 const React = require('react');
 const ReactDOM = require('react-dom');
 const MapGL = require('react-map-gl');
-const Current = require('views/current/CurrentContainer').default;
+const Current = require('components/current/CurrentContainer').default;
 const {Provider} = require('react-redux');
 const { Router, Route, browserHistory } = require('react-router');
 const { syncHistoryWithStore } = require('react-router-redux');
 
 const {setState} = require('./store/reducers/fullState');
 const initialState = require('./store/data/initialState').default;
-const makeStore = require('./store').default;
+const makeStore = require('./store/store').default;
 const currentConfig = require('./store/data/current/config').default;
 
 // const currentConfig = require('./store/data/current/config').default;
