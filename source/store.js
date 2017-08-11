@@ -8,35 +8,34 @@
  *
  * THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-/***
+/**
  * Configures and returns the Store with the root reducer and middleware
  */
 // Do this once before any other code in your app (http://redux.js.org/docs/advanced/AsyncActions.html)
-import 'babel-polyfill';
-import thunk from 'redux-thunk';
-import {applyMiddleware, compose, createStore} from 'redux';
-import {createCycleMiddleware} from 'redux-cycles';
-import reducer from './store/reducers/reducer';
-import {persistentStore} from 'redux-pouchdb-plus';
-import {responsiveStoreEnhancer} from 'redux-responsive'
-import PouchDB from 'pouchdb';
-import R from 'ramda';
-import {startSync} from './store/async/pouchDbIO';
-import {main} from 'store/async/cycle';
-import {run} from '@cycle/run'
-import {makePouchDBDriver} from 'cycle-pouchdb-most-driver';
+const thunk = require('redux-thunk');
+const {applyMiddleware, compose, createStore} = require('redux');
+const {createCycleMiddleware} = require('redux-cycles');
+const reducer = require('./store/reducers/reducer').default;
+const {persistentStore} = require('redux-pouchdb-plus');
+const {responsiveStoreEnhancer} = require('redux-responsive');
+const PouchDB = require('pouchdb');
+const R = require('ramda');
+const {startSync} = require('./store/async/pouchDbIO');
+const {main} = require('store/async/cycle');
+const {run} = require('@cycle/run');
+const {makePouchDBDriver} = require('cycle-pouchdb-most-driver');
 
 // Use this synced db to store the state of the app
 // There might be no reason to doSync the state to a remote db
-const dbName = 'default'
-const db = new PouchDB(dbName);
-startSync(db, `http://localhost:5984/${dbName}`);
+const DB_NAME = 'default';
+const db = new PouchDB(DB_NAME);
+startSync(db, `http://localhost:5984/${DB_NAME}`);
 
 const environmentMiddlewares = R.ifElse(
     R.equals('development'),
     // Development-only middlewares
     () => {
-        const {createLogger} = require(`redux-logger`);
+        const {createLogger} = require('redux-logger');
         return [
             createLogger()
         ];
@@ -55,7 +54,7 @@ const runCycle = dbName => run(main, {
     POUCHDB: makePouchDBDriver(PouchDB, dbName)
 });
 let dispose = null;
-export const restartCycle = (dbName) => {
+module.exports.restartCycle = (dbName) => {
     if (dispose) {
         dispose();
     }
@@ -63,11 +62,12 @@ export const restartCycle = (dbName) => {
     return dispose;
 };
 
-/***
+/**
  * Function to create a store that accepts an initial state for testing
- * @param initialState
+ * @param {Object} [initialState] The optional initial state of the store
+ * @returns {Object} The redux Store
  */
-export default (initialState = {}) => createStore(
+module.exports.default = (initialState = {}) => createStore(
     reducer,
     initialState,
     // In addition to Middleware, compose state with PouchDb, devTools, and Redux Responsive

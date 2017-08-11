@@ -9,12 +9,13 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import createInitialState, {toObjectKeyedByGeneratedId} from './initialState'
-import config from 'store/data/california/config'
-import R from 'ramda'
-import {mapPropValueAsIndex} from '../../helpers/functions';
+const createInitialState = require('./initialState').default;
+const {toObjectKeyedByGeneratedId} = require('./initialState');
+const config = require('store/data/california/config').default;
+const R = require('ramda');
+const {mapPropValueAsIndex} = require('../../helpers/functions');
 
-describe('Initial Satate', () => {
+describe('Initial State', () => {
     test('toImmutableKeyedById adds an id and keys by it', () => {
         const obj = [
             {
@@ -25,27 +26,27 @@ describe('Initial Satate', () => {
             }
         ];
         let i = 1;
-        function* numbers () {
+        function *numbers() {
             while (true) {
                 yield (i++).toString();
             }
         }
         expect(toObjectKeyedByGeneratedId(numbers())(obj)).toEqual(
             {
-                '1': {
+                1: {
                     id: '1',
-                    foo: 'bar',
+                    foo: 'bar'
                 },
-                '2': {
+                2: {
                     id: '2',
-                    foo: 'car',
-                },
+                    foo: 'car'
+                }
             }
-        )
+        );
     });
     test('matchs the current configuration', () => {
         const toObjectKeyedById = mapPropValueAsIndex('id');
-        R.map(toObjectKeyedById, config.gtfs)
+        R.map(toObjectKeyedById, config.gtfs);
         expect(createInitialState(config)).toMatchSnapshot();
-    })
+    });
 });

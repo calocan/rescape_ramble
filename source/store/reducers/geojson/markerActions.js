@@ -9,19 +9,18 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import {SCOPE} from './geojsons'
-import R from 'ramda'
-import {actionId, actionPath, asyncActions, asyncActionCreators} from 'store/reducers/actionHelpers'
-//import {persistMarkers, fetchMarkers as fetchMarkersIO, removeMarkers as removeMarkersIO} from 'store/async/markerIO'
-
-export {SCOPE}
-export const ACTION_KEY = 'markers';
-export const ACTION_PATH = actionPath(SCOPE, ACTION_KEY)
+const {SCOPE} = require('./geojsons');
+module.exports.SCOPE = SCOPE;
+const R = require('ramda');
+const {actionId, actionPath, asyncActions, asyncActionCreators} = require('store/reducers/actionHelpers');
+// const {persistMarkers, fetchMarkers as fetchMarkersIO, removeMarkers as removeMarkersIO} = require('store/async/markerIO')
+const ACTION_KEY = module.exports.ACTION_KEY = 'markers';
+module.exports.ACTION_PATH = actionPath(SCOPE, ACTION_KEY);
 const makeAsyncActionCreators = asyncActionCreators(SCOPE, ACTION_KEY);
 const makeAsyncActions = asyncActions(SCOPE, ACTION_KEY);
 const makeAction = name => ({name: actionId(SCOPE, ACTION_KEY, name)});
 // Make and export all actions
-export const actions = R.mergeAll([
+const actions = module.exports.actions = R.mergeAll([
     makeAsyncActions('FETCH'),
     makeAsyncActions('UPDATE'),
     makeAsyncActions('REMOVE'),
@@ -30,7 +29,7 @@ export const actions = R.mergeAll([
 ]);
 
 // Define Action Creators
-export const actionCreators = R.mergeAll([
+module.exports.actionCreators = R.mergeAll([
     makeAsyncActionCreators('FETCH'),
     makeAsyncActionCreators('UPDATE'),
     makeAsyncActionCreators('REMOVE'),

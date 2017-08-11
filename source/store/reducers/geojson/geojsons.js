@@ -9,15 +9,24 @@
  * THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import R from 'ramda';
-import {combineReducers} from 'redux';
-import markers, {actionTypes as markerActionTypes, actionCreators as markerActionCreators} from 'store/reducers/geojson/markers'
-import openStreetMaps, {actionTypes as openStreetMapActionTypes, actionCreators as openStreetMapActionCreators} from 'store/reducers/geojson/openStreetMaps'
-import searches, {actionTypes as searchesActionTypes, actionCreators as searchesActionCreators} from 'store/reducers/geojson/searches'
+const R = require('ramda');
+const {combineReducers} = require('redux');
 
-export const SCOPE = 'geojson';
-export const actionTypes = R.mergeAll([markerActionTypes, openStreetMapActionTypes, searchesActionTypes]);
-export const actionCreators = R.mergeAll([markerActionCreators, openStreetMapActionCreators, searchesActionCreators]);
+const markersImport = require('store/reducers/geojson/markers').default;
+const markers = markersImport.default;
+const [markerActionTypes, markerActionCreators] = [markersImport.actions, markersImport.actionCreators];
+
+const openStreetMapsImport = require('store/reducers/geojson/openStreetMaps').default;
+const openStreetMaps = markersImport.default;
+const [openStreetMapActionTypes, openStreetMapActionCreators] = [openStreetMapsImport.actions, openStreetMapsImport.actionCreators];
+
+const searchesImport = require('store/reducers/geojson/searches').default;
+const searches = searchesImport.default;
+const [searchesActionTypes, searchesActionCreators] = [searchesImport.actions, searchesImport.actionCreators];
+
+module.exports.SCOPE = 'geojson';
+module.exports.actions = R.mergeAll([markerActionTypes, openStreetMapActionTypes, searchesActionTypes]);
+module.exports.actionCreators = R.mergeAll([markerActionCreators, openStreetMapActionCreators, searchesActionCreators]);
 
 /**
  @typedef Geojson
@@ -27,11 +36,11 @@ export const actionCreators = R.mergeAll([markerActionCreators, openStreetMapAct
  @property {geojson} markers Point data representing markers in geojson format
  */
 
-export default () => {
+module.exports.default = () => {
     return combineReducers({
         osm: openStreetMaps,
         markers: markers,
         searches: searches
     });
-}
+};
 

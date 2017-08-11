@@ -1,12 +1,12 @@
 
-import * as places from './california/places';
-import * as helper from './dataCreationHelpers';
-import * as w from './california/stops';
-import * as regions from './california/regions';
-import * as routeTypes from './default/routeTypes';
-import {DEFAULT_SERVICE} from './default/services'
-import * as query from './dataQueryHelpers';
-import * as stopTypes from './default/stopTypes'
+const places = require('./california/places').default;
+const helper = require('./dataCreationHelpers').default;
+const w = require('./california/stops').default;
+const regions = require('./california/regions').default;
+const routeTypes = require('./default/routeTypes').default;
+const {DEFAULT_SERVICE} = require('./default/services');
+const query = require('./dataQueryHelpers').default;
+const stopTypes = require('./default/stopTypes').default;
 
 describe('Data Creation Helpers', () => {
     test('Creates a Stop id from a Place and Stop location', () => {
@@ -57,7 +57,6 @@ describe('Data Creation Helpers', () => {
 });
 
 describe('Trips with Stops', () => {
-
     const route = helper.createRoute(places.LOS_ANGELES, places.RENO,
         {routeType: routeTypes.INTER_REGIONAL_RAIL_SERVICE});
     const trip = helper.createTrip(route, helper.TO_FROM_DIRECTION, DEFAULT_SERVICE);

@@ -8,16 +8,16 @@
  *
  * THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import configureStore from 'redux-mock-store';
-import {actions, actionCreators} from 'store/reducers/geojson/openStreetMaps';
-import thunk from 'redux-thunk';
-import {expectTask, testState} from 'helpers/jestHelpers';
-import {removeDuplicateObjectsByProp} from 'helpers/functions';
-import R from 'ramda'
+const configureStore = require('redux-mock-store');
+const {actions, actionCreators} = require('store/reducers/geojson/openStreetMaps');
+const thunk = require('redux-thunk');
+const {expectTask, testState} = require('helpers/jestHelpers');
+const {removeDuplicateObjectsByProp} = require('helpers/functions');
+const R = require('ramda');
 const middlewares = [thunk];
 const mockStore = configureStore(middlewares);
-const state = testState()
-jest.mock('query-overpass')
+const state = testState();
+jest.mock('query-overpass');
 
 describe('openStreetMaps', () => {
     test('fetchTransit', async () => {
@@ -27,7 +27,7 @@ describe('openStreetMaps', () => {
             { type: actions.FETCH_TRANSIT_DATA },
             {
                 type: actions.FETCH_TRANSIT_SUCCESS,
-                body: R.over(                         // remove features with the same id
+                body: R.over( // remove features with the same id
                     R.lens(R.prop('features'), R.assoc('features')),
                     removeDuplicateObjectsByProp('id'))(require('queryOverpassResponse').LA_SAMPLE)
             }
@@ -39,6 +39,6 @@ describe('openStreetMaps', () => {
                 {cellSize: store.getState().settings.overpass.cellSize, testBounds: bounds},
                 bounds
             )).map(() => store.getActions())
-        ).resolves.toEqual(expectedActions)
-    })
+        ).resolves.toEqual(expectedActions);
+    });
 });

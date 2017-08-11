@@ -8,36 +8,36 @@
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import {fromJS, Iterable} from 'immutable';
-import R from 'ramda';
-import Rm from 'ramda-maybe';
-import prettyFormat from 'pretty-format'
-import Task from 'data.task'
-import stackTrace from 'stack-trace'
-import {Maybe, Either} from 'ramda-fantasy'
+const {fromJS, Iterable} = require('immutable');
+const R = require('ramda');
+const Rm = require('ramda-maybe');
+const prettyFormat = require('pretty-format');
+const Task = require('data.task');
+const stackTrace = require('stack-trace');
+const {Maybe, Either} = require('ramda-fantasy');
 
-/***
+/**
  * Return an empty string if the given entity is falsy
  * @param entity
  * orEmpty:: a -> a
  *        :: a -> String
  */
-export const orEmpty = entity => entity || '';
+const orEmpty = module.exports.orEmpty = entity => entity || '';
 
-/***
+/**
  * Removed null or undefined items from an iterable
  * @param [a] items Items that might have falsy values to remove
  * compact:: [a] -> [a]
  * compact:: {k,v} -> {k,v}
  */
-export const compact = R.reject(R.isNil);
+const compact = module.exports.compact = R.reject(R.isNil);
 
-/***
+/**
  * Remove empty strings
  * @param [a] items Items that might have empty or null strings to remove
  * compactEmpty:: [a] -> [a]
  */
-export const compactEmpty = R.reject(R.either(R.isNil, R.isEmpty));
+const compactEmpty = module.exports.compactEmpty = R.reject(R.either(R.isNil, R.isEmpty));
 
 /**
  * Convert an empty value to null
@@ -45,56 +45,56 @@ export const compactEmpty = R.reject(R.either(R.isNil, R.isEmpty));
  * emptyToNull:: a -> a
  *            :: a -> null
  */
-export const emptyToNull = R.when(R.isEmpty, ()=>null);
+const emptyToNull = module.exports.emptyToNull = R.when(R.isEmpty, ()=>null);
 
-/***
+/**
  * Join elements, first remove null items and empty strings. If the result is empty make it null
  * @param connector Join connector string
  * @param [a] items Items to join that might be removed
  * compactEmpty:: [a] -> String
  *             :: [a] -> null
  */
-export const compactJoin = R.compose(
+const compactJoin = module.exports.compactJoin = R.compose(
     (connector, items) => R.pipe(compactEmpty, R.join(connector), emptyToNull)(items)
 );
 
-/***
+/**
  * Convert the obj to an Immutable if it is not.
  * @param {a} a An Immutable or anything else
  * toImmutable:: Immutable b = a -> b
  *            :: Immutable b = b -> b
  */
-export const toImmutable = obj => Iterable.isIterable(obj) ? obj : fromJS(obj);
+const toImmutable = module.exports.toImmutable = obj => Iterable.isIterable(obj) ? obj : fromJS(obj);
 
-/***
+/**
  * Converts an Immutable to javascript if it's an Immutable
  * @param {Map|Object} obj
  * toJS:: Immutable a = a -> b
  */
-export const toJS = obj => obj.toJS ? obj.toJS() : obj;
+const toJS = module.exports.toJS = obj => obj.toJS ? obj.toJS() : obj;
 
-/***
+/**
  * Convert the Immutable to plain JS if it is not
  * @param obj
  * fromImmutable:: Immutable b = b -> a
  *              :: a-> a
  */
-export const fromImmutable = obj =>
+const fromImmutable = module.exports.fromImmutable = obj =>
     R.ifElse(
         Iterable.isIterable,
         toJS,
         R.when(Array.isArray, R.map(fromImmutable))
     )(obj);
 
-/***
+/**
  * Creates a partial mapping function that expects an iterable and maps each item of the iterable to the given property
  * @param {String} prop The prop of each object to map
  * @param {[Object]} items The objects to map
  * mapProp :: String -> [{k, v}] -> [a]
  */
-export const mapProp = R.curry((prop, objs) => R.pipe(R.prop, R.map)(prop)(objs));
+const mapProp = module.exports.mapProp = R.curry((prop, objs) => R.pipe(R.prop, R.map)(prop)(objs));
 
-/***
+/**
  * Creates a partial function that maps an array of objects to an object keyed by the given prop of the object's
  * of the array, valued by the item. If the item is not an array, it leaves it alone, assuming it is already indexed
  * @param {String} prop The prop of each object to use as the key
@@ -102,25 +102,25 @@ export const mapProp = R.curry((prop, objs) => R.pipe(R.prop, R.map)(prop)(objs)
  * mapPropValueAsIndex:: String -> [{k, v}] -> {j, {k, v}}
  * mapPropValueAsIndex:: String -> {k, v} -> {k, v}
  */
-export const mapPropValueAsIndex = R.curry((prop, obj) =>
+const mapPropValueAsIndex = module.exports.mapPropValueAsIndex = R.curry((prop, obj) =>
     R.when(
         Array.isArray,
         R.pipe(R.prop, R.indexBy)(prop)
     )(obj));
 
-/***
+/**
  * Merges a list of objects by the given key and returns the values, meaning all items that are
  * duplicate prop key value are removed from the final list
  * removeDuplicateObjectsByProp:: String -> [{k, v}] -> [{k, v}]
  */
-export const removeDuplicateObjectsByProp = R.curry((prop, list) =>
+const removeDuplicateObjectsByProp = module.exports.removeDuplicateObjectsByProp = R.curry((prop, list) =>
     R.pipe(
         mapPropValueAsIndex(prop),
         R.values
     )(list)
 );
 
-/***
+/**
  * Creates a partial function that expects a property of an object which in turn returns a function that
  * expects a listOrObj
  * If listOrObj is not already object, the function converts an array to an Immutable keyed by each array items id.
@@ -129,26 +129,26 @@ export const removeDuplicateObjectsByProp = R.curry((prop, list) =>
  * mapPropValueAsIndex:: Immutable m = {j, {k, v}} -> m {j, {k, v}}
  *                    :: Immutable m = [{k, v}] -> m {j, {k, v}}
  */
-export const toImmutableKeyedByProp = R.curry((prop, objs) =>
+const toImmutableKeyedByProp = module.exports.toImmutableKeyedByProp = R.curry((prop, objs) =>
     R.pipe(
         R.when(Array.isArray, mapPropValueAsIndex(prop)),
         toImmutable
     )(objs)
 );
 
-/***
+/**
  * Returns the id of the given value if it is an object or the value itself if it is not.
  * @param {Object|String|Number} objOrId
  * @param {String|Number}
  * idOrIdFromObj:: a -> a
  *              :: {k, v} -> a
  */
-export const idOrIdFromObj = R.when(
+const idOrIdFromObj = module.exports.idOrIdFromObj = R.when(
     objOrId => (typeof objOrId === 'object') && objOrId !== null,
     R.prop('id')
 );
 
-/***
+/**
  * Reduces with the current and next value of a list. The reducer is called n-1 times for a list of n length
  * @param {callWithNext} fn reducer
  * @param {Object} head first item of the list
@@ -156,7 +156,7 @@ export const idOrIdFromObj = R.when(
  * @param {Object} previous initial reduction value
  * @return {Object} the reduction
  */
-export const reduceWithNext = (fn, [head, next, ...tail], previous) =>
+const reduceWithNext = module.exports.reduceWithNext = (fn, [head, next, ...tail], previous) =>
     next === undefined ?
         previous :
         reduceWithNext(fn, [next, ...tail], fn(previous, head, next));
@@ -169,24 +169,24 @@ export const reduceWithNext = (fn, [head, next, ...tail], previous) =>
  * @returns {Object} the next reduction
  */
 
-/***
+/**
  * Deep merge values that are objects but not arrays
  * based on https://github.com/ramda/ramda/pull/1088
  * @type {Immutable.Map<string, V>|__Cursor.Cursor|List<T>|Map<K, V>|*}
  * mergeDeep:: (<k, v>, <k, v>) -> <k, v>
  */
-export const mergeDeep = R.mergeWith((l, r) =>
+const mergeDeep = module.exports.mergeDeep = R.mergeWith((l, r) =>
     (l.concat || r.concat) || !(R.is(Object, l) && R.is(Object, r)) ?
         r :
         mergeDeep(l, r) // tail recursive
-)
+);
 
-/***
+/**
  * http://stackoverflow.com/questions/40011725/point-free-style-capitalize-function-with-ramda
  * Capitalize the first letter
  * capitalize:: String -> String
  */
-export const capitalize = obj => R.compose(
+const capitalize = module.exports.capitalize = obj => R.compose(
     R.join(''),
     R.juxt([R.compose(R.toUpper, R.head), R.tail])
 )(obj);
@@ -196,25 +196,25 @@ export const capitalize = obj => R.compose(
  * [{k: v}] → {k: v}
  * mergeAllWithKey:: (String → a → a → a) → [{a}] → {a}
  */
-export const mergeAllWithKey = R.curry((fn, [head, ...rest]) =>
-    R.mergeWithKey(                     // call mergeWithKey on two objects at a time
+const mergeAllWithKey = module.exports.mergeAllWithKey = R.curry((fn, [head, ...rest]) =>
+    R.mergeWithKey( // call mergeWithKey on two objects at a time
         fn,
-        head || {},                     // first object is always the head
-        R.ifElse(                       // second object is the merged object of the recursion
-            R.isEmpty,                  // if no rest
-            ()=>R.empty({}),            // end case empty object
-            mergeAllWithKey(fn),        // else recurse with the rest
+        head || {}, // first object is always the head
+        R.ifElse( // second object is the merged object of the recursion
+            R.isEmpty, // if no rest
+            () => R.empty({}), // end case empty object
+            mergeAllWithKey(fn), // else recurse with the rest
         )(rest)
     )
-)
+);
 
-/***
+/**
  * Get a required path or return a helpful Error if it fails
  * @param {String} path A lensPath, e.g. ['a', 'b'] or ['a', 2, 'b']
  * @param {Object} obj The object to inspect
  * reqPath:: String -> {k: v} → Either
  */
-export const reqPath = R.curry((path, obj) => {
+const reqPath = module.exports.reqPath = R.curry((path, obj) => {
     return R.compose(
             R.ifElse(
                 Maybe.isNothing,
@@ -231,23 +231,23 @@ export const reqPath = R.curry((path, obj) => {
                 }),
                 res => Either.Right(res.value)
             ),
-            Rm.path(path))(obj)
+            Rm.path(path))(obj);
     }
-)
+);
 
-/***
+/**
  * Use immutable to make a deep copy of an object
  * copy:: a -> a
  */
-export const copy = R.compose(toJS, toImmutable);
+const copy = module.exports.copy = R.compose(toJS, toImmutable);
 
-/***
+/**
  * Wraps a Task in a Promise.
  * @param {Task} task
  * @param {boolean} expectReject Set true for testing when a rejection is expected
  * @return {Promise}
  */
-export const taskToPromise = (task, expectReject = false) => {
+const taskToPromise = module.exports.taskToPromise = (task, expectReject = false) => {
     if (!task.fork) {
         throw new TypeError(`Expected a Task, got ${typeof task}`);
     }
@@ -255,7 +255,7 @@ export const taskToPromise = (task, expectReject = false) => {
         task.fork(
             reject => {
                 if (!expectReject) {
-                    console.log('Unhandled Promise', prettyFormat(reject))
+                    console.log('Unhandled Promise', prettyFormat(reject));
                     if (reject && reject.stack) {
                         console.log(stackTrace.parse(reject));
                     }
@@ -267,27 +267,27 @@ export const taskToPromise = (task, expectReject = false) => {
     );
 };
 
-/***
+/**
  * Wraps a Promise in a Task
  * @param {Promise} promise
  * @param {boolean} expectReject default false. Set true for testing to avoid logging rejects
  */
-export const promiseToTask = (promise, expectReject = false) => {
+const promiseToTask = module.exports.promiseToTask = (promise, expectReject = false) => {
     if (!promise.then) {
         throw new TypeError(`Expected a Promise, got ${typeof promise}`);
     }
     return new Task((rej, res) => promise.then(res).catch(reject => {
         if (!expectReject) {
-            console.warn('Unhandled Promise', prettyFormat(reject))
-            console.warn(reject.stack)
+            console.warn('Unhandled Promise', prettyFormat(reject));
+            console.warn(reject.stack);
         }
         return rej(reject);
-    }))
+    }));
 };
 
-/***
+/**
  * From the cookbook: https://github.com/ramda/ramda/wiki/Cookbook#map-keys-of-an-object
  * mapKeys :: (String -> String) -> Object -> Object
 */
-export const mapKeys = R.curry((fn, obj) =>
+const mapKeys = module.exports.mapKeys = R.curry((fn, obj) =>
     R.fromPairs(R.map(R.adjust(fn, 0), R.toPairs(obj))));

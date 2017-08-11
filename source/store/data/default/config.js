@@ -9,12 +9,12 @@
  * THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import privateConfig from 'config.json'
-import * as routeTypes from './routeTypes';
-import {DEFAULT_SERVICE, WEEKEND_SERVICE} from './services';
-import {mergeDeep} from 'helpers/functions'
+const privateConfig = require('config.json');
+const routeTypes = require('./routeTypes').default;
+const {DEFAULT_SERVICE, WEEKEND_SERVICE} = require('./services');
+const {mergeDeep} = require('helpers/functions');
 
-export default mergeDeep(privateConfig, {regions: [{
+module.exports.default = mergeDeep(privateConfig, {regions: [{
     gtfs: {
         calendar: [
             DEFAULT_SERVICE,
@@ -38,6 +38,6 @@ export default mergeDeep(privateConfig, {regions: [{
             latitude: 0,
             longitude: 0,
             zoom: 1
-        },
+        }
     }
 }]});

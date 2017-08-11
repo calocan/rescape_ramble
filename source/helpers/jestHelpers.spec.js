@@ -9,13 +9,15 @@
  * THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import {expectTask, testState} from './jestHelpers'
-import Task from 'data.task'
+const {expectTask, testState} = require('./jestHelpers');
+const Task = require('data.task');
 
 describe('jestHelpers', () => {
     test('expectTask', () => {
         expectTask(new Task((reject, resolve) => resolve('apple'))).resolves.toEqual('apple');
-        expectTask(new Task((reject, resolve) => { throw new Error('snapple') })).rejects.toEqual(new Error('snapple'));
+        expectTask(new Task((reject, resolve) => {
+ throw new Error('snapple');
+})).rejects.toEqual(new Error('snapple'));
     });
 
     test('testState', () =>

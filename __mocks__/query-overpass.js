@@ -9,9 +9,8 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import {PARIS_SAMPLE, LA_SAMPLE} from './queryOverpassResponse';
-import {Map, fromJS} from 'immutable';
-import {PARIS_BOUNDS, LA_BOUNDS} from 'store/async/queryOverpass.sample'
+const {Map, fromJS} = require('immutable');
+const {PARIS_BOUNDS, LA_BOUNDS, PARIS_SAMPLE, LA_SAMPLE} = require('store/async/queryOverpass.sample')
 
 // Use Map for equality matching of keys
 const responses = Map([
@@ -20,7 +19,7 @@ const responses = Map([
 ]);
 const getResponse = (bounds) => responses.get(fromJS(bounds));
 
-/***
+/**
  * Mocks the query_overpass method,
  * accepting an extra options.bounds argument to save parsing the bounds from the query
  * @param query
@@ -29,7 +28,7 @@ const getResponse = (bounds) => responses.get(fromJS(bounds));
  * @param options.testBounds Required for testing
  * @return {Promise}
  */
-export default (query, cb, options) => {
+module.exports.default = (query, cb, options) => {
     const response = getResponse(options.testBounds);
     process.nextTick(
         () => response ?

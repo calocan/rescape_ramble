@@ -8,11 +8,10 @@
  *
  * THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import R from 'ramda'
-import {actions, actionCreators} from './markerActions'
+const R = require('ramda');
+const {actions, actionCreators} = require('./markerActions');
 
-export default (state = {}, action = {}) => {
-
+module.exports.default = (state = {}, action = {}) => {
     const sortById = R.sortBy(R.prop('id'));
     const merge = R.merge(state);
     switch (action.type) {
@@ -30,6 +29,6 @@ export default (state = {}, action = {}) => {
             // Merge the returned geojson into the state
             return merge({markers: R.map(R.prop('doc'), sortById(action.body.rows))});
         default:
-            return state
+            return state;
     }
 };

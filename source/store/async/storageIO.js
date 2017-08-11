@@ -8,11 +8,11 @@
  *
  * THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import R from 'ramda'
-import Task from 'data.task'
-import {promiseToTask} from 'helpers/functions';
+const R = require('ramda');
+const Task = require('data.task');
+const {promiseToTask} = require('helpers/functions');
 
-/****
+/** *
  * Curryable function returning a Task to seek data from a PouchDb with a given id.
  * If the fetch does not match a result the fetchTask is called
  * and the resultant data is inserted into the db with the given id
@@ -20,17 +20,12 @@ import {promiseToTask} from 'helpers/functions';
  * @param {PouchDb} db The PouchDb to fetch from
  * @param {String} id The id to fetch
  */
-export const retrieveOrFetch = R.curry((fetchTask, db, id) => {
+module.exports.retrieveOrFetch = R.curry((fetchTask, db, id) => {
     return new Task((reject, response) => {
-        db.get(id).then(doc => response(doc)).catch(error => {
+        db.get(id).then(doc => response(doc)).catch(error =>
             // Make sure error is not found before sending empty response
-            if (error.status === 404) {
-                return response()
-            }
-            else {
-                reject(error)
-            }
-        })
+            error.status === 404 ? response() : reject()
+        );
     }).chain(response => {
         // If no response chain fetchTask and then store its result at the given in,
         // otherwise just return the doc
@@ -40,7 +35,7 @@ export const retrieveOrFetch = R.curry((fetchTask, db, id) => {
                     result => promiseToTask(db.put(R.merge(result, {_id: id})))
                 ),
                 doc => Task.of(doc)
-            )(response)
+            )(response);
         }
-    )
+    );
 });

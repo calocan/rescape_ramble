@@ -9,26 +9,27 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-/***
+/**
  * Creates default TripPair objects
  */
 
-import stops, * as w from './stops'
-import routes from './routes';
-import {createTripWithStopTimesPair, orderStops, stopTimeGenerator} from '../dataCreationHelpers';
-import {stopResolver, routeResolver} from '../dataQueryHelpers';
-import * as places from './places'
-import * as regions from './regions'
-import {DEFAULT_SERVICE} from '../default/services'
+const stops = require('./stops').default;
+const w = require('./stops').default;
+const routes = require('./routes').default;
+const {createTripWithStopTimesPair, orderStops, stopTimeGenerator} = require('../dataCreationHelpers');
+const {stopResolver, routeResolver} = require('../dataQueryHelpers');
+const places = require('./places').default;
+const regions = require('./regions').default;
+const {DEFAULT_SERVICE} = require('../default/services');
 
 const resolveStop = stopResolver(stops);
 const resolveRoute = routeResolver(routes);
 
 
-/***
+/**
  * Creates a TripPair and then augments each trip with the StopTimes
  */
-export default [
+module.exports.default = [
     ...createTripWithStopTimesPair(
         resolveRoute(places.SAN_FRANCISCO, places.RENO, regions.NORTH_BAY),
         DEFAULT_SERVICE,

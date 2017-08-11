@@ -8,11 +8,11 @@
  *
  * THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import makeStore from './store'
-import R from 'ramda'
-import createInitialState from 'store/data/initialState'
-import testConfig from 'store/data/test/config';
-import {setState} from 'store/reducers/fullStates'
+const makeStore = require('./store').default;
+const R = require('ramda');
+const createInitialState = require('store/data/initialState').default;
+const testConfig = require('store/data/test/config').default;
+const {setState} = require('store/reducers/fullStates');
 
 describe('store', () => {
     test('makeStore', () => {
@@ -21,8 +21,8 @@ describe('store', () => {
         // Check for our expected state keys
         expect(R.map(v => ({}), store.getState())).toEqual(
             { browser: {}, regions: {}, routing: {}, settings: {} }
-        )
-    })
+        );
+    });
 
     test('setState', () => {
         const initialState = createInitialState(testConfig);
@@ -31,6 +31,6 @@ describe('store', () => {
         // Check for our expected state keys
         expect(R.map(v => ({}), store.getState())).toEqual(
             { browser: {}, regions: {}, routing: {}, settings: {} }
-        )
-    })
-})
+        );
+    });
+});

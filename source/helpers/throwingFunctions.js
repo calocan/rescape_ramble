@@ -8,16 +8,16 @@
  *
  * THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import {reqPath as _reqPath} from './functions'
-import {Either} from 'ramda-fantasy';
-import R from 'ramda'
-import prettyFormat from 'pretty-format'
+const {reqPath} = require('./functions');
+const {Either} = require('ramda-fantasy');
+const R = require('ramda');
+const prettyFormat = require('pretty-format');
 
-/***
+/**
  * Calls functions.reqPath and throws if the reqPath does not resolve to a non-nil
  * reqPath:: string -> obj -> a or throws
  */
-export const reqPath = R.curry((path, obj) =>
+module.exports.reqPath = R.curry((path, obj) =>
     R.compose(
         R.ifElse(
             Either.isLeft,
@@ -25,12 +25,13 @@ export const reqPath = R.curry((path, obj) =>
                 throw new Error(
                     [either.value.resolved.length ?
                         `Only found non-nil path up to ${either.value.resolved.join('.')}` :
-                        `Found no non-nil value of path`,
+                        'Found no non-nil value of path',
                     `of ${path.join('.')} for obj ${prettyFormat(obj)}`
                     ].join(' ')
-            )},
+            );
+},
             either => either.value,
         ),
-        _reqPath(path)
+        reqPath(path)
     )(obj)
 );

@@ -9,21 +9,21 @@
  * THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import React from 'react';
-import {DraggablePointsOverlay, SVGOverlay} from 'react-map-gl';
-import autobind from 'autobind-decorator';
-import {resolveSvgJsx} from 'helpers/svgHelpers';
-import {LineLayer} from 'deck.gl';
-import PropTypes from 'prop-types';
+const React = require('react');
+const {DraggablePointsOverlay, SVGOverlay} = require('react-map-gl');
+const autobind = require('autobind-decorator');
+const {resolveSvgJsx} = require('helpers/svgHelpers');
+const {LineLayer} = require('deck.gl');
+const PropTypes = require('prop-types');
+const R = require('ramda');
 const e = React.createElement;
 
 class MapLines extends React.Component {
-
     _redrawSVGOverlay(opt) {
         if (!this.props.geojson || !this.props.geojson.features) {
             return null;
         }
-        return resolveSvgJsx(opt, this.props.geojson.features)
+        return resolveSvgJsx(opt, this.props.geojson.features);
     }
 
     render() {
@@ -35,12 +35,11 @@ class MapLines extends React.Component {
             strokeWidth={5}
         />
         */
-        return e(SVGOverlay, {
+        return e(SVGOverlay, R.merge(this.props.viewport, {
             className: 'map-lines',
             key: 'svg-overlay',
-            redraw: this._redrawSVGOverlay.bind(this),
-            ...this.props.viewport
-        })
+            redraw: this._redrawSVGOverlay.bind(this)
+        }));
     }
 }
 
@@ -54,6 +53,6 @@ const {
 
 MapLines.propTypes = {
     viewport: object.isRequired,
-    geojson: object.isRequired,
+    geojson: object.isRequired
 };
-export default MapLines;
+module.exports.default = MapLines;

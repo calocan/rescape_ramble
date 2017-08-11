@@ -9,16 +9,15 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import configureMockStore from 'redux-mock-store'
-import thunk from 'redux-thunk'
-import {SET_STATE, FETCH_FULL_STATE_REQUEST, FETCH_FULL_STATE_SUCCESS, setState, fetchFullState} from './fullStates'
-import nock from 'nock'
+const configureMockStore = require('redux-mock-store').default;
+const thunk = require('redux-thunk').default;
+const {SET_STATE, FETCH_FULL_STATE_REQUEST, FETCH_FULL_STATE_SUCCESS, setState, fetchFullState} = require('./fullStates');
+const nock = require('nock');
 
-const middlewares = [ thunk ]
-const mockStore = configureMockStore(middlewares)
+const middlewares = [ thunk ];
+const mockStore = configureMockStore(middlewares);
 
 describe('full state actionTypes', () => {
-
     it('SET_STATE sets the full state', () => {
         const state = {
             settings: {
@@ -26,7 +25,7 @@ describe('full state actionTypes', () => {
             },
             map: {
                 bar: 1
-            },
+            }
         };
         expect(setState(state)).toEqual({
             type: SET_STATE,
@@ -35,8 +34,7 @@ describe('full state actionTypes', () => {
     });
 
     it('creates FETCH_FULL_STATE_SUCCESS when fetching full state has been done', () => {
-
-        const fakeHost = 'http://cloudycloud.co'
+        const fakeHost = 'http://cloudycloud.co';
         // Mock fetch to always return the same thing
         nock(fakeHost)
             .get('/settings')
@@ -59,7 +57,7 @@ describe('full state actionTypes', () => {
                 }
             }
         ];
-        const store = mockStore({ settings: {} })
+        const store = mockStore({ settings: {} });
 
         // TODO redo
         /*
@@ -68,6 +66,6 @@ describe('full state actionTypes', () => {
                 expect(store.getActions()).toEqual(expectedActions)
             });
         */
-        nock.cleanAll()
-    })
+        nock.cleanAll();
+    });
 });

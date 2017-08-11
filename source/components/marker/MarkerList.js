@@ -9,24 +9,22 @@
  * THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import React from 'react';
-import autobind from 'autobind-decorator';
-import {reqPath} from 'helpers/throwingFunctions';
-import {AddMarkerItem, MarkerItem} from './MarkerItem';
-import R from 'ramda';
-import styles from './MarkerList.style.js';
-import Geocode from 'components/mapbox/Geocode';
-import ScrollArea from 'react-scrollbar';
-import PropTypes from 'prop-types';
+const React = require('react');
+const {reqPath} = require('helpers/throwingFunctions');
+const {AddMarkerItem, MarkerItem} = require('./MarkerItem');
+const R = require('ramda');
+const styles = require('./MarkerList.style.js').default;
+const Geocode = require('components/mapbox/Geocode').default;
+const ScrollArea = require('react-scrollbar');
+const PropTypes = require('prop-types');
 const e = React.createElement;
 
 class MarkerList extends React.Component {
-
     constructor(props) {
-        super(props)
+        super(props);
         this.state = {
             locationFeature: {}
-        }
+        };
     }
     componentDidUpdate() {
 
@@ -34,7 +32,7 @@ class MarkerList extends React.Component {
 
     componentWillReceiveProps(nextProps) {
         const markersLens = R.lensPath(['geojson', 'markers']);
-        const dbLens = R.lensProp('db')
+        const dbLens = R.lensProp('db');
         // Features have changed
         if (R.view(markersLens, this.props) !== R.view(markersLens, nextProps)) {
             this.setState({markers: nextProps.geojson.markers});
@@ -104,7 +102,7 @@ class MarkerList extends React.Component {
                     contentClassName: 'content',
                     contentStyle: {height: '100%'},
                     horizontal: false,
-                    style: styles.scrollContainer,
+                    style: styles.scrollContainer
                 },
                     e('div', {
                         className: 'marker-items-container',
@@ -132,6 +130,6 @@ MarkerList.propTypes = {
     id: string.isRequired
 };
 
-export default MarkerList;
+module.exports.default = MarkerList;
 
 

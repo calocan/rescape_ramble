@@ -8,44 +8,33 @@
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import Mapbox from 'components/mapbox/MapboxContainer';
-import MarkerList from 'components/marker/MarkerListContainer';
-import styles from './Region.style.js';
-import R from 'ramda';
-import React from 'react';
-import {reqPath} from 'helpers/functions'
-import PropTypes from 'prop-types'
+const Mapbox = require('components/mapbox/MapboxContainer').default;
+const MarkerList = require('components/marker/MarkerListContainer').default;
+const styles = require('./Region.style.js').default;
+const R = require('ramda');
+const React = require('react');
+const {reqPath} = require('helpers/functions');
+const PropTypes = require('prop-types');
 const e = React.createElement;
 
-/***
+/**
  * The View for a Region, such as California. Theoretically we could display multiple regions at once
  * if we had more than one, or we could have a zoomed in region of California like the Bay Area.
  */
 class Region extends React.Component {
-
     componentWillReceiveProps(nextProps) {
-        const getRegionId = reqPath(['region', 'id'])
+        const getRegionId = reqPath(['region', 'id']);
         if (
             !(R.equals(...R.map(getRegionId, [this.props, nextProps]))) || // Region changed
             !reqPath(['region', 'geojson', 'osm', 'requested'], nextProps) // or geojson not yet requested
         ) {
-            this.props.onRegionIsChanged(nextProps.settings.overpass, nextProps.region.geospatial.bounds).fork(
-                error => this.props.fetchTransitFailure(error),
-                osm => {
-                    // osm was set in store by action
-                }
-            );
+            this.props.onRegionIsChanged(nextProps.settings.overpass, nextProps.region.geospatial.bounds);
         }
         if (
             !(R.equals(...R.map(getRegionId, [this.props, nextProps]))) || // Region changed
             !reqPath(['region', 'geojson', 'markers', 'requested'], nextProps) // or markers not yet requested
         ) {
-            this.props.fetchMarkers({}, nextProps.region.id).fork(
-                error => this.props.fetchMarkersFailure(error),
-                markers => {
-                    // markers was set in store by action
-                }
-            );
+            this.props.fetchMarkersData({}, nextProps.region.id);
         }
     }
 
@@ -54,16 +43,16 @@ class Region extends React.Component {
         const multiplyByPercent = R.compose((percent, num) => num * parseFloat(percent) / 100.0);
         const styleMultiplier = prop => R.apply(multiplyByPercent, R.map(R.prop(prop), [styles.mapboxContainer, this.props.style]));
         return e('div', {
-            className: 'region',
-            style: R.merge(this.props.style, styles.container)
-        },
+                className: 'region',
+                style: R.merge(this.props.style, styles.container)
+            },
             /* We additionally give Mapbox the container width and height so the map can track changes to these
              We have to apply the width and height fractions of this container to them.
-            */
+             */
             e('div', {
-                className: 'mapboxContainer',
-                style: styles.mapboxContainer,
-            },
+                    className: 'mapboxContainer',
+                    style: styles.mapboxContainer
+                },
                 e(Mapbox, {
                     region: this.props.region,
                     style: {
@@ -81,22 +70,25 @@ class Region extends React.Component {
                     accessToken: this.props.accessToken
                 })
             )
-        )
+        );
     }
 }
 
-/***
+/**
  * Expect the region
  * @type {{region: *}}
-*/
+ */
 const {
     string, object, number, func
 } = PropTypes;
+
 Region.propTypes = {
     settings: object.isRequired,
     region: object.isRequired,
     style: object.isRequired,
-    accessToken: string.isRequired
+    accessToken: string.isRequired,
+    onRegionIsChanged: func.isRequired,
+    fetchMarkersData: func.isRequired
 };
 
-export default Region;
+module.exports.default = Region;

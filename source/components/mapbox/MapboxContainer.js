@@ -9,22 +9,22 @@
  * THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import {connect} from 'react-redux';
-import {bindActionCreators} from 'redux';
-import {actionCreators} from 'store/reducers/geojson/geojsons';
-import {onChangeViewport} from 'redux-map-gl';
-import Mapbox from './Mapbox';
-import R from 'ramda';
-import {toJS} from 'helpers/functions';
+const {connect} = require('react-redux');
+const {bindActionCreators} = require('redux');
+const {actionCreators} = require('store/reducers/geojson/geojsons');
+const {onChangeViewport} = require('redux-map-gl');
+const Mapbox = require('./Mapbox').default;
+const R = require('ramda');
+const {toJS} = require('helpers/functions');
 const {hoverMarker, selectMarker} = actionCreators;
 
-/***
+/**
  * Raises viewport, mapboxApiAccessToken, geojson, and gtfs to top level
  * @param state
  * @param {Region} region The Region object
  * @param {Object} style A style object with the width and height
  */
-export const mapStateToProps = (state, {region, style}) => {
+const mapStateToProps = module.exports.mapStateToProps = (state, {region, style}) => {
     const mapbox = region.mapbox;
     return {
             region,
@@ -35,12 +35,12 @@ export const mapStateToProps = (state, {region, style}) => {
             mapboxApiAccessToken: mapbox.mapboxApiAccessToken,
             iconAtlas: mapbox.iconAtlas,
             // TODO showCluster should come in as bool
-            showCluster: mapbox.showCluster === 'true',
+            showCluster: mapbox.showCluster === 'true'
     };
-}
+};
 
 
-export const mapDispatchToProps = (dispatch, ownProps) => {
+const mapDispatchToProps = module.exports.mapDispatchToProps = (dispatch, ownProps) => {
     return bindActionCreators({
         onChangeViewport,
         hoverMarker,
@@ -48,4 +48,4 @@ export const mapDispatchToProps = (dispatch, ownProps) => {
     }, dispatch);
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Mapbox);
+module.exports.default = connect(mapStateToProps, mapDispatchToProps)(Mapbox);

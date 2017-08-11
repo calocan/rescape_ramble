@@ -1,5 +1,5 @@
-import {SET_CURRENT, setState, setCurrent} from './settings';
-import {SET_STATE} from 'store/reducers/fullStates';
+const {SET_CURRENT, setState, setCurrent} = require('./settings');
+const {SET_STATE} = require('store/reducers/fullStates');
 
 describe('settings actionTypes', () => {
     it('should create an action to set the state', () =>{
@@ -12,11 +12,11 @@ describe('settings actionTypes', () => {
             state
         });
     });
-    it('should create an action to set foo', () => {
-        const value = 1;
-        expect(setCurrent(value)).toEqual({
+    it('should create an action to set current', () => {
+        const regionKey = 'california';
+        expect(setCurrent(regionKey)).toEqual({
             type: SET_CURRENT,
-            value
+            regionKey
         });
-    })
+    });
 });

@@ -1,12 +1,12 @@
-import {mockTimeSource} from '@cycle/time/most';
-import R from 'ramda'
+const {mockTimeSource} = require('@cycle/time/most');
+const R = require('ramda');
 
 // Modified from
 // https://github.com/cyclejs-community/redux-cycles/blob/master/example/cycle/test/helpers.js
 
-/***
+/**
  *
- * @param sources Diagram Mapping of the Cycle sources to assert in a form like this:
+ * @param {Object} sources Diagram Mapping of the Cycle sources to assert in a form like this:
  * {
         ACTION: { 'ab|': actionSource },
         HTTP:   { '--|': httpSource }
@@ -22,7 +22,7 @@ import R from 'ramda'
         () => ({
           r: xs.of({ body: { items: ['foo'] } })
         })
- * @param sinks A Diagram Mapping of expected Sinks in a form like:
+ * @param {Object} sinks A Diagram Mapping of expected Sinks in a form like:
  * {
  *  HTTP:   { 'xy|': httpSink }
  * }
@@ -40,13 +40,14 @@ import R from 'ramda'
   };
     where the keys match those in the diagram string, and the values are the expected doSync value
     to be produced by corresponding source
- * @param main The Cycle main function, which is called with sources and a mock timeSource
- * @param done Jest done() function to call after the assertion
- * @param {Object} Optional timeOpts Supplied to mockTimeSource
+ * @param {Function} main The Cycle main function, which is called with sources and a mock timeSource
+ * @param {Function} done Jest done() function to call after the assertion
+ * @param {Object} [timeOpts] Supplied to mockTimeSource
+ * @returns {undefined}
  */
-export function assertSourcesSinks(sources, sinks, main, done, timeOpts = {}) {
+module.exports.assertSourcesSinks = function assertSourcesSinks(sources, sinks, main, done, timeOpts = {}) {
     // Mock a Time Source
-    const timeSource = mockTimeSource(timeOpts)
+    const timeSource = mockTimeSource(timeOpts);
     const _sources = Object.keys(sources)
     // e.g. sourceKey is 'ACTION' or 'HTTP'
         .reduce((_theSources, sourceKey) => {
@@ -92,13 +93,13 @@ export function assertSourcesSinks(sources, sinks, main, done, timeOpts = {}) {
                 obj = {
                     [sourceKey]:
                         R.map(
-                            value => function() {
-                                return timeSource.diagram(diagramStr, value(...arguments))
-                                    //.tap( i => console.log(`Source: ${sourceKey}`, R.keys(i).join(',')) );
+                            value => function () {
+                                return timeSource.diagram(diagramStr, value(...arguments));
+                                    // .tap( i => console.log(`Source: ${sourceKey}`, R.keys(i).join(',')) );
                             },
                             sourceOpts
                         )
-                }
+                };
             } else {
                 // Else the action call returns an object make an object keyed by the Source key and valued
                 // by the Time Diagram, which itself is called with the Diagram key and key mappings
@@ -108,8 +109,8 @@ export function assertSourcesSinks(sources, sinks, main, done, timeOpts = {}) {
                 //  }
                 obj = {
                     [sourceKey]: timeSource.diagram(diagramStr, sourceOpts)
-                        //.tap( i => console.log(`Source: ${sourceKey}`, R.keys(i).join(',')) )
-                }
+                        // .tap( i => console.log(`Source: ${sourceKey}`, R.keys(i).join(',')) )
+                };
             }
 
             // Reduce each Source object
@@ -119,7 +120,7 @@ export function assertSourcesSinks(sources, sinks, main, done, timeOpts = {}) {
             //  sourceB: sourceOpts1stKey: diagram(sourceASource1stKey1, sourceOptions)
             // }
             return Object.assign(_theSources, obj);
-        }, {})
+        }, {});
 
     // Reduce the sinks into an object in the following format
     // {
@@ -146,7 +147,7 @@ export function assertSourcesSinks(sources, sinks, main, done, timeOpts = {}) {
     Object.keys(sinks)
         .filter(key => key === 'POUCHDB')
         .map(sinkKey => {
-            timeSource.assertEqual(_main[sinkKey], _sinks[sinkKey])
+            timeSource.assertEqual(_main[sinkKey], _sinks[sinkKey]);
         });
 
     // Execute the schedule and ensure no errors
@@ -154,4 +155,4 @@ export function assertSourcesSinks(sources, sinks, main, done, timeOpts = {}) {
         expect(err).toBeFalsy();
         done();
     });
-}
+};

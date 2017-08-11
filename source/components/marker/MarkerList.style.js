@@ -1,4 +1,4 @@
-export default {
+module.exports.default = {
   container: {
     position: 'absolute',
     width: '100%',
@@ -8,25 +8,25 @@ export default {
         position: 'absolute',
         top: '0',
         width: '100%',
-        height: '15px',
+        height: '15px'
     },
   addMarkerContainer: {
     position: 'relative',
     top: '20px',
     width: '100%',
-    height: '100px',
+    height: '100px'
   },
   geocoderContainer: {
     position: 'relative',
     top: '0',
     width: '100%',
-    height: '100px',
+    height: '100px'
   },
     addItemContainer: {
         position: 'relative',
         top: '100px',
         width: '100%',
-        height: '20px',
+        height: '20px'
     },
   scrollContainer: {
       position: 'relative',
@@ -41,4 +41,4 @@ export default {
     height: '100%',
     overflow: 'scroll'
   }
-}
+};

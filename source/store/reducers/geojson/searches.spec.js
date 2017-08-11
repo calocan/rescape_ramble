@@ -10,8 +10,7 @@
  */
 
 describe('Searches', () => {
-    console.warn('Not implemented')
     test('something', () => {
 
-    })
+    });
 });

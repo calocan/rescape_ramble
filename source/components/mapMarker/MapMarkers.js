@@ -9,12 +9,12 @@
  * THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import {DraggablePointsOverlay, SVGOverlay} from 'react-map-gl';
-import PropTypes from 'prop-types';
-import React from 'react';
-import R from 'ramda';
-import {resolveSvgJsx} from 'helpers/svgHelpers';
-import {updateMarker} from 'store/async/markerIO';
+const {DraggablePointsOverlay, SVGOverlay} = require('react-map-gl');
+const PropTypes = require('prop-types');
+const React = require('react');
+const R = require('ramda');
+const {resolveSvgJsx} = require('helpers/svgHelpers');
+const {updateMarker} = require('store/async/markerIO');
 const e = React.createElement;
 const ENTER_KEY = 13;
 const LIGHT_SETTINGS = {
@@ -27,21 +27,20 @@ const LIGHT_SETTINGS = {
 };
 
 class MapMarkers extends React.Component {
-
     _redrawSVGOverlay(opt) {
         if (!this.props.geojson || !this.props.geojson.features) {
             return null;
         }
-        return resolveSvgJsx(opt, this.props.geojson.features)
+        return resolveSvgJsx(opt, this.props.geojson.features);
     }
 
     markerAdded(value) {
-        this.markerUpdated(value)
+        this.markerUpdated(value);
     }
     markerChanged(event) {
-        this.markerUpdated(event.target.value)
+        this.markerUpdated(event.target.value);
     }
-    /***
+    /**
      * Update or creates a new marker as a geojson Feature and persists it
      * @param {Object} value
      * @param {String} value.name The name of the marker
@@ -52,31 +51,31 @@ class MapMarkers extends React.Component {
         const id = `node/${value.id}`;
         const marker = {
             _id: value.id,
-            'type': 'Feature',
-            'properties': {
+            type: 'Feature',
+            properties: {
                 '@id': id,
-                'name': `${value.name}`,
+                name: `${value.name}`
             },
-            'geometry': {
-                'type': 'Point',
-                'coordinates': value.location,
+            geometry: {
+                type: 'Point',
+                coordinates: value.location
             },
-            'id': id
+            id: id
         };
         this.props.updateMarkers({}, [marker]);
     }
 
     // Show the current markers
     showMarkers() {
-        this.props.fetchMarkers({})
+        this.props.fetchMarkers({});
     }
 
-    /***
+    /**
      * Marker clicked to edit the name
      * @param todo
      */
     markerClicked(marker) {
-        //TODO
+        // TODO
         /*
         const div = document.getElementById('li_' + marker.id);
         const inputEditTodo = document.getElementById('input_' + marker.id);
@@ -85,7 +84,7 @@ class MapMarkers extends React.Component {
         */
     }
 
-    /***
+    /**
      *
      * The input box when editing a marker has blurred, we should save
      * the new marker or delete the marker if the name is empty
@@ -105,7 +104,7 @@ class MapMarkers extends React.Component {
         */
     }
 
-    /***
+    /**
      *
      * If they press enter while editing the name, blur it to trigger save (or delete)
      * @param marker
@@ -122,11 +121,11 @@ class MapMarkers extends React.Component {
     }
 
     render() {
-        return e('SVGOverlay',  R.merge(this.props.viewport, {
+        return e('SVGOverlay', R.merge(this.props.viewport, {
             className: 'map-markers',
             key: 'svg-overlay',
             redraw: this._redrawSVGOverlay.bind(this)
-        }))
+        }));
     }
 }
 
@@ -140,7 +139,7 @@ const {
 
 MapMarkers.propTypes = {
     viewport: object.isRequired,
-    geojson: object.isRequired,
+    geojson: object.isRequired
 };
-export default MapMarkers;
+module.exports.default = MapMarkers;
 

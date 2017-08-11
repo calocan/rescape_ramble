@@ -8,11 +8,11 @@
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import {mapStateToProps} from './CurrentContainer';
-import testConfig from 'store/data/test/config'
-import initialState from 'store/data/initialState'
-import R from 'ramda'
-import makeStore from 'store'
+const {mapStateToProps} = require('./CurrentContainer');
+const testConfig = require('store/data/test/config').default;
+const initialState = require('store/data/initialState').default;
+const R = require('ramda');
+const makeStore = require('store');
 
 describe('CurrentContainer', () => {
     test('mapStateToProps returns regions and current of state.settings', () => {
@@ -25,6 +25,6 @@ describe('CurrentContainer', () => {
             height: 500
         };
 
-        expect(mapStateToProps(store.getState(), ownProps)).toMatchSnapshot()
+        expect(mapStateToProps(store.getState(), ownProps)).toMatchSnapshot();
     });
-})
+});

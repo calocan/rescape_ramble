@@ -9,12 +9,12 @@
  * THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import {getDb, createLocalDb, createRemoteDb, createRemoteUrl, destroy, startSync, stopSync, logSync} from './pouchDbIO'
-import {expectTask, expectTaskRejected} from 'helpers/jestHelpers';
-import {promiseToTask} from 'helpers/functions'
-import * as fs from 'fs';
-import moment from 'moment';
-import Task from 'data.task'
+const {getDb, createLocalDb, createRemoteDb, createRemoteUrl, destroy, startSync, stopSync, logSync} = require('./pouchDbIO');
+const {expectTask, expectTaskRejected} = require('helpers/jestHelpers');
+const {promiseToTask} = require('helpers/functions');
+const fs = require('fs');
+const moment = require('moment');
+const Task = require('data.task');
 const name = 'pouch_db_io_spec';
 const PATH = `${__dirname}/__databases__/`;
 const DB = `${PATH}${name}`;
@@ -36,45 +36,45 @@ describe('pouchDbIO', () => {
         createLocalDb(DB);
         expectTaskRejected(destroy(DB)
             .chain(() => {
-                return promiseToTask(getDb(DB).info(), true)
+                return promiseToTask(getDb(DB).info(), true);
             })
-        ).rejects.toMatch(Error)
+        ).rejects.toMatch(Error);
     });
 
     test('Create a remote pouchdDb', () => {
         expectTask(createRemoteDb(REMOTE_DB_URL)
             .chain(db => promiseToTask(db.info()))
             .map(response => {
-                return response.host
+                return response.host;
             })
         ).resolves.toBe(REMOTE_DB_URL);
-    })
+    });
 
     test('Destroy a remote pouchdDb', () => {
-        let remoteDb
+        let remoteDb;
         expectTaskRejected(createRemoteDb(REMOTE_DB_URL)
             .chain(db => {
                 remoteDb = db;
-                return destroy(REMOTE_DB_URL)
+                return destroy(REMOTE_DB_URL);
             })
             // The remoted database should no longer exist
             .chain(response => {
-                promiseToTask(remoteDb.info(), true)
+                promiseToTask(remoteDb.info(), true);
             })
-        ).rejects.toMatch(Error)
+        ).rejects.toMatch(Error);
     });
 
     test('Sync', () => {
         const db = createLocalDb(DB);
         const doc = {
-            '_id': moment.now().toString(),
-            'name': 'Mittens',
-            'occupation': 'kitten',
-            'age': 3,
-            'hobbies': [
+            _id: moment.now().toString(),
+            name: 'Mittens',
+            occupation: 'kitten',
+            age: 3,
+            hobbies: [
                 'playing with balls of yarn',
                 'chasing laser pointers',
-                "lookin' hella cute"
+                'lookin\' hella cute'
             ]
         };
         expectTask(promiseToTask(db.put(doc)).chain(
@@ -82,12 +82,12 @@ describe('pouchDbIO', () => {
                 startSync(db, REMOTE_DB_URL)
                     .on('change', theDoc => {
                         // Wait for the change event from syncing the doc to the remote Db
-                        response()
-                    })
+                        response();
+                    });
             }))
             .chain(() => {
                 // Retrieve a remote Db reference and wait for it to be ready
-                return createRemoteDb(REMOTE_DB_URL)
+                return createRemoteDb(REMOTE_DB_URL);
             })
             .chain(remoteDb => {
                 return promiseToTask(remoteDb.get(doc._id));
@@ -97,5 +97,5 @@ describe('pouchDbIO', () => {
                 return retrievedDoc._id;
             })
         ).resolves.toBe(doc._id);
-    })
+    });
 });

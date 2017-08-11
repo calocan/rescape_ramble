@@ -10,14 +10,6 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin');
  */
 module.exports = {
     devtool: 'inline-source-map',
-    /*
-    node: {
-        console: true,
-        fs: 'empty',
-        net: 'empty',
-        tls: 'empty'
-    },
-    */
     resolve: {
 
         modules: [
@@ -42,10 +34,6 @@ module.exports = {
     module: {
         noParse: /(mapbox-gl)\.js$/,
         loaders: [
-            {
-                test: /node_modules\/JSONStream\/index\.js$/,
-                loaders: ['shebang-loader', 'babel-loader'],
-            },
             {
                 test: /\.json$/,
                 loader: 'json-loader'

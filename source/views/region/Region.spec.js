@@ -1,11 +1,13 @@
-import React from 'react';
-import {shallow} from 'enzyme'
-import Region from './Region';
-import testConfig from 'store/data/test/config'
-import initialState from 'store/data/initialState'
-import R from 'ramda'
+const React = require('react');
+const {shallow} = require('enzyme');
 
-test('Region', () => {
+const testConfig = require('store/data/test/config').default;
+const initialState = require('store/data/initialState').default;
+const R = require('ramda');
+const e = React.createElement;
+const Region = require('./Region').default;
+
+describe('Region', () => {
     const state = initialState(testConfig);
 
     const props = {
@@ -14,8 +16,10 @@ test('Region', () => {
         height: 500
     };
 
-    it('Region can mount', () => {
-        const wrapper = shallow(<Region {...props} />);
+    test('Region can mount', () => {
+        const wrapper = shallow(
+            e(Region, props)
+        );
         expect(wrapper).toMatchSnapshot();
     });
 });

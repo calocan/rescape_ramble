@@ -9,76 +9,74 @@
  * THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import Task from 'data.task';
-import R from 'ramda';
-import { cycleRecords } from './cycleHelpers'
-import {getDb} from './pouchDbIO';
-import { actions, actionCreators, actionPath } from 'store/reducers/geojson/markerActions'
+const Task = require('data.task');
+const R = require('ramda');
+const { cycleRecords } = require('./cycleHelpers');
+const {getDb} = require('./pouchDbIO');
+const { actions, actionCreators, actionPath } = require('store/reducers/geojson/markerActions');
 const resolveDb = (regionKey, options) => getDb(options && options.dbName || regionKey);
 
 
-// Constants specific to markers to make the cycle more generic
-const actionUpdateName = actions.UPDATE_MARKERS_DATA
-const actionFetchName = actions.FETCH_MARKERS_DATA
-const actionFetchSuccess = actionCreators.FETCH_MARKERS_SUCCESS
-const actionUpdateSuccess = actionCreators.UPDATE_MARKERS_SUCCESS
-const actionFetchFailure = actionCreators.FETCH_MARKERS_FAILURE
-const actionUpdateFailure = actionCreators.UPDATE_MARKERS_FAILURE
-
-/***
+/**
  * A cycle.js component that processes async Marker sources/sinks
+ * @param {Object} sources The Cycle.js sources
+ * @param {Object} sources.ACTION_CONFIG The constant React Action configuration Cycle.js source
+ * @param {Object} sources.ACTION The React Action driver source for Cycle.js
+ * @param {Object} sources.POUCHDB The PouchDb driver source for Cycle.js
+ * @returns {Object} The Cycle.js sinks
  */
-export const cycleMarkers = sources => cycleRecords({
+module.exports.cycleMarkers = sources => cycleRecords({
     // ACTION_CONFIG configures the generic cycleRecords to call/match the correct actions
     ACTION_CONFIG: R.merge(sources, {
         actionPath,
-        actionFetchName,
-        actionUpdateName,
-        actionFetchSuccess,
-        actionUpdateSuccess,
-        actionFetchFailure,
-        actionUpdateFailure
+        // Constants specific to markers to make the cycle more generic
+        actionUpdateName: actions.UPDATE_MARKERS_DATA,
+        actionFetchName: actions.FETCH_MARKERS_DATA,
+        actionFetchSuccess: actionCreators.FETCH_MARKERS_SUCCESS,
+        actionUpdateSuccess: actionCreators.UPDATE_MARKERS_SUCCESS,
+        actionFetchFailure: actionCreators.FETCH_MARKERS_FAILURE,
+        actionUpdateFailure: actionCreators.UPDATE_MARKERS_FAILURE
     })
-})
+});
 
-/***
- * fetches transit data from OpenStreetMap using the Overpass API.
- * @param {String} The key of the region, used for database scope
+/**
+ * Fetches transit data from OpenStreetMap using the Overpass API.
+ * @param {String} regionKey The key of the region, used for database scope
  * @param {Object} options Currently unused. Options to pass to query-overpass, plus the following
  * @param {Object} options.testBounds Used only for testing
- * @param {Array} options.bounds Currently unusued [lat_min, lon_min, lat_max, lon_max]
+ * @param {Array} options.bounds Currently unused [lat_min, lon_min, lat_max, lon_max]
+ * @returns {Object} A Task to fetch the markers
  */
-export const fetchMarkers = (regionKey, options) => {
-    return new Task(function(reject, resolve) {
-        const db = resolveDb(regionKey, options)
-        db.allDocs({include_docs: true, descending: true}, function(err, doc) {
+const fetchMarkers = module.exports.fetchMarkers = (regionKey, options) => {
+    return new Task(function (reject, resolve) {
+        const db = resolveDb(regionKey, options);
+        db.allDocs({include_docs: true, descending: true}, function (err, doc) {
             if (!err) {
-                console.log('Fetched')
+                // console.log('Fetched');
                 resolve(doc);
-            }
-            else {
-                console.error('Fetch failed')
+            } else {
+                // console.error('Fetch failed');
                 reject(err);
             }
-        })
+        });
     });
 };
 
-/***
+/**
  * Removes the given markers or all markers if markers is null
- * @param {String} regionKey
- * @param options
- * @param markers
- * @returns {*|Task}
+ * @param {String} regionKey The Region key
+ * @param {Object} options Unused
+ * @param {[Object]} markers The geojson markers
+ * @returns {Task} Task to remove the markers
  */
-export const removeMarkers = (regionKey, options, markers) => {
+const removeMarkers = module.exports.removeMarkers = (regionKey, options, markers) => {
     return new Task((reject, resolve) => {
-        const db = resolveDb(regionKey, options)
+        const db = resolveDb(regionKey, options);
         // Get all markers or just those specified
         db.allDocs(markers ? { keys: R.map(R.prop('id'), markers) } : {}).then(function (result) {
             // Promise isn't supported by all browsers; you may want to use bluebird
             return Promise.all(result.rows.map(function (row) {
-                console.log(`Deleting ${row.id}`);
+                // console.log(`Deleting ${row.id}`);
                 return db.remove(row.id, row.value.rev);
             }));
         }).then(function () {
@@ -86,28 +84,29 @@ export const removeMarkers = (regionKey, options, markers) => {
         }).catch(function (err) {
             reject(err);
         });
-    }).chain(db => fetchMarkers(db, options, null))
-}
+    }).chain(db => fetchMarkers(db, options, null));
+};
 
-/***
+/**
  * Remove the given marker
- * @param {String} regionKey
- * @param options Reserved for future use
- * @param marker Geojson feature representing the marker to delete
+ * @param {String} regionKey The Region key
+ * @param {Object} options Reserved for future use
+ * @param {Object} marker Geojson feature representing the marker to delete
+ * @return {Object} Task to remove the marker
  */
-export function removeMarker(regionKey, options, marker) {
-    removeMarkers(regionKey, options, [marker])
-}
+module.exports.removeMarker = function removeMarker(regionKey, options, marker) {
+    return removeMarkers(regionKey, options, [marker]);
+};
 
-/***
+/**
  * Persists a list of features that represent markers
- * @param {String} regionKey
+ * @param {String} regionKey The Region key
  * @param {Object} options Currently unused, reserved for future use
  * @param {Object} options.dbName Optional name for the database for testing. Defaults to regionKey
  * @param {Array} features Geojson features
- * @returns {Task} A Task that when forked executes the persistence
+ * @returns {Object} A Task that when forked executes the persistence
  */
-export const persistMarkers = (regionKey, options, features) => {
+module.exports.persistMarkers = (regionKey, options, features) => {
     /*
     const dateLens = R.lensProp('date');
     const _idLens = R.lensProp('_id');
@@ -143,3 +142,4 @@ export const persistMarkers = (regionKey, options, features) => {
     }).chain(() => fetchMarkers(regionKey, options, null))
     */
 };
+

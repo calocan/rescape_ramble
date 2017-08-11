@@ -1,6 +1,6 @@
-import React from 'react'
-import styles from './Geocode.style'
-import PropTypes from 'prop-types'
+const React = require('react');
+const styles = require('./Geocode.style').default;
+const PropTypes = require('prop-types');
 const e = React.createElement;
 
 /**
@@ -9,7 +9,6 @@ const e = React.createElement;
  * and provides an autocompleting interface for finding locations.
  */
 class Geocode extends React.Component {
-
     constructor(props) {
         super(props);
         this.state = {
@@ -20,9 +19,9 @@ class Geocode extends React.Component {
         };
     }
 
-    onInput(e) {
+    onInput(ev) {
         this.setState({ loading: true });
-        var value = e.target.value;
+        let value = ev.target.value;
         if (value === '' || !value) {
             this.textInput.value = null;
             this.setState({
@@ -64,11 +63,11 @@ class Geocode extends React.Component {
             this.props.onSelect(this.state.results[this.state.focus]);
         }
     }
-    onKeyDown(e) {
-        switch (e.which) {
+    onKeyDown(ev) {
+        switch (ev.which) {
             // up
             case 38:
-                e.preventDefault();
+                ev.preventDefault();
                 this.moveFocus(-1);
                 break;
             // down
@@ -83,7 +82,7 @@ class Geocode extends React.Component {
                 this.acceptFocus();
                 break;
             default:
-                return
+                return;
         }
     }
     onResult(body, searchTime) {
@@ -110,13 +109,15 @@ class Geocode extends React.Component {
     }
     render() {
         const inputElem = e('input', {
-            ref: (input) => { this.textInput = input; },
+            ref: (input) => {
+ this.textInput = input;
+},
             style: styles.inputContainer,
             className: this.props.inputClass,
             onInput: this.onInput.bind(this),
             onKeyDown: this.onKeyDown,
             placeholder: this.props.inputPlaceholder,
-            type:'text'
+            type: 'text'
         });
 
         return e('div', {
@@ -128,10 +129,10 @@ class Geocode extends React.Component {
             },
             this.state.results.map((result, i) => (
                 e('li', {
-                    key: result.id,
+                    key: result.id
                 },
                     e('a', {
-                        href:'#',
+                        href: '#',
                         onClick: this.clickOption.bind(this, result, i),
                         className: this.props.resultClass + ' ' + (i === this.state.focus ? this.props.resultFocusClass : ''),
                         key: result.id
@@ -141,7 +142,7 @@ class Geocode extends React.Component {
                 )
             ))),
             this.props.inputPosition === 'bottom' && inputElem
-        )
+        );
     }
 }
 
@@ -156,8 +157,8 @@ Geocode.defaultProps = {
     showLoader: false,
     source: 'mapbox.places',
     proximity: '',
-    onSuggest: function() {}
-}
+    onSuggest: function () {}
+};
 
 Geocode.proptypes = {
     endpoint: PropTypes.string,
@@ -174,5 +175,5 @@ Geocode.proptypes = {
     proximity: PropTypes.string,
     showLoader: PropTypes.bool,
     focusOnMount: PropTypes.bool
-}
-export default Geocode
+};
+module.exports.default = Geocode;

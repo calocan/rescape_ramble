@@ -9,13 +9,13 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import thunk from 'redux-thunk'
-import {mapStateToProps} from 'components/marker/MarkerListContainer'
-import configureStore from 'redux-mock-store';
+const thunk = require('redux-thunk');
+const {mapStateToProps} = require('components/marker/MarkerListContainer');
+const configureStore = require('redux-mock-store');
 
-import testConfig from 'store/data/test/config'
-import initialState from 'store/data/initialState'
-import {reqPath} from 'helpers/throwingFunctions'
+const testConfig = require('store/data/test/config').default;
+const initialState = require('store/data/initialState').default;
+const {reqPath} = require('helpers/throwingFunctions');
 
 const middlewares = [thunk];
 const mockStore = configureStore(middlewares);
@@ -26,9 +26,9 @@ describe('MarkerListContainer', () => {
         const state = store.getState();
 
         const ownProps = {
-            region: reqPath(['regions', reqPath(['regions', 'currentKey'], state)], state),
+            region: reqPath(['regions', reqPath(['regions', 'currentKey'], state)], state)
         };
 
-        expect(mapStateToProps(store.getState(), ownProps)).toMatchSnapshot()
+        expect(mapStateToProps(store.getState(), ownProps)).toMatchSnapshot();
     });
 });

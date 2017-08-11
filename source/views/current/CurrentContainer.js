@@ -1,13 +1,14 @@
-import {connect} from 'react-redux';
-import Current from './Current.js';
-import R from 'ramda';
-import {currentRegion} from 'helpers/stateHelpers'
+const {connect} = require('react-redux');
+const Current = require('./Current.js').default;
+const R = require('ramda');
+const {currentRegion} = require('helpers/stateHelpers');
 
-/***
+/**
  * The CurrentContainer and all children are scoped to a single Region
- * @param state
+ * @param {Object} state The Store state
+ * @returns {Object} the props from the state
  */
-export const mapStateToProps = state => ({
+const mapStateToProps = module.exports.mapStateToProps = state => ({
     region: currentRegion(state),
     style: R.fromPairs(R.map(
         // Pass the current window width and height
@@ -20,4 +21,4 @@ const CurrentContainer = connect(
     mapStateToProps
 )(Current);
 
-export default CurrentContainer;
+module.exports.default = CurrentContainer;

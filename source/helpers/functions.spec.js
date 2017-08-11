@@ -8,10 +8,11 @@
  *
  * THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import {Map as ImMap} from 'immutable';
-import R from 'ramda';
-import * as f from './functions';
-import Task from 'data.task'
+const ImMap = require('immutable').Map;
+const R = require('ramda');
+const f = require('./functions');
+const Task = require('data.task');
+const {Just} = require('data.maybe');
 
 describe('helperFunctions', () => {
     test('Should be empty', () => {
@@ -50,15 +51,15 @@ describe('helperFunctions', () => {
     });
     test('Should map prop as key', () => {
         expect(f.mapPropValueAsIndex('bar')([{bar: 1}, {bar: 2}])).
-        toEqual(R.indexBy(R.prop('bar'), [{bar: 1}, {bar: 2}]))
+        toEqual(R.indexBy(R.prop('bar'), [{bar: 1}, {bar: 2}]));
     });
     test('Should remove duplicate objects with same prop key', () => {
         expect(f.removeDuplicateObjectsByProp('bar')([{bar: 1, foo: 2}, {bar: 1, foo: 2}, {bar: 2}])).
-        toEqual([{bar: 1, foo: 2}, {bar: 2}])
+        toEqual([{bar: 1, foo: 2}, {bar: 2}]);
     });
     test('Should be immutable and keyed by prop', () => {
         expect(f.toImmutableKeyedByProp('bar')([{bar: 1}, {bar: 2}]).toJS()).
-        toEqual(ImMap([[1, {bar: 1}], [2, {bar: 2}]]).toJS())
+        toEqual(ImMap([[1, {bar: 1}], [2, {bar: 2}]]).toJS());
     });
     test('Should return an id from an object or the identify from a value', () => {
         expect(f.idOrIdFromObj('foo')).toEqual('foo');
@@ -81,29 +82,29 @@ describe('helperFunctions', () => {
             {foo: 1, bar: {bizz: [2, 3], buzz: 7}},
             {foo: 4, bar: {bizz: [5, 6]}}
         )).toEqual({foo: 4, bar: {bizz: [5, 6], buzz: 7}});
-    })
+    });
     test('Should capitalize first letter', () => {
-        expect(f.capitalize('good grief')).toEqual('Good grief')
-    })
+        expect(f.capitalize('good grief')).toEqual('Good grief');
+    });
     test('Required path', () => {
-        expect(f.reqPath(['a'], {a: 1}).value).toBe(1)
+        expect(f.reqPath(['a'], {a: 1}).value).toBe(1);
         expect(f.reqPath(['a', 'b'], {a: {c: 1}}).value).toEqual({
             resolved: ['a'],
             path: ['a', 'b']
-        })
-    })
+        });
+    });
     test('Should merge all with key', () => {
         expect(
             f.mergeAllWithKey(
                 (k, l, r) => k === 'a' ? R.concat(l, r) : r,
                 [{a: [1], b: 2}, {a: [2], c: 3}, {a: [3]}]
         )).toEqual({a: [1, 2, 3], b: 2, c: 3});
-    })
+    });
     test('Should reqPath of object', () => {
         expect(
             f.reqPath(['a', 'b', 1, 'c'], {a: {b: [null, {c: 2}]}})
-        ).toEqual(2)
-    })
+        ).toEqual(Just(2));
+    });
     test('Should copy an object', () => {
         const obj = { a: {b: 1}};
         const copy = f.copy(obj);
@@ -111,13 +112,14 @@ describe('helperFunctions', () => {
         expect(obj).not.toBe(copy);
         expect(obj.a).toEqual(copy.a);
         expect(obj.a).not.toBe(copy.a);
-    })
-    test('Should convert Task to Promise', () => {
-        expect(f.taskToPromise(new Task(function(reject, resolve) {
-            resolve('donut')
-        }))).resolves.toBe('donut')
-        expect(f.taskToPromise(new Task(function(reject) {
-            reject(new Error('octopus'))
-        }), true)).rejects.toThrow(Error)
-    })
+    });
+    test('Should convert Task to Promise', async () => {
+        await expect(f.taskToPromise(new Task(function (reject, resolve) {
+            resolve('donut');
+        }))).resolves.toBe('donut');
+        const err = new Error('octopus');
+        await expect(f.taskToPromise(new Task(function (reject) {
+            reject(err);
+        }), true)).rejects.toBe(err);
+    });
 });

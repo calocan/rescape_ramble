@@ -9,29 +9,29 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { combineReducers } from 'redux';
-import geojsonReducer from 'store/reducers/geojson/geojsons'
-import {createViewportReducer} from 'redux-map-gl';
-import R from 'ramda';
-import {SET_STATE} from 'store/reducers/fullStates'
+const { combineReducers } = require('redux');
+const geojsonReducer = require('store/reducers/geojson/geojsons').default;
+const {createViewportReducer} = require('redux-map-gl');
+const R = require('ramda');
+const {SET_STATE} = require('store/reducers/fullStates');
 
-/***
+/**
  * Only allow the region reducer to be created once for each Region
  * @returns {Function}
  * once: () -> regionName -> () -> Reducer
  */
 const once = () => {
     let done = {};
-    return regionName => fn => done[regionName] || (done[regionName] = fn.apply(this, arguments))
+    return regionName => fn => done[regionName] || (done[regionName] = fn.apply(this, arguments));
 };
 
-/***
+/**
  * Creates a region reducer for the given region. The regionName is passed
  * so that a database specific to the region can be used
  * @param regionName
  * @returns A reducer expecting a state
  */
-const regionReducerOnce = once()
+const regionReducerOnce = once();
 const regionReducer = regionName => regionReducerOnce(regionName)(() =>
     combineReducers(R.merge(
         {
@@ -71,15 +71,15 @@ const regionReducer = regionName => regionReducerOnce(regionName)(() =>
  @property {Mapbox} Required data for the map, suh as the viewport.
  */
 
-/***
+/**
  * @param {Object<String, Region>} state The regions reducer reduces an object keyed by Region id
  * @param {String} state.regionId The id of the region
 
- * @param action
- * @return {*}
+ * @param {Object} action The action
+ * @return {Object} The reduced state
  */
 const regionsReducer = (
-    state = { }, action = {}
+    state = {}, action = {}
 ) => {
     switch (action.type) {
         case SET_STATE:
@@ -102,4 +102,4 @@ const regionsReducer = (
 };
 
 
-export default regionsReducer;
+module.exports.default = regionsReducer;

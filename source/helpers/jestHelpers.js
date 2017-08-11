@@ -8,30 +8,30 @@
  *
  * THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import {promiseToTask, taskToPromise} from './functions'
-import testConfig from 'store/data/test/config';
-import initialState from 'store/data/initialState';
-import streamLength from 'stream-length';
-import Task from 'data.task';
+const {promiseToTask, taskToPromise} = require('./functions');
+const testConfig = require('store/data/test/config').default;
+const initialState = require('store/data/initialState').default;
+const streamLength = require('stream-length');
+const Task = require('data.task');
 
-/***
+/**
  * Given a task, wraps it in promise and passes it to Jest's expect.
  * With this you can call resolves or rejects depending on whether success or failure is expected:
  * expectTask(task).resolves|rejects
- * @param {Task} task: wrapped in a Promise and forked
+ * @param {Task} task wrapped in a Promise and forked
+ * @returns {undefined}
  */
-export const expectTask = task => expect(taskToPromise(task));
-/***
+module.exports.expectTask = task => expect(taskToPromise(task));
+/**
  * Same as expectTask but expects a rejects so diables debugging
- * @param task
+ * @param {Task} The Task
+ * @returns {undefined}
  */
-export const expectTaskRejected = task => expect(taskToPromise(task, true));
+module.exports.expectTaskRejected = task => expect(taskToPromise(task, true));
 
-/***
+/**
  * Create an initial test state based on the testConfig for tests to use.
  * This should only be used for sample configuration, unless store functionality is being tested
+ * @returns {Object} The initial state
  */
-export const testState = () => initialState(testConfig);
-
-
-export const testStreamLength = stream$ => promiseToTask(streamLength(stream$))
+module.exports.testState = () => initialState(testConfig);

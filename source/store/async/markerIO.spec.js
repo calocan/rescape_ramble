@@ -9,36 +9,35 @@
  * THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import {createDesignDoc} from './cycleHelpers'
-import {removeMarker, fetchMarkers, persistMarkers, cycleMarkers} from './markerIO';
-import { actions, actionCreators, ACTION_PATH } from 'store/reducers/geojson/markerActions'
-import config from 'store/data/test/config';
-import {PARIS_SAMPLE, LA_SAMPLE} from './markerIO.sample'
-import {reqPath} from 'helpers/throwingFunctions'
-import {mergeAllWithKey} from 'helpers/functions'
-import {concatFeatures} from 'helpers/geojsonHelpers'
-import R from 'ramda'
-import initialState from 'store/data/initialState';
-import { assertSourcesSinks } from './jestCycleHelpers'
+const {createDesignDoc} = require('./cycleHelpers');
+const {removeMarker, fetchMarkers, persistMarkers, cycleMarkers} = require('./markerIO');
+const { actions, actionCreators, ACTION_PATH } = require('store/reducers/geojson/markerActions');
+const config = require('store/data/test/config').default;
+const {PARIS_SAMPLE, LA_SAMPLE} = require('./markerIO.sample');
+const {reqPath} = require('helpers/throwingFunctions');
+const {mergeAllWithKey} = require('helpers/functions');
+const {concatFeatures} = require('helpers/geojsonHelpers');
+const R = require('ramda');
+const initialState = require('store/data/initialState').default;
+const { assertSourcesSinks } = require('./jestCycleHelpers');
 
 // combine the samples into one obj with concatinated features
 const geojson = mergeAllWithKey(concatFeatures)([PARIS_SAMPLE, LA_SAMPLE]);
 const state = initialState(config);
 const currentRegionKey = reqPath(['regions', 'currentKey'], state);
 const region = reqPath(['regions', currentRegionKey], state);
-const testDbName = name => `${__dirname}/__databases__/${name}`
-import {LA_BOUNDS as bounds} from 'queryOverpass.sample'
+const testDbName = name => `${__dirname}/__databases__/${name}`;
+const bounds = require('queryOverpass.sample').LA_BOUNDS;
 
-function* letterGen (letter) {
-    let index = letter.charCodeAt(0)
+function *letterGen(letter) {
+    let index = letter.charCodeAt(0);
     while (true) {
         yield String.fromCharCode(index++);
     }
 }
 
 describe('markerHelpers', () => {
-
-    //PouchDB.debug.enable('*');
+    // PouchDB.debug.enable('*');
     const path = '__db__/tests/markerHelpers.';
     // const createRemoteUrl = `http://localhost:5984/${name}`;
     // const syncObject = doSync({db, createRemoteUrl});
@@ -134,7 +133,7 @@ describe('markerHelpers', () => {
      */
 
 
-    test('should emit sink POUCHDB.update given sources ACTION.updateMarkerData', function(done) {
+    test('should emit sink POUCHDB.update given sources ACTION.updateMarkerData', function (done) {
         // Fire the fetchMarkersData action
         const actionSource = {
             a: actionCreators.updateMarkersData(
@@ -143,10 +142,10 @@ describe('markerHelpers', () => {
                     region,
                     payload: geojson.features
                 },
-            ),
+            )
         };
 
-        const sourceGen = letterGen('b')
+        const sourceGen = letterGen('b');
         const pouchDbSource = {
             // Mimic the actual driver
             // The driver simply returns the put op with given doc
@@ -171,14 +170,13 @@ describe('markerHelpers', () => {
                         },
                         seq: key.charCodeAt(0)
                     }
-                ], geojson.features))
+                ], geojson.features));
             }
         };
 
 
-
         // Ignore the particular query parameters and return features as rows
-        const sinkGen = letterGen('b')
+        const sinkGen = letterGen('b');
         const pouchDbSink = R.merge(
             {a: {
                     op: 'put',

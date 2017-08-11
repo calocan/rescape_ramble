@@ -1,17 +1,18 @@
-import React from 'react';
-import {shallow} from 'enzyme';
-import {reqPath} from 'helpers/throwingFunctions';
-import {mapStateToProps} from './MarkerListContainer';
-import {geojsonByType} from 'helpers/geojsonHelpers';
+const React = require('react');
+const {shallow} = require('enzyme');
+const {reqPath} = require('helpers/throwingFunctions');
+const {mapStateToProps} = require('./MarkerListContainer');
+const {geojsonByType} = require('helpers/geojsonHelpers');
 
-import config from 'store/data/test/config';
-import initialState from 'store/data/initialState';
-import R from 'ramda';
-import MarkerList from './MarkerList'
-jest.mock('query-overpass')
+const config = require('store/data/test/config').default;
+const initialState = require('store/data/initialState').default;
+const R = require('ramda');
+const MarkerList = require('./MarkerList').default;
+jest.mock('query-overpass');
 const state = initialState(config);
 const currentKey = reqPath(['regions', 'currentKey'], state);
 const geojson = require('queryOverpassResponse').LA_SAMPLE;
+const e = React.createElement;
 
 const props = mapStateToProps(state, {
     region: R.set(
@@ -23,9 +24,7 @@ const props = mapStateToProps(state, {
 
 describe('MarkerList', () => {
     it('MarkerList can mount', () => {
-        const wrapper = shallow(<MarkerList
-            { ...props }
-        />);
+        const wrapper = shallow(e(MarkerList, props));
         expect(wrapper).toMatchSnapshot();
     });
 });

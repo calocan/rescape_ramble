@@ -9,20 +9,20 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { combineReducers } from 'redux';
-import settings from './settings.js'
-import regions from './regions.js'
-import { routerReducer as routing} from 'react-router-redux'
-import {createResponsiveStateReducer} from 'redux-responsive'
+const { combineReducers } = require('redux');
+const settings = require('./settings.js').default;
+const regions = require('./regions.js').default;
+const routing = require('react-router-redux').routerReducer;
+const {createResponsiveStateReducer} = require('redux-responsive');
 
-export default combineReducers({
+module.exports.default = combineReducers({
     settings,
     regions,
     browser: createResponsiveStateReducer(null, {
         extraFields: () => ({
             width: typeof (window) !== 'undefined' ? window.innerWidth : 0,
             height: typeof (window) !== 'undefined' ? window.innerHeight : 0
-        }),
+        })
     }),
-    routing,
-})
+    routing
+});

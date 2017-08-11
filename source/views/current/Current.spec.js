@@ -1,13 +1,13 @@
-import React from 'react';
-import {shallow} from 'enzyme'
+const React = require('react');
+const {shallow} = require('enzyme');
 
-import Current from './Current';
-import testConfig from 'store/data/test/config'
-import initialState from 'store/data/initialState'
-import R from 'ramda'
+const Current = require('./Current').default;
+const testConfig = require('store/data/test/config').default;
+const initialState = require('store/data/initialState').default;
+const R = require('ramda');
+const e = React.createElement;
 
 describe('The current application', () => {
-
     const state = initialState(testConfig);
 
     const props = {
@@ -19,7 +19,9 @@ describe('The current application', () => {
     };
 
     test('Current can mount', () => {
-        const wrapper = shallow(<Current {...props} />);
+        const wrapper = shallow(
+            e(Current, props)
+        );
         expect(wrapper).toMatchSnapshot();
     });
 });

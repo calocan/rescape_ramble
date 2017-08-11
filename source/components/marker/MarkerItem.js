@@ -9,20 +9,18 @@
  * THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import React from 'react';
-import PropTypes from 'prop-types';
-import autobind from 'autobind-decorator';
-import styles from './MarkerItem.style.js';
-import moment from 'moment';
-import R from 'ramda';
+const React = require('react');
+const PropTypes = require('prop-types');
+const styles = require('./MarkerItem.style.js').default;
+const moment = require('moment');
+const R = require('ramda');
 const e = React.createElement;
 
 export class MarkerItem extends React.Component {
-
     _handleRemove() {
         this.props.removeMarkers({}, this.props.regionId, [this.props.locationFeature]).fork(
             () => {
-                console.error('Error removing marker')
+                console.error('Error removing marker');
             },
             () => {
             }
@@ -58,39 +56,37 @@ export class MarkerItem extends React.Component {
 }
 
 export class AddMarkerItem extends React.Component {
-
     constructor(props) {
-        super(props)
+        super(props);
         this.state = {
             warn: false
-        }
+        };
     }
 
-    _handleKeyPress(e) {
-        if (e.key === 'Enter') {
+    _handleKeyPress(ev) {
+        if (ev.key === 'Enter') {
             if (this.props.locationFeature.geometry && this.textInput.value) {
-                this.setState({'warn': false});
-                const id = `node/${moment.now()}`
+                this.setState({warn: false});
+                const id = `node/${moment.now()}`;
                 const marker = R.merge(this.props.locationFeature, {
                     id,
                     _id: id,
                     type: 'Feature',
                     properties: {
                         name: this.textInput.value
-                    },
+                    }
                 });
                 this.props.updateMarkers({}, this.props.regionId, [marker]).fork(
                     () => {
-                        console.error('Error adding marker')
+                        console.error('Error adding marker');
                     },
                     () => {
                         this.textInput.value = null;
                     }
                 );
-            }
-            else {
+            } else {
                 // Warn user to set a location
-                this.setState({'warn': true});
+                this.setState({warn: true});
             }
             console.log('do validate');
         }
@@ -106,14 +102,16 @@ export class AddMarkerItem extends React.Component {
                 className: 'add-marker',
                 style: styles.addNameContainer,
                 onKeyPress: this._handleKeyPress.bind(this),
-                ref: (input) => { this.textInput = input; }
+                ref: (input) => {
+ this.textInput = input;
+}
             }),
-            e('div' , R.merge(styles.warnContainer, {
+            e('div', R.merge(styles.warnContainer, {
                 ref: 'warn',
                 className: 'warn',
                 style: {
                     display: this.state.warn ? 'block' : 'none'
-                },
+                }
             }),
                'Please select a location, enter a name, and click enter on the name.'
             )

@@ -1,24 +1,24 @@
-import {from} from 'most';
-import {mockTimeSource} from '@cycle/time/most';
-import {expectTask} from './jestHelpers';
+const {from} = require('most');
+const {mockTimeSource} = require('@cycle/time/most');
+const {expectTask} = require('./jestHelpers');
 
 const R = require('ramda');
-const Task = require('data.task')
+const Task = require('data.task');
 
 describe('research', () => {
     test('lift can be used with Task', async () => {
         const lift2 = R.liftN(2, (a, b) => {
-            return R.add(a, b)
+            return R.add(a, b);
         });
         expect.assertions(1);
         // See if we can add to Tasks together using lift
         await expectTask(lift2(
             Task.of(2),
-            new Task((rej, res) => setTimeout(() => res(3) )))
-        ).resolves.toEqual(5)
-    })
+            new Task((rej, res) => setTimeout(() => res(3))))
+        ).resolves.toEqual(5);
+    });
 
-    test('understanding concatMap', function(done) {
+    test('understanding concatMap', function (done) {
         const Time = mockTimeSource();
 
         Time.assertEqual(
@@ -30,7 +30,7 @@ describe('research', () => {
         Time.run(err => {
             expect(err).toBeFalsy();
             done();
-        })
+        });
     });
-})
+});
 

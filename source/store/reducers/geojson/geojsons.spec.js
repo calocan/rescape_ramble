@@ -8,24 +8,25 @@
  *
  * THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import {Map} from 'immutable';
-import testConfig from 'store/data/test/config';
-import initialState from 'store/data/initialState';
-import {reqPath} from 'helpers/throwingFunctions'
-import {mapPropValueAsIndex} from 'helpers/functions';
-import R from 'ramda';
-import reducer, {actions, fetchMarkers, ftchOsm, removeMarkers, stopSync, updateMarkers} from './geojsons';
-import {setState} from 'store/reducers/fullStates';
+const {Map} = require('immutable');
+const testConfig = require('store/data/test/config').default;
+const initialState = require('store/data/initialState').default;
+const {reqPath} = require('helpers/throwingFunctions');
+const {mapPropValueAsIndex} = require('helpers/functions');
+const R = require('ramda');
+const {actions, fetchMarkers, ftchOsm, removeMarkers, stopSync, updateMarkers} = require('./geojsons');
+const reducer = require('./geojsons').default;
+const {setState} = require('store/reducers/fullStates');
 const toObjectKeyedById = mapPropValueAsIndex('id');
 
 describe('geojson reducer', () => {
-    const state = initialState(testConfig)
+    const state = initialState(testConfig);
     it('should return the initial state', () => {
         expect(
             Map(reducer()(
                 reqPath(['regions', state.regions.currentKey, 'geojson'], state),
                 {})
             ).toJS()
-        ).toEqual(R.map(toObjectKeyedById, testConfig.geojson))
+        ).toEqual(R.map(toObjectKeyedById, testConfig.geojson));
     });
 });

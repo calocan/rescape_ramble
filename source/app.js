@@ -1,40 +1,24 @@
 
-//import 'babel-polyfill'
-import React from 'react'
-import ReactDOM from 'react-dom'
-//import Current from 'views/current/CurrentContainer'
-//import Application from 'views/application/ApplicationContainer'
+const React = require('react');
+const ReactDOM = require('react-dom');
+const MapGL = require('react-map-gl');
+const Current = require('views/current/CurrentContainer').default;
+const {Provider} = require('react-redux');
+const { Router, Route, browserHistory } = require('react-router');
+const { syncHistoryWithStore } = require('react-router-redux');
 
-//import {Provider} from 'react-redux'
-//import { Router, Route, browserHistory } from 'react-router'
-//import { syncHistoryWithStore } from 'react-router-redux'
+const {setState} = require('./store/reducers/fullState');
+const initialState = require('./store/data/initialState').default;
+const makeStore = require('./store').default;
+const currentConfig = require('./store/data/current/config').default;
 
-//import {setState} from './store/reducers/fullState'
-//import initialState from './store/data/initialState'
-//import makeStore from './store'
-//import currentConfig from './store/data/current/config'
+// const currentConfig = require('./store/data/current/config').default;
+const { createStore, applyMiddleware, compose } = require('redux');
+const e = React.createElement;
+const store = makeStore();
+store.dispatch(setState(initialState(currentConfig)));
+
 // Create an enhanced history that syncs navigation events with the store
-//const history = syncHistoryWithStore(browserHistory, store);
-
-//import currentConfig from './store/data/current/config'
-import { createStore, applyMiddleware, compose } from 'redux'
-const middlewares = [
-];
-const store = createStore(
-    function(state = {}, action) {return state},
-    {},
-    compose(
-        applyMiddleware(
-            ...middlewares
-        ),
-        // Use the Chrome devToolsExtension
-        window.devToolsExtension ? window.devToolsExtension() : f => f
-    )
-)
-//const store = makeStore();
-//store.dispatch(setState(initialState(currentConfig)));
-// Create an enhanced history that syncs navigation events with the store
-import MapGL from 'react-map-gl';
 
 const token = process.env.MAPBOX_ACCESS_TOKEN; // eslint-disable-line
 
@@ -43,6 +27,10 @@ if (!token) {
 }
 
 ReactDOM.render(
-    <MapGL/>,
+    e(Provider, {},
+        e(Current, {},
+            e(MapGL, {})
+        )
+    ),
     document.getElementById('root')
 );

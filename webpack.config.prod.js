@@ -30,13 +30,6 @@ module.exports = {
         noParse: /node_modules\/mapbox-gl\/dist\/mapbox-gl.js/,
         loaders: [
             {
-                test: /\.js$/,
-                use: [{
-                    loader: 'babel-loader',
-                    options: {presets: ['es2015', 'stage-0', 'react']}
-                }]
-            },
-            {
                 test: /\.json$/,
                 loader: 'json-loader'
             },

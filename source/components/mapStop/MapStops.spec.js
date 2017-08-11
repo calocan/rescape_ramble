@@ -11,6 +11,6 @@
 
 describe('MapStops', () => {
     test('something', () => {
-        console.warn('Not Implemented')
-    })
-})
+        console.warn('Not Implemented');
+    });
+});

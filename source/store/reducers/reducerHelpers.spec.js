@@ -9,18 +9,18 @@
  * THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import {asyncActionCreators, asyncActions, asyncActionsGenericKeys} from './actionHelpers';
-import Task from 'data.task'
-import {expectTask} from 'helpers/jestHelpers';
+const {asyncActionCreators, asyncActions, asyncActionsGenericKeys} = require('./actionHelpers');
+const Task = require('data.task');
+const {expectTask} = require('helpers/jestHelpers');
 
 describe('actionHelpers', () => {
     test('asyncActionsGenericKeys', () => {
         expect(asyncActionsGenericKeys('person', 'user', 'FETCH')).toMatchSnapshot();
     });
-    test('asyncActionsGenericKeys', () => {
+    test('asyncActions', () => {
         expect(asyncActions('person', 'user', 'FETCH')).toMatchSnapshot();
     });
-    test('asyncActionsGenericKeys', async () => {
+    test('asyncActionCreators', async () => {
         const actionCreators = asyncActionCreators(
             'person', 'user', 'FETCH',
             (someArg) => new Task((reject, response) => response(someArg)
@@ -34,5 +34,4 @@ describe('actionHelpers', () => {
         expect(actionCreators.fetchUserSuccess('floopy')).toEqual({type: 'person/user/FETCH_SUCCESS', body: 'floopy'});
         expect(actionCreators.fetchUserFailure(new Error('flop'))).toEqual({type: 'person/user/FETCH_FAILURE', error: new Error('flop')});
     });
-
-})
+});

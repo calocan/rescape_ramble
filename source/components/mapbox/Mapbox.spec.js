@@ -1,16 +1,17 @@
-import MapGL from 'react-map-gl';
-import Mapbox from './Mapbox';
-import React from 'react';
-import {shallow} from 'enzyme';
-import {reqPath} from 'helpers/throwingFunctions';
-import {mapStateToProps, mapDispatchToProps} from './MapboxContainer';
-import {geojsonByType} from 'helpers/geojsonHelpers';
+const MapGL = require('react-map-gl');
+const Mapbox = require('./Mapbox').default;
+const React = require('react');
+const {shallow} = require('enzyme');
+const {reqPath} = require('helpers/throwingFunctions');
+const {mapStateToProps, mapDispatchToProps} = require('./MapboxContainer');
+const {geojsonByType} = require('helpers/geojsonHelpers');
+const e = React.createElement;
 
-import config from 'store/data/test/config';
-import initialState from 'store/data/initialState';
-import R from 'ramda';
+const config = require('store/data/test/config').default;
+const initialState = require('store/data/initialState').default;
+const R = require('ramda');
 
-jest.mock('query-overpass')
+jest.mock('query-overpass');
 const state = initialState(config);
 const currentKey = reqPath(['regions', 'currentKey'], state);
 const geojson = require('queryOverpassResponse').LA_SAMPLE;
@@ -32,18 +33,21 @@ const props = R.merge(
 
 describe('Mapbox', () => {
     it('MapGL can mount', () => {
-        const wrapper = shallow(<MapGL
-            {...props.viewport}
-            showZoomControls={ true }
-            perspectiveEnabled={ true }
-            preventStyleDiffing={ false }
-        />);
+        const wrapper = shallow(
+            e(MapGL, R.merge(props.viewport, {
+                showZoomControls: true,
+                perspectiveEnabled: true,
+                preventStyleDiffing: false
+            }))
+        );
         expect(wrapper).toMatchSnapshot();
     });
     it('MapBox loads data', () => {
-        const wrapper = shallow(<Mapbox {...props} />);
+        const wrapper = shallow(
+            e(Mapbox, props)
+        );
         expect(wrapper).toMatchSnapshot();
-    })
+    });
 });
 
 /*

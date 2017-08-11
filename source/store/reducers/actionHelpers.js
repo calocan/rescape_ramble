@@ -9,18 +9,18 @@
  * THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import R from 'ramda'
-import {capitalize, mapKeys} from 'helpers/functions'
-import Task from 'data.task'
+const R = require('ramda');
+const {capitalize, mapKeys} = require('helpers/functions');
+const Task = require('data.task');
 
-/***
+/**
  * The path of an action
  * @param {String} scope The reducer scope (e.g. geojson)
  * @param {String} actionKey The key of the action (e.g. markers)
  * @returns {String} /scope/actionKey/
  */
-export const actionPath = R.curry((scope, actionKey) => `/${scope}/${actionKey}/`)
-/***
+const actionPath = module.exports.actionPath = R.curry((scope, actionKey) => `/${scope}/${actionKey}/`);
+/**
  * Create a standard action value. Curryable
  * @param {String} scope The reducer scope (e.g. geojson)
  * @param {String} actionKey The key of the action (e.g. markers)
@@ -28,7 +28,7 @@ export const actionPath = R.curry((scope, actionKey) => `/${scope}/${actionKey}/
  * @returns {String} /scope/actionKey/ACTION/
  * actionId:: String -> String -> String
 */
-export const actionId = R.curry((scope, actionKey, action) => `${actionPath(scope, actionKey)}${R.toUpper(action)}/`);
+const actionId = module.exports.actionId = R.curry((scope, actionKey, action) => `${actionPath(scope, actionKey)}${R.toUpper(action)}/`);
 
 const PHASES = ['DATA', 'SUCCESS', 'FAILURE'];
 
@@ -41,7 +41,7 @@ const actionKeys = R.curry((action, crud, phase) =>`${crud}_${R.toUpper(action)}
  */
 const actionValues = R.curry((scope, action, crud, phase) =>`${scope}/${action}/${crud}_${phase}`);
 
-/***
+/**
  * Async operations have three standard actionTypes for each crud type. Curryable.
  * Use this when you need generic action keys. Probably just for testing
  * @param {String} scope The scope of the reducer
@@ -50,7 +50,7 @@ const actionValues = R.curry((scope, action, crud, phase) =>`${scope}/${action}/
  * @returns {Object} where keys are (DATA|SUCCESS|FAILURE) and value is scope/ACTION/crud_(DATA|SUCCESS|FAILURE)
  * e.g. {DATA: person/user/FETCH_DATA, SUCCESS: person/user/FETCH_SUCCESS, ERROR: person/user/FETCH_ERROR}
  */
-export const asyncActionsGenericKeys = R.curry((scope, action, crud = 'FETCH') => {
+const asyncActionsGenericKeys = module.exports.asyncActionsGenericKeys = R.curry((scope, action, crud = 'FETCH') => {
     const actionValueMaker = actionValues(scope, action, crud);
     return R.compose(
         R.fromPairs,
@@ -58,7 +58,7 @@ export const asyncActionsGenericKeys = R.curry((scope, action, crud = 'FETCH') =
     )(PHASES);
 });
 
-/***
+/**
  * Async operations have three standard actionTypes for each crud type. Curryable.
  * @param {String} scope The scope of the reducer
  * @param {String} action The subject of the async operation, such as a User
@@ -66,12 +66,12 @@ export const asyncActionsGenericKeys = R.curry((scope, action, crud = 'FETCH') =
  * @returns {Object} where keys are CRUD_ACTION_(DATA|SUCCESS|FAILURE) and value is scope/ACTION/crud_(DATA|SUCCESS|FAILURE)
  * e.g. {FETCH_USER_DATA: person/user/FETCH_DATA, FETCH_USER_SUCCESS: person/user/FETCH_SUCCESS, FETCH_USER_ERROR: person/user/FETCH_ERROR}
  */
-export const asyncActions = R.curry((scope, action, crud) => {
+const asyncActions = module.exports.asyncActions = R.curry((scope, action, crud) => {
     const keyMaker = actionKeys(action, crud);
     return mapKeys(phase => keyMaker(phase), asyncActionsGenericKeys(scope, action, crud));
 });
 
-/***
+/**
  * Returns standard async action handler functions,
  * one to crud the data, one to handle success, one to handle failure
  * @param {String} scope The scope of the reducer
@@ -84,7 +84,7 @@ export const asyncActions = R.curry((scope, action, crud) => {
  *  CrudActionFailure: trivial action handler indicating crud failure, returns object with exception in 'error'
  * }
  */
-export const asyncActionCreators = R.curry((scope, action, crud) => {
+const asyncActionCreators = module.exports.asyncActionCreators = R.curry((scope, action, crud) => {
     if (typeof (action) === 'object') {
         throw new Error();
     }
@@ -99,7 +99,7 @@ export const asyncActionCreators = R.curry((scope, action, crud) => {
         // Create a CRUD action that has key and whatever params are passed in
         [crudAction('data')]: (key, params) => R.merge({type: DATA, key}, params),
         [crudAction('success')]: (body) => ({type: SUCCESS, body}),
-        [crudAction('failure')]: (error) => ({type: FAILURE, error}),
+        [crudAction('failure')]: (error) => ({type: FAILURE, error})
     };
 });
 

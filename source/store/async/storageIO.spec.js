@@ -9,15 +9,15 @@
  * THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import {cycleLocalDb, getDb} from './pouchDbIO';
-import * as fs from 'fs';
-import {retrieveOrFetch} from './storageIO';
-import {expectTask} from 'helpers/jestHelpers';
-import Maybe from 'data.maybe';
-import {promiseToTask} from 'helpers/functions';
-import R from 'ramda';
-import Rm from 'ramda-maybe';
-import Task from 'data.task';
+const {cycleLocalDb, getDb} = require('./pouchDbIO');
+const fs = require('fs');
+const {retrieveOrFetch} = require('./storageIO');
+const {expectTask} = require('helpers/jestHelpers');
+const Maybe = require('data.maybe');
+const {promiseToTask} = require('helpers/functions');
+const R = require('ramda');
+const Rm = require('ramda-maybe');
+const Task = require('data.task');
 
 const name = 'storage_io_spec';
 const PATH = `${__dirname}/__databases__/`;
@@ -37,19 +37,19 @@ describe('storageIO', () => {
                 // Array (Task String) ===> (Task (Array String))
                 db => R.sequence(Task.of, [
                     // Put a document in the db
-                    promiseToTask(db.put({'_id': HIT_ID}))
+                    promiseToTask(db.put({_id: HIT_ID}))
                         // Expect to find the document in the db. Make the fetch task return null to indicate a db miss
                         .chain(() => retrieveOrFetch(Task.of(null), getDb(DB), HIT_ID))
                         // Map to Maybe(id)
                         .map(documentOrNull => Rm.prop('_id')(documentOrNull)),
 
                     // Expect to fail to find the document and to instead load it from elsewhere (hence Task.of({ '_id': ID}))
-                    retrieveOrFetch(Task.of({'_id': MISS_ID}), getDb(DB), MISS_ID)
+                    retrieveOrFetch(Task.of({_id: MISS_ID}), getDb(DB), MISS_ID)
                         // Map to Maybe(id)
                         .map(documentOrNull => Rm.prop('_id')(documentOrNull))
                 ])
             )
         ).resolves.toEqual([Maybe.Just(HIT_ID), Maybe.Just(MISS_ID)]);
-    })
-})
+    });
+});
 

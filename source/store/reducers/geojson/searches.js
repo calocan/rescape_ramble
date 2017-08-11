@@ -9,24 +9,24 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import {searchLocation as searchLocationIO} from 'store/async/searchIO'
-import {asyncActions, asyncActionCreators} from 'store/reducers/actionHelpers'
+const searchLocationIO = require('store/async/searchIO').searchLocation.default;
+const {asyncActions, asyncActionCreators} = require('store/reducers/actionHelpers');
 
-export const ACTION_KEY = 'location';
-import {SCOPE} from './geojsons'
+const ACTION_KEY = module.exports.ACTION_KEY = 'location';
+const {SCOPE} = require('./geojsons');
 const makeAsyncActionHandlers = asyncActionCreators(SCOPE, ACTION_KEY);
-export const actions = asyncActions(SCOPE, ACTION_KEY, 'SEARCH');
-export const actionCreators = makeAsyncActionHandlers('SEARCH', searchLocationIO);
+const actions = module.exports.actions = asyncActions(SCOPE, ACTION_KEY, 'SEARCH');
+const actionCreators = module.exports.actionCreators = makeAsyncActionHandlers('SEARCH', searchLocationIO);
 
-/***
- * Reduces a gelocation search. This currently doesn't store anything in the state,
+/**
+ * Reduces a geolocation search. This currently doesn't store anything in the state,
  * the Component calling the action is using the response.
  * TODO Store the search result in the state. Components should never access async results directly
- * @param state
- * @param action
- * @returns {{}}
+ * @param {Object} state The state
+ * @param {Object} action The action
+ * @returns {Object} the reduced state
  */
-export default (state = {}, action = {}) => {
+module.exports.default = (state = {}, action = {}) => {
     switch (action.type) {
         default:
             return state;

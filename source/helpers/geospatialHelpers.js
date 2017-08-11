@@ -10,13 +10,13 @@
  */
 
 // http://stackoverflow.com/questions/27928/calculate-distance-between-two-latitude-longitude-points-haversine-formula
-/***
+/**
  * Returns kilometers between location
  * @param fromLocation
  * @param toLocation
  * @returns {number}
  */
-export function calculateDistance(fromLocation, toLocation) {
+module.exports.calculateDistance = function calculateDistance(fromLocation, toLocation) {
     const pi = Math.PI / 180,
         cos = Math.cos,
         a = 0.5 - cos((toLocation.lat - fromLocation.lat) * pi) / 2 +
@@ -24,5 +24,5 @@ export function calculateDistance(fromLocation, toLocation) {
             (1 - cos((toLocation.lon - fromLocation.lon) * pi)) / 2;
 
     return 12742 * Math.asin(Math.sqrt(a)); // 2 * R; Earth Radius = 6371 km
-}
+};
 

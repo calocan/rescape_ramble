@@ -9,8 +9,8 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import {createRouteId, createStopId} from './dataCreationHelpers'
-import {mapPropValueAsIndex} from 'helpers/functions'
+const {createRouteId, createStopId} = require('./dataCreationHelpers');
+const {mapPropValueAsIndex} = require('helpers/functions');
 
 
 /**
@@ -20,12 +20,12 @@ import {mapPropValueAsIndex} from 'helpers/functions'
  * @param {string} which which station of a place (e.g. Amtrak, Union, Airport)
  */
 
-/***
+/**
  * Stop resolver for the given stops
  * @param {[Stop]} stops list of Stops
  * @returns {stopResolverCallback} - A function that takes a place.id and which
  */
-export const stopResolver = stops => {
+module.exports.stopResolver = stops => {
     const stopLookup = mapPropValueAsIndex('id')(stops);
     return (place, which) => stopLookup[createStopId(place.id, which)];
 };
@@ -37,12 +37,12 @@ export const stopResolver = stops => {
  * @param {string} [via] Optional Region string for Routes that distinguish by an intermediate Region
  */
 
-/***
+/**
  * Route resolver for the given stops
  * @param {[Route]} routes list of Routes
  * @returns {routeResolverCallback} - See callback
  */
-export const routeResolver = routes => {
+module.exports.routeResolver = routes => {
     const routeLookup = mapPropValueAsIndex('id')(routes);
     return (from, to, via = null) =>
         routeLookup[createRouteId(from, to, via)];
@@ -58,12 +58,12 @@ export const routeResolver = routes => {
  * @returns {[Trip]} One or more matchingTrips in an array
  */
 
-/***
+/**
  * Route resolver for the given stops
  * @param {[Trip]} trips list of Trips
  * @returns {tripResolverCallback} - See callback
  */
-export const tripResolver = trips => {
+module.exports.tripResolver = trips => {
     return (route, options = null) => {
         // Return trips matching the route and the options
         return trips.filter(trip =>

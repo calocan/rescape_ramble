@@ -9,17 +9,18 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import R from 'ramda';
-import {mapPropValueAsIndex, toImmutable} from 'helpers/functions';
+const R = require('ramda');
+const {mapPropValueAsIndex, toImmutable} = require('helpers/functions');
 
-/***
+/**
  * Returns a function that can be applied to a list to add an id value to each object of the list
  * and then change the list to an object keyed by the id value. This is only useful for sample data
  * that doesn't have an id
- * @param generator
+ * @param {Function} generator The generator to create ids
+ * @returns {Object} the Object
  * toObjectKeyedByGeneratedId:: [<k, v>] -> <v.id, <k, v>>
  */
-export const toObjectKeyedByGeneratedId = generator => R.pipe(
+const toObjectKeyedByGeneratedId = module.exports.toObjectKeyedByGeneratedId = generator => R.pipe(
     R.map(item => R.merge(item, {id: generator.next().value})), // Add a generated id
     mapPropValueAsIndex('id') // make the id the key
 );
@@ -29,17 +30,17 @@ const toObjectKeyedById = mapPropValueAsIndex('id');
 const toObjectKeyedByIdWithCurrent = R.curry((currentKey, object) => {
     const obj = toObjectKeyedById(object);
     return R.merge(obj, {
-        currentKey: currentKey,
-    })
+        currentKey: currentKey
+    });
 });
 
-/***
+/**
  * Returns an initialState based on the given region config. It's possible to configure the state
  * to have multiple regions, but this function only assumes a single initial region
- * @param config
- * @return {{settings: (*|store.settings|{}|body.settings|{foo}|settings), travel: *, gtfs: *, mapbox: *}}
+ * @param {Object} config The config
+ * @return {Object} The state
  */
-export default (config) => {
+module.exports.default = (config) => {
     return {
         settings: config.settings,
         // regions maps to an object keyed by region id, valued by the Region object
@@ -61,6 +62,6 @@ export default (config) => {
             }),
             config.regions
         ))
-    }
+    };
 };
 

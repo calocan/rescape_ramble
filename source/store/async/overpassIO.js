@@ -9,23 +9,24 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import query_overpass from 'query-overpass';
-import Task from 'data.task'
-import R from 'ramda';
-import {mergeAllWithKey, removeDuplicateObjectsByProp} from 'helpers/functions';
-import os from 'os';
-import squareGrid from '@turf/square-grid';
-import bbox from '@turf/bbox';
-import {concatFeatures} from 'helpers/geojsonHelpers'
+const queryOverpass = require('query-overpass');
+const Task = require('data.task');
+const R = require('ramda');
+const {mergeAllWithKey, removeDuplicateObjectsByProp} = require('helpers/functions');
+const os = require('os');
+const squareGrid = require('@turf/square-grid').default;
+const bbox = require('@turf/bbox').default;
+const {concatFeatures} = require('helpers/geojsonHelpers');
 
-/***
+/**
  * fetches transit data from OpenStreetMap using the Overpass API.
  * @param {Object} options Options to pass to query-overpass, plus the following:
  * @param {Object} options.testBounds Used only for testing
  * @param {Object} options.cellSize If specified delegates to fetchTransitCelled
  * @param {Array} bounds [lat_min, lon_min, lat_max, lon_max]
+ * @returns {Object} Task to fetch the data
  */
-export const fetchTransit = R.curry((options, bounds) => {
+const fetchTransit = module.exports.fetchTransit = R.curry((options, bounds) => {
     if (options.cellSize) {
         return fetchTransitCelled(options, bounds);
     }
@@ -35,7 +36,7 @@ export const fetchTransit = R.curry((options, bounds) => {
             R.reverse(R.slice(0, 2)(list)),
             R.reverse(R.slice(2, 4)(list))),
         R.join(',')
-    )(bounds)
+    )(bounds);
     const query = boundsString => `
     [out:json];
     (
@@ -55,24 +56,22 @@ export const fetchTransit = R.curry((options, bounds) => {
     `;
 
     // Wrap overpass helper's execution and callback in a Task
-    return new Task(function(reject, resolve) {
+    return new Task(function (reject, resolve) {
         // Possibly delay each call to query_overpass to avoid request rate threshold
         // Since we are executing calls sequentially, this will pause sleepBetweenCalls before each call
         setTimeout(() =>
-            query_overpass(query(boundsAsString), (error, data) => {
+            queryOverpass(query(boundsAsString), (error, data) => {
                 if (!error) {
                     resolve(data);
-                }
-                else {
+                } else {
                     reject(error);
                 }
             }, options),
-            options.sleepBetweenCalls || 0)
+            options.sleepBetweenCalls || 0);
     });
 });
 
-
-/***
+/**
  * fetches transit data in squares sequentially from OpenStreetMap using the Overpass API.
  * (concurrent calls were triggering API throttle limits)
  * @param {Number} cellSize Splits query-overpass into separate requests, by splitting
@@ -80,12 +79,10 @@ export const fetchTransit = R.curry((options, bounds) => {
  * 200 by 200km bounding boxes will be created and sent to query-overpass. Any remainder will
  * be queried separately. The results from all queries are merged by feature id so that no
  * duplicates are returned.
- * @param {Object} options Options to pass to query-overpass, plus the following:
- * @param {Number} options.cellSize Size of cells to request in kilometers
- * @param {Number} options.sleepBetweenCalls Pause this many milliseconds between calls to avoid the request rate limit
- * @param {Object} options.testBounds Used only for testing
- * @param {Array} bounds [lat_min, lon_min, lat_max, lon_max]
- *
+ * @param {Number} sleepBetweenCalls Pause this many milliseconds between calls to avoid the request rate limit
+ * @param {Object} testBounds Used only for testing
+ * @param {[Number]} bounds [lat_min, lon_min, lat_max, lon_max]
+ * @returns {Object} Chained Tasks to fetch the data
  */
 const fetchTransitCelled = ({cellSize, sleepBetweenCalls, testBounds}, bounds) => {
     const units = 'kilometers';
@@ -111,16 +108,15 @@ const fetchTransitCelled = ({cellSize, sleepBetweenCalls, testBounds}, bounds) =
 
 
     // sequenced :: Task (Array Object)
-    //const sequenced = R.sequence(Task.of, fetchTasks);
+    // const sequenced = R.sequence(Task.of, fetchTasks);
     return chainedTasks.chain((results) =>
         Task.of(
             R.pipe(
-                mergeAllWithKey(concatFeatures),  // combine the results into one obj with concatinated features
-                R.over(                         // remove features with the same id
+                mergeAllWithKey(concatFeatures), // combine the results into one obj with concatinated features
+                R.over( // remove features with the same id
                     R.lens(R.prop('features'), R.assoc('features')),
                     removeDuplicateObjectsByProp('id'))
             )(results)
         )
     );
 };
-

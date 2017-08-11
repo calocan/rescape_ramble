@@ -1,10 +1,9 @@
-import {connect} from 'react-redux';
-import R from 'ramda';
-import Region from './Region.js';
-import {geojsonActions as geojsonActions, actionCreators as geojsonActionCreators} from 'store/reducers/geojson/geojsons';
-import openStreetMaps, {actions as openStreetMapActions} from 'store/reducers/geojson/openStreetMaps'
+const {connect} = require('react-redux');
+const R = require('ramda');
+const Region = require('./Region.js').default;
+const {actions} = require('store/reducers/geojson/geojsons');
 
-export const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = module.exports.mapStateToProps = (state, ownProps) => {
     return R.merge(
         ownProps,
         {
@@ -12,21 +11,21 @@ export const mapStateToProps = (state, ownProps) => {
             accessToken: ownProps.region.mapbox.mapboxApiAccessToken
         }
     );
-}
+};
 
 const mapDispatchToProps = (dispatch) => {
     return {
         onRegionIsChanged: (options, bounds) => {
             dispatch({
-                type: geojsonActions.FETCH_TRANSIT,
+                type: actions.FETCH_TRANSIT_DATA,
                 args: [options, bounds]
-            })
-        },
+            });
+        }
     };
 };
 
 const RegionContainer = connect(
-    /***
+    /**
      * The wrapped component needs access to the settings and a r
      * @param state
      * @returns {{}}
@@ -34,5 +33,5 @@ const RegionContainer = connect(
     mapStateToProps, mapDispatchToProps()
 )(Region);
 
-export default RegionContainer;
+module.exports.default = RegionContainer;
 

@@ -9,31 +9,31 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import R from 'ramda';
+const R = require('ramda');
 const reduceFeaturesBy = R.reduceBy((acc, feature) => acc.concat(feature), []);
 const regex = /(.+)\/\d+/;
 // Get the feature by type based on its id
 // featuresByType:: Feature f = [f] -> <String, [f]>
-export const featureByType = reduceFeaturesBy(feature => R.match(regex, feature.id)[1]);
+const featureByType = module.exports.featureByType = reduceFeaturesBy(feature => R.match(regex, feature.id)[1]);
 
-/***
+/**
  * Split geojson by feature type
  * @param {Object} geojson
  * @param {[Feature]} osm.features Features that are way, node, or route according to their id
  * @return {Object} Copies of the gtfs with a single type of Feature
  * geojsonByType:: geojson g = g -> <String, g>
  */
-export const geojsonByType = R.curry((geojson) => R.map(
+module.exports.geojsonByType = R.curry((geojson) => R.map(
     // Make a copy of the geojson with the typed features
     featureOfType => R.set(R.lensProp('features'), featureOfType, geojson),
     featureByType(geojson.features) // Reduce by feature type
 ));
 
-/***
+/**
  * Fetch each square of transit and merge the results by feature id
  * concatValues combines are results sets when they return
  * @param k.
  * @param l
  * @param r
  */
-export const concatFeatures = (k, l, r) => k === 'features' ? R.concat(l, r) : r;
+module.exports.concatFeatures = (k, l, r) => k === 'features' ? R.concat(l, r) : r;

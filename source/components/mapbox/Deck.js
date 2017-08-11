@@ -8,13 +8,14 @@
  *
  * THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import React from 'react';
-import {featuresByType} from 'helpers/geojsonHelpers';
-import DeckGL, {IconLayer, WebMercatorViewport} from 'deck.gl';
-import rbush from 'rbush';
-import R from 'ramda';
-import locationIconMapping from './locationIconMapping';
-import PropTypes from 'prop-types';
+const React = require('react');
+const {featuresByType} = require('helpers/geojsonHelpers');
+const {IconLayer, WebMercatorViewport} = require('deck.gl');
+const DeckGL = require('deck.gl').default;
+const rbush = require('rbush');
+const R = require('ramda');
+const locationIconMapping = require('./locationIconMapping').default;
+const PropTypes = require('prop-types');
 const e = React.createElement;
 
 const ICON_SIZE = 60;
@@ -37,7 +38,6 @@ function getIconSize(size) {
 }
 
 class Deck extends React.Component {
-
     constructor(props) {
         super(props);
 
@@ -159,7 +159,7 @@ class Deck extends React.Component {
             iconAtlas,
             showCluster,
             locationIconMapping,
-            debug: true,
+            debug: true
         }));
     }
 }
@@ -174,6 +174,6 @@ const {
 
 Deck.propTypes = {
     viewport: object.isRequired,
-    geojson: object.isRequired,
+    geojson: object.isRequired
 };
-export default Deck
+module.exports.default = Deck;

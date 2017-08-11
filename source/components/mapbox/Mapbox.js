@@ -9,21 +9,20 @@
  * THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import PropTypes from 'prop-types';
-import MapGL from 'react-map-gl';
-import React from 'react';
-import createMapStops from 'components/mapStop/mapStops';
-import MapMarkers from 'components/mapMarker/MapMarkers';
-import {reqPath} from 'helpers/throwingFunctions';
-import {geojsonByType} from 'helpers/geojsonHelpers';
-import Deck from './Deck';
-import R from 'ramda';
-import styles from './Mapbox.style.js';
+const PropTypes = require('prop-types');
+const MapGL = require('react-map-gl');
+const React = require('react');
+const createMapStops = require('components/mapStop/mapStops').default;
+const MapMarkers = require('components/mapMarker/MapMarkers').default;
+const {reqPath} = require('helpers/throwingFunctions');
+const {geojsonByType} = require('helpers/geojsonHelpers');
+const Deck = require('./Deck').default;
+const R = require('ramda');
+const styles = require('./Mapbox.style.js').default;
 const MapStops = createMapStops(React);
 const e = React.createElement;
 
 class Mapbox extends React.Component {
-
     componentWillReceiveProps(nextProps) {
         const osmLens = R.lensPath(['region', 'geojson', 'osm', 'features', 'length']);
         const markersLens = R.lensPath(['region', 'geojson', 'markers']);
@@ -41,13 +40,13 @@ class Mapbox extends React.Component {
         const {node, way} = reqPath(['state', 'osmByType'], this) || {};
         const markers = {type: 'FeatureCollection', features: reqPath(['state', 'markers'], this) || []};
 
-        //<MapStops geojson={node || {}} viewport={viewport}/>,
-        //<MapLines geojson={way || {}} viewport={viewport}/>,
+        // <MapStops geojson={node || {}} viewport={viewport}/>,
+        // <MapLines geojson={way || {}} viewport={viewport}/>,
         const mapMarkers = e(MapMarkers, {
             geojson: markers,
             viewport,
             regionId: this.props.region.id
-        })
+        });
         const deck = e(Deck, {
             viewport,
             geojson: markers,
@@ -55,7 +54,7 @@ class Mapbox extends React.Component {
             showCluster,
             onHover: hoverMarker,
             onClick: selectMarker
-        })
+        });
 
         return e(MapGL, R.merge(viewport, {
             mapboxApiAccessToken,
@@ -86,6 +85,6 @@ Mapbox.propTypes = {
     region: object.isRequired
 };
 
-export default Mapbox;
+module.exports.default = Mapbox;
 
 

@@ -9,20 +9,20 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import defaultConfig from 'store/data/default/config'
-import journeys from './journeys.json';
-import locations from './locations.json';
-import routes from './routes';
-import * as routeTypes from 'store/data/default/routeTypes';
-import trips from './trips';
-import stops from './stops';
-import {mergeDeep} from 'helpers/functions'
+const defaultConfig = require('store/data/default/config').default;
+const journeys = require('./journeys.json').default;
+const locations = require('./locations.json').default;
+const routes = require('./routes').default;
+const routeTypes = require('store/data/default/routeTypes').default;
+const trips = require('./trips').default;
+const stops = require('./stops').default;
+const {mergeDeep} = require('helpers/functions');
 
-/***
+/**
  * California configuration
  * @type {*}
  */
-export default mergeDeep(defaultConfig, {regions: [{
+module.exports.default = mergeDeep(defaultConfig, {regions: [{
     id: 'california',
 
     gtfs: {
@@ -34,11 +34,11 @@ export default mergeDeep(defaultConfig, {regions: [{
 
     travel: {
         journeys,
-        locations,
+        locations
     },
 
     geospatial: {
-        //bounds: [-125, 31, -113, 43]
+        // bounds: [-125, 31, -113, 43]
         bounds: [-122.720306, 37.005783, -121.568275, 38.444660]
     },
 

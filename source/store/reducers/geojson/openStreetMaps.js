@@ -9,16 +9,22 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import R from 'ramda'
-import {fetchTransit} from 'store/async/overpassIO'
-import {asyncActions, asyncActionCreators} from 'store/reducers/actionHelpers'
-import {SCOPE} from './geojsons'
+const R = require('ramda');
+const {fetchTransit} = require('store/async/overpassIO');
+const {asyncActions, asyncActionCreators} = require('store/reducers/actionHelpers');
+const {SCOPE} = require('./geojsons');
 const ACTION_KEY = 'transit';
 const makeAsyncActionCreators = asyncActionCreators(SCOPE, ACTION_KEY);
-export const actions = asyncActions(SCOPE, ACTION_KEY, 'FETCH');
-export const actionCreators = makeAsyncActionCreators('FETCH', fetchTransit);
+const actions = module.exports.actions = asyncActions(SCOPE, ACTION_KEY, 'FETCH');
+const actionCreators = module.exports.actionCreators = makeAsyncActionCreators('FETCH', fetchTransit);
 
-export default (state = {}, action = {}) => {
+/**
+ * Reduces openStreetMaps state
+ * @param {Object} state The state
+ * @param {Object} action The action
+ * @returns {Object} the reduced state
+ */
+module.exports.default = (state = {}, action = {}) => {
     switch (action.type) {
         case actions.FETCH_TRANSIT_DATA:
             // TODO handle with reselect in containers instead

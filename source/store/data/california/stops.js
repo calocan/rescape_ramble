@@ -1,16 +1,16 @@
 
-import {createStop} from '../dataCreationHelpers'
-import * as places from './places'
-import * as stopTypes from '../default/stopTypes'
+const {createStop} = require('../dataCreationHelpers');
+const places = require('./places').default;
+const stopTypes = require('../default/stopTypes').default;
 
-export const UNION = 'Union';
-export const CENTRAL = 'Central';
-export const JACK_LONDON_SQUARE = 'Jack London Square';
-export const ACE = 'ACE';
-export const TRANSBAY = 'Transbay';
-export const AMTRAK = 'Amtrak';
+const UNION = module.exports.UNION = 'Union';
+const CENTRAL = module.exports.CENTRAL = 'Central';
+const JACK_LONDON_SQUARE = module.exports.JACK_LONDON_SQUARE = 'Jack London Square';
+const ACE = module.exports.ACE = 'ACE';
+const TRANSBAY = module.exports.TRANSBAY = 'Transbay';
+const AMTRAK = module.exports.AMTRAK = 'Amtrak';
 
-export default [
+module.exports.default = [
     createStop(places.LOS_ANGELES, UNION,
         { lon: -118.236502, lat: 34.056219 },
     ),
@@ -42,6 +42,6 @@ export default [
     createStop(places.TRUCKEE, AMTRAK,
         { lon: -120.185620, lat: 39.327493 },
         { stopType: stopTypes.DEPOT }
-    ),
-]
+    )
+];
 

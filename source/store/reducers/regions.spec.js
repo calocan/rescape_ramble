@@ -1,10 +1,10 @@
 
-import reducer from 'store/reducers/regions'
-import {actionTypes as geoJsonActions} from 'store/reducers/geojson/geojsons'
-import {Map} from 'immutable'
-import testConfig from 'store/data/test/config'
-import initialState from 'store/data/initialState'
-import {reqPath} from 'helpers/throwingFunctions'
+const reducer = require('store/reducers/regions').default;
+const {actions} = require('store/reducers/geojson/geojsons').actions;
+const {Map} = require('immutable');
+const testConfig = require('store/data/test/config').default;
+const initialState = require('store/data/initialState').default;
+const {reqPath} = require('helpers/throwingFunctions');
 
 describe('mabpox reducer', () => {
     it('should return the initial state', () => {
@@ -22,13 +22,13 @@ describe('mabpox reducer', () => {
             reducer(
                 state.regions,
                 {
-                    type: geoJsonActions.FETCH_TRANSIT_SUCCESS,
+                    type: actions.FETCH_TRANSIT_SUCCESS,
                     value: {
-                        'type': 'FeatureCollection',
-                        'generator': 'overpass-turbo',
-                        'copyright': 'The data included in this document is from www.openstreetmap.org. The data is made available under ODbL.',
-                        'timestamp': '2017-04-06T22:46:03Z',
-                        'features': []
+                        type: 'FeatureCollection',
+                        generator: 'overpass-turbo',
+                        copyright: 'The data included in this document is from www.openstreetmap.org. The data is made available under ODbL.',
+                        timestamp: '2017-04-06T22:46:03Z',
+                        features: []
                     }
                 }
             )
@@ -46,7 +46,7 @@ describe('mabpox reducer', () => {
             pitch: 40,
             startDragLngLat: null,
             zoom: 4
-        }
+        };
         expect(
             reqPath(
                 [reqPath(['regions', 'currentKey'], state), 'mapbox', 'viewport'],
@@ -60,7 +60,7 @@ describe('mabpox reducer', () => {
                 })).toJS()
         ).toEqual(
             viewport
-        )
-    })
+        );
+    });
 });
 
