@@ -145,7 +145,6 @@ module.exports.assertSourcesSinks = function assertSourcesSinks(sources, sinks, 
 
     // Assert that the time diagram streams of the main sink and the expect sink are equivalent
     Object.keys(sinks)
-        .filter(key => key === 'POUCHDB')
         .map(sinkKey => {
             timeSource.assertEqual(_main[sinkKey], _sinks[sinkKey]);
         });

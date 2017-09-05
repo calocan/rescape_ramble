@@ -12,15 +12,15 @@
  * Configures and returns the Store with the root reducer and middleware
  */
 // Do this once before any other code in your app (http://redux.js.org/docs/advanced/AsyncActions.html)
-const thunk = require('redux-thunk');
+const thunk = require('redux-thunk').default;
 const {applyMiddleware, compose, createStore} = require('redux');
 const {createCycleMiddleware} = require('redux-cycles');
 const reducer = require('./reducers/reducer').default;
 const {persistentStore} = require('redux-pouchdb-plus');
 const {responsiveStoreEnhancer} = require('redux-responsive');
-const PouchDB = require('pouchdb');
+const PouchDB = require('pouchdb').default;
 const R = require('ramda');
-const {startSync} = require('./async/pouchDbIO');
+const {startSync} = require('async/pouchDbIO');
 const {main} = require('async/cycle');
 const {run} = require('@cycle/run');
 const {makePouchDBDriver} = require('cycle-pouchdb-most-driver');
@@ -74,10 +74,12 @@ module.exports.default = (initialState = {}) => createStore(
     compose(
         responsiveStoreEnhancer,
         // Use thunk and the persistentStore, the latter applies couchDB persistence to the store
-        applyMiddleware(
-            thunk,
-            cycleMiddleware,
-            environmentMiddlewares
+        applyMiddleware.apply(undefined,
+            R.concat([
+              thunk,
+              cycleMiddleware,
+            ],
+            environmentMiddlewares)
         ),
         // Use the Chrome devToolsExtension
         typeof (window) !== 'undefined' && window.devToolsExtension ? window.devToolsExtension() : f => f,

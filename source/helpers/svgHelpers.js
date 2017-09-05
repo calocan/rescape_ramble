@@ -10,9 +10,9 @@
  */
 const React = require('react');
 const R = require('ramda');
-const e = React.createElement;
+const {eMap} = require('helpers/componentHelpers')
 
-const {circle, polygon, polyline, g} = require('react').ReactSVG;
+const {circle, polygon, polyline, g} = eMap(['circle', 'polygon', 'polyline', 'g']);
 
 /**
  * Inspects a feature and returns its type and projected point representation
@@ -48,7 +48,7 @@ const resolveSvgPoints = module.exports.resolveSvgPoints = (opt, feature) => {
  * @param {[Object]} features geojson features for which to resolve SVG shapes
  * @returns {ReactElement<P>|CElement<P, T>|ReactSVGElement|DOMElement<P, T>|CElement<P, ClassicComponent<P, ComponentState>>|DetailedReactHTMLElement<P, T>|any} React SVG elements
  */
-module.exports.resolveSvgJsx = (opt, features) => {
+module.exports.resolveSvgReact = (opt, features) => {
     const pointData = R.map(
         feature => {
             return {
@@ -88,4 +88,3 @@ module.exports.resolveSvgJsx = (opt, features) => {
         paths
     );
 };
-

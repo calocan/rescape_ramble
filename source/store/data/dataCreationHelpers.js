@@ -19,7 +19,7 @@ const {
     fromImmutable,
     idOrIdFromObj,
     reduceWithNext
-} = require('helpers/functions');
+} = require('rescape-ramda');
 const {toTimeString} = require('helpers/timeHelpers');
 const {calculateDistance} = require('helpers/geospatialHelpers');
 

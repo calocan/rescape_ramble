@@ -10,7 +10,7 @@
  */
 const R = require('ramda');
 const Task = require('data.task');
-const {promiseToTask} = require('helpers/functions');
+const {promiseToTask} = require('rescape-ramda');
 
 /** *
  * Curryable function returning a Task to seek data from a PouchDb with a given id.

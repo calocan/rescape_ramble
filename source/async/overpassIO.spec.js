@@ -10,7 +10,7 @@
  */
 
 const {fetchTransit} = require('./overpassIO');
-const {removeDuplicateObjectsByProp} = require('helpers/functions');
+const {removeDuplicateObjectsByProp} = require('rescape-ramda');
 const {expectTask} = require('helpers/jestHelpers');
 const {retrieveOrFetch} = require('./storageIO');
 const {createLocalDb, cycleLocalDb, destroy, getDb} = require('./pouchDbIO');

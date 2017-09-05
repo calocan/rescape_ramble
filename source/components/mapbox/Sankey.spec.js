@@ -1,5 +1,5 @@
 /**
- * Created by Andy Likuski on 2017.02.06
+ * Created by Andy Likuski on 2017.09.04
  * Copyright (c) 2017 Andy Likuski
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
@@ -8,27 +8,17 @@
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+const sankey = require('d3-sankey');
+const R = require('ramda');
+const sample = require('async/sankey.sample');
+const {nodePositon, linkPositon} = require('./Sankey');
 
-const thunk = require('redux-thunk');
-const {mapStateToProps} = require('components/marker/MarkerListContainer');
-const configureStore = require('redux-mock-store');
+describe('Sankey', () => {
+  test('Renders', () => {
 
-const testConfig = require('store/data/test/config').default;
-const initialState = require('store/data/initialState').default;
-const {reqPath} = require('rescape-ramda').throwing;
-
-const middlewares = [thunk];
-const mockStore = configureStore(middlewares);
-
-describe('MarkerListContainer', () => {
-    test('mapStateToProps flattens viewport props', () => {
-        const store = mockStore(initialState(testConfig));
-        const state = store.getState();
-
-        const ownProps = {
-            region: reqPath(['regions', reqPath(['regions', 'currentKey'], state)], state)
-        };
-
-        expect(mapStateToProps(store.getState(), ownProps)).toMatchSnapshot();
-    });
+    const sankey = sankey().nodeWidth(15).nodePadding(10).extent([[1, 1], [959, 494]]);
+    const sample = sankey(sample);
+    expect(R.length(sample.nodes.map(nodePosition))).toEqual(1);
+    expect(R.length(sample.links.map(linkPosition))).toEqual(1);
+  })
 });

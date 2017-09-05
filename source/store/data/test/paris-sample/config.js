@@ -11,7 +11,7 @@
 
 const defaultConfig = require('store/data/default/config').default;
 const routeTypes = require('store/data/default/routeTypes');
-const {mergeDeep} = require('helpers/functions');
+const {mergeDeep} = require('rescape-ramda');
 
 /**
  * Sample of center of Paris with geojson preloaded

@@ -4,7 +4,7 @@ const {actions} = require('store/reducers/geojson/geojsons').actions;
 const {Map} = require('immutable');
 const testConfig = require('store/data/test/config').default;
 const initialState = require('store/data/initialState').default;
-const {reqPath} = require('helpers/throwingFunctions');
+const {reqPath} = require('rescape-ramda').throwing;
 
 describe('mabpox reducer', () => {
     it('should return the initial state', () => {

@@ -2499,6 +2499,10 @@ d3-array@1:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/d3-array/-/d3-array-1.2.0.tgz#147d269720e174c4057a7f42be8b0f3f2ba53108"
 
+d3-collection@1:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/d3-collection/-/d3-collection-1.0.4.tgz#342dfd12837c90974f33f1cc0a785aea570dcdc2"
+
 d3-geo@^1.6.3:
   version "1.6.4"
   resolved "https://registry.yarnpkg.com/d3-geo/-/d3-geo-1.6.4.tgz#f20e1e461cb1845f5a8be55ab6f876542a7e3199"
@@ -2508,6 +2512,24 @@ d3-geo@^1.6.3:
 d3-hexbin@^0.2.1:
   version "0.2.2"
   resolved "https://registry.yarnpkg.com/d3-hexbin/-/d3-hexbin-0.2.2.tgz#9c5837dacfd471ab05337a9e91ef10bfc4f98831"
+
+d3-path@1:
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/d3-path/-/d3-path-1.0.5.tgz#241eb1849bd9e9e8021c0d0a799f8a0e8e441764"
+
+d3-sankey@^0.7.1:
+  version "0.7.1"
+  resolved "https://registry.yarnpkg.com/d3-sankey/-/d3-sankey-0.7.1.tgz#d229832268fc69a7fec84803e96c2256a614c521"
+  dependencies:
+    d3-array "1"
+    d3-collection "1"
+    d3-shape "^1.2.0"
+
+d3-shape@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/d3-shape/-/d3-shape-1.2.0.tgz#45d01538f064bafd05ea3d6d2cb748fd8c41f777"
+  dependencies:
+    d3-path "1"
 
 d@1:
   version "1.0.0"
@@ -2549,9 +2571,9 @@ decamelize@^1.0.0, decamelize@^1.1.1, decamelize@^1.1.2:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/decamelize/-/decamelize-1.2.0.tgz#f6534d15148269b20352e7bee26f501f9a191290"
 
-deck.gl@^4.0.6:
-  version "4.1.0"
-  resolved "https://registry.yarnpkg.com/deck.gl/-/deck.gl-4.1.0.tgz#8c9ee434a486c854ffa55891f2316b19f7bcc28c"
+deck.gl@^4.1.2:
+  version "4.1.2"
+  resolved "https://registry.yarnpkg.com/deck.gl/-/deck.gl-4.1.2.tgz#079b1d4f48f2457f87cd31597bb5d42e59db6929"
   dependencies:
     d3-hexbin "^0.2.1"
     earcut "^2.0.6"
@@ -3701,13 +3723,21 @@ gl-constants@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/gl-constants/-/gl-constants-1.0.0.tgz#597a504e364750ff50253aa35f8dea7af4a5d233"
 
+gl-mat3@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/gl-mat3/-/gl-mat3-1.0.0.tgz#89633219ca429379a16b9185d95d41713453b912"
+
 gl-mat4@^1.1.4:
   version "1.1.4"
   resolved "https://registry.yarnpkg.com/gl-mat4/-/gl-mat4-1.1.4.tgz#1e895b55892e56a896867abd837d38f37a178086"
 
-gl-matrix@^2.3.2:
-  version "2.4.0"
-  resolved "https://registry.yarnpkg.com/gl-matrix/-/gl-matrix-2.4.0.tgz#2089b13301a29eec822d9d99dffc1f78ee9a3c50"
+gl-quat@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/gl-quat/-/gl-quat-1.0.0.tgz#0945ec923386f45329be5dc357b1c8c2d47586c5"
+  dependencies:
+    gl-mat3 "^1.0.0"
+    gl-vec3 "^1.0.3"
+    gl-vec4 "^1.0.0"
 
 gl-vec2@^1.0.0:
   version "1.0.0"
@@ -3717,7 +3747,7 @@ gl-vec3@^1.0.3:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/gl-vec3/-/gl-vec3-1.0.3.tgz#110fd897d0729f6398307381567d0944941bf22b"
 
-gl-vec4@^1.0.1:
+gl-vec4@^1.0.0, gl-vec4@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/gl-vec4/-/gl-vec4-1.0.1.tgz#97d96878281b14b532cbce101785dfd1cb340964"
 
@@ -5288,12 +5318,17 @@ ltgt@2.2.0:
   version "2.2.0"
   resolved "https://registry.yarnpkg.com/ltgt/-/ltgt-2.2.0.tgz#b65ba5fcb349a29924c8e333f7c6a5562f2e4842"
 
-luma.gl@^3.0.2:
-  version "3.0.2"
-  resolved "https://registry.yarnpkg.com/luma.gl/-/luma.gl-3.0.2.tgz#0da003f104e7341d50543e55cb1cfe81f6014b00"
+luma.gl@^4.0.2:
+  version "4.0.2"
+  resolved "https://registry.yarnpkg.com/luma.gl/-/luma.gl-4.0.2.tgz#33a0de64164f722b81ade6f318f04a85ecc5a19f"
   dependencies:
     gl-constants "^1.0.0"
-    gl-matrix "^2.3.2"
+    gl-mat4 "^1.1.4"
+    gl-quat "^1.0.0"
+    gl-vec2 "^1.0.0"
+    gl-vec3 "^1.0.3"
+    gl-vec4 "^1.0.1"
+    seer "^0.2.2"
     webgl-debug "^1.0.2"
 
 macaddress@^0.2.8:
@@ -6841,6 +6876,12 @@ raf@^3.1.0, raf@^3.3.0:
   dependencies:
     performance-now "^2.1.0"
 
+ramda-fantasy-validation@^0.2.0:
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/ramda-fantasy-validation/-/ramda-fantasy-validation-0.2.0.tgz#55381e2dd5f6924ac2b1fa5660cb1fb9caf612f7"
+  dependencies:
+    ramda "^0.17.1"
+
 ramda-fantasy@>=0.4.0, ramda-fantasy@^0.8.0:
   version "0.8.0"
   resolved "https://registry.yarnpkg.com/ramda-fantasy/-/ramda-fantasy-0.8.0.tgz#9e8c37d93ec0a70796cfc10873dd9c50850390f6"
@@ -6857,6 +6898,10 @@ ramda-maybe@^0.18.0:
 ramda@>=0.15.0, ramda@^0.24.1:
   version "0.24.1"
   resolved "https://registry.yarnpkg.com/ramda/-/ramda-0.24.1.tgz#c3b7755197f35b8dc3502228262c4c91ddb6b857"
+
+ramda@^0.17.1:
+  version "0.17.1"
+  resolved "https://registry.yarnpkg.com/ramda/-/ramda-0.17.1.tgz#4c198147d3ab54e8c15255f11730e2116f6e6073"
 
 ramda@^0.18.0:
   version "0.18.0"
@@ -7392,6 +7437,29 @@ requires-port@1.0.x, requires-port@1.x.x:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/requires-port/-/requires-port-1.0.0.tgz#925d2601d39ac485e091cf0da5c6e694dc3dcaff"
 
+rescape-ramda@^1.0.7:
+  version "1.0.7"
+  resolved "https://registry.yarnpkg.com/rescape-ramda/-/rescape-ramda-1.0.7.tgz#603b2fe9709acdcbe8f8fd2dacffa1ac0be5ac5d"
+  dependencies:
+    data.maybe "^1.2.2"
+    data.task "^3.1.1"
+    pretty-format "^20.0.3"
+    ramda "^0.24.1"
+    ramda-fantasy "^0.8.0"
+    ramda-maybe "^0.18.0"
+
+rescape-validate@^1.0.7:
+  version "1.0.7"
+  resolved "https://registry.yarnpkg.com/rescape-validate/-/rescape-validate-1.0.7.tgz#28511c4e2a0053b85dd003db376d9afeccf5f5d2"
+  dependencies:
+    data.maybe "^1.2.2"
+    pretty-format "^20.0.3"
+    ramda "^0.24.1"
+    ramda-fantasy "^0.8.0"
+    ramda-fantasy-validation "^0.2.0"
+    ramda-maybe "^0.18.0"
+    rescape-ramda "^1.0.7"
+
 reselect@^3.0.1:
   version "3.0.1"
   resolved "https://registry.yarnpkg.com/reselect/-/reselect-3.0.1.tgz#efdaa98ea7451324d092b2b2163a6a1d7a9a2147"
@@ -7522,7 +7590,7 @@ schema-utils@^0.3.0:
   dependencies:
     ajv "^5.0.0"
 
-seer@^0.2.3:
+seer@^0.2.2, seer@^0.2.3:
   version "0.2.3"
   resolved "https://registry.yarnpkg.com/seer/-/seer-0.2.3.tgz#e7ba529921330327dbbf30141fbf052296772fb7"
 

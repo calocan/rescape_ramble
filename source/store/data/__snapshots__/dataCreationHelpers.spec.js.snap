@@ -1,0 +1,983 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Data Creation Helpers Creates Trip 1`] = `
+Object {
+  "direction": Object {
+    "id": "0",
+    "resolveToStop": [Function],
+    "resolveTripSymbol": [Function],
+  },
+  "id": "LAX->REN Everyday Yearlong",
+  "route": Object {
+    "id": "LAX<->REN",
+    "places": Object {
+      "from": Object {
+        "id": "LAX",
+        "label": "Los Angeles",
+      },
+      "to": Object {
+        "id": "REN",
+        "label": "Reno",
+      },
+    },
+    "routeLongName": "Los Angeles/Reno",
+    "routeShortName": "LAX<->REN",
+    "routeType": Object {
+      "description": "Inter Regional Rail Service",
+      "id": "103",
+      "supported": true,
+    },
+    "via": undefined,
+  },
+  "service": Object {
+    "days": Array [
+      "everyday",
+    ],
+    "endDate": undefined,
+    "id": "yearlong_everyday",
+    "label": "Everyday Yearlong",
+    "seasons": Array [
+      "yearlong",
+    ],
+    "startDate": undefined,
+  },
+  "tripHeadsign": "Reno",
+}
+`;
+
+exports[`Data Creation Helpers Creates a Route 1`] = `
+Object {
+  "id": "LAX<->REN",
+  "places": Object {
+    "from": Object {
+      "id": "LAX",
+      "label": "Los Angeles",
+    },
+    "to": Object {
+      "id": "REN",
+      "label": "Reno",
+    },
+  },
+  "routeLongName": "Los Angeles/Reno",
+  "routeShortName": "LAX<->REN",
+  "routeType": Object {
+    "description": "Inter Regional Rail Service",
+    "id": "103",
+    "supported": true,
+  },
+  "via": undefined,
+}
+`;
+
+exports[`Data Creation Helpers Creates a Route 2`] = `
+Object {
+  "id": "LAX<-East-Bay->REN",
+  "places": Object {
+    "from": Object {
+      "id": "LAX",
+      "label": "Los Angeles",
+    },
+    "to": Object {
+      "id": "REN",
+      "label": "Reno",
+    },
+  },
+  "routeLongName": "Los Angeles/Reno via East-Bay",
+  "routeShortName": "LAX<-East-Bay->REN via East-Bay",
+  "routeType": Object {
+    "description": "Replacement Rail Service",
+    "id": "110",
+    "supported": false,
+  },
+  "via": "East-Bay",
+}
+`;
+
+exports[`Data Creation Helpers Creates a Route id 1`] = `"LAX<->REN"`;
+
+exports[`Data Creation Helpers Creates a Route id 2`] = `"LAX<-East-Bay->REN"`;
+
+exports[`Data Creation Helpers Creates a Service 1`] = `
+Object {
+  "days": Array [
+    "weekend",
+  ],
+  "endDate": "20170831",
+  "id": "summer_weekend",
+  "label": "20170601-20170831 Weekend Summer",
+  "seasons": Array [
+    "summer",
+  ],
+  "startDate": "20170601",
+}
+`;
+
+exports[`Data Creation Helpers Creates a Stop 1`] = `
+Object {
+  "id": "LAX-Union",
+  "location": Object {
+    "lat": 34.056219,
+    "lon": -118.236502,
+  },
+  "place": Object {
+    "id": "LAX",
+    "label": "Los Angeles",
+  },
+  "stopName": "Los Angeles Union Station",
+  "which": "Union",
+}
+`;
+
+exports[`Data Creation Helpers Creates a Stop 2`] = `
+Object {
+  "id": "LAX-Union",
+  "location": Object {
+    "lat": 34.056219,
+    "lon": -118.236502,
+  },
+  "place": Object {
+    "id": "LAX",
+    "label": "Los Angeles",
+  },
+  "stopName": "LA Fancy Station",
+  "which": "Union",
+}
+`;
+
+exports[`Data Creation Helpers Creates a Stop 3`] = `
+Object {
+  "id": "LAX-Union",
+  "location": Object {
+    "lat": 34.056219,
+    "lon": -118.236502,
+  },
+  "place": Object {
+    "id": "LAX",
+    "label": "Los Angeles",
+  },
+  "stopName": "Los Angeles Union MegaStation",
+  "which": "Union",
+}
+`;
+
+exports[`Data Creation Helpers Creates a Stop id from a Place and Stop location 1`] = `"LAX-Union"`;
+
+exports[`Data Creation Helpers Creates a Trip id 1`] = `"LAX->REN Everyday Yearlong"`;
+
+exports[`Trips with Stops Creates Trips with Stop Times Pair 1`] = `
+Array [
+  Object {
+    "direction": Object {
+      "id": "0",
+      "resolveToStop": [Function],
+      "resolveTripSymbol": [Function],
+    },
+    "id": "LAX->REN Everyday Yearlong",
+    "route": Object {
+      "id": "LAX<->REN",
+      "places": Object {
+        "from": Object {
+          "id": "LAX",
+          "label": "Los Angeles",
+        },
+        "to": Object {
+          "id": "REN",
+          "label": "Reno",
+        },
+      },
+      "routeLongName": "Los Angeles/Reno",
+      "routeShortName": "LAX<->REN",
+      "routeType": Object {
+        "description": "Inter Regional Rail Service",
+        "id": "103",
+        "supported": true,
+      },
+      "via": undefined,
+    },
+    "service": Object {
+      "days": Array [
+        "everyday",
+      ],
+      "endDate": undefined,
+      "id": "yearlong_everyday",
+      "label": "Everyday Yearlong",
+      "seasons": Array [
+        "yearlong",
+      ],
+      "startDate": undefined,
+    },
+    "stopTimes": Array [
+      Object {
+        "departureTime": "09:10",
+        "stop": Object {
+          "id": "SFC-Transbay",
+          "location": Object {
+            "lat": 37.789339,
+            "lon": -122.392481,
+          },
+          "place": Object {
+            "id": "SFC",
+            "label": "San Francisco",
+          },
+          "stopName": "San Francisco Transbay Terminal",
+          "which": "Transbay",
+        },
+        "totalDistance": 0,
+      },
+      Object {
+        "arrivalTime": "09:13:54",
+        "departureTime": "09:14:54",
+        "stop": Object {
+          "id": "OAK-Central",
+          "location": Object {
+            "lat": 37.806624,
+            "lon": -122.277158,
+          },
+          "place": Object {
+            "id": "OAK",
+            "label": "Oakland",
+          },
+          "stopName": "Oakland Central Station",
+          "which": "Central",
+        },
+        "stopSequence": 2,
+        "totalDistance": 10.313371948554073,
+        "trip": Object {
+          "direction": Object {
+            "id": "0",
+            "resolveToStop": [Function],
+            "resolveTripSymbol": [Function],
+          },
+          "id": "LAX->REN Everyday Yearlong",
+          "route": Object {
+            "id": "LAX<->REN",
+            "places": Object {
+              "from": Object {
+                "id": "LAX",
+                "label": "Los Angeles",
+              },
+              "to": Object {
+                "id": "REN",
+                "label": "Reno",
+              },
+            },
+            "routeLongName": "Los Angeles/Reno",
+            "routeShortName": "LAX<->REN",
+            "routeType": Object {
+              "description": "Inter Regional Rail Service",
+              "id": "103",
+              "supported": true,
+            },
+            "via": undefined,
+          },
+          "service": Object {
+            "days": Array [
+              "everyday",
+            ],
+            "endDate": undefined,
+            "id": "yearlong_everyday",
+            "label": "Everyday Yearlong",
+            "seasons": Array [
+              "yearlong",
+            ],
+            "startDate": undefined,
+          },
+          "tripHeadsign": "Reno",
+        },
+      },
+      Object {
+        "arrivalTime": "09:54:19",
+        "departureTime": "09:55:19",
+        "stop": Object {
+          "id": "SKN-Amtrak",
+          "location": Object {
+            "lat": 37.945332,
+            "lon": -121.285602,
+          },
+          "place": Object {
+            "id": "SKN",
+            "label": "Stockton",
+          },
+          "stopName": "Stockton Amtrak Station",
+          "which": "Amtrak",
+        },
+        "stopSequence": 3,
+        "totalDistance": 98.69869271402743,
+        "trip": Object {
+          "direction": Object {
+            "id": "0",
+            "resolveToStop": [Function],
+            "resolveTripSymbol": [Function],
+          },
+          "id": "LAX->REN Everyday Yearlong",
+          "route": Object {
+            "id": "LAX<->REN",
+            "places": Object {
+              "from": Object {
+                "id": "LAX",
+                "label": "Los Angeles",
+              },
+              "to": Object {
+                "id": "REN",
+                "label": "Reno",
+              },
+            },
+            "routeLongName": "Los Angeles/Reno",
+            "routeShortName": "LAX<->REN",
+            "routeType": Object {
+              "description": "Inter Regional Rail Service",
+              "id": "103",
+              "supported": true,
+            },
+            "via": undefined,
+          },
+          "service": Object {
+            "days": Array [
+              "everyday",
+            ],
+            "endDate": undefined,
+            "id": "yearlong_everyday",
+            "label": "Everyday Yearlong",
+            "seasons": Array [
+              "yearlong",
+            ],
+            "startDate": undefined,
+          },
+          "tripHeadsign": "Reno",
+        },
+      },
+      Object {
+        "arrivalTime": "10:26:26",
+        "departureTime": "10:27:26",
+        "stop": Object {
+          "id": "SAC-Amtrak",
+          "location": Object {
+            "lat": 38.584162,
+            "lon": -121.500675,
+          },
+          "place": Object {
+            "id": "SAC",
+            "label": "Sacramento",
+          },
+          "stopName": "Sacramento Amtrak Station",
+          "which": "Amtrak",
+        },
+        "stopSequence": 4,
+        "totalDistance": 172.17310803406272,
+        "trip": Object {
+          "direction": Object {
+            "id": "0",
+            "resolveToStop": [Function],
+            "resolveTripSymbol": [Function],
+          },
+          "id": "LAX->REN Everyday Yearlong",
+          "route": Object {
+            "id": "LAX<->REN",
+            "places": Object {
+              "from": Object {
+                "id": "LAX",
+                "label": "Los Angeles",
+              },
+              "to": Object {
+                "id": "REN",
+                "label": "Reno",
+              },
+            },
+            "routeLongName": "Los Angeles/Reno",
+            "routeShortName": "LAX<->REN",
+            "routeType": Object {
+              "description": "Inter Regional Rail Service",
+              "id": "103",
+              "supported": true,
+            },
+            "via": undefined,
+          },
+          "service": Object {
+            "days": Array [
+              "everyday",
+            ],
+            "endDate": undefined,
+            "id": "yearlong_everyday",
+            "label": "Everyday Yearlong",
+            "seasons": Array [
+              "yearlong",
+            ],
+            "startDate": undefined,
+          },
+          "tripHeadsign": "Reno",
+        },
+      },
+      Object {
+        "arrivalTime": "11:46:10",
+        "departureTime": "11:47:10",
+        "stop": Object {
+          "id": "TRU-Amtrak",
+          "location": Object {
+            "lat": 39.327493,
+            "lon": -120.18562,
+          },
+          "place": Object {
+            "id": "TRU",
+            "label": "Truckee",
+          },
+          "stopName": "Truckee Amtrak Depot",
+          "which": "Amtrak",
+        },
+        "stopSequence": 5,
+        "totalDistance": 312.7476949701635,
+        "trip": Object {
+          "direction": Object {
+            "id": "0",
+            "resolveToStop": [Function],
+            "resolveTripSymbol": [Function],
+          },
+          "id": "LAX->REN Everyday Yearlong",
+          "route": Object {
+            "id": "LAX<->REN",
+            "places": Object {
+              "from": Object {
+                "id": "LAX",
+                "label": "Los Angeles",
+              },
+              "to": Object {
+                "id": "REN",
+                "label": "Reno",
+              },
+            },
+            "routeLongName": "Los Angeles/Reno",
+            "routeShortName": "LAX<->REN",
+            "routeType": Object {
+              "description": "Inter Regional Rail Service",
+              "id": "103",
+              "supported": true,
+            },
+            "via": undefined,
+          },
+          "service": Object {
+            "days": Array [
+              "everyday",
+            ],
+            "endDate": undefined,
+            "id": "yearlong_everyday",
+            "label": "Everyday Yearlong",
+            "seasons": Array [
+              "yearlong",
+            ],
+            "startDate": undefined,
+          },
+          "tripHeadsign": "Reno",
+        },
+      },
+      Object {
+        "arrivalTime": "12:20:00",
+        "stop": Object {
+          "id": "REN-Amtrak",
+          "location": Object {
+            "lat": 38.243449,
+            "lon": -122.041192,
+          },
+          "place": Object {
+            "id": "REN",
+            "label": "Reno",
+          },
+          "stopName": "Reno Amtrak Station",
+          "which": "Amtrak",
+        },
+        "stopSequence": 6,
+        "totalDistance": 513.7309617362711,
+        "trip": Object {
+          "direction": Object {
+            "id": "0",
+            "resolveToStop": [Function],
+            "resolveTripSymbol": [Function],
+          },
+          "id": "LAX->REN Everyday Yearlong",
+          "route": Object {
+            "id": "LAX<->REN",
+            "places": Object {
+              "from": Object {
+                "id": "LAX",
+                "label": "Los Angeles",
+              },
+              "to": Object {
+                "id": "REN",
+                "label": "Reno",
+              },
+            },
+            "routeLongName": "Los Angeles/Reno",
+            "routeShortName": "LAX<->REN",
+            "routeType": Object {
+              "description": "Inter Regional Rail Service",
+              "id": "103",
+              "supported": true,
+            },
+            "via": undefined,
+          },
+          "service": Object {
+            "days": Array [
+              "everyday",
+            ],
+            "endDate": undefined,
+            "id": "yearlong_everyday",
+            "label": "Everyday Yearlong",
+            "seasons": Array [
+              "yearlong",
+            ],
+            "startDate": undefined,
+          },
+          "tripHeadsign": "Reno",
+        },
+      },
+    ],
+    "tripHeadsign": "Reno",
+  },
+  Object {
+    "direction": Object {
+      "id": "1",
+      "resolveToStop": [Function],
+      "resolveTripSymbol": [Function],
+    },
+    "id": "REN->LAX Everyday Yearlong",
+    "route": Object {
+      "id": "LAX<->REN",
+      "places": Object {
+        "from": Object {
+          "id": "LAX",
+          "label": "Los Angeles",
+        },
+        "to": Object {
+          "id": "REN",
+          "label": "Reno",
+        },
+      },
+      "routeLongName": "Los Angeles/Reno",
+      "routeShortName": "LAX<->REN",
+      "routeType": Object {
+        "description": "Inter Regional Rail Service",
+        "id": "103",
+        "supported": true,
+      },
+      "via": undefined,
+    },
+    "service": Object {
+      "days": Array [
+        "everyday",
+      ],
+      "endDate": undefined,
+      "id": "yearlong_everyday",
+      "label": "Everyday Yearlong",
+      "seasons": Array [
+        "yearlong",
+      ],
+      "startDate": undefined,
+    },
+    "stopTimes": Array [
+      Object {
+        "departureTime": "09:10",
+        "stop": Object {
+          "id": "REN-Amtrak",
+          "location": Object {
+            "lat": 38.243449,
+            "lon": -122.041192,
+          },
+          "place": Object {
+            "id": "REN",
+            "label": "Reno",
+          },
+          "stopName": "Reno Amtrak Station",
+          "which": "Amtrak",
+        },
+        "totalDistance": 0,
+      },
+      Object {
+        "arrivalTime": "11:12:06",
+        "departureTime": "11:13:06",
+        "stop": Object {
+          "id": "TRU-Amtrak",
+          "location": Object {
+            "lat": 39.327493,
+            "lon": -120.18562,
+          },
+          "place": Object {
+            "id": "TRU",
+            "label": "Truckee",
+          },
+          "stopName": "Truckee Amtrak Depot",
+          "which": "Amtrak",
+        },
+        "stopSequence": 2,
+        "totalDistance": 200.98326676610756,
+        "trip": Object {
+          "direction": Object {
+            "id": "1",
+            "resolveToStop": [Function],
+            "resolveTripSymbol": [Function],
+          },
+          "id": "REN->LAX Everyday Yearlong",
+          "route": Object {
+            "id": "LAX<->REN",
+            "places": Object {
+              "from": Object {
+                "id": "LAX",
+                "label": "Los Angeles",
+              },
+              "to": Object {
+                "id": "REN",
+                "label": "Reno",
+              },
+            },
+            "routeLongName": "Los Angeles/Reno",
+            "routeShortName": "LAX<->REN",
+            "routeType": Object {
+              "description": "Inter Regional Rail Service",
+              "id": "103",
+              "supported": true,
+            },
+            "via": undefined,
+          },
+          "service": Object {
+            "days": Array [
+              "everyday",
+            ],
+            "endDate": undefined,
+            "id": "yearlong_everyday",
+            "label": "Everyday Yearlong",
+            "seasons": Array [
+              "yearlong",
+            ],
+            "startDate": undefined,
+          },
+          "tripHeadsign": "Los Angeles",
+        },
+      },
+      Object {
+        "arrivalTime": "12:07:43",
+        "departureTime": "12:08:43",
+        "stop": Object {
+          "id": "SAC-Amtrak",
+          "location": Object {
+            "lat": 38.584162,
+            "lon": -121.500675,
+          },
+          "place": Object {
+            "id": "SAC",
+            "label": "Sacramento",
+          },
+          "stopName": "Sacramento Amtrak Station",
+          "which": "Amtrak",
+        },
+        "stopSequence": 3,
+        "totalDistance": 341.5578537022083,
+        "trip": Object {
+          "direction": Object {
+            "id": "1",
+            "resolveToStop": [Function],
+            "resolveTripSymbol": [Function],
+          },
+          "id": "REN->LAX Everyday Yearlong",
+          "route": Object {
+            "id": "LAX<->REN",
+            "places": Object {
+              "from": Object {
+                "id": "LAX",
+                "label": "Los Angeles",
+              },
+              "to": Object {
+                "id": "REN",
+                "label": "Reno",
+              },
+            },
+            "routeLongName": "Los Angeles/Reno",
+            "routeShortName": "LAX<->REN",
+            "routeType": Object {
+              "description": "Inter Regional Rail Service",
+              "id": "103",
+              "supported": true,
+            },
+            "via": undefined,
+          },
+          "service": Object {
+            "days": Array [
+              "everyday",
+            ],
+            "endDate": undefined,
+            "id": "yearlong_everyday",
+            "label": "Everyday Yearlong",
+            "seasons": Array [
+              "yearlong",
+            ],
+            "startDate": undefined,
+          },
+          "tripHeadsign": "Los Angeles",
+        },
+      },
+      Object {
+        "arrivalTime": "12:17:07",
+        "departureTime": "12:18:07",
+        "stop": Object {
+          "id": "SKN-Amtrak",
+          "location": Object {
+            "lat": 37.945332,
+            "lon": -121.285602,
+          },
+          "place": Object {
+            "id": "SKN",
+            "label": "Stockton",
+          },
+          "stopName": "Stockton Amtrak Station",
+          "which": "Amtrak",
+        },
+        "stopSequence": 4,
+        "totalDistance": 415.0322690222436,
+        "trip": Object {
+          "direction": Object {
+            "id": "1",
+            "resolveToStop": [Function],
+            "resolveTripSymbol": [Function],
+          },
+          "id": "REN->LAX Everyday Yearlong",
+          "route": Object {
+            "id": "LAX<->REN",
+            "places": Object {
+              "from": Object {
+                "id": "LAX",
+                "label": "Los Angeles",
+              },
+              "to": Object {
+                "id": "REN",
+                "label": "Reno",
+              },
+            },
+            "routeLongName": "Los Angeles/Reno",
+            "routeShortName": "LAX<->REN",
+            "routeType": Object {
+              "description": "Inter Regional Rail Service",
+              "id": "103",
+              "supported": true,
+            },
+            "via": undefined,
+          },
+          "service": Object {
+            "days": Array [
+              "everyday",
+            ],
+            "endDate": undefined,
+            "id": "yearlong_everyday",
+            "label": "Everyday Yearlong",
+            "seasons": Array [
+              "yearlong",
+            ],
+            "startDate": undefined,
+          },
+          "tripHeadsign": "Los Angeles",
+        },
+      },
+      Object {
+        "arrivalTime": "12:34:15",
+        "departureTime": "12:35:15",
+        "stop": Object {
+          "id": "OAK-Central",
+          "location": Object {
+            "lat": 37.806624,
+            "lon": -122.277158,
+          },
+          "place": Object {
+            "id": "OAK",
+            "label": "Oakland",
+          },
+          "stopName": "Oakland Central Station",
+          "which": "Central",
+        },
+        "stopSequence": 5,
+        "totalDistance": 503.41758978771696,
+        "trip": Object {
+          "direction": Object {
+            "id": "1",
+            "resolveToStop": [Function],
+            "resolveTripSymbol": [Function],
+          },
+          "id": "REN->LAX Everyday Yearlong",
+          "route": Object {
+            "id": "LAX<->REN",
+            "places": Object {
+              "from": Object {
+                "id": "LAX",
+                "label": "Los Angeles",
+              },
+              "to": Object {
+                "id": "REN",
+                "label": "Reno",
+              },
+            },
+            "routeLongName": "Los Angeles/Reno",
+            "routeShortName": "LAX<->REN",
+            "routeType": Object {
+              "description": "Inter Regional Rail Service",
+              "id": "103",
+              "supported": true,
+            },
+            "via": undefined,
+          },
+          "service": Object {
+            "days": Array [
+              "everyday",
+            ],
+            "endDate": undefined,
+            "id": "yearlong_everyday",
+            "label": "Everyday Yearlong",
+            "seasons": Array [
+              "yearlong",
+            ],
+            "startDate": undefined,
+          },
+          "tripHeadsign": "Los Angeles",
+        },
+      },
+      Object {
+        "arrivalTime": "12:20:00",
+        "stop": Object {
+          "id": "SFC-Transbay",
+          "location": Object {
+            "lat": 37.789339,
+            "lon": -122.392481,
+          },
+          "place": Object {
+            "id": "SFC",
+            "label": "San Francisco",
+          },
+          "stopName": "San Francisco Transbay Terminal",
+          "which": "Transbay",
+        },
+        "stopSequence": 6,
+        "totalDistance": 513.7309617362711,
+        "trip": Object {
+          "direction": Object {
+            "id": "1",
+            "resolveToStop": [Function],
+            "resolveTripSymbol": [Function],
+          },
+          "id": "REN->LAX Everyday Yearlong",
+          "route": Object {
+            "id": "LAX<->REN",
+            "places": Object {
+              "from": Object {
+                "id": "LAX",
+                "label": "Los Angeles",
+              },
+              "to": Object {
+                "id": "REN",
+                "label": "Reno",
+              },
+            },
+            "routeLongName": "Los Angeles/Reno",
+            "routeShortName": "LAX<->REN",
+            "routeType": Object {
+              "description": "Inter Regional Rail Service",
+              "id": "103",
+              "supported": true,
+            },
+            "via": undefined,
+          },
+          "service": Object {
+            "days": Array [
+              "everyday",
+            ],
+            "endDate": undefined,
+            "id": "yearlong_everyday",
+            "label": "Everyday Yearlong",
+            "seasons": Array [
+              "yearlong",
+            ],
+            "startDate": undefined,
+          },
+          "tripHeadsign": "Los Angeles",
+        },
+      },
+    ],
+    "tripHeadsign": "Los Angeles",
+  },
+]
+`;
+
+exports[`Trips with Stops Orders Stops of a Trip 1`] = `
+Array [
+  Object {
+    "id": "REN-Amtrak",
+    "location": Object {
+      "lat": 38.243449,
+      "lon": -122.041192,
+    },
+    "place": Object {
+      "id": "REN",
+      "label": "Reno",
+    },
+    "stopName": "Reno Amtrak Station",
+    "which": "Amtrak",
+  },
+  Object {
+    "id": "TRU-Amtrak",
+    "location": Object {
+      "lat": 39.327493,
+      "lon": -120.18562,
+    },
+    "place": Object {
+      "id": "TRU",
+      "label": "Truckee",
+    },
+    "stopName": "Truckee Amtrak Depot",
+    "which": "Amtrak",
+  },
+  Object {
+    "id": "SAC-Amtrak",
+    "location": Object {
+      "lat": 38.584162,
+      "lon": -121.500675,
+    },
+    "place": Object {
+      "id": "SAC",
+      "label": "Sacramento",
+    },
+    "stopName": "Sacramento Amtrak Station",
+    "which": "Amtrak",
+  },
+  Object {
+    "id": "SKN-Amtrak",
+    "location": Object {
+      "lat": 37.945332,
+      "lon": -121.285602,
+    },
+    "place": Object {
+      "id": "SKN",
+      "label": "Stockton",
+    },
+    "stopName": "Stockton Amtrak Station",
+    "which": "Amtrak",
+  },
+  Object {
+    "id": "OAK-Central",
+    "location": Object {
+      "lat": 37.806624,
+      "lon": -122.277158,
+    },
+    "place": Object {
+      "id": "OAK",
+      "label": "Oakland",
+    },
+    "stopName": "Oakland Central Station",
+    "which": "Central",
+  },
+  Object {
+    "id": "SFC-Transbay",
+    "location": Object {
+      "lat": 37.789339,
+      "lon": -122.392481,
+    },
+    "place": Object {
+      "id": "SFC",
+      "label": "San Francisco",
+    },
+    "stopName": "San Francisco Transbay Terminal",
+    "which": "Transbay",
+  },
+]
+`;

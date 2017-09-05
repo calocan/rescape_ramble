@@ -1,0 +1,25 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`jestReducerHelpers expectedFailedAsyncActions 1`] = `
+Array [
+  Object {
+    "type": "person/user/FETCH_DATA",
+  },
+  Object {
+    "error": "Some error",
+    "type": "person/user/FETCH_FAILURE",
+  },
+]
+`;
+
+exports[`jestReducerHelpers expectedSuccessfulAsyncActions 1`] = `
+Array [
+  Object {
+    "type": "person/user/FETCH_DATA",
+  },
+  Object {
+    "body": "Some response",
+    "type": "person/user/FETCH_SUCCESS",
+  },
+]
+`;

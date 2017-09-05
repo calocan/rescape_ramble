@@ -13,7 +13,7 @@ const {DraggablePointsOverlay, SVGOverlay} = require('react-map-gl');
 const PropTypes = require('prop-types');
 const React = require('react');
 const R = require('ramda');
-const {resolveSvgJsx} = require('helpers/svgHelpers');
+const {resolveSvgReact} = require('helpers/svgHelpers');
 const {updateMarker} = require('async/markerIO');
 const e = React.createElement;
 const ENTER_KEY = 13;
@@ -37,7 +37,7 @@ class MapMarkers extends React.Component {
         if (!this.props.geojson || !this.props.geojson.features) {
             return null;
         }
-        return resolveSvgJsx(opt, this.props.geojson.features);
+        return resolveSvgReact(opt, this.props.geojson.features);
     }
 
     /**

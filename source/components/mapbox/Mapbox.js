@@ -14,7 +14,7 @@ const MapGL = require('react-map-gl');
 const React = require('react');
 const createMapStops = require('components/mapStop/mapStops').default;
 const MapMarkers = require('components/mapMarker/MapMarkers').default;
-const {reqPath} = require('helpers/throwingFunctions');
+const {reqPath} = require('rescape-ramda').throwing;
 const {geojsonByType} = require('helpers/geojsonHelpers');
 const Deck = require('./Deck').default;
 const R = require('ramda');
@@ -79,6 +79,7 @@ const {
 } = PropTypes;
 
 Mapbox.propTypes = {
+    style: object.isRequired,
     viewport: object.isRequired,
     mapboxApiAccessToken: string.isRequired,
     iconAtlas: string.isRequired,

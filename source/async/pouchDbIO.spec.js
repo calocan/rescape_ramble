@@ -11,7 +11,7 @@
 
 const {getDb, createLocalDb, createRemoteDb, createRemoteUrl, destroy, startSync, stopSync, logSync} = require('./pouchDbIO');
 const {expectTask, expectTaskRejected} = require('helpers/jestHelpers');
-const {promiseToTask} = require('helpers/functions');
+const {promiseToTask} = require('rescape-ramda');
 const fs = require('fs');
 const moment = require('moment');
 const Task = require('data.task');

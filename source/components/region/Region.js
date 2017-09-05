@@ -8,14 +8,16 @@
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-const Mapbox = require('components/mapbox/MapboxContainer').default;
-const MarkerList = require('components/marker/MarkerListContainer').default;
+const mapbox = require('components/mapbox/MapboxContainer').default;
+const sankey = require('components/mapbox/SankeyContainer').default;
+const markerList = require('components/marker/MarkerListContainer').default;
 const styles = require('./Region.style.js').default;
 const R = require('ramda');
 const React = require('react');
-const {reqPath} = require('helpers/functions');
+const {reqPath} = require('rescape-ramda');
 const PropTypes = require('prop-types');
-const e = React.createElement;
+const {eMap} = require('helpers/componentHelpers')
+const [Mapbox, Sankey, MarkerList,  Div] = eMap([mapbox, sankey, markerList, 'div']);
 
 /**
  * The View for a Region, such as California. Theoretically we could display multiple regions at once
@@ -42,18 +44,18 @@ class Region extends React.Component {
         // applies parent container width/height to mapboxContainer width/height
         const multiplyByPercent = R.compose((percent, num) => num * parseFloat(percent) / 100.0);
         const styleMultiplier = prop => R.apply(multiplyByPercent, R.map(R.prop(prop), [styles.mapboxContainer, this.props.style]));
-        return e('div', {
-                className: 'region',
-                style: R.merge(this.props.style, styles.container)
-            },
+        return Div({
+            className: 'region',
+            style: R.merge(this.props.style, styles.container)
+        },
             /* We additionally give Mapbox the container width and height so the map can track changes to these
              We have to apply the width and height fractions of this container to them.
              */
-            e('div', {
-                    className: 'mapboxContainer',
-                    style: styles.mapboxContainer
-                },
-                e(Mapbox, {
+            Div({
+                className: 'mapboxContainer',
+                style: styles.mapboxContainer
+            },
+                Sankey({
                     region: this.props.region,
                     style: {
                         width: styleMultiplier('width'),
@@ -61,11 +63,11 @@ class Region extends React.Component {
                     }
                 })
             ),
-            e('div', {
-                    className: 'markersContainer',
-                    style: styles.markersContainer
-                },
-                e(MarkerList, {
+            Div({
+                className: 'markersContainer',
+                style: styles.markersContainer
+            },
+                MarkerList({
                     region: this.props.region,
                     accessToken: this.props.accessToken
                 })

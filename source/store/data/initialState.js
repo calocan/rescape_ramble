@@ -10,7 +10,8 @@
  */
 
 const R = require('ramda');
-const {mapPropValueAsIndex, toImmutable} = require('helpers/functions');
+const {toImmutable} = require('helpers/immutableHelpers');
+const {mapPropValueAsIndex} = require('rescape-ramda');
 
 /**
  * Returns a function that can be applied to a list to add an id value to each object of the list

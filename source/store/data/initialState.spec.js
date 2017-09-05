@@ -13,7 +13,6 @@ const createInitialState = require('./initialState').default;
 const {toObjectKeyedByGeneratedId} = require('./initialState');
 const config = require('store/data/california/config').default;
 const R = require('ramda');
-const {mapPropValueAsIndex} = require('../../helpers/functions');
 
 describe('Initial State', () => {
     test('toImmutableKeyedById adds an id and keys by it', () => {

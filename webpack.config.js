@@ -11,7 +11,6 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin');
 module.exports = {
     devtool: 'inline-source-map',
     resolve: {
-
         modules: [
             resolve('./source'),
             'node_modules'

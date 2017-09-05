@@ -12,7 +12,7 @@
 const React = require('react');
 const {DraggablePointsOverlay, SVGOverlay} = require('react-map-gl');
 const autobind = require('autobind-decorator');
-const {resolveSvgJsx} = require('helpers/svgHelpers');
+const {resolveSvgReact} = require('helpers/svgHelpers');
 const {LineLayer} = require('deck.gl');
 const PropTypes = require('prop-types');
 const R = require('ramda');
@@ -23,7 +23,7 @@ class MapLines extends React.Component {
         if (!this.props.geojson || !this.props.geojson.features) {
             return null;
         }
-        return resolveSvgJsx(opt, this.props.geojson.features);
+        return resolveSvgReact(opt, this.props.geojson.features);
     }
 
     render() {

@@ -15,7 +15,7 @@ const configureStore = require('redux-mock-store');
 
 const testConfig = require('store/data/test/config').default;
 const initialState = require('store/data/initialState').default;
-const {reqPath} = require('helpers/throwingFunctions');
+const {reqPath} = require('rescape-ramda').throwing;
 
 const middlewares = [thunk];
 const mockStore = configureStore(middlewares);

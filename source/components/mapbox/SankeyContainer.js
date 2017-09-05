@@ -13,7 +13,7 @@ const {connect} = require('react-redux');
 const {bindActionCreators} = require('redux');
 const {actionCreators} = require('store/reducers/geojson/geojsons');
 const {onChangeViewport} = require('redux-map-gl');
-const Mapbox = require('./Mapbox').default;
+const Sankey = require('./Sankey').default;
 const R = require('ramda');
 const {toJS} = require('helpers/immutableHelpers');
 const {hoverMarker, selectMarker} = actionCreators;
@@ -49,4 +49,4 @@ const mapDispatchToProps = module.exports.mapDispatchToProps = (dispatch, ownPro
     }, dispatch);
 };
 
-module.exports.default = connect(mapStateToProps, mapDispatchToProps)(Mapbox);
+module.exports.default = connect(mapStateToProps, mapDispatchToProps)(Sankey);

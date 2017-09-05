@@ -16,7 +16,7 @@ const moment = require('moment');
 const R = require('ramda');
 const e = React.createElement;
 
-module.exports.MarkerItem = class MarkerItem extends React.Component {
+class MarkerItem extends React.Component {
     _handleRemove() {
         this.props.removeMarkers({}, this.props.regionId, [this.props.locationFeature]).fork(
             () => {
@@ -55,7 +55,7 @@ module.exports.MarkerItem = class MarkerItem extends React.Component {
     }
 }
 
-export class AddMarkerItem extends React.Component {
+class AddMarkerItem extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -102,9 +102,7 @@ export class AddMarkerItem extends React.Component {
                 className: 'add-marker',
                 style: styles.addNameContainer,
                 onKeyPress: this._handleKeyPress.bind(this),
-                ref: (input) => {
- this.textInput = input;
-}
+                ref: (input) => { this.textInput = input; }
             }),
             e('div', R.merge(styles.warnContainer, {
                 ref: 'warn',
@@ -140,3 +138,5 @@ AddMarkerItem.propTypes = {
     regionId: string.isRequired,
     updateMarkers: func.isRequired
 };
+
+module.exports = {MarkerItem, AddMarkerItem}

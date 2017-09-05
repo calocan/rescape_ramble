@@ -10,14 +10,14 @@
  */
 
 const R = require('ramda');
-const {capitalize, mapKeys} = require('helpers/functions');
+const {capitalize, mapKeys} = require('rescape-ramda');
 const Task = require('data.task');
 
 /**
  * The path of an action
  * @param {String} scope The reducer scope (e.g. geojson)
  * @param {String} actionKey The key of the action (e.g. markers)
- * @returns {String} /scope/actionKey/
+ * @returns {String} /${scope}/${actionKey}/
  */
 const actionPath = module.exports.actionPath = R.curry((scope, actionKey) => `/${scope}/${actionKey}/`);
 /**

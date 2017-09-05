@@ -1,6 +1,6 @@
 const React = require('react');
 const {shallow} = require('enzyme');
-const {reqPath} = require('helpers/throwingFunctions');
+const {reqPath} = require('rescape-ramda').throwing;
 const {mapStateToProps} = require('./MarkerListContainer');
 const {geojsonByType} = require('helpers/geojsonHelpers');
 

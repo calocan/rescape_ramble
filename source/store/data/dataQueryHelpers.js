@@ -10,7 +10,7 @@
  */
 
 const {createRouteId, createStopId} = require('./dataCreationHelpers');
-const {mapPropValueAsIndex} = require('helpers/functions');
+const {mapPropValueAsIndex} = require('rescape-ramda');
 
 
 /**

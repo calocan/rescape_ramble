@@ -13,8 +13,8 @@ const R = require('ramda');
 const privateConfig = require('config.json');
 const routeTypes = require('./routeTypes');
 const {DEFAULT_SERVICE, WEEKEND_SERVICE} = require('./services');
-const {mergeDeep, mapPropValueAsIndex} = require('helpers/functions');
-const {reqPath} = require('helpers/throwingFunctions');
+const {mergeDeep, mapPropValueAsIndex} = require('rescape-ramda');
+const {reqPath} = require('rescape-ramda').throwing;
 
 /***
  * Extract a template from the default config

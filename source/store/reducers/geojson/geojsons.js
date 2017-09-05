@@ -11,11 +11,11 @@
 
 const R = require('ramda');
 const {combineReducers} = require('redux');
-const {mapDefault} = require('helpers/functions');
+const {mapDefaultAndPrefixOthers} = require('rescape-ramda');
 
-const {markers, actions, actionCreators} = mapDefaultAndPrefix('markers', require('store/reducers/geojson/markers'));
-const {openStreetMaps, openStreetMapActions, openStreetMapActionCreators} = mapDefault('openStreetMaps',  require('store/reducers/geojson/openStreetMaps'));
-const {searches, searchesActions, searchesActionCreators} = mapDefault('searches', require('store/reducers/geojson/searches'));
+const {markers, markerActions, markerActionCreators} = mapDefaultAndPrefixOthers('markers', 'marker', require('store/reducers/geojson/markers'));
+const {openStreetMaps, openStreetMapActions, openStreetMapActionCreators} = mapDefaultAndPrefixOthers('openStreetMaps', 'openStreetMap',  require('store/reducers/geojson/openStreetMaps'));
+const {searches, searchesActions, searchesActionCreators} = mapDefaultAndPrefixOthers('searches', 'search', require('store/reducers/geojson/searches'));
 
 module.exports.SCOPE = 'geojson';
 module.exports.actions = R.mergeAll([markerActions, openStreetMapActions, searchesActions]);

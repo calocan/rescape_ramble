@@ -10,7 +10,7 @@
  */
 
 const R = require('ramda')
-const {mapDefault, mergeDeep, mapKeyForLens, mapPropValueAsIndex} = require('helpers/functions');
+const {mapDefault, mergeDeep, mapKeyForLens, mapPropValueAsIndex} = require('rescape-ramda');
 const {defaultConfig, extractTemplate} = mapDefault('defaultConfig', require('store/data/default/config'))
 const journeys = require('./journeys.json').default;
 const locations = require('./locations.json').default;
@@ -18,7 +18,7 @@ const routes = require('./routes').default;
 const routeTypes = require('store/data/default/routeTypes');
 const trips = require('./trips').default;
 const stops = require('./stops').default;
-const {reqPath} = require('helpers/throwingFunctions');
+const {reqPath} = require('rescape-ramda').throwing;
 
 // Merge the default Region template with our Region
 const defaultRegion = extractTemplate('default', R.lens('regions'), defaultConfig)

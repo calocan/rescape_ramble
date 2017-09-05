@@ -10,7 +10,7 @@
  */
 
 const React = require('react');
-const {reqPath} = require('helpers/throwingFunctions');
+const {reqPath} = require('rescape-ramda').throwing;
 const {AddMarkerItem, MarkerItem} = require('./MarkerItem');
 const R = require('ramda');
 const styles = require('./MarkerList.style.js').default;
