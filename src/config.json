@@ -1,5 +1,6 @@
 {
   "settings": {
+
     "environments": [
       {
         "id": "production",
@@ -23,6 +24,18 @@
       "mapboxApiAccessToken": "pk.eyJ1IjoiY2Fsb2NhbiIsImEiOiJjaXl1aXkxZjkwMG15MndxbmkxMHczNG50In0.07Zu3XXYijL6GJMuxFtvQg",
       "iconAtlas": "data/location-icon-atlas.png",
       "showCluster": "true"
+    },
+    "cycle": {
+      "drivers": {
+        "api": "HTTP"
+      }
+    },
+    "domain": "localhost",
+    "api": {
+      "protocol": "http",
+      "host": "localhost",
+      "port": "8080",
+      "root": "/api/"
     }
   }
 }

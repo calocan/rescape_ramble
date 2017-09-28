@@ -18,22 +18,22 @@ const R = require('ramda');
 const ACTION_ROOT = module.exports.ACTION_ROOT = 'locations';
 const {makeActionConfigLookup, actionConfig, VERBS: {FETCH, ADD, SELECT}} = require('rescape-cycle');
 const config = require('data/default/defaultConfig').default;
-const {overrideSourcesWithoutStreaming} = require('rescape-cycle');
+const {overrideSourcesWithoutStreaming, makeActionCreators} = require('rescape-cycle');
 
 // The various action keys that define something being modeled
 // Models are various manifestations of the locations
 const M = R.mapObjIndexed((v, k) => R.toLower(k), {
-  MARKERS: '',
+  LOCATIONS: '',
 });
 
-const scope = ['user'];
+const scopeKeys = module.exports.scopeKeys = ['user'];
 const rootedConfig = actionConfig(ACTION_ROOT);
-const userConfig = rootedConfig(scope);
+const userConfig = rootedConfig(scopeKeys);
 
 const ACTION_CONFIGS = module.exports.ACTION_CONFIGS = [
-  userConfig(M.MARKERS, FETCH),
-  userConfig(M.MARKERS, ADD),
-  userConfig(M.MARKERS, SELECT),
+  userConfig(M.LOCATIONS, FETCH),
+  userConfig(M.LOCATIONS, ADD),
+  userConfig(M.LOCATIONS, SELECT),
 ];
 
 /**
@@ -46,3 +46,11 @@ module.exports.locationCycleSources = overrideSourcesWithoutStreaming({
     configByType: makeActionConfigLookup(ACTION_CONFIGS)
   }
 });
+
+/**
+ * The actionCreators that produce the action bodies
+ * @returns {Function} A function expected the scope.
+ * Once the scope is passed an object keyed by action name and valued by action function is returned.
+ * Each action function expects a functor (object or array) as its unary argument
+ */
+module.exports.actionCreators = makeActionCreators(ACTION_CONFIGS);
