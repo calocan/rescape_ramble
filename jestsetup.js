@@ -29,7 +29,7 @@ if (process.env.NODE_ENV !== 'production'){
 
 // Make the __database__ dir to store local databases
 // Local databases are only need in Node since they are normally stored in the browser
-const PATH = global.NODE_POUCH_DB_PATH = `${__dirname}/source/store/data/__databases__/`;
+const PATH = global.NODE_POUCH_DB_PATH = `${__dirname}/src/data/__databases__/`;
 if (!fs.existsSync(PATH))
     fs.mkdirSync(PATH);
 
