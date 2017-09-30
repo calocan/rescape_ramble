@@ -10,51 +10,83 @@
  */
 
 const R = require('ramda');
-const {mapDefault, mergeDeep} = require('rescape-ramda');
-const {defaultConfig, extractTemplate} = mapDefault('defaultConfig', require('data/default/defaultConfig'));
-const journeys = require('./journeys.json').default;
-const locations = require('./locations.json').default;
-const routes = require('./routes').default;
+const {mergeDeep} = require('rescape-ramda');
+const {defaultConfig,
+  userTemplateKeys: { REGION_MANAGER, REGION_USER, REGION_VISITOR },
+  permissions: {ADMINISTRATE, MANAGE, USE, VISIT}} = require('data/default');
+const journeys = require('./californiaJourneys.json');
+const locations = require('./californiaUserLocations.json');
+const routes = require('./californiaRoutes').default;
 const routeTypes = require('data/default/routeTypes');
-const trips = require('./trips').default;
-const stops = require('./stops').default;
+const {mapDefaultRegion, mapDefaultUsers} = require('data/configHelpers');
+const trips = require('./californiaTrips').default;
+const stops = require('./californiaStops').default;
 
-// Merge the default Region template with our Region
-const defaultRegion = extractTemplate('default', R.lens('regions'), defaultConfig);
-const defaultConfigNoTemplates = R.omit(['regions'], defaultConfig);
+// Create three users
+const users = {
+  CALIFORNIA_MANAGER: 'californiaManager',
+  CALIFORNIA_USER: 'californiaUser',
+  CALIFORNIA_VISITOR: 'californiaVisitor'
+};
 
 /**
  * California configuration
  * @type {*}
  */
 module.exports.default = mergeDeep(
-    defaultConfigNoTemplates,
-    {regions: [ mergeDeep(defaultRegion, {
+  // merge the default region template with our region(s)
+  R.compose(
+    mapDefaultUsers({
+      [REGION_MANAGER]: [users.CALIFORNIA_MANAGER],
+      [REGION_USER]: [users.CALIFORNIA_USER],
+      [REGION_VISITOR]: [users.CALIFORNIA_VISITOR]
+    }),
+    mapDefaultRegion(['california']),
+  )(defaultConfig),
+  {
+    regions: {
+      'california': {
         id: 'california',
 
         gtfs: {
-            routes,
-            trips,
-            stops,
-            routeTypes: [routeTypes.INTER_REGIONAL_RAIL_SERVICE]
+          routes,
+          trips,
+          stops,
+          routeTypes: [routeTypes.INTER_REGIONAL_RAIL_SERVICE]
         },
 
         travel: {
-            journeys,
-            locations
+          journeys,
+          locations
         },
 
         geospatial: {
-            // bounds: [-125, 31, -113, 43]
-            bounds: [-122.720306, 37.005783, -121.568275, 38.444660]
+          // bounds: [-125, 31, -113, 43]
+          bounds: [-122.720306, 37.005783, -121.568275, 38.444660]
         },
 
         mapbox: {
-            viewport: {
-                latitude: 37,
-                longitude: -119,
-                zoom: 5
-            }
+          viewport: {
+            latitude: 37,
+            longitude: -119,
+            zoom: 5
+          }
         }
-    })]}
+      }
+    },
+    users: {
+      [users.CALIFORNIA_MANAGER]: {
+        id: users.CALIFORNIA_MANAGER,
+        name: 'Jerry Brown'
+      },
+      [users.CALIFORNIA_USER]: {
+        id: users.CALIFORNIA_USER,
+        name: 'Nancy Pelosi'
+      },
+      [users.CALIFORNIA_VISITOR]: {
+        id: users.CALIFORNIA_VISITOR,
+        name: 'Angela Merkel'
+      },
+    }
+  }
 );

@@ -1,5 +1,5 @@
 const {SET_CURRENT, setState, setCurrent} = require('./settings');
-const {SET_STATE} = require('store/reducers/fullStates');
+const {SET_STATE} = require('redux/fullStates');
 
 describe('settings actionTypes', () => {
     it('should create an action to set the state', () =>{

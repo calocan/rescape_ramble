@@ -10,41 +10,12 @@
  */
 
 const createInitialState = require('./initialState').default;
-const {toObjectKeyedByGeneratedId} = require('./initialState');
-const config = require('data/california/californiaConfig').default;
+const config = require('data/test').default;
 
 describe('Initial State', () => {
-    test('toImmutableKeyedById adds an id and keys by it', () => {
-        const obj = [
-            {
-                foo: 'bar'
-            },
-            {
-                foo: 'car'
-            }
-        ];
-        let i = 1;
-        function *numbers() {
-            while (true) {
-                yield (i++).toString();
-            }
-        }
-        expect(toObjectKeyedByGeneratedId(numbers())(obj)).toEqual(
-            {
-                1: {
-                    id: '1',
-                    foo: 'bar'
-                },
-                2: {
-                    id: '2',
-                    foo: 'car'
-                }
-            }
-        );
-    });
-    test('matches the current configuration', () => {
-        //const toObjectKeyedById = mapPropValueAsIndex('id');
-        //R.map(toObjectKeyedById, config.gtfs);
-        expect(createInitialState(config)).toMatchSnapshot();
-    });
+  test('matches the current configuration', () => {
+    //const toObjectKeyedById = mapPropValueAsIndex('id');
+    //R.map(toObjectKeyedById, config.gtfs);
+    expect(createInitialState(config)).toMatchSnapshot();
+  });
 });

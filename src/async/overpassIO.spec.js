@@ -12,19 +12,8 @@
 const {fetchTransit} = require('./overpassIO');
 const {removeDuplicateObjectsByProp} = require('rescape-ramda');
 const {expectTask} = require('helpers/jestHelpers');
-const {retrieveOrFetch} = require('./storageIO');
-const {createLocalDb, cycleLocalDb, destroy, getDb} = require('./pouchDbIO');
 const fs = require('fs');
-const {promiseToTask} = require('../../helpers/functions');
-const R = require('ramda');
 const {LA_SAMPLE, LA_BOUNDS} = require('async/queryOverpass.sample');
-
-const name = 'overpass_io_spec';
-const PATH = `${__dirname}/__databases__/`;
-const DB = `${PATH}${name}`;
-if (!fs.existsSync(PATH)) {
-    fs.mkdirSync(PATH);
-}
 
 let mock;
 // jest.unmock('query-overpass')
@@ -79,21 +68,6 @@ describe('overpassHelpers', async () => {
             // the sample can have duplicate ids
             removeDuplicateObjectsByProp('id', LA_SAMPLE.features)
         );
-    });
-    test('store fetch', async () => {
-        await expectTask(
-            cycleLocalDb(DB)
-                .chain(db =>
-                    retrieveOrFetch(
-                        fetchTransit({testBounds: bounds}, bounds),
-                        db,
-                        'somewhere')
-                )
-                // Fetch the geojson, now expected to be in the DB
-                .chain(() => promiseToTask(getDb(DB).get('somewhere')))
-                // Remove the db fields for comparison
-                .map(res => R.omit(['_id', '_rev'], res))
-        ).resolves.toEqual(LA_SAMPLE);
     });
 });
 

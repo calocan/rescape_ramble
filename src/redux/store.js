@@ -15,21 +15,21 @@
 const thunk = require('redux-thunk').default;
 const {applyMiddleware, compose, createStore} = require('redux');
 const {createCycleMiddleware} = require('redux-cycles');
-const reducer = require('./reducers/reducer').default;
-const {persistentStore} = require('redux-pouchdb-plus');
+const reducer = require('redux/reducer').default;
+//const {persistentStore} = require('redux-pouchdb-plus');
 const {responsiveStoreEnhancer} = require('redux-responsive');
-const PouchDB = require('pouchdb').default;
+//const PouchDB = require('pouchdb').default;
 const R = require('ramda');
-const {startSync} = require('async/pouchDbIO');
+//const {startSync} = require('unused/pouchDbIO');
 const {main} = require('redux/cycle');
 const {run} = require('@cycle/run');
-const {makePouchDBDriver} = require('cycle-pouchdb-most-driver');
+//const {makePouchDBDriver} = require('cycle-pouchdb-most-driver');
 
 // Use this synced db to store the state of the app
 // There might be no reason to doSync the state to a remote db
-const DB_NAME = 'default';
-const db = new PouchDB(DB_NAME);
-startSync(db, `http://localhost:5984/${DB_NAME}`);
+//const DB_NAME = 'default';
+//const db = new PouchDB(DB_NAME);
+//startSync(db, `http://localhost:5984/${DB_NAME}`);
 
 const environmentMiddlewares = R.ifElse(
     R.equals('development'),
@@ -51,7 +51,7 @@ const { makeActionDriver, makeStateDriver } = cycleMiddleware;
 const runCycle = dbName => run(main, {
     ACTION: makeActionDriver(),
     STATE: makeStateDriver(),
-    POUCHDB: makePouchDBDriver(PouchDB, dbName)
+    //POUCHDB: makePouchDBDriver(PouchDB, dbName)
 });
 let dispose = null;
 module.exports.restartCycle = (dbName) => {
@@ -83,6 +83,6 @@ module.exports.default = (initialState = {}) => createStore(
         ),
         // Use the Chrome devToolsExtension
         typeof (window) !== 'undefined' && window.devToolsExtension ? window.devToolsExtension() : f => f,
-        persistentStore({db})
+        //persistentStore({db})
     )
 );

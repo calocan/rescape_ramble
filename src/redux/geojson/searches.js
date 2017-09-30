@@ -10,12 +10,12 @@
  */
 
 const searchLocationIO = require('async/searchIO').searchLocation.default;
-const {asyncActions, asyncActionCreators} = require('store/reducers/actionHelpers');
+const {asyncActions, asyncActionCreators} = require('redux/actionHelpers');
 
 const ACTION_ROOT = module.exports.ACTION_ROOT = 'location';
-const {SCOPE} = require('./geojsons');
-const makeAsyncActionHandlers = asyncActionCreators(SCOPE, ACTION_ROOT);
-const actions = module.exports.actions = asyncActions(SCOPE, ACTION_ROOT, 'SEARCH');
+const {ROOT} = require('redux/geojson/geojsonConfig');
+const makeAsyncActionHandlers = asyncActionCreators(ROOT, ACTION_ROOT);
+const actions = module.exports.actions = asyncActions(ROOT, ACTION_ROOT, 'SEARCH');
 const actionCreators = module.exports.actionCreators = makeAsyncActionHandlers('SEARCH', searchLocationIO);
 
 /**

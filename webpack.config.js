@@ -12,7 +12,7 @@ module.exports = {
     devtool: 'inline-source-map',
     resolve: {
         modules: [
-            resolve('./source'),
+            resolve('./src'),
             'node_modules'
         ],
         alias: {
@@ -22,7 +22,7 @@ module.exports = {
     },
 
     entry: [
-        resolve('source/index')
+        resolve('src/index')
     ],
 
     output: {
@@ -50,11 +50,28 @@ module.exports = {
     node: {
         fs: 'empty',
     },
+    devServer: {
+      historyApiFallback: true,
+      hot: true,
+      inline: true,
+
+      host: 'localhost', // Defaults to `localhost`
+      port: 3000, // Defaults to 8080
+      proxy: {
+        '^/graphql/*': {
+          target: 'http://localhost:3100/graphql/',
+          secure: false
+        }
+      }
+    },
     plugins: [
         new webpack.DefinePlugin({
             'process.env': {
                 'NODE_ENV': JSON.stringify('development'),
             }
+        }),
+        new webpack.HotModuleReplacementPlugin({
+          multiStep: true
         }),
         new ExtractTextPlugin( "bundle.css" )
     ],

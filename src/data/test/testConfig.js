@@ -9,12 +9,13 @@
  * THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-const {mergeDeep} = require('rescape-ramda');
-const californiaConfig = require('data/california/californiaConfig').default;
-const parisConfig = require('data/test/paris-sample/config').default;
+const {mergeDeep, mapKeys} = require('rescape-ramda');
 const R = require('ramda');
+const prefix = k => R.concat('oakland', R.toUpper(k));
+const {oaklandConfig, oaklandData} = mapKeys(prefix('oakland'), require('./oakland-sample'));
+const {parisConfig, parisData} = mapKeys(prefix('paris'), require('./paris-sample'));
 
-const testConfigs = module.exports.testConfigs = [californiaConfig, parisConfig];
+const testConfigs = module.exports.testConfig = R.mergeAll([oaklandConfig, parisConfig]);
 module.exports.default = R.merge(
         // Combine everything but the regions key
         mergeDeep(...R.map(R.omit('regions'), testConfigs)),

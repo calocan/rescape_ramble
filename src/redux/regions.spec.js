@@ -1,6 +1,6 @@
 
-const reducer = require('store/reducers/regions').default;
-const {actions} = require('store/reducers/geojson/geojsons').actions;
+const reducer = require('redux/regions').default;
+const {actions} = require('redux/geojson/geojsons').actions;
 const {Map} = require('immutable');
 const testConfig = require('data/test/config').default;
 const initialState = require('data/initialState').default;

@@ -12,7 +12,7 @@ const {mapStateToProps} = require('./CurrentContainer');
 const testConfig = require('data/test/config').default;
 const initialState = require('data/initialState').default;
 const R = require('ramda');
-const makeStore = require('source/store/store');
+const makeStore = require('redux/store');
 
 describe('CurrentContainer', () => {
     test('mapStateToProps returns regions and current of state.settings', () => {

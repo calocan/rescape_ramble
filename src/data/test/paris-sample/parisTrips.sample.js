@@ -13,13 +13,13 @@
  * Creates default TripPair objects
  */
 
-const stops = require('./stops').default;
-const w = require('./stops').default;
-const routes = require('./routes').default;
+const stops = require('./parisStops.sample').default;
+const w = require('./parisStops.sample').default;
+const routes = require('./parisRoutes.sample').default;
 const {createTripWithStopTimesPair, orderStops, stopTimeGenerator} = require('../dataCreationHelpers');
 const {stopResolver, routeResolver} = require('../dataQueryHelpers');
-const places = require('./places');
-const regions = require('./regions');
+const places = require('./parisPlaces.sample');
+const regions = require('./parisRegions.sample');
 const {DEFAULT_SERVICE} = require('../default/services');
 
 const resolveStop = stopResolver(stops);

@@ -14,7 +14,7 @@ const initialState = require('data/initialState').default;
 const {reqPath} = require('rescape-ramda').throwing;
 const {mapPropValueAsIndex} = require('rescape-ramda');
 const R = require('ramda');
-const reducer = require('./geojsons').default;
+const reducer = require('redux/geojson/geojsons').default;
 const toObjectKeyedById = mapPropValueAsIndex('id');
 
 describe('geojson reducer', () => {

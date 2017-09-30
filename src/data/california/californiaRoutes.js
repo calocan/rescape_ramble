@@ -10,8 +10,8 @@
  */
 
 const {createRoute} = require('../dataCreationHelpers');
-const places = require('./places');
-const regions = require('./regions');
+const places = require('./californiaPlaces');
+const regions = require('./californiaRegions');
 const routeTypes = require('../default/routeTypes');
 
 const defaultRouteType = routeTypes.INTER_REGIONAL_RAIL_SERVICE.id;

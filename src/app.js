@@ -5,13 +5,13 @@ const MapGL = require('react-map-gl');
 const Current = require('components/current/CurrentContainer').default;
 const {Provider} = require('react-redux');
 
-const {setState} = require('./store/reducers/fullState');
+const {setState} = require('./redux/fullStates');
 const initialState = require('./data/initialState').default;
 const makeStore = require('./redux/store').default;
-const currentConfig = require('./data/current/currentConfig').default;
+const {configResolver} = require('./data/current');
+const config = configResolveR(defaultUserSettings);
 
 // const currentConfig = require('./data/current/config').default;
-const { createStore, applyMiddleware, compose } = require('redux');
 const e = React.createElement;
 const store = makeStore();
 store.dispatch(setState(initialState(currentConfig)));

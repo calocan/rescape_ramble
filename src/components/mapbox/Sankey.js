@@ -15,19 +15,19 @@ const createMapStops = require('components/mapStop/mapStops').default;
 const {reqPath} = require('rescape-ramda').throwing;
 const {geojsonByType} = require('helpers/geojsonHelpers');
 const R = require('ramda');
-import {resolveSvgPoints, resolveSvgReact} from 'helpers/svgHelpers';
+const {resolveSvgPoints, resolveSvgReact} = require('helpers/svgHelpers');
 const styles = require('./Mapbox.style').default;
 const {sankey, sankeyLinkHorizontal} = require('d3-sankey');
 const {mapDefault} = require('rescape-ramda');
 const {deckGL, ScatterplotLayer, OrthographicViewport, COORDINATE_SYSTEM} = mapDefault('deckGl', require('deck.gl'));
 const {eMap} = require('helpers/componentHelpers');
-const
-  [MapGL, DeckGL, Svg, G, Circle, Div] = eMap([require('react-map-gl'), deckGL, 'svg', 'g', 'circle', 'div']);
+const sample = require('data/sankey.sample');
+const [MapGL, DeckGL, Svg, G, Circle, Div] =
+  eMap([require('react-map-gl'), deckGL, 'svg', 'g', 'circle', 'div']);
 
 const DEGREE_TO_RADIAN = Math.PI / 180;
 const NUM_POINTS = 2000;
 
-const sample = require('async/sankey.sample');
 
 const round = x => Math.round(x * 10) / 10;
 

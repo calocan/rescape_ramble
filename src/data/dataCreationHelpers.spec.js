@@ -1,8 +1,8 @@
 
-const places = require('./california/places');
+const places = require('./california/californiaPlaces');
 const helper = require('./dataCreationHelpers');
-const w = require('./california/stops');
-const regions = require('./california/regions');
+const w = require('./california/californiaStops');
+const regions = require('./california/californiaRegions');
 const routeTypes = require('./default/routeTypes');
 const {DEFAULT_SERVICE} = require('./default/services');
 const query = require('./dataQueryHelpers');

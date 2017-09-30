@@ -10,7 +10,7 @@
  */
 const sankey = require('d3-sankey');
 const R = require('ramda');
-const sample = require('async/sankey.sample');
+const sample = require('src/data/sankey.sample');
 const {nodePositon, linkPositon} = require('./Sankey');
 
 describe('Sankey', () => {

@@ -19,14 +19,14 @@ const scopeValues = R.fromPairs(R.addIndex(R.map)((k, i) => [k, Math.pow(10, i+1
 const actions = actionCreators(scopeValues);
 
 const locations = require('data/test/locations.json');
-const newLocations = R.values(R.omit(['id'], locations))
+const newLocations = R.values(R.omit(['id'], locations));
 // Create sample request and response bodies
 const {fetchLocationsRequestBody, addLocationsRequestBody, fetchLocationsSuccessBody, addLocationsSuccessBody} =
   testBodies(ACTION_CONFIGS, scopeValues, {locations});
 
 describe('cycleRecords', () => {
 
-  test('add and fetch', (done) => {
+  test('User can add and fetch locations', (done) => {
     // Override the async and config drivers for testing
     const testSources = R.merge(
       // Our configs are always single event streams

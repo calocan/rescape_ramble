@@ -1,6 +1,6 @@
 
 const {createStop} = require('../dataCreationHelpers');
-const places = require('./places');
+const places = require('./californiaPlaces');
 const stopTypes = require('../default/stopTypes');
 
 const UNION = module.exports.UNION = 'Union';

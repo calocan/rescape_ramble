@@ -9,31 +9,32 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-const {SCOPE} = require('./geojsonConfig');
-module.exports.SCOPE = SCOPE;
+const {ROOT} = require('./geojsonConfig');
 const R = require('ramda');
-// const {persistLocations, fetchLocations as fetchLocationsIO, removeLocations as removeLocationsIO} = require('async/locationIO')
+const {makeActionConfigLookup, actionConfig,
+  VERBS: {FETCH, ADD, REMOVE, SELECT},
+  overrideSourcesWithoutStreaming, makeActionCreators} = require('rescape-cycle');
+const config = require('data/default/defaultConfig').default;
+const {camelCase} = require('rescape-ramda');
+
+// Models are various manifestations of the locations
+// For now just define a generic LOCATION model
+const {LOCATION} = module.exports.MODELS =
+  R.mapObjIndexed((v, k) => camelCase(R.toLower(k)), {
+    LOCATION: '',
+  });
+
 // Describes the fundamental data structure being transacted in these actions
 // Everything here is a geospatial data structure with a minimum set of properties such as lat, lon
-const ACTION_ROOT = module.exports.ACTION_ROOT = 'locations';
-const {makeActionConfigLookup, actionConfig, VERBS: {FETCH, ADD, SELECT}} = require('rescape-cycle');
-const config = require('data/default/defaultConfig').default;
-const {overrideSourcesWithoutStreaming, makeActionCreators} = require('rescape-cycle');
-
-// The various action keys that define something being modeled
-// Models are various manifestations of the locations
-const M = R.mapObjIndexed((v, k) => R.toLower(k), {
-  LOCATIONS: '',
-});
-
 const scopeKeys = module.exports.scopeKeys = ['user'];
-const rootedConfig = actionConfig(ACTION_ROOT);
-const userConfig = rootedConfig(scopeKeys);
+const rootedConfig = actionConfig(ROOT);
+const userScopedConfig = rootedConfig(scopeKeys);
 
 const ACTION_CONFIGS = module.exports.ACTION_CONFIGS = [
-  userConfig(M.LOCATIONS, FETCH),
-  userConfig(M.LOCATIONS, ADD),
-  userConfig(M.LOCATIONS, SELECT),
+  userScopedConfig(LOCATION, FETCH),
+  userScopedConfig(LOCATION, ADD),
+  userScopedConfig(LOCATION, REMOVE),
+  userScopedConfig(LOCATION, SELECT),
 ];
 
 /**

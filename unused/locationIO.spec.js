@@ -9,25 +9,23 @@
  * THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-const {createDesignDoc} = require('../redux/cyclePouchDbStuff');
-const {removeMarker, fetchMarkers, persistMarkers, cycleMarkers} = require('./locationIO');
+const {createDesignDoc} = require('../src/redux/cyclePouchDbStuff');
+const {removeLocation, fetchLocations, persistLocations, cycleLocations} = require('./locationIO');
 const { actions, actionCreators, ACTION_PATH } = require('locationActions');
 const config = require('data/test/config').default;
-const {PARIS_SAMPLE, LA_SAMPLE} = require('./locationIO.sample');
+const {PARIS_SAMPLE, LA_SAMPLE} = require('../src/data/test/location.sample');
 const {reqPath} = require('rescape-ramda').throwing;
 const {mergeAllWithKey} = require('rescape-ramda');
 const {concatFeatures} = require('helpers/geojsonHelpers');
 const R = require('ramda');
-const initialState = require('data/initialState').default;
+const initialState = require('src/data/initialState').default;
 const { assertSourcesSinks } = require('rescape-cycle');
 const { expectTask } = require('helpers/jestHelpers');
-const {createLocalDb, cycleLocalDb, destroy, getDb} = require('./pouchDbIO');
 // combine the samples into one obj with concatinated features
 const geojson = mergeAllWithKey(concatFeatures)([PARIS_SAMPLE, LA_SAMPLE]);
 const state = initialState(config);
 const currentRegionKey = reqPath(['regions', 'currentKey'], state);
 const region = reqPath(['regions', currentRegionKey], state);
-const testDbName = name => `${__dirname}/__databases__/${name}`;
 const bounds = require('async/queryOverpass.sample').LA_BOUNDS;
 
 function *letterGen(letter) {
@@ -37,57 +35,53 @@ function *letterGen(letter) {
     }
 }
 
-describe('markerHelpers', () => {
+describe('locationHelpers', () => {
     // PouchDB.debug.enable('*');
-    const path = '__db__/tests/markerHelpers.';
+    const path = '__db__/tests/locationHelpers.';
     // const createRemoteUrl = `http://localhost:5984/${name}`;
     // const syncObject = doSync({db, createRemoteUrl});
 
-    test('Persist MarkerList', () => {
-        const dbName = testDbName('PersistMarkers');
-
-        const options = {dbName};
-
+    test('Persist LocationList', () => {
         // Populate the db
         expectTask(
-            cycleLocalDb(dbName).chain(() => persistMarkers(currentRegionKey, options, geojson.features))
+            cycleLocalDb(dbName).chain(() => persistLocations(currentRegionKey, options, geojson.features))
         ).resolves.toEqual(geojson.features);
     });
 
-    test('Query MarkerList', () => {
-        const dbName = testDbName('QueryMarkers');
+    test('Query LocationList', () => {
+        const dbName = testDbName('QueryLocations');
         const options = {dbName};
 
         // Query the db
         expectTask(
-            cycleLocalDb(dbName).chain(() => persistMarkers(currentRegionKey, options, geojson.features)).chain(
-                response => fetchMarkers(db, options, bounds)
+            cycleLocalDb(dbName).chain(() => persistLocations(currentRegionKey, options, geojson.features)).chain(
+                response => fetchLocations(db, options, bounds)
             ).map(response => response.rows.length)
         ).resolves.toEqual(geojson.features.length);
     });
 
-    test('Remove Marker', () => {
-        const dbName = testDbName('RemoveMarkers');
+    test('Remove Location', () => {
+        const dbName = testDbName('RemoveLocations');
         const options = {dbName};
 
         expectTask(
             cycleLocalDb(dbName).chain(
-                console.log('Persist') || persistMarkers(currentRegionKey, options, geojson.features)
+                console.log('Persist') || persistLocations(currentRegionKey, options, geojson.features)
             )
             .chain(
-                response => console.log('Fetch') || fetchMarkers(currentRegionKey, {testBounds: bounds}, bounds)
+                response => console.log('Fetch') || fetchLocations(currentRegionKey, {testBounds: bounds}, bounds)
             ).chain(
-                response => console.log('Remove') || removeMarker(currentRegionKey, {testBounds: bounds}, R.head(response.rows))
+                response => console.log('Remove') || removeLocation(currentRegionKey, {testBounds: bounds}, R.head(response.rows))
             ).chain(
-                response => console.log('Fetch') || fetchMarkers(currentRegionKey, {testBounds: bounds}, bounds)
+                response => console.log('Fetch') || fetchLocations(currentRegionKey, {testBounds: bounds}, bounds)
             ).map(response => R.head(response.rows))
         ).resolves.toEqual(geojson.features.length - 1);
     })
 
-    test('should emit sink ACTION.fetchMarkersSuccess given sources ACTION.fetchMarkerData and POUCHDB.query response', function(done) {
-        // Fire the fetchMarkers action
+    test('should emit sink ACTION.fetchLocationsSuccess given sources ACTION.fetchLocationData and POUCHDB.query response', function(done) {
+        // Fire the fetchLocations action
         const actionSource = {
-            a: actionCreators.fetchMarkersData(
+            a: actionCreators.fetchLocationsData(
                 currentRegionKey,
                 {
                     region
@@ -127,13 +121,13 @@ describe('markerHelpers', () => {
         }, {
             // Expect this sink, the
             ACTION:   { 'x|': actionSink }
-        }, cycleMarkers, done);
+        }, cycleLocations, done);
     });
 
-    test('should emit sink POUCHDB.update given sources ACTION.updateMarkerData', function (done) {
-        // Fire the fetchMarkersData action
+    test('should emit sink POUCHDB.update given sources ACTION.updateLocationData', function (done) {
+        // Fire the fetchLocationsData action
         const actionSource = {
-            a: actionCreators.updateMarkersData(
+            a: actionCreators.updateLocationsData(
                 currentRegionKey,
                 {
                     region,
@@ -201,6 +195,6 @@ describe('markerHelpers', () => {
         }, {
             // Expect the doc view and each feature to be put simulataneously
             POUCHDB: { [`(${R.keys(pouchDbSink)})|`]: pouchDbSink }
-        }, cycleMarkers, done);
+        }, cycleLocations, done);
     }, 100000);
 });

@@ -10,10 +10,10 @@
  */
 
 const { combineReducers } = require('redux');
-const geojsonReducer = require('store/reducers/geojson/geojsons').default;
+const geojsonReducer = require('redux/geojson/geojsons').default;
 const {createViewportReducer} = require('redux-map-gl');
 const R = require('ramda');
-const {SET_STATE} = require('store/reducers/fullStates');
+const {SET_STATE} = require('redux/fullStates');
 
 /**
  * Only allow the region reducer to be created once for each Region

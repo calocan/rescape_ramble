@@ -14,7 +14,6 @@ const PropTypes = require('prop-types');
 const React = require('react');
 const R = require('ramda');
 const {resolveSvgReact} = require('helpers/svgHelpers');
-const {updateMarker} = require('locationIO');
 const e = React.createElement;
 const ENTER_KEY = 13;
 const LIGHT_SETTINGS = {

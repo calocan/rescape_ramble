@@ -11,4 +11,9 @@
 
 const config = require('config.json');
 const current = config.settings.defaultRegion;
-module.exports.default = require(`data/${current}/config`).default;
+/**
+ * Resolves the current configuration based on the userSettings
+ * This will all be dynamic eventually, not file based configuration
+ * @param userSettings
+ */
+module.exports.configResolver = ({userSettings}) => require(`data/${userSettings.current}`).config

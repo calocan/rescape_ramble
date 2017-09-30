@@ -11,14 +11,13 @@
 
 const testConfig = require('data/test/config').default;
 const initialState = require('data/initialState').default;
-const {actionTypes} = require('./geojsons');
-const {stopSync} = require('async/pouchDbIO');
-const {setState} = require('store/reducers/fullStates');
+const {actionTypes} = require('redux/geojson/geojsons');
+const {setState} = require('redux/fullStates');
 const {expectTask} = require('helpers/jestHelpers');
-const {LA_SAMPLE} = require('locationIO.sample');
-const {SCOPE} = require('./geojsons');
+const {LA_SAMPLE} = require('../../data/test/location.sample');
+const {ROOT} = require('redux/geojson/geojsonConfig');
 const {ACTION_ROOT} = require('locationActions');
-const {asyncActionCreators} = require('store/reducers/actionHelpers');
+const {asyncActionCreators} = require('redux/actionHelpers');
 const Task = require('data.task');
 const thunk = require('redux-thunk');
 const configureMockStore = require('redux-mock-store');
@@ -26,9 +25,9 @@ const {LA_BOUNDS} = require('async/queryOverpass.sample');
 const middlewares = [ thunk ];
 const mockStore = configureMockStore(middlewares);
 // Mock the asynchronous actionCreator
-const {fetchLocationsData} = asyncActionCreators(SCOPE, ACTION_ROOT, 'FETCH', () => Task.of(LA_SAMPLE));
-const {removeLocationsData} = asyncActionCreators(SCOPE, ACTION_ROOT, 'REMOVE', () => Task.of(LA_SAMPLE));
-const {updateLocationsData} = asyncActionCreators(SCOPE, ACTION_ROOT, 'UPDATE', () => Task.of(LA_SAMPLE));
+const {fetchLocationsData} = asyncActionCreators(ROOT, ACTION_ROOT, 'FETCH', () => Task.of(LA_SAMPLE));
+const {removeLocationsData} = asyncActionCreators(ROOT, ACTION_ROOT, 'REMOVE', () => Task.of(LA_SAMPLE));
+const {updateLocationsData} = asyncActionCreators(ROOT, ACTION_ROOT, 'UPDATE', () => Task.of(LA_SAMPLE));
 
 describe('locations reducer', () => {
     const state = initialState(testConfig);
@@ -64,7 +63,6 @@ describe('locations reducer', () => {
                 {testBounds: bounds},
                 LA_SAMPLE)))
             .map(() => {
-                stopSync(state.regions.currentKey);
                 return store.getActions();
             }).resolves.toEqual(expectedActions);
     });

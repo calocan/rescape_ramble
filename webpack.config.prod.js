@@ -8,7 +8,7 @@ module.exports = {
 
     resolve: {
         modules: [
-            resolve('./source'),
+            resolve('./src'),
             resolve('./node_modules')
         ],
         alias: {
@@ -19,7 +19,7 @@ module.exports = {
     },
 
     entry: [
-        resolve('source/index')
+        resolve('src/index')
     ],
     output: {
         path: resolve('build'),

@@ -8,11 +8,11 @@
  *
  * THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-const makeStore = require('store.js').default;
+const makeStore = require('redux/store').default;
 const R = require('ramda');
 const createInitialState = require('data/initialState').default;
 const testConfig = require('data/test/config').default;
-const {setState} = require('store/reducers/fullStates');
+const {setState} = require('redux/fullStates');
 
 describe('store', () => {
     test('makeStore', () => {

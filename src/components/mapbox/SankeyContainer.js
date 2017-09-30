@@ -11,7 +11,7 @@
 
 const {connect} = require('react-redux');
 const {bindActionCreators} = require('redux');
-const {actionCreators} = require('store/reducers/geojson/geojsons');
+const {actionCreators} = require('redux/geojson/geojsons');
 const {onChangeViewport} = require('redux-map-gl');
 const Sankey = require('./Sankey').default;
 const R = require('ramda');

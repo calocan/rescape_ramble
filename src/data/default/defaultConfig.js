@@ -10,58 +10,43 @@
  */
 
 const R = require('ramda');
-const privateConfig = require('config.json');
+const environment = R.propOr('development', 'NODE_ENV', process.env);
+const environmentConfig = require(`${environment}.json`);
 const routeTypes = require('./routeTypes');
 const {DEFAULT_SERVICE, WEEKEND_SERVICE} = require('./services');
-const {mergeDeep, mapPropValueAsIndex} = require('rescape-ramda');
-const {reqPath} = require('rescape-ramda').throwing;
+const {mergeDeep} = require('rescape-ramda');
+const {users} = require('./defaultUsers');
 
-/***
- * Extract a template from the default config
- * @param {String} templateId The templateId in the config
- * @param {Lens} lens A Ramda lens into the config
- * @param {Object} config The config whence to extract
- * @returns {Object} The extracted template
- */
-const extractTemplate = module.exports.extractTemplate = (templateId, lens, config) =>
-    // Remove the templateId from the config
-    R.omit(
-        ['templateId'],
-        reqPath(
-            [templateId],
-            // Convert the array of regions to an object keyed by templateId
-            mapPropValueAsIndex(
-                'templateId',
-                reqPath(['regions'], config))
-        )
-    );
-
-module.exports.default = mergeDeep(privateConfig, {regions: [{
-    // This region should be extracted and deep merged with real region configurations
-    templateId: 'default',
-    gtfs: {
+module.exports.default = mergeDeep(environmentConfig, {
+  regions: {
+    default: {
+      gtfs: {
         calendar: [
-            DEFAULT_SERVICE,
-            WEEKEND_SERVICE
+          DEFAULT_SERVICE,
+          WEEKEND_SERVICE
         ],
         routeTypes: routeTypes
-    },
-    geojson: {
+      },
+      geojson: {
         markers: {},
         osm: {},
         searches: {}
-    },
-    mapbox: {
+      },
+      mapbox: {
         mapStyle: 'mapbox://styles/mapbox/streets-v8',
         viewport: {
-            pitch: 40,
-            bearing: 0,
-            startDragLngLat: null,
-            isDragging: false,
+          pitch: 40,
+          bearing: 0,
+          startDragLngLat: null,
+          isDragging: false,
 
-            latitude: 0,
-            longitude: 0,
-            zoom: 1
+          latitude: 0,
+          longitude: 0,
+          zoom: 1
         }
+      }
     }
-}]});
+  },
+  // These are all just templates that can be merged with real users
+  user: users
+});

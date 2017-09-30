@@ -10,13 +10,10 @@
  */
 
 const R = require('ramda');
-const {fetchTransit} = require('async/overpassIO');
-const {asyncActions, asyncActionCreators} = require('rescape-cycle');
-const {SCOPE} = require('./geojsons');
+const {asyncActions} = require('rescape-cycle');
+const {ROOT} = require('redux/geojson/geojsonConfig');
 const ACTION_ROOT = 'transit';
-const makeAsyncActionCreators = asyncActionCreators(SCOPE, ACTION_ROOT);
-const actions = asyncActions(SCOPE, ACTION_ROOT, 'FETCH');
-const actionCreators = makeAsyncActionCreators('FETCH', fetchTransit);
+const actions = asyncActions(ROOT, ACTION_ROOT, 'FETCH');
 
 /**
  * Reduces openStreetMaps state
@@ -25,19 +22,17 @@ const actionCreators = makeAsyncActionCreators('FETCH', fetchTransit);
  * @returns {Object} the reduced state
  */
 module.exports = {
-    actions,
-    actionCreators,
-    default: (state = {}, action = {}) => {
-        switch (action.type) {
-            case actions.FETCH_TRANSIT_DATA:
-                // TODO handle with reselect in containers instead
-                // Indicate that the geojson has been requested so that it never tries to lad again
-                return R.merge(state, {requested: true});
-            case actions.FETCH_TRANSIT_SUCCESS:
-                // Merge the returned geojson into the state
-                return R.merge(state, action.body);
-            default:
-                return state;
-        }
+  default: (state = {}, action = {}) => {
+    switch (action.type) {
+      case actions.fetchTransitRequest:
+        // TODO handle with reselect in containers instead
+        // Indicate that the geojson has been requested so that it never tries to lad again
+        return R.merge(state, {requested: true});
+      case actions.fetchTransitSuccess:
+        // Merge the returned geojson into the state
+        return R.merge(state, action.body);
+      default:
+        return state;
     }
+  }
 };

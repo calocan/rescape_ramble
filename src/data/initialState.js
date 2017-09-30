@@ -14,66 +14,29 @@ const {toImmutable} = require('helpers/immutableHelpers');
 const {mapPropValueAsIndex} = require('rescape-ramda');
 
 /**
- * Returns a function that can be applied to a list to add an id value to each object of the list
- * and then change the list to an object keyed by the id value. This is only useful for sample data
- * that doesn't have an id
- * @param {Function} generator The generator to create ids
- * @returns {Object} the Object
- * toObjectKeyedByGeneratedId:: [<k, v>] -> <v.id, <k, v>>
- */
-const toObjectKeyedByGeneratedId = module.exports.toObjectKeyedByGeneratedId = generator => R.pipe(
-    R.map(item => R.merge(item, {id: generator.next().value})), // Add a generated id
-    mapPropValueAsIndex('id') // make the id the key
-);
-const toObjectKeyedById = mapPropValueAsIndex('id');
-// Maps the array to objects keyed by id and also inserts a 'current' key to reference the given currentKey
-// toObjectKeyedByIdWithCurrent:: String -> [{k,v}] -> {j|currentKey, {k, v}}
-const toObjectKeyedByIdWithCurrent = R.curry((currentKey, object) => {
-    const obj = toObjectKeyedById(object);
-    return R.merge(obj, {
-        currentKey: currentKey
-    });
-});
-
-/**
  * Returns an initialState based on the given region config. It's possible to configure the state
  * to have multiple regions, but this function only assumes a single initial region
  * @param {Object} config The config
  * @return {Object} The state
  */
 module.exports.default = (config) => {
-    return {
-        settings: config.settings,
-        // regions maps to an object keyed by region id, valued by the Region object
-        regions: toObjectKeyedByIdWithCurrent(
-            config.settings.defaultRegion,
-            R.map(region =>
-            ({
-                id: region.id,
-                geospatial: region.geospatial,
-                // make each array of objects in travel to an object by array object id
-                // An object of user travel data, such as journeys and locations, each of which
-                // is an object keyed by id (e.g. journey id)
-                travel: R.map(toObjectKeyedByGeneratedId, region.travel),
-                // geojson data from OpenStreetMap
-                geojson: region.geojson,
-                // make each array of objects in gtfs, such as routes, an object by id (e.g. by route id)
-                gtfs: R.map(toObjectKeyedById, region.gtfs),
-                // The viewport must be an Immutable to satisfied the redux-map-gl reducer
-                // Apply toImmutable to the viewport of config.mapbox
-                mapbox:
-                    R.over(
-                        R.lensProp('viewport'),
-                        toImmutable,
-                        // Merge the initial mapbox configuration into each region
-                        R.merge(
-                            config.settings.mapbox,
-                            region.mapbox
-                        )
-                    )
-            }),
-            config.regions
-        ))
-    };
+  return {
+    settings: config.settings,
+    regions: R.map(region => R.merge(region, {
+        // The viewport must be an Immutable to satisfied the redux-map-gl reducer
+        // Apply toImmutable to the viewport of config.mapbox
+        mapbox: R.over(
+          R.lensProp('viewport'),
+          toImmutable,
+          // Merge the initial mapbox configuration into each region
+          R.merge(
+            config.settings.mapbox,
+            region.mapbox
+          )
+        )
+      }),
+      config.regions
+    )
+  };
 };
 
