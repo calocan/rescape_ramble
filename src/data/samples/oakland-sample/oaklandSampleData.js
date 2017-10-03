@@ -14,7 +14,7 @@ module.exports.data = {
   journeys: require('./oaklandJourneys.sample.json'),
   locations: require('./oaklandLocations.sample'),
   places: require('./oaklandPlaces.sample'),
-  regions: require('./oaklaneRegions.sample'),
+  regions: require('./oaklandRegions.sample'),
   routes: require('./oaklandRoutes.sample'),
   routings: require('./oaklandRoutings.sample.json'),
   stops: require('./oaklandStops.sample'),

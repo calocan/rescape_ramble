@@ -95,22 +95,20 @@ describe('configHelpers', () => {
         }
       }
     };
-    const realConfig = {
-      users: {
-        linus: {
-          permissions: {
-            b: 'Security Blanket'
-          }
-        },
-        lucy: {
-          permissions: {
-            b: 'Psychiatrist'
-          }
-        },
-        pigpen: {
-          permissions: {
-            b: 'Stink'
-          }
+    const realUsers = {
+      linus: {
+        permissions: {
+          b: 'Security Blanket'
+        }
+      },
+      lucy: {
+        permissions: {
+          b: 'Psychiatrist'
+        }
+      },
+      pigpen: {
+        permissions: {
+          b: 'Stink'
         }
       }
     };
@@ -118,8 +116,11 @@ describe('configHelpers', () => {
       mergeDeep(
         // Duplicate snoopy key to linus and lucy and duplicate schroeder key to pigpen
         // Once duplicated we can correctly merge
-        mapDefaultUsers({snoopy: ['linus', 'lucy'], 'schroeder': ['pigpen']}, defaultConfig),
-        realConfig
+        mapDefaultUsers({
+          snoopy: R.pick(['linus', 'lucy'], realUsers),
+          'schroeder': R.pick(['pigpen'], realUsers)
+        }, defaultConfig),
+        {users: realUsers}
       )
     ).toEqual(
       {
@@ -142,16 +143,6 @@ describe('configHelpers', () => {
               b: 'Stink'
             }
           },
-          snoopy: {
-            permissions: {
-              a: 'World War I Flying Ace'
-            }
-          },
-          schroeder: {
-            permissions: {
-              a: 'Jam'
-            }
-          }
         }
       }
     )

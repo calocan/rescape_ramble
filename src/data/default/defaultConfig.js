@@ -48,5 +48,5 @@ module.exports.defaultConfig = mergeDeep(environmentConfig, {
     }
   },
   // These are all just templates that can be merged with real users
-  user: users
+  users
 });

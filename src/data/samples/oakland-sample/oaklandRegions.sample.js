@@ -10,22 +10,22 @@
  */
 
 const {mergeDeep} = require('rescape-ramda');
-const journeys = require('./parisJourneys.sample.json');
-const locations = require('./parisUserLocations.sample.json');
-const routes = require('./parisRoutes.sample').default;
+const journeys = require('./oaklandJourneys.sample.json');
+const locations = require('./oaklandUserLocations.sample.json');
+const routes = require('./oaklandRoutes.sample').default;
 const routeTypes = require('data/default/routeTypes');
 const {mapDefaultRegion} = require('data/configHelpers');
-const trips = require('./parisTrips.sample').default;
-const stops = require('./parisStops.sample').default;
+const trips = require('./oaklandTrips.sample').default;
+const stops = require('./oaklandStops.sample').default;
 const {defaultConfig} = require('data/default');
 
 // merge the default region template with our region(s)
 module.exports.default = mergeDeep(
-  mapDefaultRegion(['paris'], defaultConfig),
+  mapDefaultRegion(['oakland'], defaultConfig),
   {
     regions: {
-      'paris': {
-        id: 'paris',
+      'oakland': {
+        id: 'oakland',
 
         gtfs: {
           routes,

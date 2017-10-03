@@ -16,7 +16,7 @@ const users = require('./californiaUsers').default;
  * California configuration
  * @type {*}
  */
-module.exports.default = {
+module.exports.californiaConfig = {
   region: regions,
   users: users
 };

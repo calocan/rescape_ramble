@@ -19,7 +19,7 @@ const routes = require('./oaklandRoutes.sample').default;
 const {createTripWithStopTimesPair, orderStops, stopTimeGenerator} = require('data/dataCreationHelpers');
 const {stopResolver, routeResolver} = require('data/dataQueryHelpers');
 const places = require('./oaklandPlaces.sample');
-const regions = require('./oaklaneRegions.sample');
+const regions = require('./oaklandRegions.sample');
 const {DEFAULT_SERVICE} = require('data/default/services');
 
 const resolveStop = stopResolver(stops);

@@ -130,7 +130,7 @@
     "redux-router": "^2.1.2",
     "redux-thunk": "^2.2.0",
     "rescape-cycle": "^1.5.7",
-    "rescape-ramda": "^1.2.1",
+    "rescape-ramda": "^1.2.3",
     "rescape-validate": "^1.2.2",
     "reselect": "^3.0.1",
     "stack-trace": "^0.0.10"

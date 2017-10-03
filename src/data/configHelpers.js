@@ -10,12 +10,12 @@
  */
 
 const R = require('ramda');
-const {duplicateKey} = require('rescape-ramda');
+const {moveToKeys} = require('rescape-ramda');
 const PropTypes = require('prop-types');
 const {v} = require('rescape-validate');
 
 /**
- * Copies the 'default' region to the specified region keys.
+ * Copies the 'default' region to the specified region keys, removing the default key
  * This basically clones a template so that it can be merged into each real region
  * The default region of this config is copied to the given regionKeys
  * @param {[String]} regionKeys The region keys to target.
@@ -23,7 +23,7 @@ const {v} = require('rescape-validate');
  * @returns {Object} The "modified" defaultConfig
  */
 module.exports.mapDefaultRegion = v(R.curry((regionKeys, defaultConfig) =>
-    duplicateKey(R.lensPath(['regions']), 'default', regionKeys, defaultConfig)
+    moveToKeys(R.lensPath(['regions']), 'default', regionKeys, defaultConfig)
   ),
   [
     ['regionKeys', PropTypes.array.isRequired],
@@ -35,23 +35,34 @@ module.exports.mapDefaultRegion = v(R.curry((regionKeys, defaultConfig) =>
   ], 'mapDefaultRegion');
 
 /**
- * Copies the defaultConfig user keys to the specified users keys.
+ * Copies the defaultConfig user keys to the specified users keys, removing the defaultConfig keys
  * This basically clones a template so that it can be merged into each real user
  * The default users of the defaultConfig are copied to the given usersKeys within the defaultConfig,
  * producing a new defaultConfig to merge with the target config
- * @param {Object} defaultUserKeyToUserKeys Maps each default user key of interest to a list of
- * target user keys
+ * @param {Object} defaultUserKeyToUserObjs Maps each default user key of interest to a list of
+ * target user keyed objects.
+ * E.g.  {
+ * {[APP_ADMIN]: {
+ *  'phil': {...}
+ *  'barbara': {...}
+ * }
+ * {[MANAGER]: {
+ *  'ken': {...}
+ *  'billy': {...}
+ * }
+ * }
  * @param {Object} defaultConfig The defaultConfig being merged into the target config
  * @returns {Object} The "modified" defaultConfig
  */
-module.exports.mapDefaultUsers = v(R.curry((defaultUserKeyToUserKeys, defaultConfig) =>
+module.exports.mapDefaultUsers = v(R.curry((defaultUserKeyToUserObjs, defaultConfig) =>
     R.set(
       R.lensProp(['users']),
       // for each pair duplicate the users object, adding the desired userKeys. Merge them
       // all together
-      R.reduce((accumulated, [defaultUserKey, userKeys]) => duplicateKey(R.lensPath([]), defaultUserKey, userKeys, accumulated),
+      R.reduce((accumulated, [defaultUserKey, userObjs]) =>
+          moveToKeys(R.lensPath([]), defaultUserKey, R.keys(userObjs), accumulated),
         R.prop('users', defaultConfig),
-        R.toPairs(defaultUserKeyToUserKeys)
+        R.toPairs(defaultUserKeyToUserObjs)
       ),
       defaultConfig
     )
@@ -59,8 +70,6 @@ module.exports.mapDefaultUsers = v(R.curry((defaultUserKeyToUserKeys, defaultCon
   [
     ['defaultUserKeyToUserKeys', PropTypes.shape().isRequired],
     ['defaultConfig', PropTypes.shape({
-      regions: PropTypes.shape({
-        default: PropTypes.shape({}).isRequired
-      }).isRequired
+      users: PropTypes.shape().isRequired
     }).isRequired]
   ], 'mapDefaultUsers');
