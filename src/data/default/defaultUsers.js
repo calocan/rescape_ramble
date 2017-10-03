@@ -19,7 +19,7 @@ const {APP_ADMIN, REGION_MANAGER, REGION_USER, REGION_VISITOR} = module.exports.
   // Can create projects
   REGION_USER: 'region_user',
   // Exploratory access to specified regions, no edit ability
-  REGION_VISITOR: 'region_visitor,'
+  REGION_VISITOR: 'region_visitor'
 };
 
 const {ADMINISTRATE, MANAGE, USE, VISIT} = module.exports.permissions = {
@@ -45,21 +45,21 @@ module.exports.users = {
       // Can manage regions listed in keys
       regions: {
         permission: MANAGE,
-        keys: [],
+        keys: []
       }
     },
     [REGION_USER]: {
       // Can use regions listed in keys, creating projects, etc
       regions: {
         permission: USE,
-        keys: [],
+        keys: []
       }
     },
     [REGION_VISITOR]: {
       // Can use regions listed in keys, creating projects, etc
       regions: {
         permission: VISIT,
-        keys: [],
+        keys: []
       },
     }
   }

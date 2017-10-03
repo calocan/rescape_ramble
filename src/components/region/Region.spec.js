@@ -1,7 +1,7 @@
 const React = require('react');
 const {shallow} = require('enzyme');
 
-const testConfig = require('data/test/config').default;
+const testConfig = require('data/samples/config').default;
 const initialState = require('data/initialState').default;
 const R = require('ramda');
 const e = React.createElement;

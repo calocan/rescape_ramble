@@ -11,13 +11,13 @@
 
 const R = require('ramda');
 const environment = R.propOr('development', 'NODE_ENV', process.env);
-const environmentConfig = require(`${environment}.json`);
+const {environmentConfig} = require(`environments/${environment}Config`);
 const routeTypes = require('./routeTypes');
 const {DEFAULT_SERVICE, WEEKEND_SERVICE} = require('./services');
 const {mergeDeep} = require('rescape-ramda');
 const {users} = require('./defaultUsers');
 
-module.exports.default = mergeDeep(environmentConfig, {
+module.exports.defaultConfig = mergeDeep(environmentConfig, {
   regions: {
     default: {
       gtfs: {

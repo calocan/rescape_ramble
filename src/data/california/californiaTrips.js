@@ -16,11 +16,11 @@
 const stops = require('./californiaStops').default;
 const w = require('./californiaStops').default;
 const routes = require('./californiaRoutes').default;
-const {createTripWithStopTimesPair, orderStops, stopTimeGenerator} = require('../dataCreationHelpers');
-const {stopResolver, routeResolver} = require('../dataQueryHelpers');
+const {createTripWithStopTimesPair, orderStops, stopTimeGenerator} = require('data/dataCreationHelpers');
+const {stopResolver, routeResolver} = require('data/dataQueryHelpers');
 const places = require('./californiaPlaces');
 const regions = require('./californiaRegions');
-const {DEFAULT_SERVICE} = require('../default/services');
+const {DEFAULT_SERVICE} = require('data/default/services');
 
 const resolveStop = stopResolver(stops);
 const resolveRoute = routeResolver(routes);

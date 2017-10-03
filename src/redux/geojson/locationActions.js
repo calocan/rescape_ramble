@@ -14,14 +14,14 @@ const R = require('ramda');
 const {makeActionConfigLookup, actionConfig,
   VERBS: {FETCH, ADD, REMOVE, SELECT},
   overrideSourcesWithoutStreaming, makeActionCreators} = require('rescape-cycle');
-const config = require('data/default/defaultConfig').default;
+const {defaultConfig} = require('data/default/defaultConfig');
 const {camelCase} = require('rescape-ramda');
 
 // Models are various manifestations of the locations
 // For now just define a generic LOCATION model
-const {LOCATION} = module.exports.MODELS =
+const {LOCATIONS} = module.exports.MODELS =
   R.mapObjIndexed((v, k) => camelCase(R.toLower(k)), {
-    LOCATION: '',
+    LOCATIONS: '',
   });
 
 // Describes the fundamental data structure being transacted in these actions
@@ -31,17 +31,17 @@ const rootedConfig = actionConfig(ROOT);
 const userScopedConfig = rootedConfig(scopeKeys);
 
 const ACTION_CONFIGS = module.exports.ACTION_CONFIGS = [
-  userScopedConfig(LOCATION, FETCH),
-  userScopedConfig(LOCATION, ADD),
-  userScopedConfig(LOCATION, REMOVE),
-  userScopedConfig(LOCATION, SELECT),
+  userScopedConfig(LOCATIONS, FETCH),
+  userScopedConfig(LOCATIONS, ADD),
+  userScopedConfig(LOCATIONS, REMOVE),
+  userScopedConfig(LOCATIONS, SELECT),
 ];
 
 /**
  * cycle.js sources that process location async actions
  */
 module.exports.locationCycleSources = overrideSourcesWithoutStreaming({
-  CONFIG: config,
+  CONFIG: defaultConfig,
   // ACTION_CONFIG configures the generic cycleRecords to call/match the correct actions
   ACTION_CONFIG: {
     configByType: makeActionConfigLookup(ACTION_CONFIGS)

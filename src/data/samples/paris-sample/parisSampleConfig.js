@@ -9,25 +9,23 @@
  * THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-const defaultConfig = require('data/default/defaultConfig').default;
+const {defaultConfig} = require('data/default');
 const routeTypes = require('data/default/routeTypes');
 const {mergeDeep} = require('rescape-ramda');
 const journeys = require('./parisJourneys.sample.json');
 const userLocations = require('./parisUserLocations.sample.json');
 const routes = require('./parisRoutes.sample').default;
-const routeTypes = require('data/default/routeTypes');
 const {mapDefaultRegion} = require('data/configHelpers');
 const trips = require('./parisTrips.sample').default;
 const stops = require('./parisStops.sample').default;
-
 
 /**
  * Paris sample configuration
  * @type {*}
  */
-module.exports.default = mergeDeep(
+module.exports.parisSampleConfig = mergeDeep(
   // merge the default region template with our region(s)
-  mapDefaultRegion(defaultConfig, ['parisSample']),
+  mapDefaultRegion(['parisSample'], defaultConfig),
   {
     regions: {
       'parisSample': {

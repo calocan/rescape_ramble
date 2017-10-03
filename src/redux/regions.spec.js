@@ -2,7 +2,7 @@
 const reducer = require('redux/regions').default;
 const {actions} = require('redux/geojson/geojsons').actions;
 const {Map} = require('immutable');
-const testConfig = require('data/test/config').default;
+const testConfig = require('data/samples/config').default;
 const initialState = require('data/initialState').default;
 const {reqPath} = require('rescape-ramda').throwing;
 

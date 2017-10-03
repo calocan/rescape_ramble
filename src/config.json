@@ -1,22 +1,10 @@
 {
   "settings": {
-    "environments": [
-      {
-        "id": "production",
-        "domain": "rescapes.net"
-      }
-    ],
     "overpass": {
       "cellSize": 100,
       "sleepBetweenCalls": 1000
     },
     "markers": {
-    },
-    "regions": {
-      "california": {
-        "id": "california",
-        "label": "California"
-      }
     },
     "mapbox": {
       "mapboxApiAccessToken": "pk.eyJ1IjoiY2Fsb2NhbiIsImEiOiJjaXl1aXkxZjkwMG15MndxbmkxMHczNG50In0.07Zu3XXYijL6GJMuxFtvQg",
@@ -27,13 +15,6 @@
       "drivers": {
         "api": "HTTP"
       }
-    },
-    "domain": "localhost",
-    "api": {
-      "protocol": "http",
-      "host": "localhost",
-      "port": "8080",
-      "root": "/api/"
     }
   }
 }

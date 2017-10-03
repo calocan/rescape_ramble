@@ -9,11 +9,12 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 const R = require('ramda');
-const {mapDefault} = require('rescape-ramda');
-const {config, testConfigs} = mapDefault('config', require('./testConfig'));
+const {sampleConfig} = require('./sampleConfig');
 
 describe("config", () => {
-    test("Contains merged configs", () => {
-        expect(R.length(config.regions)).toEqual(R.length(testConfigs))
-    })
-})
+    test("Contains merged configs and the default config, the latter which we should probably not copy in", () => {
+        expect(R.length(R.keys(sampleConfig.regions))).toEqual(3);
+        // Make sure settings is in there
+        expect(R.keys(R.pick(['mapbox', 'domain', 'api'], sampleConfig.settings))).toEqual(['mapbox', 'domain', 'api']);
+    });
+});

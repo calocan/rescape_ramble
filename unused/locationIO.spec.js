@@ -12,7 +12,7 @@
 const {createDesignDoc} = require('../src/redux/cyclePouchDbStuff');
 const {removeLocation, fetchLocations, persistLocations, cycleLocations} = require('./locationIO');
 const { actions, actionCreators, ACTION_PATH } = require('locationActions');
-const config = require('data/test/config').default;
+const config = require('data/samples/config').default;
 const {PARIS_SAMPLE, LA_SAMPLE} = require('../src/data/test/location.sample');
 const {reqPath} = require('rescape-ramda').throwing;
 const {mergeAllWithKey} = require('rescape-ramda');

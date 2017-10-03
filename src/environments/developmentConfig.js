@@ -1,7 +1,7 @@
 const privateConfig = require(`config.json`);
 const {mergeDeep} = require('rescape-ramda');
 
-mergeDeep(privateConfig, {
+module.exports.environmentConfig = mergeDeep(privateConfig, {
   "settings": {
     "mapbox": {
       "mapboxApiAccessToken": "pk.eyJ1IjoiY2Fsb2NhbiIsImEiOiJjaXl1aXkxZjkwMG15MndxbmkxMHczNG50In0.07Zu3XXYijL6GJMuxFtvQg",

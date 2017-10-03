@@ -11,6 +11,8 @@
 
 const R = require('ramda');
 const {duplicateKey} = require('rescape-ramda');
+const PropTypes = require('prop-types');
+const {v} = require('rescape-validate');
 
 /**
  * Copies the 'default' region to the specified region keys.
@@ -20,9 +22,17 @@ const {duplicateKey} = require('rescape-ramda');
  * @param {Object} defaultConfig The defaultConfig being merged into another config
  * @returns {Object} The "modified" defaultConfig
  */
-module.exports.mapDefaultRegion = R.curry((regionKeys, defaultConfig) =>
-  duplicateKey(R.lensPath(['regions']), 'default', regionKeys, defaultConfig)
-);
+module.exports.mapDefaultRegion = v(R.curry((regionKeys, defaultConfig) =>
+    duplicateKey(R.lensPath(['regions']), 'default', regionKeys, defaultConfig)
+  ),
+  [
+    ['regionKeys', PropTypes.array.isRequired],
+    ['defaultConfig', PropTypes.shape({
+      regions: PropTypes.shape({
+        default: PropTypes.shape({}).isRequired
+      }).isRequired
+    }).isRequired]
+  ], 'mapDefaultRegion');
 
 /**
  * Copies the defaultConfig user keys to the specified users keys.
@@ -34,15 +44,23 @@ module.exports.mapDefaultRegion = R.curry((regionKeys, defaultConfig) =>
  * @param {Object} defaultConfig The defaultConfig being merged into the target config
  * @returns {Object} The "modified" defaultConfig
  */
-module.exports.mapDefaultUsers = R.curry((defaultUserKeyToUserKeys, defaultConfig) =>
-  R.set(
-    R.lensProp(['users']),
-    // for each pair duplicate the users object, adding the desired userKeys. Merge them
-    // all together
-    R.reduce((accumulated, [defaultUserKey, userKeys]) => duplicateKey(R.lensPath([]), defaultUserKey, userKeys, accumulated),
-      R.prop('users', defaultConfig),
-      R.toPairs(defaultUserKeyToUserKeys)
-    ),
-    defaultConfig
-  )
-);
+module.exports.mapDefaultUsers = v(R.curry((defaultUserKeyToUserKeys, defaultConfig) =>
+    R.set(
+      R.lensProp(['users']),
+      // for each pair duplicate the users object, adding the desired userKeys. Merge them
+      // all together
+      R.reduce((accumulated, [defaultUserKey, userKeys]) => duplicateKey(R.lensPath([]), defaultUserKey, userKeys, accumulated),
+        R.prop('users', defaultConfig),
+        R.toPairs(defaultUserKeyToUserKeys)
+      ),
+      defaultConfig
+    )
+  ),
+  [
+    ['defaultUserKeyToUserKeys', PropTypes.shape().isRequired],
+    ['defaultConfig', PropTypes.shape({
+      regions: PropTypes.shape({
+        default: PropTypes.shape({}).isRequired
+      }).isRequired
+    }).isRequired]
+  ], 'mapDefaultUsers');

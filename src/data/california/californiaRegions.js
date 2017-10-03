@@ -12,4 +12,49 @@
 module.exports.NORTH_BAY = 'North-Bay';
 module.exports.ALTAMONT = 'Altamont';
 module.exports.EAST_BAY = 'East-Bay';
+const {mergeDeep} = require('rescape-ramda');
+const journeys = require('./californiaJourneys.json');
+const locations = require('./californiaUserLocations.json');
+const routes = require('./californiaRoutes').default;
+const routeTypes = require('data/default/routeTypes');
+const {mapDefaultRegion} = require('data/configHelpers');
+const trips = require('./californiaTrips').default;
+const stops = require('./californiaStops').default;
+const {defaultConfig} = require('data/default');
 
+// merge the default region template with our region(s)
+module.exports.default = mergeDeep(
+  mapDefaultRegion(['california'], defaultConfig),
+  {
+    regions: {
+      'california': {
+        id: 'california',
+
+        gtfs: {
+          routes,
+          trips,
+          stops,
+          routeTypes: [routeTypes.INTER_REGIONAL_RAIL_SERVICE]
+        },
+
+        travel: {
+          journeys,
+          locations
+        },
+
+        geospatial: {
+          // bounds: [-125, 31, -113, 43]
+          bounds: [-122.720306, 37.005783, -121.568275, 38.444660]
+        },
+
+        mapbox: {
+          viewport: {
+            latitude: 37,
+            longitude: -119,
+            zoom: 5
+          }
+        }
+      }
+    }
+  }
+);

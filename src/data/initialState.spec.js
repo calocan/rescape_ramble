@@ -10,7 +10,7 @@
  */
 
 const createInitialState = require('./initialState').default;
-const config = require('data/test').default;
+const config = require('data/samples').default;
 
 describe('Initial State', () => {
   test('matches the current configuration', () => {

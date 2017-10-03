@@ -1,5 +1,5 @@
 /**
- * Created by Andy Likuski on 2017.02.06
+ * Created by Andy Likuski on 2017.10.02
  * Copyright (c) 2017 Andy Likuski
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
@@ -8,29 +8,35 @@
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-const thunk = require('redux-thunk');
-const {mapStateToProps} = require('./RegionContainer');
-const configureStore = require('redux-mock-store');
 
-const testConfig = require('data/samples/config').default;
-const initialState = require('data/initialState').default;
-const {reqPath} = require('rescape-ramda').throwing;
+const { userTemplateKeys: { REGION_MANAGER, REGION_USER, REGION_VISITOR } } = require('data/default');
+const {mapDefaultUsers} = require('data/configHelpers');
+const R = require('ramda');
 
-const middlewares = [thunk];
-const mockStore = configureStore(middlewares);
-
-describe('RegionContainer', () => {
-    test('mapStateToProps returns regions and current of state.settings', () => {
-        const store = mockStore(initialState(testConfig));
-        const currentKey = reqPath(['regions', 'currentKey'], store.getState());
-
-        const ownProps = {
-            region: reqPath(['regions', currentKey], store.getState()),
-            width: 500,
-            height: 500
-        };
-
-        expect(mapStateToProps(store.getState(), ownProps)).toMatchSnapshot();
-    });
-});
-
+// Create three users
+// rename the user templates to match our users
+module.exports.default = mapDefaultUsers(
+  R.map(
+    usersForPermissionLevel => R.keys(usersForPermissionLevel),
+    {
+      [REGION_MANAGER]: {
+        californiaManager: {
+          id: 'californiaManager',
+          name: 'Jerry Brown',
+        },
+      },
+      [REGION_USER]: {
+        californiaUser: {
+          id: 'californiaUser',
+          name: 'Nancy Pelosi',
+        }
+      },
+      [REGION_VISITOR]: {
+        californiaVisitor: {
+          id: 'californiaVisitor',
+          name: 'Angela Merkel'
+        }
+      }
+    }
+  )
+);

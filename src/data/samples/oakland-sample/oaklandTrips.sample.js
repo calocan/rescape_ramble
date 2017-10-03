@@ -13,14 +13,14 @@
  * Creates default TripPair objects
  */
 
-const stops = require('./parisStops.sample').default;
-const w = require('./parisStops.sample').default;
-const routes = require('./parisRoutes.sample').default;
-const {createTripWithStopTimesPair, orderStops, stopTimeGenerator} = require('../dataCreationHelpers');
-const {stopResolver, routeResolver} = require('../dataQueryHelpers');
-const places = require('./parisPlaces.sample');
-const regions = require('./parisRegions.sample');
-const {DEFAULT_SERVICE} = require('../default/services');
+const stops = require('./oaklandStops.sample').default;
+const w = require('./oaklandStops.sample').default;
+const routes = require('./oaklandRoutes.sample').default;
+const {createTripWithStopTimesPair, orderStops, stopTimeGenerator} = require('data/dataCreationHelpers');
+const {stopResolver, routeResolver} = require('data/dataQueryHelpers');
+const places = require('./oaklandPlaces.sample');
+const regions = require('./oaklaneRegions.sample');
+const {DEFAULT_SERVICE} = require('data/default/services');
 
 const resolveStop = stopResolver(stops);
 const resolveRoute = routeResolver(routes);

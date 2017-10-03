@@ -1,5 +1,5 @@
 
-const {createStop} = require('../dataCreationHelpers');
+const {createStop} = require('data/dataCreationHelpers');
 const places = require('./californiaPlaces');
 const stopTypes = require('../default/stopTypes');
 

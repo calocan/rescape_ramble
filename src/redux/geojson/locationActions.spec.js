@@ -18,11 +18,13 @@ const {reqPath} = require('rescape-ramda').throwing;
 const scopeValues = R.fromPairs(R.addIndex(R.map)((k, i) => [k, Math.pow(10, i+1)], scopeKeys));
 const actions = actionCreators(scopeValues);
 
-const locations = require('data/test/locations.json');
+const {sampleConfig} = require('data/samples/sampleConfig');
+const locations = reqPath(['regions', 'oaklandSample', 'travel', 'locations'], sampleConfig);
+
 const newLocations = R.values(R.omit(['id'], locations));
 // Create sample request and response bodies
 const {fetchLocationsRequestBody, addLocationsRequestBody, fetchLocationsSuccessBody, addLocationsSuccessBody} =
-  testBodies(ACTION_CONFIGS, scopeValues, {locations});
+  testBodies(sampleConfig, ACTION_CONFIGS, scopeValues, {locations});
 
 describe('cycleRecords', () => {
 

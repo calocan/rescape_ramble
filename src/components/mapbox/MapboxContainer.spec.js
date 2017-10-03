@@ -13,7 +13,7 @@ const thunk = require('redux-thunk');
 const {mapStateToProps} = require('./MapboxContainer');
 const configureStore = require('redux-mock-store');
 
-const testConfig = require('data/test/config').default;
+const testConfig = require('data/samples/config').default;
 const initialState = require('data/initialState').default;
 const {reqPath} = require('rescape-ramda').throwing;
 

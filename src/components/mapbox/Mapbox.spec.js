@@ -7,7 +7,7 @@ const {mapStateToProps, mapDispatchToProps} = require('./MapboxContainer');
 const {geojsonByType} = require('helpers/geojsonHelpers');
 const e = React.createElement;
 
-const config = require('data/test/config').default;
+const config = require('data/samples/config').default;
 const initialState = require('data/initialState').default;
 const R = require('ramda');
 

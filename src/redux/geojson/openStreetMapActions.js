@@ -14,7 +14,7 @@ const R = require('ramda');
 const {makeActionConfigLookup, actionConfig,
   VERBS: {FETCH, SELECT},
   overrideSourcesWithoutStreaming, makeActionCreators} = require('rescape-cycle');
-const config = require('data/default/defaultConfig').default;
+const {defaultConfig} = require('data/default/defaultConfig');
 const {camelCase} = require('rescape-ramda');
 
 // Models are various manifestations of the locations
@@ -43,7 +43,7 @@ const ACTION_CONFIGS = module.exports.ACTION_CONFIGS = [
  * cycle.js sources that process location async actions
  */
 module.exports.openStreetMapCycleSources = overrideSourcesWithoutStreaming({
-  CONFIG: config,
+  CONFIG: defaultConfig,
   // ACTION_CONFIG configures the generic cycleRecords to call/match the correct actions
   ACTION_CONFIG: {
     configByType: makeActionConfigLookup(ACTION_CONFIGS)

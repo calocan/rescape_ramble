@@ -1,7 +1,7 @@
 
-const {createStop} = require('../dataCreationHelpers');
+const {createStop} = require('data/dataCreationHelpers');
 const places = require('./parisPlaces.sample');
-const stopTypes = require('../default/stopTypes');
+const stopTypes = require('data/default/stopTypes');
 
 const UNION = module.exports.UNION = 'Union';
 const CENTRAL = module.exports.CENTRAL = 'Central';
