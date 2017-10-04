@@ -24,7 +24,7 @@ const {defaultConfig} = require('data/default');
 
 // merge the default region template with our region(s)
 module.exports.default = mergeDeep(
-  mapDefaultRegion(['california'], defaultConfig),
+  mapDefaultRegion(['california']),
   {
     regions: {
       'california': {

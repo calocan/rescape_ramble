@@ -33,34 +33,32 @@ const {ADMINISTRATE, MANAGE, USE, VISIT} = module.exports.permissions = {
   User template. Merge one of these into a user configuration
 */
 module.exports.users = {
-  entries: {
-    [APP_ADMIN]: {
-      // Admin access to application
-      regions: {
-        permission: ADMINISTRATE,
-        keys: ['global']
-      }
-    },
-    [REGION_MANAGER]: {
-      // Can manage regions listed in keys
-      regions: {
-        permission: MANAGE,
-        keys: []
-      }
-    },
-    [REGION_USER]: {
-      // Can use regions listed in keys, creating projects, etc
-      regions: {
-        permission: USE,
-        keys: []
-      }
-    },
-    [REGION_VISITOR]: {
-      // Can use regions listed in keys, creating projects, etc
-      regions: {
-        permission: VISIT,
-        keys: []
-      },
+  [APP_ADMIN]: {
+    // Admin access to application
+    regions: {
+      permission: ADMINISTRATE,
+      keys: ['global']
     }
+  },
+  [REGION_MANAGER]: {
+    // Can manage regions listed in keys
+    regions: {
+      permission: MANAGE,
+      keys: []
+    }
+  },
+  [REGION_USER]: {
+    // Can use regions listed in keys, creating projects, etc
+    regions: {
+      permission: USE,
+      keys: []
+    }
+  },
+  [REGION_VISITOR]: {
+    // Can use regions listed in keys, creating projects, etc
+    regions: {
+      permission: VISIT,
+      keys: []
+    },
   }
 };

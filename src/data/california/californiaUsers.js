@@ -11,6 +11,7 @@
 
 const { defaultConfig, userTemplateKeys: { REGION_MANAGER, REGION_USER, REGION_VISITOR } } = require('data/default');
 const {mapDefaultUsers} = require('data/configHelpers');
+const {regions} = require('./californiaRegions').default;
 
 // Create three users
 // rename the user templates to match our users
@@ -34,6 +35,5 @@ module.exports.default = mapDefaultUsers(
         name: 'Angela Merkel'
       }
     }
-  },
-  defaultConfig
+  }
 );

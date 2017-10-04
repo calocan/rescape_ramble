@@ -46,6 +46,5 @@ module.exports.default = mapDefaultUsers(
         name: 'Paris Visitor'
       }
     }
-  },
-  defaultConfig
+  }
 );

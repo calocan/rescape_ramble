@@ -35,6 +35,5 @@ module.exports.default = mapDefaultUsers(
         name: 'Angela Merkel'
       }
     }
-  },
-  defaultConfig
+  }
 );

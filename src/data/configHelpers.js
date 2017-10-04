@@ -12,6 +12,7 @@
 const R = require('ramda');
 const {moveToKeys} = require('rescape-ramda');
 const PropTypes = require('prop-types');
+const {defaultConfig} = require('data/default');
 const {v} = require('rescape-validate');
 
 /**
@@ -19,19 +20,13 @@ const {v} = require('rescape-validate');
  * This basically clones a template so that it can be merged into each real region
  * The default region of this config is copied to the given regionKeys
  * @param {[String]} regionKeys The region keys to target.
- * @param {Object} defaultConfig The defaultConfig being merged into another config
  * @returns {Object} The "modified" defaultConfig
  */
-module.exports.mapDefaultRegion = v(R.curry((regionKeys, defaultConfig) =>
+module.exports.mapDefaultRegion = v(regionKeys =>
     moveToKeys(R.lensPath(['regions']), 'default', regionKeys, defaultConfig)
-  ),
+  ,
   [
-    ['regionKeys', PropTypes.array.isRequired],
-    ['defaultConfig', PropTypes.shape({
-      regions: PropTypes.shape({
-        default: PropTypes.shape({}).isRequired
-      }).isRequired
-    }).isRequired]
+    ['regionKeys', PropTypes.array.isRequired]
   ], 'mapDefaultRegion');
 
 /**
@@ -51,10 +46,9 @@ module.exports.mapDefaultRegion = v(R.curry((regionKeys, defaultConfig) =>
  *  'billy': {...}
  * }
  * }
- * @param {Object} defaultConfig The defaultConfig being merged into the target config
  * @returns {Object} The "modified" defaultConfig
  */
-module.exports.mapDefaultUsers = v(R.curry((defaultUserKeyToUserObjs, defaultConfig) =>
+module.exports.mapDefaultUsers = v(defaultUserKeyToUserObjs =>
     R.set(
       R.lensProp(['users']),
       // for each pair duplicate the users object, adding the desired userKeys. Merge them
@@ -66,10 +60,8 @@ module.exports.mapDefaultUsers = v(R.curry((defaultUserKeyToUserObjs, defaultCon
       ),
       defaultConfig
     )
-  ),
+  ,
   [
-    ['defaultUserKeyToUserKeys', PropTypes.shape().isRequired],
-    ['defaultConfig', PropTypes.shape({
-      users: PropTypes.shape().isRequired
-    }).isRequired]
+    ['defaultUserKeyToUserKeys', PropTypes.shape().isRequired]
   ], 'mapDefaultUsers');
+

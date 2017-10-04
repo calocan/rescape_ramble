@@ -18,29 +18,12 @@
  * @returns {Object} The "modified" defaultConfig
  */
 const {mapDefaultRegion, mapDefaultUsers} = require('./configHelpers');
+const { defaultConfig, userTemplateKeys: { REGION_MANAGER, REGION_USER } } = require('data/default');
 const R = require('ramda');
 const {mergeDeep} = require('rescape-ramda');
 
 describe('configHelpers', () => {
   test('mapDefaultRegion', () => {
-    const defaultConfig = {
-      regions: {
-        default: {
-          name: 'Jon Doe',
-          wildcats: {
-            caracals: 5,
-          }
-        }
-      },
-      dinosaurs: {
-        albertosaurus: {
-          id: 'albertosaurus',
-          dental: {
-            sharp: 'yes'
-          }
-        }
-      }
-    };
     const realConfig = {
       regions: {
         kamchatka: {
@@ -65,36 +48,19 @@ describe('configHelpers', () => {
         }
       }
     };
-    expect(mergeDeep(
-      mapDefaultRegion(['kamchatka', 'saskatoon'], defaultConfig),
+    const mergedConfig = mergeDeep(
+      mapDefaultRegion(['kamchatka', 'saskatoon']),
       realConfig
-    )).toEqual(
-      {
-        // Should merge default with each region
-        regions: R.merge(
-          defaultConfig.regions,
-          R.map(mergeDeep(defaultConfig.regions.default), realConfig.regions)
-        ),
-        // Normal merge
-        dinosaurs: mergeDeep(defaultConfig.dinosaurs, realConfig.dinosaurs)
-      }
+    );
+    expect(
+      (R.keys(mergedConfig.regions.kamchatka).sort())
+    ).toEqual(
+      (R.keys(R.merge(realConfig.regions.kamchatka, defaultConfig.regions.default)).sort())
     )
-  }),
+  });
+
   test('mapDefaultUsers', () => {
-    const defaultConfig = {
-      users: {
-        snoopy: {
-          permissions: {
-            a: 'World War I Flying Ace'
-          }
-        },
-        schroeder: {
-          permissions: {
-            a: 'Jam'
-          }
-        }
-      }
-    };
+
     const realUsers = {
       linus: {
         permissions: {
@@ -112,39 +78,16 @@ describe('configHelpers', () => {
         }
       }
     };
+
+    const mergedConfig = mergeDeep(mapDefaultUsers({
+      [REGION_MANAGER]: R.pick(['linus', 'lucy'], realUsers),
+      [REGION_USER]: R.pick(['pigpen'], realUsers)
+    }), {users: realUsers});
+
     expect(
-      mergeDeep(
-        // Duplicate snoopy key to linus and lucy and duplicate schroeder key to pigpen
-        // Once duplicated we can correctly merge
-        mapDefaultUsers({
-          snoopy: R.pick(['linus', 'lucy'], realUsers),
-          'schroeder': R.pick(['pigpen'], realUsers)
-        }, defaultConfig),
-        {users: realUsers}
-      )
+      (R.keys(mergedConfig.users.linus).sort())
     ).toEqual(
-      {
-        users: {
-          linus: {
-            permissions: {
-              a: 'World War I Flying Ace',
-              b: 'Security Blanket'
-            }
-          },
-          lucy: {
-            permissions: {
-              a: 'World War I Flying Ace',
-              b: 'Psychiatrist'
-            }
-          },
-          pigpen: {
-            permissions: {
-              a: 'Jam',
-              b: 'Stink'
-            }
-          },
-        }
-      }
-    )
+      (R.keys(R.merge(realUsers.linus, defaultConfig.users[REGION_MANAGER])).sort())
+    );
   })
 });

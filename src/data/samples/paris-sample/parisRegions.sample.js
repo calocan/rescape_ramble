@@ -21,7 +21,7 @@ const {defaultConfig} = require('data/default');
 
 // merge the default region template with our region(s)
 module.exports.default = mergeDeep(
-  mapDefaultRegion(['paris'], defaultConfig),
+  mapDefaultRegion(['paris']),
   {
     regions: {
       'paris': {

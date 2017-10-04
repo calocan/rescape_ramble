@@ -23,6 +23,5 @@ module.exports.default = mapDefaultUsers(
         name: 'Ty Coon'
       }
     }
-  },
-  defaultConfig
+  }
 );
