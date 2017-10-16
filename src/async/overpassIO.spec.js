@@ -50,7 +50,6 @@ describe('overpassHelpers', async () => {
     }
 
     afterEach(() => {
-        destroy(DB);
     });
 
     const bounds = LA_BOUNDS;

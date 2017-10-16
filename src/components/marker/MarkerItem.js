@@ -102,7 +102,9 @@ class AddMarkerItem extends React.Component {
                 className: 'add-marker',
                 style: styles.addNameContainer,
                 onKeyPress: this._handleKeyPress.bind(this),
-                ref: (input) => { this.textInput = input; }
+                ref: (input) => {
+ this.textInput = input;
+}
             }),
             e('div', R.merge(styles.warnContainer, {
                 ref: 'warn',
@@ -139,4 +141,4 @@ AddMarkerItem.propTypes = {
     updateMarkers: func.isRequired
 };
 
-module.exports = {MarkerItem, AddMarkerItem}
+module.exports = {MarkerItem, AddMarkerItem};

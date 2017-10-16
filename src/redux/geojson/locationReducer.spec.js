@@ -11,10 +11,10 @@
 
 const testConfig = require('data/samples/config').default;
 const initialState = require('data/initialState').default;
-const {actionTypes} = require('redux/geojson/geojsons');
-const {setState} = require('redux/fullStates');
+const {actionTypes} = require('redux/geojson/geojsonReducer');
+const {setState} = require('redux/fullStateReducer');
 const {expectTask} = require('helpers/jestHelpers');
-const {LA_SAMPLE} = require('../../data/test/location.sample');
+const {LA_SAMPLE} = require('data/samples/oakland-sample/oaklandLocations.sample');
 const {ROOT} = require('redux/geojson/geojsonConfig');
 const {ACTION_ROOT} = require('locationActions');
 const {asyncActionCreators} = require('redux/actionHelpers');

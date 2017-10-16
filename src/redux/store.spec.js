@@ -12,7 +12,7 @@ const makeStore = require('redux/store').default;
 const R = require('ramda');
 const createInitialState = require('data/initialState').default;
 const testConfig = require('data/samples/config').default;
-const {setState} = require('redux/fullStates');
+const {setState} = require('redux/fullStateReducer');
 
 describe('store', () => {
     test('makeStore', () => {

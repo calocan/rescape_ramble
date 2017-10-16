@@ -9,49 +9,42 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-const {mergeDeep} = require('rescape-ramda');
 const journeys = require('./parisJourneys.sample.json');
 const locations = require('./parisUserLocations.sample.json');
 const routes = require('./parisRoutes.sample').default;
 const routeTypes = require('data/default/routeTypes');
-const {mapDefaultRegion} = require('data/configHelpers');
+const {applyDefaultRegion} = require('data/configHelpers');
 const trips = require('./parisTrips.sample').default;
 const stops = require('./parisStops.sample').default;
-const {defaultConfig} = require('data/default');
 
 // merge the default region template with our region(s)
-module.exports.default = mergeDeep(
-  mapDefaultRegion(['paris']),
-  {
-    regions: {
-      'paris': {
-        id: 'paris',
+module.exports.default = applyDefaultRegion({
+  paris: {
+    id: 'paris',
 
-        gtfs: {
-          routes,
-          trips,
-          stops,
-          routeTypes: [routeTypes.INTER_REGIONAL_RAIL_SERVICE]
-        },
+    gtfs: {
+      routes,
+      trips,
+      stops,
+      routeTypes: [routeTypes.INTER_REGIONAL_RAIL_SERVICE]
+    },
 
-        travel: {
-          journeys,
-          locations
-        },
+    travel: {
+      journeys,
+      locations
+    },
 
-        geospatial: {
-          // bounds: [-125, 31, -113, 43]
-          bounds: [-122.720306, 37.005783, -121.568275, 38.444660]
-        },
+    geospatial: {
+      // bounds: [-125, 31, -113, 43]
+      bounds: [-122.720306, 37.005783, -121.568275, 38.444660]
+    },
 
-        mapbox: {
-          viewport: {
-            latitude: 37,
-            longitude: -119,
-            zoom: 5
-          }
-        }
+    mapbox: {
+      viewport: {
+        latitude: 37,
+        longitude: -119,
+        zoom: 5
       }
     }
   }
-);
+});

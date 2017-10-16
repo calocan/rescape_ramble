@@ -8,10 +8,8 @@
  *
  * THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-const React = require('react');
 const R = require('ramda');
-const {eMap} = require('helpers/componentHelpers')
-
+const {eMap} = require('helpers/componentHelpers');
 const {circle, polygon, polyline, g} = eMap(['circle', 'polygon', 'polyline', 'g']);
 
 /**
@@ -62,13 +60,13 @@ module.exports.resolveSvgReact = (opt, features) => {
         switch (thePointData.type) {
             case 'Point':
                 const [cx, cy] = R.head(thePointData.points);
-                return e(circle, { key, cx, cy, r: '10', fill: 'red', stroke: 'blue', strokeWidth: '1' });
+                return circle({key, cx, cy, r: '10', fill: 'red', stroke: 'blue', strokeWidth: '1' });
             case 'LineString':
-                return e(polyline, { key, fill: 'none', stroke: 'blue', strokeWidth: '10',
+                return polyline({key, fill: 'none', stroke: 'blue', strokeWidth: '10',
                     points: thePointData.points.map(point => point.join(',')).join(' ')});
             case 'Polygon':
                 // TODO might need to remove a last redundant point here
-                return e(polygon, { key, fill: 'red', stroke: 'blue', strokeWidth: '10',
+                return polygon({ key, fill: 'red', stroke: 'blue', strokeWidth: '10',
                     points: thePointData.points.map(point => point.join(',')).join(' ')});
             default:
                 throw new Error(`Unexpected type ${thePointData.type}`);
@@ -84,7 +82,7 @@ module.exports.resolveSvgReact = (opt, features) => {
         */
     pointData);
 
-    return e(g,
+    return g(
         paths
     );
 };

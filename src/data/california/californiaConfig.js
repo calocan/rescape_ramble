@@ -11,12 +11,14 @@
 
 const regions = require('./californiaRegions').default;
 const users = require('./californiaUsers').default;
+const R = require('ramda');
+const {defaultConfig} = require('data/default/defaultConfig');
 
 /**
  * California configuration
  * @type {*}
  */
-module.exports.californiaConfig = {
+module.exports.californiaConfig = R.merge(defaultConfig, {
   region: regions,
   users: users
-};
+});

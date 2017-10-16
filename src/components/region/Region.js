@@ -16,8 +16,8 @@ const R = require('ramda');
 const React = require('react');
 const {reqPath} = require('rescape-ramda');
 const PropTypes = require('prop-types');
-const {eMap} = require('helpers/componentHelpers')
-const [Mapbox, Sankey, MarkerList,  Div] = eMap([mapbox, sankey, markerList, 'div']);
+const {eMap} = require('helpers/componentHelpers');
+const [Mapbox, Sankey, MarkerList, Div] = eMap([mapbox, sankey, markerList, 'div']);
 
 /**
  * The View for a Region, such as California. Theoretically we could display multiple regions at once

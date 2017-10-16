@@ -12,7 +12,7 @@
 const {connect} = require('react-redux');
 const MarkerList = require('./MarkerList').default;
 const R = require('ramda');
-const {actionCreators} = require('redux/geojson/geojsons');
+const {actionCreators} = require('redux/geojson/geojsonReducer');
 
 /**
  * Merges state.mapbox with ownProps, but raises level of state

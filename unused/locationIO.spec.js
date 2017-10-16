@@ -9,7 +9,7 @@
  * THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-const {createDesignDoc} = require('../src/redux/cyclePouchDbStuff');
+const {createDesignDoc} = require('./cyclePouchDbStuff');
 const {removeLocation, fetchLocations, persistLocations, cycleLocations} = require('./locationIO');
 const { actions, actionCreators, ACTION_PATH } = require('locationActions');
 const config = require('data/samples/config').default;

@@ -17,50 +17,40 @@
  * @param {[String]} regionKeys The region keys to target.
  * @returns {Object} The "modified" defaultConfig
  */
-const {mapDefaultRegion, mapDefaultUsers} = require('./configHelpers');
-const { defaultConfig, userTemplateKeys: { REGION_MANAGER, REGION_USER } } = require('data/default');
+const {applyDefaultRegion, mapDefaultUsers, keysAsIdObj} = require('./configHelpers');
+const {defaultConfig, userTemplateKeys: {REGION_MANAGER, REGION_USER}} = require('data/default');
 const R = require('ramda');
-const {mergeDeep} = require('rescape-ramda');
+const {reqPath} = require('rescape-ramda').throwing;
 
 describe('configHelpers', () => {
-  test('mapDefaultRegion', () => {
-    const realConfig = {
-      regions: {
-        kamchatka: {
-          id: 'kamchatka',
-          name: 'Kamchatka',
-          wildcats: {
-            servals: 2
-          }
-        },
-        saskatoon: {
-          id: 'saskatoon',
-          name: 'Saskatoon',
-          crops: ['berries']
+  test('applyDefaultRegion', () => {
+    const regions = {
+      kamchatka: {
+        id: 'kamchatka',
+        name: 'Kamchatka',
+        wildcats: {
+          servals: 2
         }
       },
-      dinosaurs: {
-        allosaurus: {
-          id: 'allosaurus',
-          dental: {
-            canines: 'yes'
-          }
-        }
+      saskatoon: {
+        id: 'saskatoon',
+        name: 'Saskatoon',
+        crops: ['berries']
       }
     };
-    const mergedConfig = mergeDeep(
-      mapDefaultRegion(['kamchatka', 'saskatoon']),
-      realConfig
-    );
     expect(
-      (R.keys(mergedConfig.regions.kamchatka).sort())
+      R.keys(applyDefaultRegion(regions).kamchatka).sort()
     ).toEqual(
-      (R.keys(R.merge(realConfig.regions.kamchatka, defaultConfig.regions.default)).sort())
-    )
+      R.keys(
+        R.merge(
+          regions.kamchatka,
+          reqPath(['regions', 'default'], defaultConfig)
+        )
+      ).sort()
+    );
   });
 
   test('mapDefaultUsers', () => {
-
     const realUsers = {
       linus: {
         permissions: {
@@ -79,15 +69,31 @@ describe('configHelpers', () => {
       }
     };
 
-    const mergedConfig = mergeDeep(mapDefaultUsers({
+    const mergedConfig = mapDefaultUsers({
       [REGION_MANAGER]: R.pick(['linus', 'lucy'], realUsers),
       [REGION_USER]: R.pick(['pigpen'], realUsers)
-    }), {users: realUsers});
+    });
 
     expect(
-      (R.keys(mergedConfig.users.linus).sort())
+      R.keys(reqPath([REGION_MANAGER, 'linus'], mergedConfig)).sort()
     ).toEqual(
-      (R.keys(R.merge(realUsers.linus, defaultConfig.users[REGION_MANAGER])).sort())
+      R.keys(
+        R.merge(
+          realUsers.linus,
+          reqPath(['users', REGION_MANAGER], defaultConfig)
+        )
+      ).sort()
     );
-  })
+  });
+
+  test('keyAsIdObj', () => {
+    expect(
+      keysAsIdObj('smoothie', 'song')
+    ).toEqual(
+      {
+        smoothie: {id: 'smoothie'},
+        song: {id: 'song'}
+      }
+    );
+  });
 });

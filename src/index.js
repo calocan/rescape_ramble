@@ -16,7 +16,7 @@ const Current = require('components/current/CurrentContainer').default;
 const {Provider} = require('react-redux');
 const { BrowserRouter, Route } = require('react-router-dom');
 
-const {setState} = require('redux/fullStates');
+const {setState} = require('redux/fullStateReducer');
 const initialState = require('data/initialState').default;
 const makeStore = require('redux/store').default;
 const currentConfig = require('data/current/currentConfig').default;

@@ -10,24 +10,31 @@
  */
 
 const R = require('ramda');
-const {moveToKeys} = require('rescape-ramda');
+const {moveToKeys, mergeDeep} = require('rescape-ramda');
 const PropTypes = require('prop-types');
-const {defaultConfig} = require('data/default');
 const {v} = require('rescape-validate');
+const {reqPath} = require('rescape-ramda').throwing;
 
 /**
- * Copies the 'default' region to the specified region keys, removing the default key
- * This basically clones a template so that it can be merged into each real region
- * The default region of this config is copied to the given regionKeys
- * @param {[String]} regionKeys The region keys to target.
- * @returns {Object} The "modified" defaultConfig
+ * Copies the 'default' region to the keys of the specified regions, removing the default key,
+ * and then deep merges.
+ * @param {Object} regions keyed by key if an object and valued by region.
+ * @returns {Object} The "modified" defaultConfig.regions
  */
-module.exports.mapDefaultRegion = v(regionKeys =>
-    moveToKeys(R.lensPath(['regions']), 'default', regionKeys, defaultConfig)
-  ,
+module.exports.applyDefaultRegion = v(regions =>
+    mergeDeep(
+      moveToKeys(
+        R.lensPath([]),
+        'default',
+        // Keys of obj or string indexes of array
+        R.keys(regions),
+        reqPath(['regions'], require('data/default').defaultConfig)
+      ),
+      regions
+    ),
   [
-    ['regionKeys', PropTypes.array.isRequired]
-  ], 'mapDefaultRegion');
+    ['regions', PropTypes.oneOfType([PropTypes.shape(), PropTypes.array]).isRequired]
+  ], 'applyDefaultRegion');
 
 /**
  * Copies the defaultConfig user keys to the specified users keys, removing the defaultConfig keys
@@ -46,22 +53,34 @@ module.exports.mapDefaultRegion = v(regionKeys =>
  *  'billy': {...}
  * }
  * }
- * @returns {Object} The "modified" defaultConfig
+ * @returns {Object} The "modified" defaultConfig.users merged into the defaultUserKeyToUserObjs
  */
-module.exports.mapDefaultUsers = v(defaultUserKeyToUserObjs =>
-    R.set(
-      R.lensProp(['users']),
-      // for each pair duplicate the users object, adding the desired userKeys. Merge them
-      // all together
-      R.reduce((accumulated, [defaultUserKey, userObjs]) =>
-          moveToKeys(R.lensPath([]), defaultUserKey, R.keys(userObjs), accumulated),
-        R.prop('users', defaultConfig),
-        R.toPairs(defaultUserKeyToUserObjs)
+module.exports.mapDefaultUsers = v(defaultUserKeyToUserObjs => {
+    const defaultUsers = reqPath(['users'], require('data/default').defaultConfig);
+    return R.mapObjIndexed(
+      (users, defaultUserKey) => R.map(
+        user => mergeDeep(reqPath([defaultUserKey], defaultUsers), user),
+        users
       ),
-      defaultConfig
-    )
-  ,
+      defaultUserKeyToUserObjs
+    );
+  },
   [
     ['defaultUserKeyToUserKeys', PropTypes.shape().isRequired]
-  ], 'mapDefaultUsers');
+  ], 'mapDefaultUsers'
+);
+
+/**
+ * Converts any number of strings to [{string1: {id: string1}, string2: {id: string2}].
+ * This is used for associations when only one or a few are expected.
+ * @param {Array} args The keys to transform
+ * @returns {Object} The object keyed by ids
+ */
+module.exports.keysAsIdObj = (...args) => R.fromPairs(R.map(key => [key, {id: key}], args));
+
+module.exports.wrapLocationsWithFeatures = (locations, locationFeatures) =>
+  R.mapObjIndexed((locationsByType, locationType) =>
+      R.set(R.lensProp('geojson'), reqPath(), locationType),
+    locations
+  );
 

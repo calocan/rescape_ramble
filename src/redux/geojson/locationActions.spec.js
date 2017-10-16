@@ -15,7 +15,7 @@ const {ACTION_CONFIGS, scopeKeys, actionCreators, locationCycleSources} = requir
 const {reqPath} = require('rescape-ramda').throwing;
 
 // Make up scope values, 10, 100, 1000 etc
-const scopeValues = R.fromPairs(R.addIndex(R.map)((k, i) => [k, Math.pow(10, i+1)], scopeKeys));
+const scopeValues = R.fromPairs(R.addIndex(R.map)((k, i) => [k, Math.pow(10, i + 1)], scopeKeys));
 const actions = actionCreators(scopeValues);
 
 const {sampleConfig} = require('data/samples/sampleConfig');
@@ -27,7 +27,6 @@ const {fetchLocationsRequestBody, addLocationsRequestBody, fetchLocationsSuccess
   testBodies(sampleConfig, ACTION_CONFIGS, scopeValues, {locations});
 
 describe('cycleRecords', () => {
-
   test('User can add and fetch locations', (done) => {
     // Override the async and config drivers for testing
     const testSources = R.merge(

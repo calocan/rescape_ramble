@@ -21,7 +21,7 @@ const {camelCase} = require('rescape-ramda');
 // For now just define a generic OPEN_STREET_MAP model
 const {OPEN_STREET_MAP} = module.exports.MODELS =
   R.mapObjIndexed((v, k) => camelCase(R.toLower(k)), {
-    OPEN_STREET_MAP: '',
+    OPEN_STREET_MAP: ''
   });
 
 // Describes the fundamental data structure being transacted in these actions
@@ -36,7 +36,7 @@ const userScopedConfig = rootedConfig(scopeKeys);
  */
 const ACTION_CONFIGS = module.exports.ACTION_CONFIGS = [
   userScopedConfig(OPEN_STREET_MAP, FETCH),
-  userScopedConfig(OPEN_STREET_MAP, SELECT),
+  userScopedConfig(OPEN_STREET_MAP, SELECT)
 ];
 
 /**

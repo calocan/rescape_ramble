@@ -11,7 +11,8 @@
 
 const R = require('ramda');
 const {toImmutable} = require('helpers/immutableHelpers');
-const {mapPropValueAsIndex} = require('rescape-ramda');
+const {PropTypes} = require('prop-types');
+const {v} = require('rescape-validate');
 
 /**
  * Returns an initialState based on the given region config. It's possible to configure the state
@@ -19,7 +20,7 @@ const {mapPropValueAsIndex} = require('rescape-ramda');
  * @param {Object} config The config
  * @return {Object} The state
  */
-module.exports.default = (config) => {
+module.exports.default = v(config => {
   return {
     settings: config.settings,
     regions: R.map(region => R.merge(region, {
@@ -38,5 +39,13 @@ module.exports.default = (config) => {
       config.regions
     )
   };
-};
+},
+[
+  ['config', PropTypes.shape({
+    settings: PropTypes.shape({
+      mapbox: PropTypes.shape().isRequired
+    }).isRequired,
+    regions: PropTypes.shape().isRequired
+  }).isRequired]
+], 'initialState.default');
 

@@ -20,13 +20,13 @@ module.exports.default = mapDefaultUsers(
     [REGION_MANAGER]: {
       californiaManager: {
         id: 'californiaManager',
-        name: 'Jerry Brown',
-      },
+        name: 'Jerry Brown'
+      }
     },
     [REGION_USER]: {
       californiaUser: {
         id: 'californiaUser',
-        name: 'Nancy Pelosi',
+        name: 'Nancy Pelosi'
       }
     },
     [REGION_VISITOR]: {

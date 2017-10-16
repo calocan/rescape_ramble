@@ -11,14 +11,13 @@
 const sankey = require('d3-sankey');
 const R = require('ramda');
 const sample = require('src/data/sankey.sample');
-const {nodePositon, linkPositon} = require('./Sankey');
+const {nodePosition, linkPosition} = require('./Sankey');
 
 describe('Sankey', () => {
   test('Renders', () => {
-
-    const sankey = sankey().nodeWidth(15).nodePadding(10).extent([[1, 1], [959, 494]]);
-    const sample = sankey(sample);
-    expect(R.length(sample.nodes.map(nodePosition))).toEqual(1);
-    expect(R.length(sample.links.map(linkPosition))).toEqual(1);
-  })
+    const theSankey = sankey().nodeWidth(15).nodePadding(10).extent([[1, 1], [959, 494]]);
+    const theSample = theSankey(sample);
+    expect(R.length(theSample.nodes.map(nodePosition))).toEqual(1);
+    expect(R.length(theSample.links.map(linkPosition))).toEqual(1);
+  });
 });

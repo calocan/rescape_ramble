@@ -24,6 +24,7 @@ const {eMap} = require('helpers/componentHelpers');
 const sample = require('data/sankey.sample');
 const [MapGL, DeckGL, Svg, G, Circle, Div] =
   eMap([require('react-map-gl'), deckGL, 'svg', 'g', 'circle', 'div']);
+const d3 = require('d3');
 
 const DEGREE_TO_RADIAN = Math.PI / 180;
 const NUM_POINTS = 2000;
@@ -47,7 +48,6 @@ const linkPosition = module.exports.linkPosition = link => ({
 });
 
 class Sankey extends React.Component {
-
   componentWillReceiveProps(nextProps) {
     const osmLens = R.lensPath(['region', 'geojson', 'osm', 'features', 'length']);
     const markersLens = R.lensPath(['region', 'geojson', 'markers']);
@@ -61,7 +61,7 @@ class Sankey extends React.Component {
   }
 
   _renderSVGPoints(opt) {
-    const sankey = sankey().nodeWidth(15).nodePadding(10).extent([[1, 1], [this.props.style.width, this.props.style.height]]);
+    const theSankey = sankey().nodeWidth(15).nodePadding(10).extent([[1, 1], [this.props.style.width, this.props.style.height]]);
     // Map sample nodes to sample features
     const features = R.map(node =>
       ({
@@ -93,21 +93,23 @@ class Sankey extends React.Component {
         },
         id: 'node/27233097'
       }), sample.nodes);
-    const points = resolveSvgPoints(opt, features)
+    const points = resolveSvgPoints(opt, features);
 
-    const graph = sankey(sample)
+    const graph = theSankey(sample);
     graph.nodes.map((node, i) => nodePosition(node, points[i]));
 
     const svg = this.node;
-    svg.append("g")
-        .attr("fill", "none")
-        .attr("stroke", "#000")
-        .attr("stroke-opacity", 0.2)
-      .selectAll("path")
+    svg.append('g')
+        .attr('fill', 'none')
+        .attr('stroke', '#000')
+        .attr('stroke-opacity', 0.2)
+      .selectAll('path')
       .data(graph.links)
-      .enter().append("path")
-        .attr("d", d3.sankeyLinkHorizontal())
-        .attr("stroke-width", function(d) { return d.width; });
+      .enter().append('path')
+        .attr('d', d3.sankeyLinkHorizontal())
+        .attr('stroke-width', function (d) {
+ return d.width;
+});
     if (!this.props.geojson || !this.props.geojson.features) {
       return null;
     }
@@ -122,14 +124,16 @@ class Sankey extends React.Component {
     const top = -Math.min(width, height) / 2;
     const glViewport = new OrthographicViewport({width, height, left, top});
 
-    const deck =  width && height &&
+    const deck = width && height &&
       Div({}, [
         Svg({
-            ref: node => this.node = node,
+            ref: node => {
+this.node = node;
+},
             viewBox: `0 0 ${width} ${height}`
           },
           this._renderSVGPoints()
-        ),
+        )
     ]);
 
     return MapGL(R.merge(viewport, {
@@ -164,6 +168,7 @@ Sankey.propTypes = {
   hoverMarker: func.isRequired,
   selectMarker: func.isRequired,
   onChangeViewport: func.isRequired,
+  geojson: object.isRequired
 };
 
 module.exports.default = Sankey;

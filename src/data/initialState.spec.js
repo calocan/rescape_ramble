@@ -10,12 +10,10 @@
  */
 
 const createInitialState = require('./initialState').default;
-const config = require('data/samples').default;
+const {sampleConfig} = require('data/samples/sampleConfig');
 
 describe('Initial State', () => {
   test('matches the current configuration', () => {
-    //const toObjectKeyedById = mapPropValueAsIndex('id');
-    //R.map(toObjectKeyedById, config.gtfs);
-    expect(createInitialState(config)).toMatchSnapshot();
+    expect(createInitialState(sampleConfig)).toMatchSnapshot();
   });
 });

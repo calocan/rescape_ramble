@@ -17,5 +17,5 @@ describe('cycle', () => {
   test('drivers', () => {
     // Make sure we can start the cycle with our drivers
     expect(run(cycleRecords, drivers)).toBeTruthy();
-  })
+  });
 });

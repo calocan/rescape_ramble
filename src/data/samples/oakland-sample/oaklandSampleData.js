@@ -19,5 +19,5 @@ module.exports.data = {
   routings: require('./oaklandRoutings.sample.json'),
   stops: require('./oaklandStops.sample'),
   trips: require('./oaklandTrips.sample'),
-  userLocations: require('./oaklandUserLocations.sample.json'),
+  userLocations: require('./oaklandUserLocations.sample.json')
 };

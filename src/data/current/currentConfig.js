@@ -9,11 +9,10 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-const config = require('config.json');
-const current = config.settings.defaultRegion;
 /**
- * Resolves the current configuration based on the userSettings
- * This will all be dynamic eventually, not file based configuration
- * @param userSettings
- */
-module.exports.configResolver = ({userSettings}) => require(`data/${userSettings.current}`).config
+* Resolves the current configuration based on the userSettings
+* This will all be dynamic eventually, not file based configuration
+* @param {Object} userSettings The userSettings used to resolve the config
+* @returns {Object} The resolved config
+*/
+module.exports.configResolver = userSettings => require(`data/${userSettings.current}`).config;

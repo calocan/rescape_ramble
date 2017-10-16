@@ -13,7 +13,7 @@ const {ROOT} = require('./geojsonConfig');
 const R = require('ramda');
 const {makeActionConfigLookup, actionConfig,
   VERBS: {FETCH, ADD, REMOVE, SELECT},
-  overrideSourcesWithoutStreaming, makeActionCreators} = require('rescape-cycle');
+  overrideSourcesWithoutStreaming, makeActionCreators, makeActionTypesLookup} = require('rescape-cycle');
 const {defaultConfig} = require('data/default/defaultConfig');
 const {camelCase} = require('rescape-ramda');
 
@@ -21,7 +21,7 @@ const {camelCase} = require('rescape-ramda');
 // For now just define a generic LOCATION model
 const {LOCATIONS} = module.exports.MODELS =
   R.mapObjIndexed((v, k) => camelCase(R.toLower(k)), {
-    LOCATIONS: '',
+    LOCATIONS: ''
   });
 
 // Describes the fundamental data structure being transacted in these actions
@@ -34,7 +34,7 @@ const ACTION_CONFIGS = module.exports.ACTION_CONFIGS = [
   userScopedConfig(LOCATIONS, FETCH),
   userScopedConfig(LOCATIONS, ADD),
   userScopedConfig(LOCATIONS, REMOVE),
-  userScopedConfig(LOCATIONS, SELECT),
+  userScopedConfig(LOCATIONS, SELECT)
 ];
 
 /**
@@ -55,3 +55,5 @@ module.exports.locationCycleSources = overrideSourcesWithoutStreaming({
  * Each action function expects a functor (object or array) as its unary argument
  */
 module.exports.actionCreators = makeActionCreators(ACTION_CONFIGS);
+
+module.exports.actionTypeLookup = makeActionTypesLookup(ACTION_CONFIGS);

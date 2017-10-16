@@ -16,10 +16,10 @@ const {
     compact,
     compactJoin,
     emptyToNull,
-    fromImmutable,
     idOrIdFromObj,
     reduceWithNext
 } = require('rescape-ramda');
+const {fromImmutable} = require('helpers/immutableHelpers');
 const {toTimeString} = require('helpers/timeHelpers');
 const {calculateDistance} = require('helpers/geospatialHelpers');
 

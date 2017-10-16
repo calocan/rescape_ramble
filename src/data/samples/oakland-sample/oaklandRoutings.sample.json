@@ -1,5 +1,3 @@
-// Not GTFS. This will normally be calculated.
-// Defines the combinations of routes that make a journey from "stopStart" to stationEnd
 {
   "1487637354681": {
     "id": "1487637354681",
@@ -16,7 +14,7 @@
         "description": "Service from Sacramento to Reno, but only as far as Truckee",
         "stopStart": "1487637917789",
         "stopEnd": "1487636659567"
-      },
+      }
     }
   },
   "1487638173974": {

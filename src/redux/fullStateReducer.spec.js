@@ -11,7 +11,7 @@
 
 const configureMockStore = require('redux-mock-store').default;
 const thunk = require('redux-thunk').default;
-const {SET_STATE, FETCH_FULL_STATE_REQUEST, FETCH_FULL_STATE_SUCCESS, setState, fetchFullState} = require('./fullStates');
+const {SET_STATE, FETCH_FULL_STATE_REQUEST, FETCH_FULL_STATE_SUCCESS, setState, fetchFullState} = require('./fullStateReducer');
 const nock = require('nock');
 
 const middlewares = [ thunk ];

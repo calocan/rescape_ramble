@@ -59,6 +59,6 @@ module.exports.users = {
     regions: {
       permission: VISIT,
       keys: []
-    },
+    }
   }
 };

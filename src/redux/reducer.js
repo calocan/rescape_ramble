@@ -10,8 +10,8 @@
  */
 
 const { combineReducers } = require('redux');
-const settings = require('./settings').default;
-const regions = require('./regions').default;
+const settings = require('./settingReducer').default;
+const regions = require('./regionReducer').default;
 const routing = require('react-router-redux').routerReducer;
 const {createResponsiveStateReducer} = require('redux-responsive');
 

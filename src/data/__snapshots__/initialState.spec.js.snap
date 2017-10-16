@@ -3,7 +3,7 @@
 exports[`Initial State matches the current configuration 1`] = `
 Object {
   "regions": Object {
-    "california": Object {
+    "oakland": Object {
       "geojson": Object {
         "markers": Object {},
         "osm": Object {},
@@ -18,8 +18,8 @@ Object {
         ],
       },
       "gtfs": Object {
-        "calendar": Object {
-          "yearlong_everyday": Object {
+        "calendar": Array [
+          Object {
             "days": Array [
               "everyday",
             ],
@@ -31,7 +31,7 @@ Object {
             ],
             "startDate": undefined,
           },
-          "yearlong_weekend": Object {
+          Object {
             "days": Array [
               "weekend",
             ],
@@ -43,16 +43,50 @@ Object {
             ],
             "startDate": null,
           },
-        },
-        "routeTypes": Object {
-          "103": Object {
+        ],
+        "routeTypes": Array [
+          Object {
             "description": "Inter Regional Rail Service",
             "id": "103",
             "supported": true,
           },
-        },
-        "routes": Object {
-          "SFC<->LAX": Object {
+        ],
+        "routes": Array [
+          Object {
+            "id": "SFC<->REN",
+            "places": Object {
+              "from": Object {
+                "id": "SFC",
+                "label": "San Francisco",
+              },
+              "to": Object {
+                "id": "REN",
+                "label": "Reno",
+              },
+            },
+            "routeLongName": "San Francisco/Reno",
+            "routeShortName": "SFC<->REN",
+            "routeType": undefined,
+            "via": undefined,
+          },
+          Object {
+            "id": "SFC<->REN",
+            "places": Object {
+              "from": Object {
+                "id": "SFC",
+                "label": "San Francisco",
+              },
+              "to": Object {
+                "id": "REN",
+                "label": "Reno",
+              },
+            },
+            "routeLongName": "San Francisco/Reno",
+            "routeShortName": "SFC<->REN",
+            "routeType": undefined,
+            "via": undefined,
+          },
+          Object {
             "id": "SFC<->LAX",
             "places": Object {
               "from": Object {
@@ -69,43 +103,9 @@ Object {
             "routeType": undefined,
             "via": undefined,
           },
-          "SFC<-Altamont->REN": Object {
-            "id": "SFC<-Altamont->REN",
-            "places": Object {
-              "from": Object {
-                "id": "SFC",
-                "label": "San Francisco",
-              },
-              "to": Object {
-                "id": "REN",
-                "label": "Reno",
-              },
-            },
-            "routeLongName": "San Francisco/Reno via Altamont",
-            "routeShortName": "SFC<-Altamont->REN via Altamont",
-            "routeType": undefined,
-            "via": "Altamont",
-          },
-          "SFC<-North-Bay->REN": Object {
-            "id": "SFC<-North-Bay->REN",
-            "places": Object {
-              "from": Object {
-                "id": "SFC",
-                "label": "San Francisco",
-              },
-              "to": Object {
-                "id": "REN",
-                "label": "Reno",
-              },
-            },
-            "routeLongName": "San Francisco/Reno via North-Bay",
-            "routeShortName": "SFC<-North-Bay->REN via North-Bay",
-            "routeType": undefined,
-            "via": "North-Bay",
-          },
-        },
-        "stops": Object {
-          "LAX-Union": Object {
+        ],
+        "stops": Array [
+          Object {
             "id": "LAX-Union",
             "location": Object {
               "lat": 34.056219,
@@ -118,7 +118,7 @@ Object {
             "stopName": "Los Angeles Union Station",
             "which": "Union",
           },
-          "OAK-Central": Object {
+          Object {
             "id": "OAK-Central",
             "location": Object {
               "lat": 37.806624,
@@ -131,7 +131,7 @@ Object {
             "stopName": "Oakland Central Station",
             "which": "Central",
           },
-          "OAK-Jack London Square": Object {
+          Object {
             "id": "OAK-Jack London Square",
             "location": Object {
               "lat": 37.793814,
@@ -144,7 +144,7 @@ Object {
             "stopName": "Oakland Jack London Square Station",
             "which": "Jack London Square",
           },
-          "PLS-ACE": Object {
+          Object {
             "id": "PLS-ACE",
             "location": Object {
               "lat": 37.70165,
@@ -157,7 +157,7 @@ Object {
             "stopName": "Pleasanton ACE Station",
             "which": "ACE",
           },
-          "REN-Amtrak": Object {
+          Object {
             "id": "REN-Amtrak",
             "location": Object {
               "lat": 38.243449,
@@ -170,7 +170,7 @@ Object {
             "stopName": "Reno Amtrak Station",
             "which": "Amtrak",
           },
-          "SAC-Union": Object {
+          Object {
             "id": "SAC-Union",
             "location": Object {
               "lat": 38.584162,
@@ -183,7 +183,7 @@ Object {
             "stopName": "Sacramento Union Station",
             "which": "Union",
           },
-          "SFC-Transbay": Object {
+          Object {
             "id": "SFC-Transbay",
             "location": Object {
               "lat": 37.789339,
@@ -196,7 +196,7 @@ Object {
             "stopName": "San Francisco Transbay Terminal",
             "which": "Transbay",
           },
-          "SKN-Amtrak": Object {
+          Object {
             "id": "SKN-Amtrak",
             "location": Object {
               "lat": 37.945332,
@@ -209,7 +209,7 @@ Object {
             "stopName": "Stockton Amtrak Station",
             "which": "Amtrak",
           },
-          "SUI-Amtrak": Object {
+          Object {
             "id": "SUI-Amtrak",
             "location": Object {
               "lat": 38.243449,
@@ -222,7 +222,7 @@ Object {
             "stopName": "Suison-Fairfield Amtrak Station",
             "which": "Amtrak",
           },
-          "TRU-Amtrak": Object {
+          Object {
             "id": "TRU-Amtrak",
             "location": Object {
               "lat": 39.327493,
@@ -235,95 +235,17 @@ Object {
             "stopName": "Truckee Amtrak Depot",
             "which": "Amtrak",
           },
-        },
-        "trips": Object {
-          "REN->(Altamont)->SFC Everyday Yearlong": Object {
-            "direction": Object {
-              "id": "1",
-              "resolveToStop": [Function],
-              "resolveTripSymbol": [Function],
-            },
-            "id": "REN->(Altamont)->SFC Everyday Yearlong",
-            "route": Object {
-              "id": "SFC<-Altamont->REN",
-              "places": Object {
-                "from": Object {
-                  "id": "SFC",
-                  "label": "San Francisco",
-                },
-                "to": Object {
-                  "id": "REN",
-                  "label": "Reno",
-                },
-              },
-              "routeLongName": "San Francisco/Reno via Altamont",
-              "routeShortName": "SFC<-Altamont->REN via Altamont",
-              "routeType": undefined,
-              "via": "Altamont",
-            },
-            "service": Object {
-              "days": Array [
-                "everyday",
-              ],
-              "endDate": undefined,
-              "id": "yearlong_everyday",
-              "label": "Everyday Yearlong",
-              "seasons": Array [
-                "yearlong",
-              ],
-              "startDate": undefined,
-            },
-            "stopTimes":  {},
-            "tripHeadsign": "San Francisco via Altamont",
-          },
-          "REN->(North-Bay)->SFC Everyday Yearlong": Object {
-            "direction": Object {
-              "id": "1",
-              "resolveToStop": [Function],
-              "resolveTripSymbol": [Function],
-            },
-            "id": "REN->(North-Bay)->SFC Everyday Yearlong",
-            "route": Object {
-              "id": "SFC<-North-Bay->REN",
-              "places": Object {
-                "from": Object {
-                  "id": "SFC",
-                  "label": "San Francisco",
-                },
-                "to": Object {
-                  "id": "REN",
-                  "label": "Reno",
-                },
-              },
-              "routeLongName": "San Francisco/Reno via North-Bay",
-              "routeShortName": "SFC<-North-Bay->REN via North-Bay",
-              "routeType": undefined,
-              "via": "North-Bay",
-            },
-            "service": Object {
-              "days": Array [
-                "everyday",
-              ],
-              "endDate": undefined,
-              "id": "yearlong_everyday",
-              "label": "Everyday Yearlong",
-              "seasons": Array [
-                "yearlong",
-              ],
-              "startDate": undefined,
-            },
-            "stopTimes":  {},
-            "tripHeadsign": "San Francisco via North-Bay",
-          },
-          "SFC->(Altamont)->REN Everyday Yearlong": Object {
+        ],
+        "trips": Array [
+          Object {
             "direction": Object {
               "id": "0",
               "resolveToStop": [Function],
               "resolveTripSymbol": [Function],
             },
-            "id": "SFC->(Altamont)->REN Everyday Yearlong",
+            "id": "SFC->REN Everyday Yearlong",
             "route": Object {
-              "id": "SFC<-Altamont->REN",
+              "id": "SFC<->REN",
               "places": Object {
                 "from": Object {
                   "id": "SFC",
@@ -334,10 +256,10 @@ Object {
                   "label": "Reno",
                 },
               },
-              "routeLongName": "San Francisco/Reno via Altamont",
-              "routeShortName": "SFC<-Altamont->REN via Altamont",
+              "routeLongName": "San Francisco/Reno",
+              "routeShortName": "SFC<->REN",
               "routeType": undefined,
-              "via": "Altamont",
+              "via": undefined,
             },
             "service": Object {
               "days": Array [
@@ -352,17 +274,56 @@ Object {
               "startDate": undefined,
             },
             "stopTimes":  {},
-            "tripHeadsign": "Reno via Altamont",
+            "tripHeadsign": "Reno",
           },
-          "SFC->(North-Bay)->REN Everyday Yearlong": Object {
+          Object {
+            "direction": Object {
+              "id": "1",
+              "resolveToStop": [Function],
+              "resolveTripSymbol": [Function],
+            },
+            "id": "REN->SFC Everyday Yearlong",
+            "route": Object {
+              "id": "SFC<->REN",
+              "places": Object {
+                "from": Object {
+                  "id": "SFC",
+                  "label": "San Francisco",
+                },
+                "to": Object {
+                  "id": "REN",
+                  "label": "Reno",
+                },
+              },
+              "routeLongName": "San Francisco/Reno",
+              "routeShortName": "SFC<->REN",
+              "routeType": undefined,
+              "via": undefined,
+            },
+            "service": Object {
+              "days": Array [
+                "everyday",
+              ],
+              "endDate": undefined,
+              "id": "yearlong_everyday",
+              "label": "Everyday Yearlong",
+              "seasons": Array [
+                "yearlong",
+              ],
+              "startDate": undefined,
+            },
+            "stopTimes":  {},
+            "tripHeadsign": "San Francisco",
+          },
+          Object {
             "direction": Object {
               "id": "0",
               "resolveToStop": [Function],
               "resolveTripSymbol": [Function],
             },
-            "id": "SFC->(North-Bay)->REN Everyday Yearlong",
+            "id": "SFC->REN Everyday Yearlong",
             "route": Object {
-              "id": "SFC<-North-Bay->REN",
+              "id": "SFC<->REN",
               "places": Object {
                 "from": Object {
                   "id": "SFC",
@@ -373,10 +334,10 @@ Object {
                   "label": "Reno",
                 },
               },
-              "routeLongName": "San Francisco/Reno via North-Bay",
-              "routeShortName": "SFC<-North-Bay->REN via North-Bay",
+              "routeLongName": "San Francisco/Reno",
+              "routeShortName": "SFC<->REN",
               "routeType": undefined,
-              "via": "North-Bay",
+              "via": undefined,
             },
             "service": Object {
               "days": Array [
@@ -391,41 +352,595 @@ Object {
               "startDate": undefined,
             },
             "stopTimes":  {},
-            "tripHeadsign": "Reno via North-Bay",
+            "tripHeadsign": "Reno",
           },
-        },
+          Object {
+            "direction": Object {
+              "id": "1",
+              "resolveToStop": [Function],
+              "resolveTripSymbol": [Function],
+            },
+            "id": "REN->SFC Everyday Yearlong",
+            "route": Object {
+              "id": "SFC<->REN",
+              "places": Object {
+                "from": Object {
+                  "id": "SFC",
+                  "label": "San Francisco",
+                },
+                "to": Object {
+                  "id": "REN",
+                  "label": "Reno",
+                },
+              },
+              "routeLongName": "San Francisco/Reno",
+              "routeShortName": "SFC<->REN",
+              "routeType": undefined,
+              "via": undefined,
+            },
+            "service": Object {
+              "days": Array [
+                "everyday",
+              ],
+              "endDate": undefined,
+              "id": "yearlong_everyday",
+              "label": "Everyday Yearlong",
+              "seasons": Array [
+                "yearlong",
+              ],
+              "startDate": undefined,
+            },
+            "stopTimes":  {},
+            "tripHeadsign": "San Francisco",
+          },
+        ],
       },
-      "id": "california",
+      "id": "oakland",
       "mapbox": Object {
         "iconAtlas": "data/location-icon-atlas.png",
         "mapStyle": "mapbox://styles/mapbox/streets-v8",
         "mapboxApiAccessToken": "pk.eyJ1IjoiY2Fsb2NhbiIsImEiOiJjaXl1aXkxZjkwMG15MndxbmkxMHczNG50In0.07Zu3XXYijL6GJMuxFtvQg",
         "showCluster": "true",
         "viewport": Immutable.Map {
-          pitch: 40,
-          bearing: 0,
-          startDragLngLat: null,
-          isDragging: false,
-          latitude: 37,
-          longitude: -119,
-          zoom: 5,
-},
+          "pitch": 40,
+          "bearing": 0,
+          "startDragLngLat": null,
+          "isDragging": false,
+          "latitude": 37,
+          "longitude": -119,
+          "zoom": 5,
+        },
       },
       "travel": Object {
-        "journeys": [Function],
-        "locations": [Function],
+        "journeys": Object {
+          "current": "1487635143780",
+          "entries": Object {
+            "journeys": Array [
+              Object {
+                "label": "Trip from Oakland To Truckee via Stockton",
+                "locations": Object {
+                  "localEnd": "1487636978561",
+                  "localStart": "1487636046449",
+                  "stopEnd": "1487636659567",
+                  "stopStart": "1487636365510",
+                  "wayPoints": Array [
+                    "1487636173160",
+                  ],
+                },
+                "route": "1487637354681",
+              },
+              Object {
+                "label": "Trip from San Francisco to Los Angeles",
+                "locations": Object {
+                  "stopEnd": "1487639102048",
+                  "stopStart": "1487638573082",
+                },
+                "route": "1487637354681",
+              },
+            ],
+          },
+          "history": Array [
+            "1487635143780",
+          ],
+        },
+        "locations": Array [
+          Object {
+            "label": "Near Home",
+            "point": Object {
+              "lat": 37.808706,
+              "lon": -122.260369,
+            },
+            "resolvedAddress": "699 Bellevue Ave, Oakland, CA 94610",
+            "searchTerm": "Children's Fairyland",
+          },
+          Object {
+            "label": "Skiing",
+            "point": Object {
+              "lat": 39.274839,
+              "lon": -120.120605,
+            },
+            "resolvedAddress": "Northstar California Resort, Northstar Drive, Truckee, CA",
+            "searchTerm": "Northstar Resort",
+          },
+        ],
       },
     },
-    "currentKey": "california",
+    "paris": Object {
+      "geojson": Object {
+        "markers": Object {},
+        "osm": Object {},
+        "searches": Object {},
+      },
+      "geospatial": Object {
+        "bounds": Array [
+          -122.720306,
+          37.005783,
+          -121.568275,
+          38.44466,
+        ],
+      },
+      "gtfs": Object {
+        "calendar": Array [
+          Object {
+            "days": Array [
+              "everyday",
+            ],
+            "endDate": undefined,
+            "id": "yearlong_everyday",
+            "label": "Everyday Yearlong",
+            "seasons": Array [
+              "yearlong",
+            ],
+            "startDate": undefined,
+          },
+          Object {
+            "days": Array [
+              "weekend",
+            ],
+            "endDate": null,
+            "id": "yearlong_weekend",
+            "label": "Weekend Yearlong",
+            "seasons": Array [
+              "yearlong",
+            ],
+            "startDate": null,
+          },
+        ],
+        "routeTypes": Array [
+          Object {
+            "description": "Inter Regional Rail Service",
+            "id": "103",
+            "supported": true,
+          },
+        ],
+        "routes": Array [
+          Object {
+            "id": "SFC<->REN",
+            "places": Object {
+              "from": Object {
+                "id": "SFC",
+                "label": "San Francisco",
+              },
+              "to": Object {
+                "id": "REN",
+                "label": "Reno",
+              },
+            },
+            "routeLongName": "San Francisco/Reno",
+            "routeShortName": "SFC<->REN",
+            "routeType": undefined,
+            "via": undefined,
+          },
+          Object {
+            "id": "SFC<->REN",
+            "places": Object {
+              "from": Object {
+                "id": "SFC",
+                "label": "San Francisco",
+              },
+              "to": Object {
+                "id": "REN",
+                "label": "Reno",
+              },
+            },
+            "routeLongName": "San Francisco/Reno",
+            "routeShortName": "SFC<->REN",
+            "routeType": undefined,
+            "via": undefined,
+          },
+          Object {
+            "id": "SFC<->LAX",
+            "places": Object {
+              "from": Object {
+                "id": "SFC",
+                "label": "San Francisco",
+              },
+              "to": Object {
+                "id": "LAX",
+                "label": "Los Angeles",
+              },
+            },
+            "routeLongName": "San Francisco/Los Angeles",
+            "routeShortName": "SFC<->LAX",
+            "routeType": undefined,
+            "via": undefined,
+          },
+        ],
+        "stops": Array [
+          Object {
+            "id": "LAX-Union",
+            "location": Object {
+              "lat": 34.056219,
+              "lon": -118.236502,
+            },
+            "place": Object {
+              "id": "LAX",
+              "label": "Los Angeles",
+            },
+            "stopName": "Los Angeles Union Station",
+            "which": "Union",
+          },
+          Object {
+            "id": "OAK-Central",
+            "location": Object {
+              "lat": 37.806624,
+              "lon": -122.277158,
+            },
+            "place": Object {
+              "id": "OAK",
+              "label": "Oakland",
+            },
+            "stopName": "Oakland Central Station",
+            "which": "Central",
+          },
+          Object {
+            "id": "OAK-Jack London Square",
+            "location": Object {
+              "lat": 37.793814,
+              "lon": -122.271522,
+            },
+            "place": Object {
+              "id": "OAK",
+              "label": "Oakland",
+            },
+            "stopName": "Oakland Jack London Square Station",
+            "which": "Jack London Square",
+          },
+          Object {
+            "id": "PLS-ACE",
+            "location": Object {
+              "lat": 37.70165,
+              "lon": -121.899181,
+            },
+            "place": Object {
+              "id": "PLS",
+              "label": "Pleasanton",
+            },
+            "stopName": "Pleasanton ACE Station",
+            "which": "ACE",
+          },
+          Object {
+            "id": "REN-Amtrak",
+            "location": Object {
+              "lat": 38.243449,
+              "lon": -122.041192,
+            },
+            "place": Object {
+              "id": "REN",
+              "label": "Reno",
+            },
+            "stopName": "Reno Amtrak Station",
+            "which": "Amtrak",
+          },
+          Object {
+            "id": "SAC-Union",
+            "location": Object {
+              "lat": 38.584162,
+              "lon": -121.500675,
+            },
+            "place": Object {
+              "id": "SAC",
+              "label": "Sacramento",
+            },
+            "stopName": "Sacramento Union Station",
+            "which": "Union",
+          },
+          Object {
+            "id": "SFC-Transbay",
+            "location": Object {
+              "lat": 37.789339,
+              "lon": -122.392481,
+            },
+            "place": Object {
+              "id": "SFC",
+              "label": "San Francisco",
+            },
+            "stopName": "San Francisco Transbay Terminal",
+            "which": "Transbay",
+          },
+          Object {
+            "id": "SKN-Amtrak",
+            "location": Object {
+              "lat": 37.945332,
+              "lon": -121.285602,
+            },
+            "place": Object {
+              "id": "SKN",
+              "label": "Stockton",
+            },
+            "stopName": "Stockton Amtrak Station",
+            "which": "Amtrak",
+          },
+          Object {
+            "id": "SUI-Amtrak",
+            "location": Object {
+              "lat": 38.243449,
+              "lon": -122.041192,
+            },
+            "place": Object {
+              "id": "SUI",
+              "label": "Suison-Fairfield",
+            },
+            "stopName": "Suison-Fairfield Amtrak Station",
+            "which": "Amtrak",
+          },
+          Object {
+            "id": "TRU-Amtrak",
+            "location": Object {
+              "lat": 39.327493,
+              "lon": -120.18562,
+            },
+            "place": Object {
+              "id": "TRU",
+              "label": "Truckee",
+            },
+            "stopName": "Truckee Amtrak Depot",
+            "which": "Amtrak",
+          },
+        ],
+        "trips": Array [
+          Object {
+            "direction": Object {
+              "id": "0",
+              "resolveToStop": [Function],
+              "resolveTripSymbol": [Function],
+            },
+            "id": "SFC->REN Everyday Yearlong",
+            "route": Object {
+              "id": "SFC<->REN",
+              "places": Object {
+                "from": Object {
+                  "id": "SFC",
+                  "label": "San Francisco",
+                },
+                "to": Object {
+                  "id": "REN",
+                  "label": "Reno",
+                },
+              },
+              "routeLongName": "San Francisco/Reno",
+              "routeShortName": "SFC<->REN",
+              "routeType": undefined,
+              "via": undefined,
+            },
+            "service": Object {
+              "days": Array [
+                "everyday",
+              ],
+              "endDate": undefined,
+              "id": "yearlong_everyday",
+              "label": "Everyday Yearlong",
+              "seasons": Array [
+                "yearlong",
+              ],
+              "startDate": undefined,
+            },
+            "stopTimes":  {},
+            "tripHeadsign": "Reno",
+          },
+          Object {
+            "direction": Object {
+              "id": "1",
+              "resolveToStop": [Function],
+              "resolveTripSymbol": [Function],
+            },
+            "id": "REN->SFC Everyday Yearlong",
+            "route": Object {
+              "id": "SFC<->REN",
+              "places": Object {
+                "from": Object {
+                  "id": "SFC",
+                  "label": "San Francisco",
+                },
+                "to": Object {
+                  "id": "REN",
+                  "label": "Reno",
+                },
+              },
+              "routeLongName": "San Francisco/Reno",
+              "routeShortName": "SFC<->REN",
+              "routeType": undefined,
+              "via": undefined,
+            },
+            "service": Object {
+              "days": Array [
+                "everyday",
+              ],
+              "endDate": undefined,
+              "id": "yearlong_everyday",
+              "label": "Everyday Yearlong",
+              "seasons": Array [
+                "yearlong",
+              ],
+              "startDate": undefined,
+            },
+            "stopTimes":  {},
+            "tripHeadsign": "San Francisco",
+          },
+          Object {
+            "direction": Object {
+              "id": "0",
+              "resolveToStop": [Function],
+              "resolveTripSymbol": [Function],
+            },
+            "id": "SFC->REN Everyday Yearlong",
+            "route": Object {
+              "id": "SFC<->REN",
+              "places": Object {
+                "from": Object {
+                  "id": "SFC",
+                  "label": "San Francisco",
+                },
+                "to": Object {
+                  "id": "REN",
+                  "label": "Reno",
+                },
+              },
+              "routeLongName": "San Francisco/Reno",
+              "routeShortName": "SFC<->REN",
+              "routeType": undefined,
+              "via": undefined,
+            },
+            "service": Object {
+              "days": Array [
+                "everyday",
+              ],
+              "endDate": undefined,
+              "id": "yearlong_everyday",
+              "label": "Everyday Yearlong",
+              "seasons": Array [
+                "yearlong",
+              ],
+              "startDate": undefined,
+            },
+            "stopTimes":  {},
+            "tripHeadsign": "Reno",
+          },
+          Object {
+            "direction": Object {
+              "id": "1",
+              "resolveToStop": [Function],
+              "resolveTripSymbol": [Function],
+            },
+            "id": "REN->SFC Everyday Yearlong",
+            "route": Object {
+              "id": "SFC<->REN",
+              "places": Object {
+                "from": Object {
+                  "id": "SFC",
+                  "label": "San Francisco",
+                },
+                "to": Object {
+                  "id": "REN",
+                  "label": "Reno",
+                },
+              },
+              "routeLongName": "San Francisco/Reno",
+              "routeShortName": "SFC<->REN",
+              "routeType": undefined,
+              "via": undefined,
+            },
+            "service": Object {
+              "days": Array [
+                "everyday",
+              ],
+              "endDate": undefined,
+              "id": "yearlong_everyday",
+              "label": "Everyday Yearlong",
+              "seasons": Array [
+                "yearlong",
+              ],
+              "startDate": undefined,
+            },
+            "stopTimes":  {},
+            "tripHeadsign": "San Francisco",
+          },
+        ],
+      },
+      "id": "paris",
+      "mapbox": Object {
+        "iconAtlas": "data/location-icon-atlas.png",
+        "mapStyle": "mapbox://styles/mapbox/streets-v8",
+        "mapboxApiAccessToken": "pk.eyJ1IjoiY2Fsb2NhbiIsImEiOiJjaXl1aXkxZjkwMG15MndxbmkxMHczNG50In0.07Zu3XXYijL6GJMuxFtvQg",
+        "showCluster": "true",
+        "viewport": Immutable.Map {
+          "pitch": 40,
+          "bearing": 0,
+          "startDragLngLat": null,
+          "isDragging": false,
+          "latitude": 37,
+          "longitude": -119,
+          "zoom": 5,
+        },
+      },
+      "travel": Object {
+        "journeys": Object {
+          "current": "1487635143780",
+          "entries": Object {
+            "journeys": Array [
+              Object {
+                "label": "Trip from Oakland To Truckee via Stockton",
+                "locations": Object {
+                  "localEnd": "1487636978561",
+                  "localStart": "1487636046449",
+                  "stopEnd": "1487636659567",
+                  "stopStart": "1487636365510",
+                  "wayPoints": Array [
+                    "1487636173160",
+                  ],
+                },
+                "route": "1487637354681",
+              },
+              Object {
+                "label": "Trip from San Francisco to Los Angeles",
+                "locations": Object {
+                  "stopEnd": "1487639102048",
+                  "stopStart": "1487638573082",
+                },
+                "route": "1487637354681",
+              },
+            ],
+          },
+          "history": Array [
+            "1487635143780",
+          ],
+        },
+        "locations": Array [
+          Object {
+            "label": "Near Home",
+            "point": Object {
+              "lat": 37.808706,
+              "lon": -122.260369,
+            },
+            "resolvedAddress": "699 Bellevue Ave, Oakland, CA 94610",
+            "searchTerm": "Children's Fairyland",
+          },
+          Object {
+            "label": "Skiing",
+            "point": Object {
+              "lat": 39.274839,
+              "lon": -120.120605,
+            },
+            "resolvedAddress": "Northstar California Resort, Northstar Drive, Truckee, CA",
+            "searchTerm": "Northstar Resort",
+          },
+        ],
+      },
+    },
   },
   "settings": Object {
-    "defaultRegion": "california",
-    "environments": Array [
-      Object {
-        "domain": "rescapes.net",
-        "id": "production",
+    "api": Object {
+      "host": "localhost",
+      "port": "3000",
+      "protocol": "http",
+      "root": "/graphql/",
+    },
+    "cycle": Object {
+      "drivers": Object {
+        "api": "HTTP",
       },
-    ],
+    },
+    "domain": "localhost",
     "mapbox": Object {
       "iconAtlas": "data/location-icon-atlas.png",
       "mapboxApiAccessToken": "pk.eyJ1IjoiY2Fsb2NhbiIsImEiOiJjaXl1aXkxZjkwMG15MndxbmkxMHczNG50In0.07Zu3XXYijL6GJMuxFtvQg",
@@ -436,12 +951,6 @@ Object {
       "cellSize": 100,
       "sleepBetweenCalls": 1000,
     },
-    "regions": Array [
-      Object {
-        "id": "california",
-        "label": "California",
-      },
-    ],
   },
 }
 `;

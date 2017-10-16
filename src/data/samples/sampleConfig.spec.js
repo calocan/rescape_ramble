@@ -11,11 +11,11 @@
 const R = require('ramda');
 const {sampleConfig} = require('./sampleConfig');
 
-describe("config", () => {
-    test("Contains merged configs", () => {
+describe('config', () => {
+    test('Contains merged configs', () => {
         expect(R.length(R.keys(sampleConfig.regions))).toEqual(2);
-        // 3 users per region and the global admin
-        expect(R.length(R.keys(sampleConfig.users))).toEqual(7);
+        // 3 users per region
+        expect(R.length(R.keys(sampleConfig.users))).toEqual(3);
         // Make sure settings is in there
         expect(R.keys(R.pick(['mapbox', 'domain', 'api'], sampleConfig.settings))).toEqual(['mapbox', 'domain', 'api']);
     });

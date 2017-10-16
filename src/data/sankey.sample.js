@@ -3,148 +3,148 @@
 module.exports = {
   nodes: [
     {
-      name: "Agricultural 'waste'"
+      name: 'Agricultural \'waste\''
     },
     {
-      name: "Bio-conversion"
+      name: 'Bio-conversion'
     },
     {
-      name: "Liquid"
+      name: 'Liquid'
     },
     {
-      name: "Losses"
+      name: 'Losses'
     },
     {
-      name: "Solid"
+      name: 'Solid'
     },
     {
-      name: "Gas"
+      name: 'Gas'
     },
     {
-      name: "Biofuel imports"
+      name: 'Biofuel imports'
     },
     {
-      name: "Biomass imports"
+      name: 'Biomass imports'
     },
     {
-      name: "Coal imports"
+      name: 'Coal imports'
     },
     {
-      name: "Coal"
+      name: 'Coal'
     },
     {
-      name: "Coal reserves"
+      name: 'Coal reserves'
     },
     {
-      name: "District heating"
+      name: 'District heating'
     },
     {
-      name: "Industry"
+      name: 'Industry'
     },
     {
-      name: "Heating and cooling - commercial"
+      name: 'Heating and cooling - commercial'
     },
     {
-      name: "Heating and cooling - homes"
+      name: 'Heating and cooling - homes'
     },
     {
-      name: "Electricity grid"
+      name: 'Electricity grid'
     },
     {
-      name: "Over generation / exports"
+      name: 'Over generation / exports'
     },
     {
-      name: "H2 conversion"
+      name: 'H2 conversion'
     },
     {
-      name: "Road transport"
+      name: 'Road transport'
     },
     {
-      name: "Agriculture"
+      name: 'Agriculture'
     },
     {
-      name: "Rail transport"
+      name: 'Rail transport'
     },
     {
-      name: "Lighting & appliances - commercial"
+      name: 'Lighting & appliances - commercial'
     },
     {
-      name: "Lighting & appliances - homes"
+      name: 'Lighting & appliances - homes'
     },
     {
-      name: "Gas imports"
+      name: 'Gas imports'
     },
     {
-      name: "Ngas"
+      name: 'Ngas'
     },
     {
-      name: "Gas reserves"
+      name: 'Gas reserves'
     },
     {
-      name: "Thermal generation"
+      name: 'Thermal generation'
     },
     {
-      name: "Geothermal"
+      name: 'Geothermal'
     },
     {
-      name: "H2"
+      name: 'H2'
     },
     {
-      name: "Hydro"
+      name: 'Hydro'
     },
     {
-      name: "International shipping"
+      name: 'International shipping'
     },
     {
-      name: "Domestic aviation"
+      name: 'Domestic aviation'
     },
     {
-      name: "International aviation"
+      name: 'International aviation'
     },
     {
-      name: "National navigation"
+      name: 'National navigation'
     },
     {
-      name: "Marine algae"
+      name: 'Marine algae'
     },
     {
-      name: "Nuclear"
+      name: 'Nuclear'
     },
     {
-      name: "Oil imports"
+      name: 'Oil imports'
     },
     {
-      name: "Oil"
+      name: 'Oil'
     },
     {
-      name: "Oil reserves"
+      name: 'Oil reserves'
     },
     {
-      name: "Other waste"
+      name: 'Other waste'
     },
     {
-      name: "Pumped heat"
+      name: 'Pumped heat'
     },
     {
-      name: "Solar PV"
+      name: 'Solar PV'
     },
     {
-      name: "Solar Thermal"
+      name: 'Solar Thermal'
     },
     {
-      name: "Solar"
+      name: 'Solar'
     },
     {
-      name: "Tidal"
+      name: 'Tidal'
     },
     {
-      name: "UK land based bioenergy"
+      name: 'UK land based bioenergy'
     },
     {
-      name: "Wave"
+      name: 'Wave'
     },
     {
-      name: "Wind"
+      name: 'Wind'
     }
   ],
     links: [
@@ -489,4 +489,4 @@ module.exports = {
     value: 289.366
   }
 ]
-}
+};

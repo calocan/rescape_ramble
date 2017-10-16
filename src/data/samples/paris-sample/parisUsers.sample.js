@@ -32,12 +32,12 @@ module.exports.default = mapDefaultUsers(
       parisManager: {
         id: 'parisManager',
         name: 'Paris Manager'
-      },
+      }
     },
     [REGION_USER]: {
       parisUser: {
         id: 'parisUser',
-        name: 'Paris User',
+        name: 'Paris User'
       }
     },
     [REGION_VISITOR]: {

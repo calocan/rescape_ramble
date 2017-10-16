@@ -5,16 +5,17 @@ const MapGL = require('react-map-gl');
 const Current = require('components/current/CurrentContainer').default;
 const {Provider} = require('react-redux');
 
+/*
 const {setState} = require('./redux/fullStates');
 const initialState = require('./data/initialState').default;
 const makeStore = require('./redux/store').default;
-const {configResolver} = require('./data/current');
-const config = configResolveR(defaultUserSettings);
-
-// const currentConfig = require('./data/current/config').default;
-const e = React.createElement;
+const {userSettings} = require('data/default/defaultUsers');
+const {configResolver} = require('data/current/currentConfig');
+const currentConfig = configResolver(userSettings);
 const store = makeStore();
 store.dispatch(setState(initialState(currentConfig)));
+*/
+const e = React.createElement;
 
 // Create an enhanced history that syncs navigation events with the store
 

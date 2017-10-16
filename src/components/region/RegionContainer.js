@@ -1,7 +1,7 @@
 const {connect} = require('react-redux');
 const R = require('ramda');
 const Region = require('./Region').default;
-const {actions} = require('redux/geojson/geojsons');
+const {actions} = require('redux/geojson/geojsonReducer');
 
 const mapStateToProps = module.exports.mapStateToProps = (state, ownProps) => {
     return R.merge(
