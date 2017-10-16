@@ -1,25 +1,33 @@
 const React = require('react');
 const {shallow} = require('enzyme');
 
-const testConfig = require('data/samples/config').default;
+const {sampleConfig} = require('data/samples/sampleConfig');
 const initialState = require('data/initialState').default;
-const R = require('ramda');
-const e = React.createElement;
-const Region = require('./Region').default;
+const {reqPath} = require('rescape-ramda').throwing;
+const region = require('./Region').default;
+const {eMap} = require('helpers/componentHelpers');
+const [Region] =
+  eMap([region]);
+const regionKey = 'oakland';
 
 describe('Region', () => {
-    const state = initialState(testConfig);
+  const state = initialState(sampleConfig);
 
-    const props = {
-        region: R.prop(state.regions.currentKey, state.regions),
-        width: 500,
-        height: 500
-    };
+  const props = {
+    region: reqPath(['regions', regionKey], state),
+    style: {
+      width: 500,
+      height: 500
+    },
+    settings: reqPath(['settings'], state),
+    onRegionIsChanged: () => {},
+    fetchMarkersData: () => {}
+  };
 
-    test('Region can mount', () => {
-        const wrapper = shallow(
-            e(Region, props)
-        );
-        expect(wrapper).toMatchSnapshot();
-    });
+  test('Region can mount', () => {
+    const wrapper = shallow(
+      Region(props)
+    );
+    expect(wrapper).toMatchSnapshot();
+  });
 });

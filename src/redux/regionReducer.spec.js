@@ -2,13 +2,13 @@
 const reducer = require('redux/geojson/regionReducer').default;
 const {actions} = require('redux/geojson/geojsonReducer').actions;
 const {Map} = require('immutable');
-const testConfig = require('data/samples/config').default;
+const {sampleConfig} = require('data/samples/sampleConfig');
 const initialState = require('data/initialState').default;
 const {reqPath} = require('rescape-ramda').throwing;
 
 describe('mabpox reducer', () => {
     it('should return the initial state', () => {
-        const state = initialState(testConfig);
+        const state = initialState(sampleConfig);
         expect(
             Map(reducer(
                 state.regions,
@@ -17,7 +17,7 @@ describe('mabpox reducer', () => {
         ).toMatchSnapshot();
     });
     it('should update the current region', () => {
-        const state = initialState(testConfig);
+        const state = initialState(sampleConfig);
         expect(
             reducer(
                 state.regions,
@@ -37,7 +37,7 @@ describe('mabpox reducer', () => {
     // This is really internal to redux-map-gl's reducer, but good to have here to document what
     // it does
     it('should handle CHANGE_VIEWPORT', () => {
-        const state = initialState(testConfig);
+        const state = initialState(sampleConfig);
         const viewport = {
             bearing: 0,
             isDragging: false,

@@ -11,8 +11,13 @@
 
 // Make Enzyme Rx available in all test files without importing
 const { shallow, render, mount } = require('enzyme');
+// Enzyme setup
+const enzyme = require('enzyme');
+const Adapter = require('enzyme-adapter-react-16');
+enzyme.configure({ adapter: new Adapter() });
+
 const fs = require('fs');
-const {JSDOM} = require('jsdom')
+const {JSDOM} = require('jsdom');
 global.shallow = shallow;
 global.render = render;
 global.mount = mount;

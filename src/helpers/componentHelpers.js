@@ -18,7 +18,7 @@ const R = require('ramda');
 
 /**
  * Maps each Reach element to an curried e function.
- * @param {String|Element} types React element types (e.g. ['div', 'svg', React])
+ * @param {[String|Element]} types React element types (e.g. ['div', 'svg', React])
  * @returns {Function} A list of functions that need just the config and children specified, not the type
  */
 module.exports.eMap = types => R.map(component => React.createFactory(component), types);

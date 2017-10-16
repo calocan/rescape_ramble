@@ -69,7 +69,7 @@ class Region extends React.Component {
             },
                 MarkerList({
                     region: this.props.region,
-                    accessToken: this.props.accessToken
+                    accessToken: this.props.region.mapbox.mapboxAccessToken
                 })
             )
         );
@@ -81,14 +81,17 @@ class Region extends React.Component {
  * @type {{region: *}}
  */
 const {
-    string, object, number, func
+    string, object, number, func, shape
 } = PropTypes;
 
 Region.propTypes = {
     settings: object.isRequired,
-    region: object.isRequired,
+    region: shape({
+      mapbox: shape({
+        mapboxAccessToken: string.isRequired
+      }).isRequired,
+    }).isRequired,
     style: object.isRequired,
-    accessToken: string.isRequired,
     onRegionIsChanged: func.isRequired,
     fetchMarkersData: func.isRequired
 };

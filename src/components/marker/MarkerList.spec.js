@@ -4,7 +4,7 @@ const {reqPath} = require('rescape-ramda').throwing;
 const {mapStateToProps} = require('./MarkerListContainer');
 const {geojsonByType} = require('helpers/geojsonHelpers');
 
-const config = require('data/samples/config').default;
+const {sampleConfig} = require('data/samples/sampleConfig');
 const initialState = require('data/initialState').default;
 const R = require('ramda');
 const MarkerList = require('./MarkerList').default;

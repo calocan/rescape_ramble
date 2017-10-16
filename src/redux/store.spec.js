@@ -11,7 +11,7 @@
 const makeStore = require('redux/store').default;
 const R = require('ramda');
 const createInitialState = require('data/initialState').default;
-const testConfig = require('data/samples/config').default;
+const {sampleConfig} = require('data/samples/sampleConfig');
 const {setState} = require('redux/fullStateReducer');
 
 describe('store', () => {
@@ -25,7 +25,7 @@ describe('store', () => {
     });
 
     test('setState', () => {
-        const initialState = createInitialState(testConfig);
+        const initialState = createInitialState(sampleConfig);
         const store = makeStore();
         store.dispatch(setState(initialState));
         // Check for our expected state keys

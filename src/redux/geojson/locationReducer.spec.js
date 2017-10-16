@@ -9,7 +9,7 @@
  * THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-const testConfig = require('data/samples/config').default;
+const {sampleConfig} = require('data/samples/sampleConfig');
 const initialState = require('data/initialState').default;
 const {actionTypes} = require('redux/geojson/geojsonReducer');
 const {setState} = require('redux/fullStateReducer');
@@ -30,11 +30,11 @@ const {removeLocationsData} = asyncActionCreators(ROOT, ACTION_ROOT, 'REMOVE', (
 const {updateLocationsData} = asyncActionCreators(ROOT, ACTION_ROOT, 'UPDATE', () => Task.of(LA_SAMPLE));
 
 describe('locations reducer', () => {
-    const state = initialState(testConfig);
+    const state = initialState(sampleConfig);
     test('should fetch locations', () => {
         // We need a real store to test PouchDb
         const store = mockStore();
-        store.dispatch(setState(initialState(testConfig)));
+        store.dispatch(setState(initialState(sampleConfig)));
         const bounds = LA_BOUNDS;
         const expectedActions = [
             { type: actionTypes.FETCH_LOCATIONS_DATA },
@@ -50,7 +50,7 @@ describe('locations reducer', () => {
 
     test('should update locations', () => {
         const store = mockStore();
-        store.dispatch(setState(initialState(testConfig)));
+        store.dispatch(setState(initialState(sampleConfig)));
         const bounds = LA_BOUNDS;
         const expectedActions = [
             { type: actionTypes.UPDATE_LOCATIONS_DATA },

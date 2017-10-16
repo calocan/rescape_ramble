@@ -10,35 +10,37 @@
  */
 
 const PropTypes = require('prop-types');
-const Region = require('components/region/RegionContainer').default;
+const region = require('components/region/RegionContainer').default;
 const styles = require('./Current.style').default;
 const React = require('react');
-const e = React.createElement;
+const {eMap} = require('helpers/componentHelpers');
+const [Div, Region] =
+  eMap(['div', region]);
 
 /**
  * Displays the Region of the current state and eventually a Region selector.
  * This might also be modified to display all available regions, perhaps on a continental map
  */
 class Current extends React.Component {
-    render() {
-        // Pass the absolute width and height to give to the Mapbox viewport
-        return e('div',
-            {className: 'current'},
-            e(Region, {
-                    region: this.props.region,
-                    style: {
-                        width: this.props.style.width,
-                        height: this.props.style.height
-                    }
-                },
-                null
-            )
-        );
-    }
+  render() {
+    // Pass the absolute width and height to give to the Mapbox viewport
+    return Div(
+      {className: 'current'},
+      Region({
+          region: this.props.region,
+          style: {
+            width: this.props.style.width,
+            height: this.props.style.height
+          }
+        },
+        null
+      )
+    );
+  }
 }
 
 const {
-    string, object, number, func, shape
+  string, object, number, func, shape
 } = PropTypes;
 
 /**
@@ -46,11 +48,11 @@ const {
  * @type {{region: *}}
  */
 Current.propTypes = {
-    region: object.isRequired,
-    style: shape({
-        width: number.isRequired,
-        height: number.isRequired
-    })
+  region: object.isRequired,
+  style: shape({
+    width: number.isRequired,
+    height: number.isRequired
+  })
 };
 
 module.exports.default = Current;

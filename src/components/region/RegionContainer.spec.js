@@ -12,25 +12,24 @@ const thunk = require('redux-thunk');
 const {mapStateToProps} = require('./RegionContainer');
 const configureStore = require('redux-mock-store');
 
-const testConfig = require('data/samples/config').default;
+const {sampleConfig} = require('data/samples/sampleConfig');
 const initialState = require('data/initialState').default;
 const {reqPath} = require('rescape-ramda').throwing;
-
-const middlewares = [thunk];
-const mockStore = configureStore(middlewares);
+const regionKey = 'oakland';
+const makeStore = require('redux/store').default;
 
 describe('RegionContainer', () => {
-    test('mapStateToProps returns regions and current of state.settings', () => {
-        const store = mockStore(initialState(testConfig));
-        const currentKey = reqPath(['regions', 'currentKey'], store.getState());
+  test('mapStateToProps returns regions and current of state.settings', () => {
+    const store = makeStore(initialState(sampleConfig));
+    const state = store.getState();
 
-        const ownProps = {
-            region: reqPath(['regions', currentKey], store.getState()),
-            width: 500,
-            height: 500
-        };
+    const ownProps = {
+      region: reqPath(['regions', regionKey], state),
+      width: 500,
+      height: 500
+    };
 
-        expect(mapStateToProps(store.getState(), ownProps)).toMatchSnapshot();
-    });
+    expect(mapStateToProps(store.getState(), ownProps)).toMatchSnapshot();
+  });
 });
 

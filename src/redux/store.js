@@ -32,34 +32,34 @@ const {run} = require('@cycle/run');
 // startSync(db, `http://localhost:5984/${DB_NAME}`);
 
 const environmentMiddlewares = R.ifElse(
-    R.equals('development'),
-    // Development-only middlewares
-    () => {
-        const {createLogger} = require('redux-logger');
-        return [
-            createLogger()
-        ];
-    },
-    // Production-only middlewares
-    () => []
+  R.equals('development'),
+  // Development-only middlewares
+  () => {
+    const {createLogger} = require('redux-logger');
+    return [
+      createLogger()
+    ];
+  },
+  // Production-only middlewares
+  () => []
 )(process.env.NODE_ENV);
 
 const cycleMiddleware = createCycleMiddleware();
-const { makeActionDriver, makeStateDriver } = cycleMiddleware;
+const {makeActionDriver, makeStateDriver} = cycleMiddleware;
 
 
 const runCycle = dbName => run(main, {
-    ACTION: makeActionDriver(),
-    STATE: makeStateDriver()
-    // POUCHDB: makePouchDBDriver(PouchDB, dbName)
+  ACTION: makeActionDriver(),
+  STATE: makeStateDriver()
+  // POUCHDB: makePouchDBDriver(PouchDB, dbName)
 });
 let dispose = null;
 module.exports.restartCycle = (dbName) => {
-    if (dispose) {
-        dispose();
-    }
-    dispose = runCycle(dbName);
-    return dispose;
+  if (dispose) {
+    dispose();
+  }
+  dispose = runCycle(dbName);
+  return dispose;
 };
 
 /**
@@ -68,21 +68,21 @@ module.exports.restartCycle = (dbName) => {
  * @returns {Object} The redux Store
  */
 module.exports.default = (initialState = {}) => createStore(
-    reducer,
-    initialState,
-    // In addition to Middleware, compose state with PouchDb, devTools, and Redux Responsive
-    compose(
-        responsiveStoreEnhancer,
-        // Use thunk and the persistentStore, the latter applies couchDB persistence to the store
-        applyMiddleware.apply(undefined, // eslint-disable-line
-            R.concat([
-              thunk,
-              cycleMiddleware
-            ],
-            environmentMiddlewares)
-        ),
-        // Use the Chrome devToolsExtension
-        typeof (window) !== 'undefined' && window.devToolsExtension ? window.devToolsExtension() : f => f,
-        // persistentStore({db})
-    )
+  reducer,
+  initialState,
+  // In addition to Middleware, compose state with PouchDb, devTools, and Redux Responsive
+  compose(
+    responsiveStoreEnhancer,
+    // Use thunk and the persistentStore, the latter applies couchDB persistence to the store
+    applyMiddleware.apply(undefined, // eslint-disable-line
+      R.concat([
+          thunk,
+          cycleMiddleware
+        ],
+        environmentMiddlewares)
+    ),
+    // Use the Chrome devToolsExtension
+    typeof (window) !== 'undefined' && window.devToolsExtension ? window.devToolsExtension() : f => f
+    // persistentStore({db})
+  )
 );

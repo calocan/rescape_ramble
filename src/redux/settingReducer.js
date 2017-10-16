@@ -12,7 +12,6 @@
 const {SET_STATE} = require('redux/fullStateReducer');
 const R = require('ramda');
 const SET_CURRENT = module.exports.SET_CURRENT = '/settings/SET_CURRENT';
-const {restartCycle} = require('redux/store');
 
 /**
  * Reduces the state of the settings
@@ -23,13 +22,13 @@ const {restartCycle} = require('redux/store');
  * @returns {Object} The reduced state
  */
 module.exports.default = function (state = {}, action) {
-    // If setting state
-    if (action.type === SET_STATE) {
-        return R.merge(state, action.state.settings);
-    } else if (action.type === SET_CURRENT) {
-        return R.merge(state, action.state.settings);
-    }
-    return state;
+  // If setting state
+  if (action.type === SET_STATE) {
+    return R.merge(state, action.state.settings);
+  } else if (action.type === SET_CURRENT) {
+    return R.merge(state, action.state.settings);
+  }
+  return state;
 };
 
 /**
@@ -38,7 +37,7 @@ module.exports.default = function (state = {}, action) {
  * @returns {Object} the Action
  */
 module.exports.setState = function setState(state) {
-    return { type: SET_STATE, state };
+  return {type: SET_STATE, state};
 };
 
 /**
@@ -47,8 +46,5 @@ module.exports.setState = function setState(state) {
  * @returns {Object} the action
  */
 module.exports.setCurrent = function setCurrent(regionKey) {
-    // Restart cycle.js with an updated PouchDb driver for this region
-    // TODO I'm not sure where to put this, or if restarting cycle this way is reasonable
-    restartCycle(regionKey);
-    return { type: SET_CURRENT, regionKey };
+  return {type: SET_CURRENT, regionKey};
 };

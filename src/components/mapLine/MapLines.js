@@ -11,7 +11,6 @@
 
 const React = require('react');
 const {DraggablePointsOverlay, SVGOverlay} = require('react-map-gl');
-const autobind = require('autobind-decorator');
 const {resolveSvgReact} = require('helpers/svgHelpers');
 const {LineLayer} = require('deck.gl');
 const PropTypes = require('prop-types');

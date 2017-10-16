@@ -9,7 +9,7 @@
  * THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 const {promiseToTask, taskToPromise} = require('rescape-ramda');
-const testConfig = require('data/samples/config').default;
+const {sampleConfig} = require('data/samples/sampleConfig');
 const initialState = require('data/initialState').default;
 
 /**
@@ -32,4 +32,4 @@ module.exports.expectTaskRejected = task => expect(taskToPromise(task, true));
  * This should only be used for sample configuration, unless store functionality is being tested
  * @returns {Object} The initial state
  */
-module.exports.testState = () => initialState(testConfig);
+module.exports.testState = () => initialState(sampleConfig);

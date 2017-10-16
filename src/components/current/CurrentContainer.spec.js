@@ -9,22 +9,23 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 const {mapStateToProps} = require('./CurrentContainer');
-const testConfig = require('data/samples/config').default;
+const {sampleConfig} = require('data/samples/sampleConfig');
 const initialState = require('data/initialState').default;
-const R = require('ramda');
-const makeStore = require('redux/store');
+const makeStore = require('redux/store').default;
+const regionKey = 'oakland';
+const {reqPath} = require('rescape-ramda').throwing;
 
 describe('CurrentContainer', () => {
-    test('mapStateToProps returns regions and current of state.settings', () => {
-        const store = makeStore(initialState(testConfig));
-        const state = store.getState();
+  test('mapStateToProps returns regions and current of state.settings', () => {
+    const store = makeStore(initialState(sampleConfig));
+    const state = store.getState();
 
-        const ownProps = {
-            region: R.prop(state.regions.currentKey, state.regions),
-            width: 500,
-            height: 500
-        };
+    const ownProps = {
+      region: reqPath(['regions', regionKey], state),
+      width: 500,
+      height: 500
+    };
 
-        expect(mapStateToProps(store.getState(), ownProps)).toMatchSnapshot();
-    });
+    expect(mapStateToProps(store.getState(), ownProps)).toMatchSnapshot();
+  });
 });

@@ -13,7 +13,7 @@ const thunk = require('redux-thunk');
 const {mapStateToProps} = require('./MapboxContainer');
 const configureStore = require('redux-mock-store');
 
-const testConfig = require('data/samples/config').default;
+const {sampleConfig} = require('data/samples/sampleConfig');
 const initialState = require('data/initialState').default;
 const {reqPath} = require('rescape-ramda').throwing;
 
@@ -22,7 +22,7 @@ const mockStore = configureStore(middlewares);
 
 describe('SankeyContainer', () => {
     test('mapStateToProps flattens viewport props', () => {
-        const store = mockStore(initialState(testConfig));
+        const store = mockStore(initialState(sampleConfig));
         const state = store.getState();
 
         const ownProps = {
