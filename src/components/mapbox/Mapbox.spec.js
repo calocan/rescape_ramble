@@ -16,20 +16,24 @@ const {eMap} = require('helpers/componentHelpers');
 const [MapGL, Mapbox] =
   eMap([mapGL, mapbox]);
 
-const props = R.merge(
-  mapStateToProps(state, {
-    // Put geojson in the Region since that is normally loaded asyncronously
-    region: R.set(
-      R.lensProp('geojson'),
-      geojsonByType(geojson),
-      reqPath(['regions', regionKey], state)
-    ),
-    style: {
-      width: 500,
-      height: 500
+const props = mapStateToProps(state)
+    data: {
+      // Put geojson in the Region since that is normally loaded asyncronously
+      region: R.set(
+        R.lensProp('geojson'),
+        geojsonByType(geojson),
+        reqPath(['regions', regionKey], state)
+      ),
+    },
+    settings: {
+      style: {
+        width: 500,
+        height: 500
+      }
     }
+    actions: mapDispatchToProps(state);
   }),
-  mapDispatchToProps(state));
+
 
 describe('Mapbox', () => {
   test('MapGL can mount', () => {

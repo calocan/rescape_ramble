@@ -27,7 +27,7 @@ const {propLensEqual} = require('components/componentHelpers');
 class Mapbox extends React.Component {
 
   render() {
-    const {viewport, mapboxApiAccessToken, iconAtlas, showCluster, hoverMarker, selectMarker} = this.props;
+    const {viewport, iconAtlas, showCluster, hoverMarker, selectMarker} = this.props;
     const {node, way} = reqPath(['osmByType'], this.props) || {};
     const markers = {type: 'FeatureCollection', features: reqPath(['state', 'markers'], this) || []};
 
@@ -62,18 +62,38 @@ class Mapbox extends React.Component {
 }
 
 Mapbox.propTypes = {
-  style: PropTypes.object.isRequired,
-  viewport: PropTypes.object.isRequired,
-  mapboxApiAccessToken: PropTypes.string.isRequired,
-  iconAtlas: PropTypes.string.isRequired,
-  showCluster: PropTypes.bool.isRequired,
-  region: PropTypes.shape({
-    id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-    osm: PropTypes.shape().isRequired
+
+  settings: PropTypes.shape({
+    style: PropTypes.object.isRequired,
+    iconAtlas: PropTypes.string.isRequired,
+    showCluster: PropTypes.bool.isRequired,
   }).isRequired,
-  hoverMarker: PropTypes.func.isRequired,
-  selectMarker: PropTypes.func.isRequired,
-  onChangeViewport: PropTypes.func.isRequired
+
+  data: PropTypes.shape({
+    region: PropTypes.shape({
+      id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+      osm: PropTypes.shape().isRequired,
+      mapbox: PropTypes.shape({
+        mapboxApiAccessToken: PropTypes.string.isRequired,
+        viewport: PropTypes.shape().isRequired,
+      }).isRequired
+    }).isRequired,
+  }).isRequired,
+
+  derived: PropTypes.shape({
+    featuresByType: PropTypes.shape({
+
+    }),
+    markersByType: PropTypes.shape({
+
+    })
+  }),
+
+  actions: PropTypes.shape({
+    hoverMarker: PropTypes.func.isRequired,
+    selectMarker: PropTypes.func.isRequired,
+    onChangeViewport: PropTypes.func.isRequired
+  }).isRequired
 };
 
 module.exports.default = Mapbox;

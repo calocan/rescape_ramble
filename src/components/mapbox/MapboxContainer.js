@@ -19,13 +19,16 @@ const {geojsonByType} = require('helpers/geojsonHelpers');
 const {toJS} = require('helpers/immutableHelpers');
 const {hoverMarker, selectMarker} = actionCreators;
 const {createLengthEqualSelector} = require('helpers/reselectHelpers');
+const {createSelector} = require('reslect');
+
+
 
 /**
  * Resolves the openstreetmap features of a region and categorizes them by type (way, node, relation).
  * Equality is currently based on the length of the features, but we should be able to do this
  * simply by reference equality (why would the features reference change?)
  */
-export const geojsonByTypeSelector = createLengthEqualSelector(
+const featuresByTypeSelector = createLengthEqualSelector(
   [
     R.view(R.lensPath(['region', 'geojson', 'osm', 'features']))
   ],
@@ -36,11 +39,36 @@ export const geojsonByTypeSelector = createLengthEqualSelector(
 /**
  * Resolves the marker features of a region and categorizes them by type (way, node, relation)
  */
-export const markersByTypeSelector = createLengthEqualSelector(
+const markersByTypeSelector = createLengthEqualSelector(
   [
     R.view(R.lensPath(['region', 'geojson', 'markers']))
   ],
   geojsonByType
+);
+
+
+const mapboxStateSelector = createSelector(
+  [
+    settingsSelector,
+    dataSelector,
+    derivedSelected,
+  ],
+  (state, props) => R.applySpec({
+    settings: {
+
+    },
+    data: {
+      region: reqPath(['regions', regionKey], state)
+    },
+  });
+)
+
+const derivedSelector = createSelector(
+  [
+    featuresByTypeSelector,
+    markersByTypeSelector
+  ],
+  [featuresByType, markersByType] => ({featuresByType, markersByType})
 );
 
 /**
@@ -50,19 +78,17 @@ export const markersByTypeSelector = createLengthEqualSelector(
  * @param {Object} style A style object with the width and height
  * @returns {Object} The props
  */
-const mapStateToProps = module.exports.mapStateToProps = (state, {region, style}) => {
-  const mapbox = region.mapbox;
+const mapStateToProps = module.exports.mapStateToProps = (state, props) => {
   return {
     region,
     viewport: R.merge(
       toJS(mapbox.viewport),
       // viewport needs absolute width and height from parent
       R.pick(['width', 'height'], style)),
-    mapboxApiAccessToken: mapbox.mapboxApiAccessToken,
     iconAtlas: mapbox.iconAtlas,
     // TODO showCluster should come in as bool
     showCluster: mapbox.showCluster === 'true',
-    geojsonByType: geojsonByTypeSelector(state),
+    featuresByType: featuresByTypeSelector(state),
     markersByType: markersByTypeSelector(state),
   };
 };
