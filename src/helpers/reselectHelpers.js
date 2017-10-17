@@ -1,5 +1,5 @@
 /**
- * Created by Andy Likuski on 2017.09.04
+ * Created by Andy Likuski on 2017.10.17
  * Copyright (c) 2017 Andy Likuski
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
@@ -9,33 +9,14 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-const React = require('react');
-const R = require('ramda');
-const {v} = require('rescape-validate');
-const PropTypes = require('prop-types');
+const { createSelectorCreator, defaultMemoize } = require('reselect')
+const R = require('ramda')
+const {propLensEqual} = require('./componentHelpers');
 
 /**
- * Returns true if the lens applied to props equals the lens applied to nextProps
- * @param {Function} lens Ramda lens
- * @param {Object} props React props
- * @param {Object} nextProps Reach nextProps
- * @returns {Boolean} True if equal, else false
+ * Compares the length of two values
  */
-module.exports.propLensEqual = v(R.curry((lens, props, nextProps) =>
-    R.equals(
-      R.view(lens, props),
-      R.view(lens, nextProps)
-    )
-  ),
-  [
-    ['lens', PropTypes.func.isRequired],
-    ['props', PropTypes.shape().isRequired],
-    ['nextProps', PropTypes.shape().isRequired],
-  ], 'propLensEqual');
-
-/**
- * Maps each Reach element to an curried e function.
- * @param {[String|Element]} types React element types (e.g. ['div', 'svg', React])
- * @returns {Function} A list of functions that need just the config and children specified, not the type
- */
-module.exports.eMap = types => R.map(component => React.createFactory(component), types);
+module.exports.createLengthEqualSelector = createSelectorCreator(
+  defaultMemoize,
+  propLensEqual(R.lensProp('length'))
+);

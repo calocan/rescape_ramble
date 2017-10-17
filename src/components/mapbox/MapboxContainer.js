@@ -15,8 +15,33 @@ const {actionCreators} = require('redux/geojson/geojsonReducer');
 const {onChangeViewport} = require('redux-map-gl');
 const Mapbox = require('./Mapbox').default;
 const R = require('ramda');
+const {geojsonByType} = require('helpers/geojsonHelpers');
 const {toJS} = require('helpers/immutableHelpers');
 const {hoverMarker, selectMarker} = actionCreators;
+const {createLengthEqualSelector} = require('helpers/reselectHelpers');
+
+/**
+ * Resolves the openstreetmap features of a region and categorizes them by type (way, node, relation).
+ * Equality is currently based on the length of the features, but we should be able to do this
+ * simply by reference equality (why would the features reference change?)
+ */
+export const geojsonByTypeSelector = createLengthEqualSelector(
+  [
+    R.view(R.lensPath(['region', 'geojson', 'osm', 'features']))
+  ],
+  geojsonByType
+);
+
+
+/**
+ * Resolves the marker features of a region and categorizes them by type (way, node, relation)
+ */
+export const markersByTypeSelector = createLengthEqualSelector(
+  [
+    R.view(R.lensPath(['region', 'geojson', 'markers']))
+  ],
+  geojsonByType
+);
 
 /**
  * Raises viewport, mapboxApiAccessToken, geojson, and gtfs to top level
@@ -26,27 +51,29 @@ const {hoverMarker, selectMarker} = actionCreators;
  * @returns {Object} The props
  */
 const mapStateToProps = module.exports.mapStateToProps = (state, {region, style}) => {
-    const mapbox = region.mapbox;
-    return {
-            region,
-            viewport: R.merge(
-                toJS(mapbox.viewport),
-                // viewport needs absolute width and height from parent
-                R.pick(['width', 'height'], style)),
-            mapboxApiAccessToken: mapbox.mapboxApiAccessToken,
-            iconAtlas: mapbox.iconAtlas,
-            // TODO showCluster should come in as bool
-            showCluster: mapbox.showCluster === 'true'
-    };
+  const mapbox = region.mapbox;
+  return {
+    region,
+    viewport: R.merge(
+      toJS(mapbox.viewport),
+      // viewport needs absolute width and height from parent
+      R.pick(['width', 'height'], style)),
+    mapboxApiAccessToken: mapbox.mapboxApiAccessToken,
+    iconAtlas: mapbox.iconAtlas,
+    // TODO showCluster should come in as bool
+    showCluster: mapbox.showCluster === 'true',
+    geojsonByType: geojsonByTypeSelector(state),
+    markersByType: markersByTypeSelector(state),
+  };
 };
 
 
 const mapDispatchToProps = module.exports.mapDispatchToProps = (dispatch, ownProps) => {
-    return bindActionCreators({
-        onChangeViewport,
-        hoverMarker,
-        selectMarker
-    }, dispatch);
+  return bindActionCreators({
+    onChangeViewport,
+    hoverMarker,
+    selectMarker
+  }, dispatch);
 };
 
 module.exports.default = connect(mapStateToProps, mapDispatchToProps)(Mapbox);

@@ -21,73 +21,59 @@ const R = require('ramda');
 const styles = require('./Mapbox.style').default;
 const MapStops = createMapStops(React);
 const e = React.createElement;
+const R = require('ramda');
+const {propLensEqual} = require('components/componentHelpers');
 
 class Mapbox extends React.Component {
-    componentWillReceiveProps(nextProps) {
-        const osmLens = R.lensPath(['region', 'geojson', 'osm', 'features', 'length']);
-        const markersLens = R.lensPath(['region', 'geojson', 'markers']);
-        // Features have changed
-        if (R.view(osmLens, this.props) !== R.view(osmLens, nextProps)) {
-            this.setState({osmByType: geojsonByType(nextProps.region.geojson.osm)});
-        }
-        if (R.view(markersLens, this.props) !== R.view(markersLens, nextProps)) {
-            this.setState({markers: nextProps.region.geojson.markers});
-        }
-    }
 
-    render() {
-        const { viewport, mapboxApiAccessToken, iconAtlas, showCluster, hoverMarker, selectMarker } = this.props;
-        const {node, way} = reqPath(['state', 'osmByType'], this) || {};
-        const markers = {type: 'FeatureCollection', features: reqPath(['state', 'markers'], this) || []};
+  render() {
+    const {viewport, mapboxApiAccessToken, iconAtlas, showCluster, hoverMarker, selectMarker} = this.props;
+    const {node, way} = reqPath(['osmByType'], this.props) || {};
+    const markers = {type: 'FeatureCollection', features: reqPath(['state', 'markers'], this) || []};
 
-        // <MapStops geojson={node || {}} viewport={viewport}/>,
-        // <MapLines geojson={way || {}} viewport={viewport}/>,
-        const mapMarkers = e(MapMarkers, {
-            geojson: markers,
-            viewport,
-            regionId: this.props.region.id
-        });
-        const deck = e(Deck, {
-            viewport,
-            geojson: markers,
-            iconAtlas,
-            showCluster,
-            onHover: hoverMarker,
-            onClick: selectMarker
-        });
+    // <MapStops geojson={node || {}} viewport={viewport}/>,
+    // <MapLines geojson={way || {}} viewport={viewport}/>,
+    const mapMarkers = e(MapMarkers, {
+      geojson: markers,
+      viewport,
+      regionId: this.props.region.id
+    });
+    const deck = e(Deck, {
+      viewport,
+      geojson: markers,
+      iconAtlas,
+      showCluster,
+      onHover: hoverMarker,
+      onClick: selectMarker
+    });
 
-        return e(MapGL, R.merge(viewport, {
-            mapboxApiAccessToken,
-            showZoomControls: true,
-            perspectiveEnabled: true,
-            // setting to `true` should cause the map to flicker because all sources
-            // and layers need to be reloaded without diffing enabled.
-            preventStyleDiffing: false,
-            onChangeViewport: this.props.onChangeViewport
-        }),
-            deck
-        );
-    }
+    return e(MapGL, R.merge(viewport, {
+        mapboxApiAccessToken,
+        showZoomControls: true,
+        perspectiveEnabled: true,
+        // setting to `true` should cause the map to flicker because all sources
+        // and layers need to be reloaded without diffing enabled.
+        preventStyleDiffing: false,
+        onChangeViewport: this.props.onChangeViewport
+      }),
+      deck
+    );
+  }
 }
 
-const {
-    number,
-    string,
-    object,
-    bool,
-    func
-} = PropTypes;
-
 Mapbox.propTypes = {
-    style: object.isRequired,
-    viewport: object.isRequired,
-    mapboxApiAccessToken: string.isRequired,
-    iconAtlas: string.isRequired,
-    showCluster: bool.isRequired,
-    region: object.isRequired,
-    hoverMarker: func.isRequired,
-    selectMarker: func.isRequired,
-    onChangeViewport: func.isRequired
+  style: PropTypes.object.isRequired,
+  viewport: PropTypes.object.isRequired,
+  mapboxApiAccessToken: PropTypes.string.isRequired,
+  iconAtlas: PropTypes.string.isRequired,
+  showCluster: PropTypes.bool.isRequired,
+  region: PropTypes.shape({
+    id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+    osm: PropTypes.shape().isRequired
+  }).isRequired,
+  hoverMarker: PropTypes.func.isRequired,
+  selectMarker: PropTypes.func.isRequired,
+  onChangeViewport: PropTypes.func.isRequired
 };
 
 module.exports.default = Mapbox;
