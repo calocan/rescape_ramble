@@ -20,7 +20,7 @@ const {geojsonByType} = require('helpers/geojsonHelpers');
 const {toJS} = require('helpers/immutableHelpers');
 const {hoverMarker, selectMarker} = actionCreators;
 const {createLengthEqualSelector} = require('helpers/reselectHelpers');
-const {createSelector} = require('reslect');
+const {createSelector, createStructuredSelector} = require('reselect');
 
 /**
  * Resolves the openstreetmap features of a region and categorizes them by type (way, node, relation).
@@ -45,6 +45,15 @@ const markersByTypeSelector = createLengthEqualSelector(
 );
 
 const isSelected = value => value.isSelected;
+const mapMerge = obj => R.map(R.merge(obj));
+const selector = createStructuredSelector({
+  settings: createStructuredSelector({
+
+  }),
+  data: createStructuredSelector({
+
+  }),
+});
 const userDataSelector = createSelector(
   [
     R.identity,
@@ -57,12 +66,12 @@ const userDataSelector = createSelector(
     settings: R.always(settings),
     // pick the user's active region
     data: {
-      regions: R.map(R.merge({
+      regions: mapMerge({
         osm: {
           featuresByTypeSelector(),
           markersByTypeSelector()
         }
-    }), filterByUserSettings(R.lensPath(['data', 'regions']), isSelected, state, user));
+      }, filterByUserSettings(R.lensPath(['data', 'regions']), isSelected, state, user))
 }
 })
 )
