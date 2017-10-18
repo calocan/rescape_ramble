@@ -21,8 +21,6 @@ const {hoverMarker, selectMarker} = actionCreators;
 const {createLengthEqualSelector} = require('helpers/reselectHelpers');
 const {createSelector} = require('reslect');
 
-
-
 /**
  * Resolves the openstreetmap features of a region and categorizes them by type (way, node, relation).
  * Equality is currently based on the length of the features, but we should be able to do this
@@ -35,7 +33,6 @@ const featuresByTypeSelector = createLengthEqualSelector(
   geojsonByType
 );
 
-
 /**
  * Resolves the marker features of a region and categorizes them by type (way, node, relation)
  */
@@ -46,30 +43,31 @@ const markersByTypeSelector = createLengthEqualSelector(
   geojsonByType
 );
 
+const userDataSelector = createSelector(
+  [
+    R.identity,
+    state => R.head(state.users),
+  ],
+  ({settings, regions}, user) => R.applySpec({
+    settings: R.always(settings),
+    data: {
+     regions: {
+        osm: {
+          featuresByType,
+          markersByType,
+        }
+      }
+    }
+  })
+);
 
-const mapboxStateSelector = createSelector(
+const mapboxSelector = createSelector(
   [
     settingsSelector,
-    dataSelector,
-    derivedSelected,
+    dataSelector
   ],
-  (state, props) => R.applySpec({
-    settings: {
-
-    },
-    data: {
-      region: reqPath(['regions', regionKey], state)
-    },
-  });
+  (settingsSelector, dataSelector) =>
 )
-
-const derivedSelector = createSelector(
-  [
-    featuresByTypeSelector,
-    markersByTypeSelector
-  ],
-  [featuresByType, markersByType] => ({featuresByType, markersByType})
-);
 
 /**
  * Raises viewport, mapboxApiAccessToken, geojson, and gtfs to top level
@@ -89,7 +87,7 @@ const mapStateToProps = module.exports.mapStateToProps = (state, props) => {
     // TODO showCluster should come in as bool
     showCluster: mapbox.showCluster === 'true',
     featuresByType: featuresByTypeSelector(state),
-    markersByType: markersByTypeSelector(state),
+    markersByType: markersByTypeSelector(state)
   };
 };
 

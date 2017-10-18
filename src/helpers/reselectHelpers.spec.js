@@ -13,6 +13,31 @@ const { createSelector, createSelectorCreator, defaultMemoize } = require('resel
 const R = require('ramda');
 const {propLensEqual} = require('./componentHelpers');
 
+const {stateSelector, createLengthEqualSelector} = require('./reselectHelpers')
+
+describe('reselectHelpers', () => {
+  test('stateSelector', () => {
+    const theState = {
+      settings: 'pie',
+      data: 'à la mode'
+    };
+    expect(
+      stateSelector(
+        state => state.settings,
+        state => state.data
+      )(theState)
+    ).toEqual(
+      {
+        settings: 'pie',
+        data: 'à la mode'
+      }
+    )
+  });
+
+  test('createLengthEqualSelector', () => {
+
+  });
+});
 
 /**
  * A selector that expects a settingsSelector and dataSelector,

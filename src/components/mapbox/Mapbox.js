@@ -72,22 +72,16 @@ Mapbox.propTypes = {
   data: PropTypes.shape({
     region: PropTypes.shape({
       id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-      osm: PropTypes.shape().isRequired,
+      osm: PropTypes.shape({
+        featuresByType: PropTypes.shape().isRequired,
+        markersByType: PropTypes.shape().isRequired
+      }).isRequired,
       mapbox: PropTypes.shape({
         mapboxApiAccessToken: PropTypes.string.isRequired,
         viewport: PropTypes.shape().isRequired,
       }).isRequired
     }).isRequired,
   }).isRequired,
-
-  derived: PropTypes.shape({
-    featuresByType: PropTypes.shape({
-
-    }),
-    markersByType: PropTypes.shape({
-
-    })
-  }),
 
   actions: PropTypes.shape({
     hoverMarker: PropTypes.func.isRequired,

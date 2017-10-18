@@ -14,6 +14,7 @@ const R = require('ramda');
 const {v} = require('rescape-validate');
 const PropTypes = require('prop-types');
 
+
 /**
  * Returns true if the lens applied to props equals the lens applied to nextProps
  * @param {Function} lens Ramda lens
