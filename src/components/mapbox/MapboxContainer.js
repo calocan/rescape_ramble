@@ -15,6 +15,7 @@ const {actionCreators} = require('redux/geojson/geojsonReducer');
 const {onChangeViewport} = require('redux-map-gl');
 const Mapbox = require('./Mapbox').default;
 const R = require('ramda');
+const {filterByUserSettings} = require('data/userSettingsHelpers');
 const {geojsonByType} = require('helpers/geojsonHelpers');
 const {toJS} = require('helpers/immutableHelpers');
 const {hoverMarker, selectMarker} = actionCreators;
@@ -43,23 +44,29 @@ const markersByTypeSelector = createLengthEqualSelector(
   geojsonByType
 );
 
+const isSelected = value => value.isSelected;
 const userDataSelector = createSelector(
   [
     R.identity,
     state => R.head(state.users),
+    featuresByTypeSelector,
+    markersByTypeSelector
   ],
-  ({settings, regions}, user) => R.applySpec({
+  ({settings, regions}, user, featuresByTypeSelector, markersByTypeSelector) => R.applySpec({
+    // settings are user-independent
     settings: R.always(settings),
+    // pick the user's active region
     data: {
-     regions: {
+      regions: R.map(R.merge({
         osm: {
-          featuresByType,
-          markersByType,
+          featuresByTypeSelector(),
+          markersByTypeSelector()
         }
-      }
-    }
-  })
-);
+    }), filterByUserSettings(R.lensPath(['data', 'regions']), isSelected, state, user));
+}
+})
+)
+;
 
 const mapboxSelector = createSelector(
   [
@@ -67,7 +74,7 @@ const mapboxSelector = createSelector(
     dataSelector
   ],
   (settingsSelector, dataSelector) =>
-)
+);
 
 /**
  * Raises viewport, mapboxApiAccessToken, geojson, and gtfs to top level
