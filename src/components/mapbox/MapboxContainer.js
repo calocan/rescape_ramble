@@ -41,13 +41,18 @@ const featuresByTypeSelector = createLengthEqualSelector(
  */
 const markersByTypeSelector = createLengthEqualSelector(
   [
-    R.view(R.lensPath(['region', 'geojson', 'markers']))
+    R.view(R.lensPath(['geojson', 'markers']))
   ],
   geojsonByType
 );
 
 const isSelected = value => value.isSelected;
 const isActive = value => value.isActive;
+const activeUserSelector = state =>
+  findOne(
+    isActive,
+    state.users
+  )
 const sel = createStructuredSelector;
 
 /**
@@ -62,14 +67,19 @@ const subSel = (substate, obj) => state => createStructuredSelector(obj)(substat
  * Selector for a particular region.
  * @param {Object} region A region with userSettings for that region merged in
  */
-const regionSelector = (region) =>
-  R.merge(region, {
-    osm: R.map(selector => selector(region), {
-      featuresByTypeSelector,
-      markersByTypeSelector
+const regionSelector = region => createSelector(
+  featuresByTypeSelector,
+  markersByTypeSelector,
+  (featuresByType, markersByType) =>
+    R.merge(region, {
+      geojson: {
+        osm: {
+          featuresByType,
+          markersByType
+        }
+      }
     })
-  });
-
+)(region);
 
 /**
  * Selects regions that are associated with this user and currently selected by this user.
@@ -79,7 +89,7 @@ const regionSelector = (region) =>
  */
 const regionsSelector = state => sel(
   R.map(
-    region => regionSelector(region),
+    region => state => regionSelector(region),
     filterMergeByUserSettings(
       // Look for the regions container in the state and userSettings
       R.lensPath(['regions']),
@@ -89,10 +99,7 @@ const regionsSelector = state => sel(
       state,
       // Find the only active user.
       R.head(R.values(
-        findOne(
-          isActive,
-          state.users
-        )
+        activeUserSelector(state)
       ))
     )
   )
@@ -103,9 +110,7 @@ const regionsSelector = state => sel(
  */
 const dataSelector = sel({
   // pick the user's active region
-  data: sel({
-    regions: regionsSelector
-  })
+  regions: regionsSelector
 });
 
 /**
@@ -114,7 +119,7 @@ const dataSelector = sel({
 const selector = module.exports.selector = sel({
   settings: state => state.settings,
   data: dataSelector,
-  users: state => state.users
+  users: activeUserSelector
 });
 
 /**

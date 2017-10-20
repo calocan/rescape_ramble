@@ -67,7 +67,7 @@ Mapbox.propTypes = {
   }).isRequired,
 
   data: PropTypes.shape({
-    region: PropTypes.shape({
+    regions: PropTypes.shape({
       id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
       osm: PropTypes.shape({
         featuresByType: PropTypes.shape().isRequired,

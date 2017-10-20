@@ -54,15 +54,3 @@ describe('Mapbox', () => {
   });
 });
 
-/*
- TODO I don't know how to test this
- */
-/*
- it('MapGL call onLoad when provided', () => {
- const onLoad = jest.fn();
-
- const props = {onLoad, ...defaultProps};
- mount(<MapGL {...props} />);
- expect(onLoad).toBeCalledWith();
- });
- */
