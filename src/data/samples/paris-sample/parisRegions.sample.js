@@ -16,11 +16,16 @@ const routeTypes = require('data/default/routeTypes');
 const {applyDefaultRegion} = require('data/configHelpers');
 const trips = require('./parisTrips.sample').default;
 const stops = require('./parisStops.sample').default;
+const osm = require('./parisOsm.sample').default;
 
 // merge the default region template with our region(s)
 module.exports.default = applyDefaultRegion({
   paris: {
     id: 'paris',
+
+    geojson: {
+      osm
+    },
 
     gtfs: {
       routes,

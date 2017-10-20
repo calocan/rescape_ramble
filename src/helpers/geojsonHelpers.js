@@ -23,11 +23,13 @@ const featureByType = module.exports.featureByType = reduceFeaturesBy(feature =>
  * @returns {Object} Copies of the gtfs with a single type of Feature
  * geojsonByType:: geojson g = g -> <String, g>
  */
-module.exports.geojsonByType = R.curry((geojson) => R.map(
+module.exports.geojsonByType = geojson => {
+  return R.map(
     // Make a copy of the geojson with the typed features
     featureOfType => R.set(R.lensProp('features'), featureOfType, geojson),
     featureByType(geojson.features) // Reduce by feature type
-));
+  );
+}
 
 /**
  * Fetch each square of transit and merge the results by feature id

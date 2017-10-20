@@ -15,21 +15,23 @@ const {actionCreators} = require('redux/geojson/geojsonReducer');
 const {onChangeViewport} = require('redux-map-gl');
 const Mapbox = require('./Mapbox').default;
 const R = require('ramda');
-const {filterByUserSettings} = require('data/userSettingsHelpers');
+const {filterMergeByUserSettings} = require('data/userSettingsHelpers');
 const {geojsonByType} = require('helpers/geojsonHelpers');
 const {toJS} = require('helpers/immutableHelpers');
 const {hoverMarker, selectMarker} = actionCreators;
 const {createLengthEqualSelector} = require('helpers/reselectHelpers');
 const {createSelector, createStructuredSelector} = require('reselect');
+const {findOne} = require('rescape-ramda').throwing;
 
 /**
  * Resolves the openstreetmap features of a region and categorizes them by type (way, node, relation).
  * Equality is currently based on the length of the features, but we should be able to do this
  * simply by reference equality (why would the features reference change?)
+ * @param {Object} state Should be the region with the
  */
 const featuresByTypeSelector = createLengthEqualSelector(
   [
-    R.view(R.lensPath(['region', 'geojson', 'osm', 'features']))
+    R.view(R.lensPath(['geojson', 'osm']))
   ],
   geojsonByType
 );
@@ -60,14 +62,14 @@ const subSel = (substate, obj) => state => createStructuredSelector(obj)(substat
  * Selector for a particular region.
  * @param {Object} region A region with userSettings for that region merged in
  */
-const regionSelector = (region) => subSel(region,
+const regionSelector = (region) =>
   R.merge(region, {
-    osm: sel({
+    osm: R.map(selector => selector(region), {
       featuresByTypeSelector,
       markersByTypeSelector
     })
-  })
-);
+  });
+
 
 /**
  * Selects regions that are associated with this user and currently selected by this user.
@@ -78,14 +80,20 @@ const regionSelector = (region) => subSel(region,
 const regionsSelector = state => sel(
   R.map(
     region => regionSelector(region),
-    filterByUserSettings(
-      R.lensPath(['data', 'regions']),
+    filterMergeByUserSettings(
+      // Look for the regions container in the state and userSettings
+      R.lensPath(['regions']),
+      // Look for regions in userSettings with property isSelected
       isSelected,
+      // The state
       state,
-      // Find the only active user
-      R.find(
-        isActive,
-        state.users)
+      // Find the only active user.
+      R.head(R.values(
+        findOne(
+          isActive,
+          state.users
+        )
+      ))
     )
   )
 )(state);
@@ -119,18 +127,18 @@ const selector = module.exports.selector = sel({
 const mapStateToProps = module.exports.mapStateToProps = (state, props) => {
   return selector(state, props);
   /*
-    region,
-    viewport: R.merge(
-      toJS(mapbox.viewport),
-      // viewport needs absolute width and height from parent
-      R.pick(['width', 'height'], style)),
-    iconAtlas: mapbox.iconAtlas,
-    // TODO showCluster should come in as bool
-    showCluster: mapbox.showCluster === 'true',
-    featuresByType: featuresByTypeSelector(state),
-    markersByType: markersByTypeSelector(state)
-  };
-  */
+   region,
+   viewport: R.merge(
+   toJS(mapbox.viewport),
+   // viewport needs absolute width and height from parent
+   R.pick(['width', 'height'], style)),
+   iconAtlas: mapbox.iconAtlas,
+   // TODO showCluster should come in as bool
+   showCluster: mapbox.showCluster === 'true',
+   featuresByType: featuresByTypeSelector(state),
+   markersByType: markersByTypeSelector(state)
+   };
+   */
 };
 
 

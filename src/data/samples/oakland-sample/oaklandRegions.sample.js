@@ -16,11 +16,16 @@ const routeTypes = require('data/default/routeTypes');
 const {applyDefaultRegion} = require('data/configHelpers');
 const trips = require('./oaklandTrips.sample').default;
 const stops = require('./oaklandStops.sample').default;
+const osm = require('./oaklandOsm.sample').default;
 
 // merge the default region template with our region(s)
 module.exports.default = applyDefaultRegion({
   oakland: {
     id: 'oakland',
+
+    geojson: {
+      osm
+    },
 
     gtfs: {
       routes,

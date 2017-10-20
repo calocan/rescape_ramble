@@ -10,15 +10,15 @@
  */
 
 const R = require('ramda');
-const {filterByUserSettings} = require('./userSettingsHelpers');
+const {filterMergeByUserSettings} = require('./userSettingsHelpers');
 
 describe('userSettingsHelper', () => {
-  test('filterByUserSettings', () => {
+  test('filterMergeByUserSettings', () => {
     const lens = R.lensPath(['foos', 'bars']);
     const predicate = value => value.isSelected;
     const state = {foos: {bars: [{id: 'bar1', name: 'Bar 1'}, {id: 'bar2', name: 'Bar 2'}]}};
     const userSettings = {foos: {bars: {bar1: {id: 'bar1', isSelected: true}, bar2: {id: 'bar2'}}}};
-    expect(filterByUserSettings(lens, predicate, state, userSettings)).
+    expect(filterMergeByUserSettings(lens, predicate, state, userSettings)).
     toEqual(
       {bar1: {id: 'bar1', name: 'Bar 1', isSelected: true}}
     );

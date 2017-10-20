@@ -25,7 +25,7 @@ const {filterWithKeys, mapPropValueAsIndex, mergeDeep} = require('rescape-ramda'
  * for the state and userSettings. It's possible for a value to only exist in the state and not
  * in the userSettings (and possibly visa-versa if the user is creating something new). These will
  * be included in the merge and run through the predicate
- * @param {Object} state The Redux state
+ * @param {Object} state The Redux state. Important: The target of the lens
  * @param {Object} userSettings The user settings that match the shape of the state
  * @returns {*} The filtered merged value pointed to by the lens
  *
@@ -34,14 +34,15 @@ const {filterWithKeys, mapPropValueAsIndex, mergeDeep} = require('rescape-ramda'
  * predicate value => value.isSelected
  * state: {foos: {bars: [{id: 'bar1', name: 'Bar 1'}, {id: 'bar2', name: 'Bar 2'}]}}
  * userSettings: {foos: {bars: {bar1: {id: 'bar1', isSelected: true}, bar2: {id: 'bar2'}}}}
- *
  * returns: {bar1: {id: 'bar1', name: 'Bar 1' isSelected: true}}
  */
-module.exports.filterByUserSettings = (lens, predicate, state, userSettings) =>
-  filterWithKeys((value, key) =>
-    predicate(
-      value
-    ),
+module.exports.filterMergeByUserSettings = (lens, predicate, state, userSettings) =>
+  filterWithKeys(
+    (value, key) => {
+      return predicate(
+        value
+      );
+    },
     // Combine the lens focused userValue and state value
     // Make sure each is keyed by id before merging
     mergeDeep(
