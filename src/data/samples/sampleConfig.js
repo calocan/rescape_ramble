@@ -9,12 +9,27 @@
  * THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+const R = require('ramda');
 const {oaklandSampleConfig} = require('./oakland-sample/oaklandSampleConfig');
 const {parisSampleConfig} = require('./paris-sample/parisSampleConfig');
 const {mergeDeepAll} = require('rescape-ramda');
 
+const firstUserLens = obj => R.lensPath(
+  ['users',
+    R.head(
+      R.keys(
+        R.view(
+          R.lensPath(['users']),
+          obj
+        )
+      )
+    )
+  ]
+);
+
 // Merge the global and regional sampleConfigs
 module.exports.sampleConfig = mergeDeepAll([
-  oaklandSampleConfig,
+  // Make the first user active
+  R.over(firstUserLens(oaklandSampleConfig), R.merge({isActive: true}), oaklandSampleConfig),
   parisSampleConfig
 ]);

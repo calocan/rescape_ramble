@@ -37,7 +37,8 @@ module.exports.default = v(config => {
         )
       }),
       config.regions
-    )
+    ),
+    users: config.users
   };
 },
 [

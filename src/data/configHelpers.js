@@ -78,6 +78,27 @@ module.exports.mapDefaultUsers = v(defaultUserKeyToUserObjs => {
  */
 module.exports.keysAsIdObj = (...args) => R.fromPairs(R.map(key => [key, {id: key}], args));
 
+
+/**
+ * Apply the given regions to the users. This conveniently sets each user to have access to all given regions
+ * in the config. It also sets isSelected to the first region for each user
+ * @param {Object} regions An object of regions, the keys are assumed to be the ids
+ * @param {Object} users An object keyed by user id and valued by user
+ * @returns {Object} users with regions key set to a list of id objects (e.g. [{id: 1}, {id: 2}, ...]
+ */
+module.exports.applyRegionsToUsers = (regions, users) =>
+  R.map(
+    user => R.set(
+      R.lensPath(['regions']),
+      R.addIndex(R.map)(
+        (id, index) => R.merge(
+          {id},
+          // Set the first region to isSelected true
+          R.ifElse(R.equals(0), R.always({isSelected: true}), R.always({}))(index)),
+        R.keys(regions)),
+      user),
+    users);
+
 module.exports.wrapLocationsWithFeatures = (locations, locationFeatures) =>
   R.mapObjIndexed((locationsByType, locationType) =>
       R.set(R.lensProp('geojson'), reqPath(), locationType),

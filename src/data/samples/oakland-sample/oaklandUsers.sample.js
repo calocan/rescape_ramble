@@ -11,10 +11,12 @@
 
 const { userTemplateKeys: { REGION_MANAGER, REGION_USER, REGION_VISITOR } } = require('data/default');
 const {mapDefaultUsers} = require('data/configHelpers');
+const R = require('ramda')
 
 // Create three users
 // rename the user templates to match our users
-module.exports.default = mapDefaultUsers(
+// ONce merged with the defaults remove the user template keys to make a flat object of users
+module.exports.default = R.mergeAll(R.values(mapDefaultUsers(
   {
     [REGION_MANAGER]: {
       californiaManager: {
@@ -35,4 +37,4 @@ module.exports.default = mapDefaultUsers(
       }
     }
   }
-);
+)));

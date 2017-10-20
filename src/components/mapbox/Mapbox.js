@@ -15,14 +15,11 @@ const React = require('react');
 const createMapStops = require('components/mapStop/mapStops').default;
 const MapMarkers = require('components/mapMarker/MapMarkers').default;
 const {reqPath} = require('rescape-ramda').throwing;
-const {geojsonByType} = require('helpers/geojsonHelpers');
 const Deck = require('./Deck').default;
-const R = require('ramda');
 const styles = require('./Mapbox.style').default;
 const MapStops = createMapStops(React);
 const e = React.createElement;
 const R = require('ramda');
-const {propLensEqual} = require('components/componentHelpers');
 
 class Mapbox extends React.Component {
 

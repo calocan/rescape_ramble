@@ -45,45 +45,69 @@ const markersByTypeSelector = createLengthEqualSelector(
 );
 
 const isSelected = value => value.isSelected;
-const mapMerge = obj => R.map(R.merge(obj));
-const selector = createStructuredSelector({
-  settings: createStructuredSelector({
+const isActive = value => value.isActive;
+const sel = createStructuredSelector;
 
-  }),
-  data: createStructuredSelector({
+/**
+ * Creates a substate selector that ignores the full state an applies the substate
+ * @param substate
+ * @param obj
+ * @returns A function that calls createStructuredSelector with substate as the state
+ */
+const subSel = (substate, obj) => state => createStructuredSelector(obj)(substate);
 
-  }),
-});
-const userDataSelector = createSelector(
-  [
-    R.identity,
-    state => R.head(state.users),
-    featuresByTypeSelector,
-    markersByTypeSelector
-  ],
-  ({settings, regions}, user, featuresByTypeSelector, markersByTypeSelector) => R.applySpec({
-    // settings are user-independent
-    settings: R.always(settings),
-    // pick the user's active region
-    data: {
-      regions: mapMerge({
-        osm: {
-          featuresByTypeSelector(),
-          markersByTypeSelector()
-        }
-      }, filterByUserSettings(R.lensPath(['data', 'regions']), isSelected, state, user))
-}
-})
-)
-;
-
-const mapboxSelector = createSelector(
-  [
-    settingsSelector,
-    dataSelector
-  ],
-  (settingsSelector, dataSelector) =>
+/**
+ * Selector for a particular region.
+ * @param {Object} region A region with userSettings for that region merged in
+ */
+const regionSelector = (region) => subSel(region,
+  R.merge(region, {
+    osm: sel({
+      featuresByTypeSelector,
+      markersByTypeSelector
+    })
+  })
 );
+
+/**
+ * Selects regions that are associated with this user and currently selected by this user.
+ * @param {Object} state The redux state
+ * @returns {Object} An object keyed by region id and valued by regions that have merged
+ * in userSettings (e.g. isSelected) and derived data
+ */
+const regionsSelector = state => sel(
+  R.map(
+    region => regionSelector(region),
+    filterByUserSettings(
+      R.lensPath(['data', 'regions']),
+      isSelected,
+      state,
+      // Find the only active user
+      R.find(
+        isActive,
+        state.users)
+    )
+  )
+)(state);
+
+/**
+ * Selects top-level data
+ */
+const dataSelector = sel({
+  // pick the user's active region
+  data: sel({
+    regions: regionsSelector
+  })
+});
+
+/**
+ * Selects top-level everything, settings, data, and users
+ */
+const selector = module.exports.selector = sel({
+  settings: state => state.settings,
+  data: dataSelector,
+  users: state => state.users
+});
 
 /**
  * Raises viewport, mapboxApiAccessToken, geojson, and gtfs to top level
@@ -93,7 +117,8 @@ const mapboxSelector = createSelector(
  * @returns {Object} The props
  */
 const mapStateToProps = module.exports.mapStateToProps = (state, props) => {
-  return {
+  return selector(state, props);
+  /*
     region,
     viewport: R.merge(
       toJS(mapbox.viewport),
@@ -105,6 +130,7 @@ const mapStateToProps = module.exports.mapStateToProps = (state, props) => {
     featuresByType: featuresByTypeSelector(state),
     markersByType: markersByTypeSelector(state)
   };
+  */
 };
 
 

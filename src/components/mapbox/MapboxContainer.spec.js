@@ -9,11 +9,12 @@
  * THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-const thunk = require('redux-thunk');
+const R = require('ramda');
+const thunk = require('redux-thunk').default;
 const {mapStateToProps} = require('./MapboxContainer');
-const configureStore = require('redux-mock-store');
+const configureStore = require('redux-mock-store').default;
 
-const {sampleConfig} = require('data/samples/sampleConfig');
+const {sampleConfig, sampleUserSettings} = require('data/samples/sampleConfig');
 const initialState = require('data/initialState').default;
 const {reqPath} = require('rescape-ramda').throwing;
 
@@ -22,17 +23,19 @@ const mockStore = configureStore(middlewares);
 
 describe('MapboxContainer', () => {
     test('mapStateToProps flattens viewport props', () => {
-        const store = mockStore(initialState(sampleConfig));
+        const store = mockStore(R.merge(
+          initialState(sampleConfig),
+          sampleUserSettings
+        ));
         const state = store.getState();
 
         const ownProps = {
-            region: reqPath(['regions', reqPath(['regions', 'currentKey'], state)], state),
             style: {
                 width: 500,
                 height: 500
             }
         };
 
-        expect(mapStateToProps(store.getState(), ownProps)).toMatchSnapshot();
+        expect(mapStateToProps(state, ownProps)).toMatchSnapshot();
     });
 });

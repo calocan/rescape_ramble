@@ -13,8 +13,9 @@ const {environmentConfig} = require('environments/testConfig');
 const regions = require('./oaklandRegions.sample').default;
 const users = require('./oaklandUsers.sample').default;
 const R = require('ramda');
+const {applyRegionsToUsers} = require('data/configHelpers');
 
 module.exports.oaklandSampleConfig = R.merge(environmentConfig, {
   regions,
-  users
+  users: applyRegionsToUsers(regions, users)
 });

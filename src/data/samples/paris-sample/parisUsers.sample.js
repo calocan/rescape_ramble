@@ -26,7 +26,8 @@ const R = require('ramda');
 
 // Create three users
 // rename the user templates to match our users
-module.exports.default = mapDefaultUsers(
+// Once merged with the defaults remove the user template keys to make a flat object of users
+module.exports.default = R.mergeAll(R.values(mapDefaultUsers(
   {
     [REGION_MANAGER]: {
       parisManager: {
@@ -47,4 +48,4 @@ module.exports.default = mapDefaultUsers(
       }
     }
   }
-);
+)));

@@ -11,7 +11,7 @@
 
 const thunk = require('redux-thunk');
 const {mapStateToProps} = require('./MapboxContainer');
-const configureStore = require('redux-mock-store');
+const configureStore = require('redux-mock-store').default;
 
 const {sampleConfig} = require('data/samples/sampleConfig');
 const initialState = require('data/initialState').default;

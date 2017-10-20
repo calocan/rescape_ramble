@@ -17,7 +17,7 @@
  * @param {[String]} regionKeys The region keys to target.
  * @returns {Object} The "modified" defaultConfig
  */
-const {applyDefaultRegion, mapDefaultUsers, keysAsIdObj} = require('./configHelpers');
+const {applyDefaultRegion, mapDefaultUsers, keysAsIdObj, applyRegionsToUsers} = require('./configHelpers');
 const {defaultConfig, userTemplateKeys: {REGION_MANAGER, REGION_USER}} = require('data/default');
 const R = require('ramda');
 const {reqPath} = require('rescape-ramda').throwing;
@@ -93,6 +93,23 @@ describe('configHelpers', () => {
       {
         smoothie: {id: 'smoothie'},
         song: {id: 'song'}
+      }
+    );
+  });
+
+  test('applyRegionsToUsers', () => {
+    const regions = {
+      a: {id: 'a', name: 'A'},
+      b: {id: 'b', name: 'B'}
+    };
+    const users = {
+      y: {id: 'y', name: 'Y'},
+      z: {id: 'z', name: 'Z'}
+    };
+    expect(applyRegionsToUsers(regions, users)).toEqual(
+      {
+        y: {id: 'y', name: 'Y', regions: [{id: 'a', isSelected: true}, {id: 'b'}]},
+        z: {id: 'z', name: 'Z', regions: [{id: 'a', isSelected: true}, {id: 'b'}]}
       }
     );
   });
