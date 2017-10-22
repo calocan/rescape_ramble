@@ -22,6 +22,8 @@ const {hoverMarker, selectMarker} = actionCreators;
 const {createLengthEqualSelector} = require('helpers/reselectHelpers');
 const {createSelector, createStructuredSelector} = require('reselect');
 const {findOne} = require('rescape-ramda').throwing;
+const {v} = require('rescape-validate');
+const PropTypes = require('prop-types');
 
 /**
  * Resolves the openstreetmap features of a region and categorizes them by type (way, node, relation).
@@ -116,6 +118,7 @@ const dataSelector = sel({
 /**
  * Selects top-level everything, settings, data, and users
  */
+
 const selector = module.exports.selector = sel({
   settings: state => state.settings,
   data: dataSelector,
@@ -129,7 +132,7 @@ const selector = module.exports.selector = sel({
  * @param {Object} style A style object with the width and height
  * @returns {Object} The props
  */
-const mapStateToProps = module.exports.mapStateToProps = (state, props) => {
+const mapStateToProps = module.exports.mapStateToProps = v((state, props) => {
   return selector(state, props);
   /*
    region,
@@ -144,7 +147,13 @@ const mapStateToProps = module.exports.mapStateToProps = (state, props) => {
    markersByType: markersByTypeSelector(state)
    };
    */
-};
+},
+  [
+    ['state', PropTypes.shape({}).isRequired],
+    ['props', PropTypes.shape({})]
+  ],
+  'mapStateToProps'
+);
 
 
 const mapDispatchToProps = module.exports.mapDispatchToProps = (dispatch, ownProps) => {

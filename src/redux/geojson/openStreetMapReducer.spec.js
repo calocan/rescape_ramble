@@ -10,7 +10,7 @@
  */
 const configureStore = require('redux-mock-store');
 const {actions, actionCreators} = require('redux/geojson/openStreetMapReducer');
-const thunk = require('redux-thunk');
+const thunk = require('redux-thunk').default;
 const {expectTask, testState} = require('helpers/jestHelpers');
 const {removeDuplicateObjectsByProp} = require('rescape-ramda');
 const R = require('ramda');

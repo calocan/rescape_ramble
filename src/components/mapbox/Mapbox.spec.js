@@ -1,42 +1,23 @@
 const mapGL = require('react-map-gl');
 const mapbox = require('./Mapbox').default;
 const {shallow} = require('enzyme');
-const {reqPath} = require('rescape-ramda').throwing;
 const {mapStateToProps, mapDispatchToProps} = require('./MapboxContainer');
-const {geojsonByType} = require('helpers/geojsonHelpers');
-const {sampleConfig} = require('data/samples/sampleConfig');
-const initialState = require('data/initialState').default;
 const R = require('ramda');
+const {sampleInitialState} = require('helpers/jestHelpers');
+const state = sampleInitialState();
+const {findOne} = require('rescape-ramda').throwing;
 
-jest.mock('query-overpass');
-const state = initialState(sampleConfig);
-const geojson = require('async/queryOverpass.sample').LA_SAMPLE;
-const regionKey = 'oakland';
 const {eMap} = require('helpers/componentHelpers');
 const [MapGL, Mapbox] =
   eMap([mapGL, mapbox]);
 
-const props = mapStateToProps(state)
-    data: {
-      // Put geojson in the Region since that is normally loaded asyncronously
-      region: R.set(
-        R.lensProp('geojson'),
-        geojsonByType(geojson),
-        reqPath(['regions', regionKey], state)
-      ),
-    },
-    settings: {
-      style: {
-        width: 500,
-        height: 500
-      }
-    }
-    actions: mapDispatchToProps(state);
-  }),
+const props = mapStateToProps(state, {});
 
 
 describe('Mapbox', () => {
   test('MapGL can mount', () => {
+    const onlyOne = reqPath(['regions'], props);
+
     const wrapper = shallow(
       MapGL(R.merge(props.viewport, {
         showZoomControls: true,

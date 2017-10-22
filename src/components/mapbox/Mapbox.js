@@ -80,6 +80,21 @@ Mapbox.propTypes = {
     }).isRequired,
   }).isRequired,
 
+  users: R.compose(
+    (props, propName, componentName) => {
+      const length = R.length(R.keys(props[propName]));
+      if (R.equals(1, length)) {
+        return new Error(
+          `Invalid prop ${propName} supplied to ${componentName}.
+           Validation failed. Object length is not one, rather ${length}`
+        );
+      }
+    },
+    PropTypes.objectOf(PropTypes.shape({
+
+    }))
+  ).isRequired,
+
   actions: PropTypes.shape({
     hoverMarker: PropTypes.func.isRequired,
     selectMarker: PropTypes.func.isRequired,

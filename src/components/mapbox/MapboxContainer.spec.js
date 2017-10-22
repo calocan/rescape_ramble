@@ -9,26 +9,11 @@
  * THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-const R = require('ramda');
-const thunk = require('redux-thunk').default;
 const {mapStateToProps} = require('./MapboxContainer');
-const configureStore = require('redux-mock-store').default;
-
-const {sampleConfig, sampleUserSettings} = require('data/samples/sampleConfig');
-const initialState = require('data/initialState').default;
-const {reqPath} = require('rescape-ramda').throwing;
-
-const middlewares = [thunk];
-const mockStore = configureStore(middlewares);
+const {sampleInitialState} = require('helpers/jestHelpers');
 
 describe('MapboxContainer', () => {
     test('mapStateToProps flattens viewport props', () => {
-        const store = mockStore(R.merge(
-          initialState(sampleConfig),
-          sampleUserSettings
-        ));
-        const state = store.getState();
-
         const ownProps = {
             style: {
                 width: 500,
@@ -36,6 +21,6 @@ describe('MapboxContainer', () => {
             }
         };
 
-        expect(mapStateToProps(state, ownProps)).toMatchSnapshot();
+        expect(mapStateToProps(sampleInitialState, ownProps)).toMatchSnapshot();
     });
 });
