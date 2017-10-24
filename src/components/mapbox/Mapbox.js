@@ -20,11 +20,13 @@ const styles = require('./Mapbox.style').default;
 const MapStops = createMapStops(React);
 const e = React.createElement;
 const R = require('ramda');
+const {makeViewportsSelector} = require('helpers/reselectHelpers');
 
 class Mapbox extends React.Component {
 
   render() {
-    const {viewport, iconAtlas, showCluster, hoverMarker, selectMarker} = this.props;
+    const viewport¢ = makeViewportsSelector(this.props)
+    const {iconAtlas, showCluster, hoverMarker, selectMarker} = this.props;
     const {node, way} = reqPath(['osmByType'], this.props) || {};
     const markers = {type: 'FeatureCollection', features: reqPath(['state', 'markers'], this) || []};
 
@@ -80,6 +82,7 @@ Mapbox.propTypes = {
     }).isRequired,
   }).isRequired,
 
+  // Custom PropTypes function to expect one user key
   users: R.compose(
     (props, propName, componentName) => {
       const length = R.length(R.keys(props[propName]));

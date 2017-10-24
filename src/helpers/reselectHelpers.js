@@ -17,15 +17,7 @@ const {propLensEqual} = require('./componentHelpers');
 const PropTypes = require('prop-types');
 const {v} = require('rescape-validate');
 const {filterMergeByUserSettings} = require('data/userSettingsHelpers');
-const sel = createStructuredSelector;
-
-/**
- * Creates a substate selector that ignores the full state an applies the substate
- * @param substate
- * @param obj
- * @returns A function that calls createStructuredSelector with substate as the state
- */
-const subSel = (substate, obj) => state => createStructuredSelector(obj)(substate);
+const {mapped} = require('ramda-lens');
 
 /**
  * Creates a reselect selector creator that compares the length of values of the
@@ -39,23 +31,20 @@ const createLengthEqualSelector = module.exports.createLengthEqualSelector =
   );
 
 /**
- * A selector that expects a settingsSelector and dataSelector,
+ * A selector that expects a settingsSelector and regionsSelector
  * returning a stateSelector the creates a data structure with top-level
  * keys of settings and data for a Component to consume as props
  * @param {Function} settingsSelector The settings for the component--normally configured options
  * that don't change often
- * @param {Function} dataSelector Data that the component will display, both directly from the
+ * @param {Function} regionsSelector Regions that the component will display, both directly from the
  * state and derived from state data
  * @returns {Function} A reselect selector that is called with state and props and returns
- * a props object for a component with the top-level keys settings and data
+ * a props object for a component with the top-level keys settings and regions
  */
-module.exports.stateSelector = (settingsSelector, dataSelector) => createSelector(
-  [
-    settingsSelector,
-    dataSelector
-  ],
-  (settings, data) => ({settings, data})
-);
+module.exports.stateSelector = (settingsSelector, regionsSelector) => createStructuredSelector({
+  settings: settingsSelector,
+  regions: regionsSelector
+});
 
 /**
  * Object states
@@ -122,8 +111,10 @@ const makeMarkersByTypeSelector = module.exports.makeMarkersByTypeSelector = () 
  * @param {Object} region A region with userSettings for that region merged in
  */
 const makeRegionSelector = module.exports.makeRegionSelector = () => region => createSelector(
-  makeFeaturesByTypeSelector(),
-  makeMarkersByTypeSelector(),
+  [
+    makeFeaturesByTypeSelector(),
+    makeMarkersByTypeSelector()
+  ],
   (featuresByType, markersByType) =>
     R.merge(region, {
       geojson: {
@@ -141,7 +132,7 @@ const makeRegionSelector = module.exports.makeRegionSelector = () => region => c
  * @returns {Object} An object keyed by region id and valued by regions that have merged
  * in userSettings (e.g. isSelected) and derived data
  */
-const regionsSelector = module.exports.regionsSelector = state => sel(
+const regionsSelector = module.exports.regionsSelector = state => createStructuredSelector(
   R.map(
     region => state => makeRegionSelector()(region),
     filterMergeByUserSettings(
@@ -160,9 +151,18 @@ const regionsSelector = module.exports.regionsSelector = state => sel(
 )(state);
 
 /**
- * Selects top-level data
+ * Makes a selector that expects a state containing regions,
+ * which each contain a Mapbox viewport
+ * @param {Object} state The Redux state
+ * @param {Object} state.regions The regions object. Usually one region is expected
+ * Each region contains a {mapbox: viewport: {...}}
+ * @returns {Object} An object keyed by region and valued by viewport or that region's Mapbox
  */
-module.exports.dataSelector = sel({
-  // pick the user's active region
-  regions: regionsSelector
-});
+module.exports.makeViewportsSelector = () => {
+  const regionsMapboxVieportLens = R.compose(mapped, R.lensPath(['mapbox', 'viewport']));
+  return createSelector(
+    [regionsSelector],
+    R.view(regionsMapboxVieportLens)
+  );
+};
+

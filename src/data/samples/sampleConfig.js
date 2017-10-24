@@ -14,6 +14,7 @@ const {oaklandSampleConfig} = require('./oakland-sample/oaklandSampleConfig');
 const {parisSampleConfig} = require('./paris-sample/parisSampleConfig');
 const {mergeDeepAll} = require('rescape-ramda');
 
+// Get the first user so we can make it the active user for testing
 const firstUserLens = obj => R.lensPath(
   ['users',
     R.head(

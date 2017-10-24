@@ -9,29 +9,28 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-const {createSelector, createSelectorCreator, defaultMemoize} = require('reselect');
 const R = require('ramda');
-const {propLensEqual} = require('./componentHelpers');
 const {
   ESTADO: {IS_ACTIVE, IS_SELECTED},
-  stateSelector, createLengthEqualSelector, activeUserSelector, makeRegionSelector, makeFeaturesByTypeSelector, makeMarkersByTypeSelector, regionsSelector, dataSelector
+  stateSelector, createLengthEqualSelector, activeUserSelector, makeRegionSelector, makeFeaturesByTypeSelector,
+  makeMarkersByTypeSelector, regionsSelector, makeViewportsSelector
 } = require('./reselectHelpers');
 
 describe('reselectHelpers', () => {
   test('stateSelector', () => {
     const theState = {
-      settings: 'pie',
-      data: 'à la mode'
+      settings: 'dessert',
+      regions: {pie: 'à la mode'}
     };
     expect(
       stateSelector(
         state => state.settings,
-        state => state.data
+        state => state.regions
       )(theState)
     ).toEqual(
       {
-        settings: 'pie',
-        data: 'à la mode'
+        settings: 'dessert',
+        regions: {pie: 'à la mode'}
       }
     );
   });
@@ -126,28 +125,34 @@ describe('reselectHelpers', () => {
     expect(regionsSelector(state)).toEqual(expected);
   });
 
-  test('dataSelector', () => {
+  test('makeViewportsSelector', () => {
     const state = {
+      regions: {
+        foo: {
+          mapbox: {
+            viewport: {some: 'thing'}
+          }
+        },
+        boo: {
+          mapbox: {
+            viewport: {what: 'ever'}
+          }
+        }
+      },
       users: {
         blinky: {
           [IS_ACTIVE]: true,
           regions: {foo: {id: 'foo'}, boo: {id: 'boo', [IS_SELECTED]: true}}
         }
-      },
-      regions: {boo: 'yah'}
-    };
-
-    const expected = {
-      regions: {
-        boo: {
-          id: 'boo',
-          [IS_SELECTED]: true,
-          // These are created by the derived data selectors
-          geojson: {osm: {featuresByType: {}, markersByType: {}}}
-        }
       }
     };
-    expect(dataSelector(state)).toEqual(expected);
+    const expected = {
+      boo: {
+        what: 'ever'
+      }
+    };
+    const viewportSelector = makeViewportsSelector();
+    expect(viewportSelector(state)).toEqual(expected);
   });
 });
 
