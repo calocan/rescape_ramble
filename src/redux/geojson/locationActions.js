@@ -52,7 +52,7 @@ module.exports.locationCycleSources = overrideSourcesWithoutStreaming({
  * The actionCreators that produce the action bodies
  * @returns {Function} A function expected the scope.
  * Once the scope is passed an object keyed by action name and valued by action function is returned.
- * Each action function expects a functor (object or array) as its unary argument
+ * Each action function expects a container (e.g. object or array) as its unary argument
  */
 module.exports.actionCreators = makeActionCreators(ACTION_CONFIGS);
 

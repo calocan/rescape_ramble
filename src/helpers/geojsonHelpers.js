@@ -18,16 +18,17 @@ const featureByType = module.exports.featureByType = reduceFeaturesBy(feature =>
 
 /**
  * Split geojson by feature type
- * @param {Object} geojson
- * @param {[Feature]} osm.features Default []. Features that are way, node, or route according to their id
+ * @param {Object} osm
+ * @param {Object} osm.geojson
+ * @param {[Feature]} osm.geojson.features Default []. Features that are way, node, or route according to their id
  * @returns {Object} Copies of the gtfs with a single type of Feature
  * geojsonByType:: geojson g = g -> <String, g>
  */
-module.exports.geojsonByType = geojson => {
+module.exports.geojsonByType = osm => {
   return R.map(
     // Make a copy of the geojson with the typed features
-    featureOfType => R.set(R.lensProp('features'), featureOfType, geojson),
-    featureByType(geojson.features || []) // Reduce by feature type
+    featureOfType => R.set(R.lensProp('features'), featureOfType, osm),
+    featureByType(R.pathOr([], ['geojson', 'features'], osm)) // Reduce by feature type
   );
 };
 

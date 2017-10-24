@@ -9,10 +9,34 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-const { createSelector, createSelectorCreator, defaultMemoize } = require('reselect');
+const {createSelector, createSelectorCreator, createStructuredSelector, defaultMemoize} = require('reselect');
 const R = require('ramda');
+const {findOne} = require('rescape-ramda').throwing;
+const {geojsonByType} = require('helpers/geojsonHelpers');
 const {propLensEqual} = require('./componentHelpers');
+const PropTypes = require('prop-types');
+const {v} = require('rescape-validate');
+const {filterMergeByUserSettings} = require('data/userSettingsHelpers');
+const sel = createStructuredSelector;
 
+/**
+ * Creates a substate selector that ignores the full state an applies the substate
+ * @param substate
+ * @param obj
+ * @returns A function that calls createStructuredSelector with substate as the state
+ */
+const subSel = (substate, obj) => state => createStructuredSelector(obj)(substate);
+
+/**
+ * Creates a reselect selector creator that compares the length of values of the
+ * selected object from one call to the next to determine equality instead of doing and equals check.
+ * This is used for large datasets like geojson features where we assume no change unless the list size changes
+ */
+const createLengthEqualSelector = module.exports.createLengthEqualSelector =
+  createSelectorCreator(
+    defaultMemoize,
+    propLensEqual(R.lensProp('length'))
+  );
 
 /**
  * A selector that expects a settingsSelector and dataSelector,
@@ -28,15 +52,117 @@ const {propLensEqual} = require('./componentHelpers');
 module.exports.stateSelector = (settingsSelector, dataSelector) => createSelector(
   [
     settingsSelector,
-    dataSelector,
+    dataSelector
   ],
   (settings, data) => ({settings, data})
 );
 
 /**
- * Compares the length of two values
+ * Object states
+ * @type {{IS_SELECTED: string, IS_ACTIVE: string}}
  */
-module.exports.createLengthEqualSelector = createSelectorCreator(
-  defaultMemoize,
-  propLensEqual(R.lensProp('length'))
+const ESTADO = module.exports.ESTADO = {
+  IS_SELECTED: 'isSelected',
+  IS_ACTIVE: 'isActive'
+};
+
+/**
+ * Object to lookup the a particular estado
+ * @type {{}}
+ */
+const esta = module.exports.esta = R.fromPairs(
+  R.map(
+    estado => [estado, R.prop(estado)],
+    [ESTADO.IS_SELECTED, ESTADO.IS_ACTIVE]
+  )
 );
+
+/**
+ * Returns the active user by searching state.users for the one and only one isActive property
+ * that is true
+ * @param state
+ */
+const activeUserSelector = module.exports.activeUserSelector = v(state =>
+    findOne(
+      esta[ESTADO.IS_ACTIVE],
+      state.users
+    ),
+  [
+    ['state', PropTypes.shape({
+      users: PropTypes.shape().isRequired
+    }).isRequired]
+  ], 'activeUserSelector');
+
+
+/**
+ * Resolves the openstreetmap features of a region and categorizes them by type (way, node, relation).
+ * Equality is currently based on the length of the features, but we should be able to do this
+ * simply by reference equality (why would the features reference change?)
+ * @param {Object} state Should be the region with the
+ */
+const makeFeaturesByTypeSelector = module.exports.makeFeaturesByTypeSelector = () => createLengthEqualSelector(
+  [
+    R.view(R.lensPath(['geojson', 'osm']))
+  ],
+  geojsonByType
+);
+
+/**
+ * Resolves the marker features of a region and categorizes them by type (way, node, relation)
+ */
+const makeMarkersByTypeSelector = module.exports.makeMarkersByTypeSelector = () => createLengthEqualSelector(
+  [
+    R.view(R.lensPath(['geojson', 'markers']))
+  ],
+  geojsonByType
+);
+
+/**
+ * Selector for a particular region that merges in derived data structures
+ * @param {Object} region A region with userSettings for that region merged in
+ */
+const makeRegionSelector = module.exports.makeRegionSelector = () => region => createSelector(
+  makeFeaturesByTypeSelector(),
+  makeMarkersByTypeSelector(),
+  (featuresByType, markersByType) =>
+    R.merge(region, {
+      geojson: {
+        osm: {
+          featuresByType,
+          markersByType
+        }
+      }
+    })
+)(region);
+
+/**
+ * Selects regions that are associated with this user and currently selected by this user.
+ * @param {Object} state The redux state
+ * @returns {Object} An object keyed by region id and valued by regions that have merged
+ * in userSettings (e.g. isSelected) and derived data
+ */
+const regionsSelector = module.exports.regionsSelector = state => sel(
+  R.map(
+    region => state => makeRegionSelector()(region),
+    filterMergeByUserSettings(
+      // Look for the regions container in the state and userSettings
+      R.lensPath(['regions']),
+      // Look for regions in userSettings with property isSelected
+      esta[ESTADO.IS_SELECTED],
+      // The state
+      state,
+      // Find the only active user.
+      R.head(R.values(
+        activeUserSelector(state)
+      ))
+    )
+  )
+)(state);
+
+/**
+ * Selects top-level data
+ */
+module.exports.dataSelector = sel({
+  // pick the user's active region
+  regions: regionsSelector
+});

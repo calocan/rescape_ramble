@@ -108,6 +108,7 @@
     "query-overpass": "^1.5.1",
     "ramda": "^0.24.1",
     "ramda-fantasy": "^0.8.0",
+    "ramda-lens": "^0.1.2",
     "ramda-maybe": "^0.18.0",
     "rbush": "^2.0.1",
     "react": "^16.0.0",
@@ -132,7 +133,7 @@
     "redux-router": "^2.1.2",
     "redux-thunk": "^2.2.0",
     "rescape-cycle": "^1.5.7",
-    "rescape-ramda": "^1.2.4",
+    "rescape-ramda": "^1.2.5",
     "rescape-validate": "^1.2.3",
     "reselect": "^3.0.1",
     "stack-trace": "^0.0.10"

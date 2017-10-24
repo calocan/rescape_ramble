@@ -9,11 +9,13 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-const { createSelector, createSelectorCreator, defaultMemoize } = require('reselect');
+const {createSelector, createSelectorCreator, defaultMemoize} = require('reselect');
 const R = require('ramda');
 const {propLensEqual} = require('./componentHelpers');
-
-const {stateSelector, createLengthEqualSelector} = require('./reselectHelpers')
+const {
+  ESTADO: {IS_ACTIVE, IS_SELECTED},
+  stateSelector, createLengthEqualSelector, activeUserSelector, makeRegionSelector, makeFeaturesByTypeSelector, makeMarkersByTypeSelector, regionsSelector, dataSelector
+} = require('./reselectHelpers');
 
 describe('reselectHelpers', () => {
   test('stateSelector', () => {
@@ -31,37 +33,122 @@ describe('reselectHelpers', () => {
         settings: 'pie',
         data: 'à la mode'
       }
-    )
+    );
   });
 
   test('createLengthEqualSelector', () => {
+    let state = {foo: [1, 2, 3]};
+    const myMockFn = jest.fn()
+      .mockImplementation(state => state.foo);
+    const selector = createLengthEqualSelector(
+      [
+        myMockFn
+      ],
+      R.identity
+    );
+    selector(state);
+    state = R.set(R.lensPath(['foo', 0]), 11, state);
+    selector(state);
+    expect(myMockFn.mock.calls.length).toEqual(2);
+  });
 
+  test('activeUserSelector', () => {
+    const state = {
+      users: {
+        yuk: {name: 'Yuk'},
+        dum: {name: 'Duk', [IS_ACTIVE]: true}
+      }
+    };
+    expect(activeUserSelector(state)).toEqual({dum: {name: 'Duk', [IS_ACTIVE]: true}});
+  });
+
+  test('makeRegionSelector', () => {
+    const region = {
+      geojson: {
+        osm: {
+          features: [
+            {
+              type: 'Feature',
+              id: 'way/29735335',
+              properties: {
+                '@id': 'way/29735335'
+              }
+            }
+          ]
+        },
+        markers: {
+          features: [
+            {
+              id: 'node/3572156993',
+              properties: {
+                '@id': 'node/3572156993'
+              }
+            }
+          ]
+        }
+      }
+    };
+    const expected =
+      R.merge(region, {
+        geojson: {
+          osm: {
+            featuresByType: makeFeaturesByTypeSelector()(region),
+            markersByType: makeMarkersByTypeSelector()(region)
+          }
+        }
+      });
+    expect(makeRegionSelector()(region)).toEqual(expected);
+  });
+
+  test('regionsSelector', () => {
+    const state = {
+      regions: {
+        foo: {},
+        boo: {id: 'boo'}
+      },
+      users: {
+        blinky: {
+          [IS_ACTIVE]: true,
+          regions: {foo: {id: 'foo'}, boo: {id: 'boo', [IS_SELECTED]: true}}
+        },
+        pinky: {}
+      }
+    };
+    // only the selected region of the active user should be selected
+    const expected = {
+      boo: {
+        id: 'boo',
+        [IS_SELECTED]: true,
+        // These are created by the derived data selectors
+        geojson: {osm: {featuresByType: {}, markersByType: {}}}
+      }
+    };
+    expect(regionsSelector(state)).toEqual(expected);
+  });
+
+  test('dataSelector', () => {
+    const state = {
+      users: {
+        blinky: {
+          [IS_ACTIVE]: true,
+          regions: {foo: {id: 'foo'}, boo: {id: 'boo', [IS_SELECTED]: true}}
+        }
+      },
+      regions: {boo: 'yah'}
+    };
+
+    const expected = {
+      regions: {
+        boo: {
+          id: 'boo',
+          [IS_SELECTED]: true,
+          // These are created by the derived data selectors
+          geojson: {osm: {featuresByType: {}, markersByType: {}}}
+        }
+      }
+    };
+    expect(dataSelector(state)).toEqual(expected);
   });
 });
 
-/**
- * A selector that expects a settingsSelector and dataSelector,
- * returning a stateSelector the creates a data structure with top-level
- * keys of settings and data for a Component to consume as props
- * @param {Function} settingsSelector The settings for the component--normally configured options
- * that don't change often
- * @param {Function} dataSelector Data that the component will display, both directly from the
- * state and derived from state data
- * @returns {Function} A reselect selector that is called with state and props and returns
- * a props object for a component with the top-level keys settings and data
- */
-module.exports.stateSelector = (settingsSelector, dataSelector) => createSelector(
-  [
-    settingsSelector,
-    dataSelector,
-  ],
-  (settings, data) => ({settings, data})
-);
 
-/**
- * Compares the length of two values
- */
-module.exports.createLengthEqualSelector = createSelectorCreator(
-  defaultMemoize,
-  propLensEqual(R.lensProp('length'))
-);

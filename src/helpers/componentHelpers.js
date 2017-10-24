@@ -18,8 +18,8 @@ const PropTypes = require('prop-types');
 /**
  * Returns true if the lens applied to props equals the lens applied to nextProps
  * @param {Function} lens Ramda lens
- * @param {Object} props React props
- * @param {Object} nextProps Reach nextProps
+ * @param {Object|Array} props React props
+ * @param {Object|Array} nextProps Reach nextProps
  * @returns {Boolean} True if equal, else false
  */
 module.exports.propLensEqual = v(R.curry((lens, props, nextProps) =>
@@ -30,8 +30,8 @@ module.exports.propLensEqual = v(R.curry((lens, props, nextProps) =>
   ),
   [
     ['lens', PropTypes.func.isRequired],
-    ['props', PropTypes.shape().isRequired],
-    ['nextProps', PropTypes.shape().isRequired],
+    ['props', PropTypes.oneOfType([PropTypes.object, PropTypes.array]).isRequired],
+    ['nextProps', PropTypes.oneOfType([PropTypes.object, PropTypes.array]).isRequired]
   ], 'propLensEqual');
 
 /**
