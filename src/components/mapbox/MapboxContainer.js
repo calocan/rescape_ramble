@@ -15,7 +15,7 @@ const {actionCreators} = require('redux/geojson/geojsonReducer');
 const {onChangeViewport} = require('redux-map-gl');
 const Mapbox = require('./Mapbox').default;
 const {hoverMarker, selectMarker} = actionCreators;
-const {dataSelector, activeUserSelector} = require('reselect');
+const {regionsSelector, activeUserSelector, viewportsSelector, stateSelector} = require('reselect');
 const {v} = require('rescape-validate');
 const PropTypes = require('prop-types');
 
@@ -23,9 +23,12 @@ const PropTypes = require('prop-types');
  * Selects top-level everything, settings, data, and users
  */
 
-const selector = module.exports.selector = sel({
+const selector = module.exports.selector = createSelector({
   settings: state => state.settings,
-  data: dataSelector,
+  regions: regionsSelector,
+  views: {
+    viewportC: viewportsSelector(this.props)
+  },
   users: activeUserSelector
 });
 

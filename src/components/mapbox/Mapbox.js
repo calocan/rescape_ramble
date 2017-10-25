@@ -24,21 +24,30 @@ const {makeViewportsSelector} = require('helpers/reselectHelpers');
 
 class Mapbox extends React.Component {
 
+  constructor(props) {
+    super(props);
+    this.state = {
+      viewportsSelector: makeViewportsSelector()
+    }
+  }
+
   render() {
-    const viewport¢ = makeViewportsSelector(this.props)
+
     const {iconAtlas, showCluster, hoverMarker, selectMarker} = this.props;
     const {node, way} = reqPath(['osmByType'], this.props) || {};
     const markers = {type: 'FeatureCollection', features: reqPath(['state', 'markers'], this) || []};
 
     // <MapStops geojson={node || {}} viewport={viewport}/>,
     // <MapLines geojson={way || {}} viewport={viewport}/>,
+    /*
     const mapMarkers = e(MapMarkers, {
       geojson: markers,
       viewport,
       regionId: this.props.region.id
     });
+    */
     const deck = e(Deck, {
-      viewport,
+      viewport¢,
       geojson: markers,
       iconAtlas,
       showCluster,

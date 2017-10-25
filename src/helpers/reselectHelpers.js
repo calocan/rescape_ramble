@@ -30,21 +30,8 @@ const createLengthEqualSelector = module.exports.createLengthEqualSelector =
     propLensEqual(R.lensProp('length'))
   );
 
-/**
- * A selector that expects a settingsSelector and regionsSelector
- * returning a stateSelector the creates a data structure with top-level
- * keys of settings and data for a Component to consume as props
- * @param {Function} settingsSelector The settings for the component--normally configured options
- * that don't change often
- * @param {Function} regionsSelector Regions that the component will display, both directly from the
- * state and derived from state data
- * @returns {Function} A reselect selector that is called with state and props and returns
- * a props object for a component with the top-level keys settings and regions
- */
-module.exports.stateSelector = (settingsSelector, regionsSelector) => createStructuredSelector({
-  settings: settingsSelector,
-  regions: regionsSelector
-});
+const settingsSelector = state => state.settings;
+
 
 /**
  * Object states
@@ -166,3 +153,17 @@ module.exports.makeViewportsSelector = () => {
   );
 };
 
+
+/**
+ * A selector that expects a settingsSelector and regionsSelector
+ * returning a stateSelector the creates a data structure with top-level
+ * keys of settings and data for a Component to consume as props
+ * state and derived from state data
+ * @returns {Function} A reselect selector that is called with state and props and returns
+ * a props object for a component with the top-level keys settings and regions
+ */
+module.exports.stateSelector = createStructuredSelector({
+  settings: settingsSelector,
+  regions: regionsSelector,
+  users: activeUserSelector
+});
