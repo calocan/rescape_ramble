@@ -1,7 +1,6 @@
 
 const React = require('react');
 const ReactDOM = require('react-dom');
-const MapGL = require('react-map-gl');
 const Current = require('components/current/CurrentContainer').default;
 const {Provider} = require('react-redux');
 
@@ -27,9 +26,7 @@ if (!token) {
 
 ReactDOM.render(
     e(Provider, {},
-        e(Current, {},
-            e(MapGL, {})
-        )
+        e(Current, {})
     ),
     document.getElementById('root')
 );

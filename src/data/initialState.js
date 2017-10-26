@@ -22,6 +22,8 @@ const {v} = require('rescape-validate');
  */
 module.exports.default = v(config => {
   return {
+    // Current browser properties
+    browser: {},
     settings: config.settings,
     regions: R.map(region => R.merge(region, {
         // The viewport must be an Immutable to satisfied the redux-map-gl reducer

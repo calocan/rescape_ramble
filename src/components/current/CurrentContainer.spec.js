@@ -16,7 +16,7 @@ const regionKey = 'oakland';
 const {reqPath} = require('rescape-ramda').throwing;
 
 describe('CurrentContainer', () => {
-  test('mapStateToProps returns regions and current of state.settings', () => {
+  test('mapStateToProps', () => {
     const store = makeStore(initialState(sampleConfig));
     const state = store.getState();
 

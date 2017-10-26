@@ -22,59 +22,23 @@ const {createSelector} = require('reselect');
 const R = require('ramda');
 
 /**
- * Limits the state to the current selections
- * TODO does this need to be a Creator.
- * TODO should this be moved up to a parent and just take incoming props as state
+ * Uses props as state and makes convenience views
  */
-const selector = createSelector(
+const mapStateToProps = module.exports.mapStateToProps = createSelector(
   [
-    activeUserAndRegionStateSelector,
-    mapboxSettingsSelector
+    (state, props) => props,
+    (state, props) => makeViewportsSelector()(props)
   ],
-  (selectedState, mapboxSettings) => {
-    const viewport = makeViewportsSelector()(selectedState);
-    return R.merge(selectedState, {
+  (propsAsState, viewports) => R.merge(
+    propsAsState,
+    {
       views: {
-        mapGl: R.merge({
-            viewport
-          },
-          mapboxSettings
-        )
+        // Containers needed by multiple children
+        viewports: makeViewportsSelector()(state)
       }
-    });
-  }
+    }
+  )
 );
-
-/**
- * Raises viewport, mapboxApiAccessToken, geojson, and gtfs to top level
- * @param {Object} state The Redux state
- * @param {Region} region The Region object
- * @param {Object} style A style object with the width and height
- * @returns {Object} The props
- */
-const mapStateToProps = module.exports.mapStateToProps = v((state, props) => {
-    return selector(state, props);
-    /*
-     region,
-     viewport: R.merge(
-     toJS(mapbox.viewport),
-     // viewport needs absolute width and height from parent
-     R.pick(['width', 'height'], style)),
-     iconAtlas: mapbox.iconAtlas,
-     // TODO showCluster should come in as bool
-     showCluster: mapbox.showCluster === 'true',
-     featuresByType: makeFeaturesByTypeSelector()(state),
-     markersByType: makeMarkersByTypeSelector()(state)
-     };
-     */
-  },
-  [
-    ['state', PropTypes.shape({}).isRequired],
-    ['props', PropTypes.shape({})]
-  ],
-  'mapStateToProps'
-);
-
 
 const mapDispatchToProps = module.exports.mapDispatchToProps = (dispatch, ownProps) => {
   return bindActionCreators({
@@ -84,4 +48,4 @@ const mapDispatchToProps = module.exports.mapDispatchToProps = (dispatch, ownPro
   }, dispatch);
 };
 
-module.exports.default = connect(mapStateToProps, mapDispatchToProps)(Mapbox);
+module.exports.default = connect(mapStateToProps, mapDispatchToProps)(Deck);

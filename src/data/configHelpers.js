@@ -99,9 +99,13 @@ module.exports.applyRegionsToUsers = (regions, users) =>
       user),
     users);
 
+
+module.exports.applyUserSettings = (lens, settings)
+
 module.exports.wrapLocationsWithFeatures = (locations, locationFeatures) =>
   R.mapObjIndexed((locationsByType, locationType) =>
       R.set(R.lensProp('geojson'), reqPath(), locationType),
     locations
   );
+
 

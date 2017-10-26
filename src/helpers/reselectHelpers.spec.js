@@ -12,14 +12,14 @@
 const R = require('ramda');
 const {
   ESTADO: {IS_ACTIVE, IS_SELECTED},
-  stateSelector, createLengthEqualSelector, activeUserSelector, makeRegionSelector, makeFeaturesByTypeSelector,
-  makeMarkersByTypeSelector, regionsSelector, makeViewportsSelector
+  activeUserAndRegionStateSelector, createLengthEqualSelector, activeUserSelector, makeRegionSelector, makeFeaturesByTypeSelector,
+  makeMarkersByTypeSelector, regionsSelector, makeViewportsSelector, mapboxSettingsSelector, browserDimensionsSelector
 } = require('./reselectHelpers');
 
 describe('reselectHelpers', () => {
-  test('stateSelector', () => {
+  test('activeUserAndRegionStateSelector', () => {
     expect(
-      stateSelector({
+      activeUserAndRegionStateSelector({
         settings: 'dessert',
         regions: {
           pie: {
@@ -161,6 +161,38 @@ describe('reselectHelpers', () => {
     };
     const viewportSelector = makeViewportsSelector();
     expect(viewportSelector(state)).toEqual(expected);
+  });
+  test('mapboxSettingSelector', () => {
+    const state = {
+      settings: {
+        mapbox: {
+          showCluster: true,
+          showZoomControls: true,
+          perspectiveEnabled: true,
+          preventStyleDiffing: false
+        }
+      }
+    };
+    const expected = {
+      showCluster: true,
+      showZoomControls: true,
+      perspectiveEnabled: true,
+      preventStyleDiffing: false
+    };
+    expect(mapboxSettingsSelector(state)).toEqual(expected);
+  });
+  test('browserDimensionSelector', () => {
+    const state = {
+      browser: {
+        width: 640,
+        height: 480
+      }
+    };
+    const expected = {
+      width: 640,
+      height: 480
+    };
+    expect(browserDimensionsSelector(state)).toEqual(expected);
   });
 });
 

@@ -1,24 +1,30 @@
 const {connect} = require('react-redux');
 const Current = require('./Current').default;
 const R = require('ramda');
+const {createSelector} = require('reselect');
 const {currentRegion} = require('helpers/stateHelpers');
+const {activeUserAndRegionStateSelector, browserDimensionsSelector} = require('helpers/reselectHelpers');
 
 /**
- * The CurrentContainer and all children are scoped to a single Region
- * @param {Object} state The Store state
- * @returns {Object} the props from the state
+ * Limits the state to the active user and region
  */
-const mapStateToProps = module.exports.mapStateToProps = state => ({
-    region: currentRegion(state),
-    style: R.fromPairs(R.map(
-        // Pass the current window width and height
-        // This could be scaled here if we don't want the CurrentContainer to be the full window width/height
-        dimension => R.pair(dimension, state.browser[dimension]),
-        ['width', 'height']))
-});
+const mapStateToProps = module.exports.mapStateToProps = (state, props) =>
+  createSelector(
+    [
+      activeUserAndRegionStateSelector,
+      browserDimensionsSelector
+    ],
+    (activeUserAndRegion, browserDimensions) => R.merge(
+      activeUserAndRegionStateSelector,
+      {
+        // Assume no other styles at this point
+        style: browserDimensions
+      }
+    )
+  )(R.merge(state, props));
 
 const CurrentContainer = connect(
-    mapStateToProps
+  mapStateToProps
 )(Current);
 
 module.exports.default = CurrentContainer;

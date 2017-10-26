@@ -24,15 +24,7 @@ const {makeViewportsSelector} = require('helpers/reselectHelpers');
 
 class Mapbox extends React.Component {
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      viewportsSelector: makeViewportsSelector()
-    }
-  }
-
   render() {
-
     const {iconAtlas, showCluster, hoverMarker, selectMarker} = this.props;
     const {node, way} = reqPath(['osmByType'], this.props) || {};
     const markers = {type: 'FeatureCollection', features: reqPath(['state', 'markers'], this) || []};
@@ -46,8 +38,8 @@ class Mapbox extends React.Component {
       regionId: this.props.region.id
     });
     */
-    const deck = e(Deck, {
-      viewport¢,
+    const deck = e(Deck, this.props.views.deck)
+      viewport,
       geojson: markers,
       iconAtlas,
       showCluster,
@@ -55,13 +47,9 @@ class Mapbox extends React.Component {
       onClick: selectMarker
     });
 
-    return e(MapGL, R.merge(viewport, {
+    return e(MapGL, this.props.views.mapGL))
         mapboxApiAccessToken,
-        showZoomControls: true,
-        perspectiveEnabled: true,
-        // setting to `true` should cause the map to flicker because all sources
-        // and layers need to be reloaded without diffing enabled.
-        preventStyleDiffing: false,
+
         onChangeViewport: this.props.onChangeViewport
       }),
       deck

@@ -11,7 +11,7 @@
 
 const {createSelector, createSelectorCreator, createStructuredSelector, defaultMemoize} = require('reselect');
 const R = require('ramda');
-const {findOne} = require('rescape-ramda').throwing;
+const {findOne, reqPath} = require('rescape-ramda').throwing;
 const {geojsonByType} = require('helpers/geojsonHelpers');
 const {propLensEqual} = require('./componentHelpers');
 const PropTypes = require('prop-types');
@@ -58,17 +58,11 @@ const esta = module.exports.esta = R.fromPairs(
  * that is true
  * @param state
  */
-const activeUserSelector = module.exports.activeUserSelector = v(state =>
-    findOne(
-      esta[ESTADO.IS_ACTIVE],
-      state.users
-    ),
-  [
-    ['state', PropTypes.shape({
-      users: PropTypes.shape().isRequired
-    }).isRequired]
-  ], 'activeUserSelector');
-
+const activeUserSelector = module.exports.activeUserSelector = state =>
+  findOne(
+    esta[ESTADO.IS_ACTIVE],
+    state.users
+  );
 
 /**
  * Resolves the openstreetmap features of a region and categorizes them by type (way, node, relation).
@@ -138,9 +132,24 @@ const regionsSelector = module.exports.regionsSelector = state => createStructur
 )(state);
 
 /**
+ * This selector creates a state that narrows down the state to the active user and region,
+ * remove any users that are not active and any regions that are not selected.
+ * Any ComponentContainer that must operate in the context of a single user and region can
+ * use this selector, or more likely receive this state from their parent component.
+ * @returns {Function} A reselect selector that is called with state and props and returns
+ * an object containing settings, regions, and users, where regions and users must limited to
+ * one each
+ */
+module.exports.activeUserAndRegionStateSelector = createStructuredSelector({
+  settings: settingsSelector,
+  regions: regionsSelector,
+  users: activeUserSelector
+});
+
+/**
  * Makes a selector that expects a state containing regions,
  * which each contain a Mapbox viewport
- * @param {Object} state The Redux state
+ * @param {Object} state The Redux state. This can be the full state or one modified for current selections
  * @param {Object} state.regions The regions object. Usually one region is expected
  * Each region contains a {mapbox: viewport: {...}}
  * @returns {Object} An object keyed by region and valued by viewport or that region's Mapbox
@@ -153,17 +162,28 @@ module.exports.makeViewportsSelector = () => {
   );
 };
 
+/**
+ * Determines the mapbox settings from the general settings.
+ * TODO we could merge user overrides here in the future
+ * @returns {Object} The mapbox settings
+ */
+module.exports.mapboxSettingsSelector = createSelector(
+  [
+    state => reqPath(['settings', 'mapbox'], state)
+  ],
+  R.identity
+);
 
 /**
- * A selector that expects a settingsSelector and regionsSelector
- * returning a stateSelector the creates a data structure with top-level
- * keys of settings and data for a Component to consume as props
- * state and derived from state data
- * @returns {Function} A reselect selector that is called with state and props and returns
- * a props object for a component with the top-level keys settings and regions
+ * Extracts the browser window dimensions from the state to pass to props
+ * that resize based on the browser
  */
-module.exports.stateSelector = createStructuredSelector({
-  settings: settingsSelector,
-  regions: regionsSelector,
-  users: activeUserSelector
-});
+module.exports.browserDimensionsSelector = createSelector(
+  [
+    R.compose(
+      R.pick(['width', 'height']),
+      reqPath(['browser'])
+    )
+  ],
+  R.identity
+);
