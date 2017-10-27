@@ -182,7 +182,7 @@ module.exports.browserDimensionsSelector = createSelector(
   [
     R.compose(
       R.pick(['width', 'height']),
-      reqPath(['browser'])
+      reqPath(['browser', 'extraFields'])
     )
   ],
   R.identity

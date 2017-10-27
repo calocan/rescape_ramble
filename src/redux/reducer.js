@@ -9,20 +9,32 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-const { combineReducers } = require('redux');
+const {combineReducers} = require('redux');
 const settings = require('./settingReducer').default;
 const regions = require('./regionReducer').default;
+const users = require('./userReducer').default;
 const routing = require('react-router-redux').routerReducer;
 const {createResponsiveStateReducer} = require('redux-responsive');
+const R = require('ramda');
 
 module.exports.default = combineReducers({
-    settings,
-    regions,
-    browser: createResponsiveStateReducer(null, {
-        extraFields: () => ({
-            width: typeof (window) !== 'undefined' ? window.innerWidth : 0,
-            height: typeof (window) !== 'undefined' ? window.innerHeight : 0
+  settings,
+  regions,
+  browser: (state, action) => createResponsiveStateReducer(
+    null,
+    // Merge predefined browser values with the window object for our extraFields
+    // We want to have the width and height stored in the state
+    R.merge(state, {
+      extraFields: () => R.ifElse(
+        R.and(R.compose(R.isNil, R.type), R.has('innerWidth')),
+        R.always({}),
+        w => ({
+          width: w.innerWidth,
+          height: w.innerHeight
         })
-    }),
-    routing
+      )(window)
+    })
+  )(state, action),
+  users,
+  routing
 });

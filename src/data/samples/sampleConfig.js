@@ -30,7 +30,18 @@ const firstUserLens = obj => R.lensPath(
 
 // Merge the global and regional sampleConfigs
 module.exports.sampleConfig = mergeDeepAll([
+  {
+    // Browser settings
+    browser: {
+      extraFields: {
+        width: 1080,
+        height: 720
+      }
+    }
+  },
+  // Oakland Region
   // Make the first user active
   R.over(firstUserLens(oaklandSampleConfig), R.merge({isActive: true}), oaklandSampleConfig),
+  // Paris Region
   parisSampleConfig
 ]);

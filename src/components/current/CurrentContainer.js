@@ -15,10 +15,12 @@ const mapStateToProps = module.exports.mapStateToProps = (state, props) =>
       browserDimensionsSelector
     ],
     (activeUserAndRegion, browserDimensions) => R.merge(
-      activeUserAndRegionStateSelector,
+      activeUserAndRegion,
       {
-        // Assume no other styles at this point
-        style: browserDimensions
+        // Merge the browser dimensions with the props
+        // props from the parent contain style instructions
+        // TODO we need to set width and height proportional to the browser dimensions, not equal to
+        style: R.merge(props.style, browserDimensions)
       }
     )
   )(R.merge(state, props));

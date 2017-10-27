@@ -38,7 +38,8 @@ class Mapbox extends React.Component {
       regionId: this.props.region.id
     });
     */
-    const deck = e(Deck, this.props.views.deck)
+    const deck = e(Deck, this.props.views.deck);
+    /*
       viewport,
       geojson: markers,
       iconAtlas,
@@ -46,14 +47,17 @@ class Mapbox extends React.Component {
       onHover: hoverMarker,
       onClick: selectMarker
     });
+    */
 
-    return e(MapGL, this.props.views.mapGL))
+    return e(MapGL, this.props.views.mapGL);
+    /*
         mapboxApiAccessToken,
 
         onChangeViewport: this.props.onChangeViewport
       }),
       deck
     );
+    */
   }
 }
 

@@ -1,5 +1,5 @@
 /**
- * Created by Andy Likuski on 2017.02.06
+ * Created by Andy Likuski on 2017.02.07
  * Copyright (c) 2017 Andy Likuski
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
@@ -8,15 +8,18 @@
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-const {mapStateToProps} = require('./CurrentContainer');
-const {sampleConfig} = require('data/samples/sampleConfig');
-const initialState = require('data/initialState').default;
-const makeStore = require('redux/store').default;
 
-describe('CurrentContainer', () => {
-  test('mapStateToProps', () => {
-    const store = makeStore(initialState(sampleConfig));
-    // For now let's assume this container gets its dimensions from the browser, not a parent
-    expect(mapStateToProps(store.getState())).toMatchSnapshot();
+const geojsonReducer = require('redux/geojson/geojsonReducer').default;
+const {sampleConfig} = require('data/samples/sampleConfig');
+const {SET_STATE} = require('redux/fullStateReducer');
+const {setState} = require('./userReducer');
+
+describe('userReducer', () => {
+  it('setState', () =>{
+    const state = sampleConfig.users;
+    expect(setState(state)).toEqual({
+      type: SET_STATE,
+      state
+    });
   });
 });

@@ -21,34 +21,34 @@ const {v} = require('rescape-validate');
  * @return {Object} The state
  */
 module.exports.default = v(config => {
-  return {
-    // Current browser properties
-    browser: {},
-    settings: config.settings,
-    regions: R.map(region => R.merge(region, {
-        // The viewport must be an Immutable to satisfied the redux-map-gl reducer
-        // Apply toImmutable to the viewport of config.mapbox
-        mapbox: R.over(
-          R.lensProp('viewport'),
-          toImmutable,
-          // Merge the initial mapbox configuration into each region
-          R.merge(
-            config.settings.mapbox,
-            region.mapbox
+    return {
+      // Current browser properties
+      browser: R.propOr({}, 'browser', config),
+      settings: config.settings,
+      regions: R.map(region => R.merge(region, {
+          // The viewport must be an Immutable to satisfied the redux-map-gl reducer
+          // Apply toImmutable to the viewport of config.mapbox
+          mapbox: R.over(
+            R.lensProp('viewport'),
+            toImmutable,
+            // Merge the initial mapbox configuration into each region
+            R.merge(
+              config.settings.mapbox,
+              region.mapbox
+            )
           )
-        )
-      }),
-      config.regions
-    ),
-    users: config.users
-  };
-},
-[
-  ['config', PropTypes.shape({
-    settings: PropTypes.shape({
-      mapbox: PropTypes.shape().isRequired
-    }).isRequired,
-    regions: PropTypes.shape().isRequired
-  }).isRequired]
-], 'initialState.default');
+        }),
+        config.regions
+      ),
+      users: config.users
+    };
+  },
+  [
+    ['config', PropTypes.shape({
+      settings: PropTypes.shape({
+        mapbox: PropTypes.shape().isRequired
+      }).isRequired,
+      regions: PropTypes.shape().isRequired
+    }).isRequired]
+  ], 'initialState.default');
 
