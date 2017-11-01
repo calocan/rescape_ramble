@@ -11,6 +11,7 @@
 
 const {createSelector, createSelectorCreator, createStructuredSelector, defaultMemoize} = require('reselect');
 const R = require('ramda');
+const {mergeDeep} = require('rescape-ramda');
 const {findOne, reqPath} = require('rescape-ramda').throwing;
 const {geojsonByType} = require('helpers/geojsonHelpers');
 const {propLensEqual} = require('./componentHelpers');
@@ -140,7 +141,7 @@ const regionsSelector = module.exports.regionsSelector = state => createStructur
  * an object containing settings, regions, and users, where regions and users must limited to
  * one each
  */
-module.exports.activeUserAndRegionStateSelector = createStructuredSelector({
+module.exports.makeActiveUserAndRegionStateSelector = () => createStructuredSelector({
   settings: settingsSelector,
   regions: regionsSelector,
   users: activeUserSelector
@@ -178,7 +179,7 @@ module.exports.mapboxSettingsSelector = createSelector(
  * Extracts the browser window dimensions from the state to pass to props
  * that resize based on the browser
  */
-module.exports.browserDimensionsSelector = createSelector(
+const browserDimensionsSelector = module.exports.browserDimensionsSelector = createSelector(
   [
     R.compose(
       R.pick(['width', 'height']),
@@ -187,3 +188,32 @@ module.exports.browserDimensionsSelector = createSelector(
   ],
   R.identity
 );
+
+/***
+ * Creates a selector that resolves the browser width and height from the state and multiplies each by the fraction
+ * stored in the local props (which can either come from parent or from the component's style). If props
+ * width or height is not defined they default to 1
+ * @props {Object} state Expected to have a browser.extraFields.[width and height]
+ * @props {Object} props Expected to have a style.[width and height]
+ * @returns {Object} a width and height relative to thte browser.
+ */
+module.exports.makeBrowserProportionalDimensionsSelector = () => (state, props) => createSelector(
+  [browserDimensionsSelector],
+  dimensions => ({
+    width: R.multiply(R.pathOr(1, ['style', 'width'], props), R.prop('width', dimensions)),
+    height: R.multiply(R.pathOr(1, ['style', 'height'], props), R.prop('height', dimensions))
+  })
+)(state, props);
+
+/**
+ * For selectors that expects the state and props pre-merged.
+ * Usage: (state, props) => R.compose(selector, mergeStateAndProps)(state, props)
+ * This will call mergeStateAndProps with state and props and then call selector with just the merged
+ * value. selectors should only take state and props separately when there is something specifically
+ * different about what is expected in the state versus the props, such as for
+ * makeBrowserProportionalDimensionsSelector, where the state and only the state must contain browser
+ * dimenions.
+ * @param state
+ * @param props
+ */
+module.exports.mergeStateAndProps = (state, props) => mergeDeep(state, props);

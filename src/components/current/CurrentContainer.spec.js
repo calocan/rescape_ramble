@@ -10,13 +10,12 @@
  */
 const {mapStateToProps} = require('./CurrentContainer');
 const {sampleConfig} = require('data/samples/sampleConfig');
-const initialState = require('data/initialState').default;
-const makeStore = require('redux/store').default;
+const {makeSampleInitialState} = require('helpers/jestHelpers');
+const initialState = makeSampleInitialState();
 
 describe('CurrentContainer', () => {
   test('mapStateToProps', () => {
-    const store = makeStore(initialState(sampleConfig));
     // For now let's assume this container gets its dimensions from the browser, not a parent
-    expect(mapStateToProps(store.getState())).toMatchSnapshot();
+    expect(mapStateToProps(initialState)).toMatchSnapshot();
   });
 });

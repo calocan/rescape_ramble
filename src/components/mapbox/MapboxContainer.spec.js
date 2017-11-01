@@ -10,7 +10,7 @@
  */
 
 const {mapStateToProps} = require('./MapboxContainer');
-const {sampleInitialState} = require('helpers/jestHelpers');
+const {makeSampleInitialState} = require('helpers/jestHelpers');
 
 describe('MapboxContainer', () => {
     test('mapStateToProps flattens viewport props', () => {
@@ -21,6 +21,6 @@ describe('MapboxContainer', () => {
             }
         };
 
-        expect(mapStateToProps(sampleInitialState, ownProps)).toMatchSnapshot();
+        expect(mapStateToProps(makeSampleInitialState(), ownProps)).toMatchSnapshot();
     });
 });

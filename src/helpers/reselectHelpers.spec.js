@@ -12,14 +12,15 @@
 const R = require('ramda');
 const {
   ESTADO: {IS_ACTIVE, IS_SELECTED},
-  activeUserAndRegionStateSelector, createLengthEqualSelector, activeUserSelector, makeRegionSelector, makeFeaturesByTypeSelector,
-  makeMarkersByTypeSelector, regionsSelector, makeViewportsSelector, mapboxSettingsSelector, browserDimensionsSelector
+  makeActiveUserAndRegionStateSelector, createLengthEqualSelector, activeUserSelector, makeRegionSelector, makeFeaturesByTypeSelector,
+  makeMarkersByTypeSelector, regionsSelector, makeViewportsSelector, mapboxSettingsSelector, browserDimensionsSelector,
+  makeBrowserProportionalDimensionsSelector, mergeStateAndProps
 } = require('./reselectHelpers');
 
 describe('reselectHelpers', () => {
-  test('activeUserAndRegionStateSelector', () => {
+  test('makeActiveUserAndRegionStateSelector', () => {
     expect(
-      activeUserAndRegionStateSelector({
+      makeActiveUserAndRegionStateSelector()({
         settings: 'dessert',
         regions: {
           pie: {
@@ -184,8 +185,10 @@ describe('reselectHelpers', () => {
   test('browserDimensionSelector', () => {
     const state = {
       browser: {
-        width: 640,
-        height: 480
+        extraFields: {
+          width: 640,
+          height: 480
+        }
       }
     };
     const expected = {
@@ -193,6 +196,54 @@ describe('reselectHelpers', () => {
       height: 480
     };
     expect(browserDimensionsSelector(state)).toEqual(expected);
+  });
+
+  test('makeBrowserProportionalDimensionsSelector', () => {
+    const state = {
+      browser: {
+        extraFields: {
+          width: 640,
+          height: 480
+        }
+      }
+    };
+    const props = {
+      style: {
+        width: .5,
+        height: .1
+      }
+    };
+    const expected = {
+      width: 320,
+      height: 48
+    };
+    expect(makeBrowserProportionalDimensionsSelector()(state, props)).toEqual(expected);
+  });
+
+  test('mergeStateAndProps', () => {
+    const state = {
+      buster: 1,
+      gob: 2,
+      lindsay: {
+        tobias: 1
+      },
+      michael: 4
+    };
+    const props = {
+      lindsay: {
+        maeby: 3
+      },
+    };
+    expect(R.compose((state, props) => state, mergeStateAndProps)(state, props))
+      .toEqual({
+        buster: 1,
+        gob: 2,
+        michael: 4,
+        lindsay: {
+          tobias: 1,
+          maeby: 3
+        }
+      });
   });
 });
 

@@ -5,24 +5,23 @@ const initialState = require('data/initialState').default;
 const R = require('ramda');
 const {reqPath} = require('rescape-ramda').throwing;
 const {eMap} = require('helpers/componentHelpers');
-const [Current] =
-  eMap([current]);
-const regionKey = 'oakland';
+const {mapStateToProps} = require('./CurrentContainer');
+const [Current] = eMap([current]);
 
 describe('The current application', () => {
   const state = initialState(sampleConfig);
 
   const props = {
-    region: reqPath(['regions', regionKey], state),
+    // Style proportional to the browser size
     style: {
-      width: 500,
-      height: 500
+      width: .5,
+      height: .5
     }
   };
 
   test('Current can mount', () => {
     const wrapper = shallow(
-      Current(props)
+      Current(mapStateToProps(state, props))
     );
     expect(wrapper).toMatchSnapshot();
   });

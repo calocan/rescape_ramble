@@ -15,7 +15,7 @@ const {actionCreators} = require('redux/geojson/geojsonReducer');
 const {onChangeViewport} = require('redux-map-gl');
 const Mapbox = require('./Mapbox').default;
 const {hoverMarker, selectMarker} = actionCreators;
-const {makeViewportsSelector, activeUserAndRegionStateSelector, mapboxSettingsSelector} = require('helpers/reselectHelpers');
+const {makeViewportsSelector, makeActiveUserAndRegionStateSelector, mapboxSettingsSelector} = require('helpers/reselectHelpers');
 const {v} = require('rescape-validate');
 const PropTypes = require('prop-types');
 const {createSelector} = require('reselect');
@@ -25,35 +25,28 @@ const R = require('ramda');
  * Limits the state to the current selections
  * TODO does this need to be a Creator.
  * TODO should this be moved up to a parent and just take incoming props as state
- */
-const selector = createSelector(
-  [
-    activeUserAndRegionStateSelector,
-    mapboxSettingsSelector
-  ],
-  (selectedState, mapboxSettings) => {
-    const viewport = makeViewportsSelector()(selectedState);
-    return R.merge(selectedState, {
-      views: {
-        mapGl: R.merge({
-            viewport
-          },
-          mapboxSettings
-        )
-      }
-    });
-  }
-);
-
-/**
- * Raises viewport, mapboxApiAccessToken, geojson, and gtfs to top level
- * @param {Object} state The Redux state
- * @param {Region} region The Region object
- * @param {Object} style A style object with the width and height
  * @returns {Object} The props
  */
-const mapStateToProps = module.exports.mapStateToProps = v((state, props) => {
-    return selector(state, props);
+const mapStateToProps = module.exports.mapStateToProps =
+
+  createSelector(
+    [
+      makeActiveUserAndRegionStateSelector(),
+      mapboxSettingsSelector
+    ],
+    (selectedState, mapboxSettings) => {
+      const viewport = makeViewportsSelector()(selectedState);
+      return R.merge(selectedState, {
+        views: {
+          mapGl: R.merge({
+              viewport
+            },
+            mapboxSettings
+          )
+        }
+      });
+    }
+  );
     /*
      region,
      viewport: R.merge(
@@ -67,13 +60,6 @@ const mapStateToProps = module.exports.mapStateToProps = v((state, props) => {
      markersByType: makeMarkersByTypeSelector()(state)
      };
      */
-  },
-  [
-    ['state', PropTypes.shape({}).isRequired],
-    ['props', PropTypes.shape({})]
-  ],
-  'mapStateToProps'
-);
 
 
 const mapDispatchToProps = module.exports.mapDispatchToProps = (dispatch, ownProps) => {

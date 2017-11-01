@@ -48,7 +48,6 @@ const {
  * @type {{region: *}}
  */
 Current.propTypes = {
-  region: object.isRequired,
   style: shape({
     width: number.isRequired,
     height: number.isRequired

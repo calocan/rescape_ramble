@@ -14,12 +14,13 @@ const ReactDOM = require('react-dom');
 const Current = require('components/current/CurrentContainer').default;
 
 const {Provider} = require('react-redux');
-const { BrowserRouter, Route } = require('react-router-dom');
+const {BrowserRouter, Switch, Route} = require('react-router-dom');
 
 const {setState} = require('redux/fullStateReducer');
 const initialState = require('data/initialState').default;
 const makeStore = require('redux/store').default;
-const currentConfig = require('data/current/currentConfig').default;
+const {currentConfigResolver} = require('data/current/currentConfig');
+const currentConfig = currentConfigResolver();
 const calculateResponsiveState = require('redux-responsive');
 const store = makeStore();
 // dispatch every time the window size changes
@@ -27,19 +28,14 @@ window.addEventListener('resize', () => store.dispatch(calculateResponsiveState(
 store.dispatch(setState(initialState(currentConfig)));
 const e = React.createElement;
 
-/**
- * App is the common component for all of our routes
- */
-const routes = (
-    e(BrowserRouter, {},
-        e(Route, {path: '/*', component: Current})
-    )
-);
-
 ReactDOM.render(
-    e(Provider, { store },
-        e(BrowserRouter, { history }, routes),
-    ),
-    document.getElementById('root')
+  e(Provider, {store},
+    e(BrowserRouter, {},
+      e(Switch, {},
+        e(Route, {path: '/*', component: Current})
+      )
+    )
+  ),
+  document.getElementById('root')
 );
 

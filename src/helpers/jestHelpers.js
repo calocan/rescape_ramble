@@ -42,7 +42,7 @@ module.exports.testState = () => initialState(sampleConfig);
  * unless the middleware is needed, such as cycle.js
  * @param {Object} sampleUserSettings Merges in sample local settings, like those from a browser cache
  */
-module.exports.sampleInitialState = (sampleUserSettings = {}) => {
+module.exports.makeSampleInitialState = (sampleUserSettings = {}) => {
   const mockStore = configureStore(middlewares);
 
   /**
