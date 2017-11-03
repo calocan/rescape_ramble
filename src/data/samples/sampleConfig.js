@@ -33,10 +33,8 @@ module.exports.sampleConfig = mergeDeepAll([
   {
     // Browser settings
     browser: {
-      extraFields: {
-        width: 1080,
-        height: 720
-      }
+      width: 1080,
+      height: 720
     }
   },
   // Oakland Region

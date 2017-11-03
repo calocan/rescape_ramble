@@ -185,10 +185,8 @@ describe('reselectHelpers', () => {
   test('browserDimensionSelector', () => {
     const state = {
       browser: {
-        extraFields: {
-          width: 640,
-          height: 480
-        }
+        width: 640,
+        height: 480
       }
     };
     const expected = {
@@ -201,10 +199,8 @@ describe('reselectHelpers', () => {
   test('makeBrowserProportionalDimensionsSelector', () => {
     const state = {
       browser: {
-        extraFields: {
-          width: 640,
-          height: 480
-        }
+        width: 640,
+        height: 480
       }
     };
     const props = {

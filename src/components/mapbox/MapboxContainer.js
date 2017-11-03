@@ -16,8 +16,6 @@ const {onChangeViewport} = require('redux-map-gl');
 const Mapbox = require('./Mapbox').default;
 const {hoverMarker, selectMarker} = actionCreators;
 const {makeViewportsSelector, makeActiveUserAndRegionStateSelector, mapboxSettingsSelector} = require('helpers/reselectHelpers');
-const {v} = require('rescape-validate');
-const PropTypes = require('prop-types');
 const {createSelector} = require('reselect');
 const R = require('ramda');
 

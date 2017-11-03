@@ -13,7 +13,7 @@ const {mapStateToProps} = require('./MapboxContainer');
 const {makeSampleInitialState} = require('helpers/jestHelpers');
 
 describe('MapboxContainer', () => {
-    test('mapStateToProps flattens viewport props', () => {
+    test('mapStateToProps', () => {
         const ownProps = {
             style: {
                 width: 500,

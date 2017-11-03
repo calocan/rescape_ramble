@@ -183,7 +183,7 @@ const browserDimensionsSelector = module.exports.browserDimensionsSelector = cre
   [
     R.compose(
       R.pick(['width', 'height']),
-      reqPath(['browser', 'extraFields'])
+      reqPath(['browser'])
     )
   ],
   R.identity
@@ -193,7 +193,7 @@ const browserDimensionsSelector = module.exports.browserDimensionsSelector = cre
  * Creates a selector that resolves the browser width and height from the state and multiplies each by the fraction
  * stored in the local props (which can either come from parent or from the component's style). If props
  * width or height is not defined they default to 1
- * @props {Object} state Expected to have a browser.extraFields.[width and height]
+ * @props {Object} state Expected to have a browser.[width and height]
  * @props {Object} props Expected to have a style.[width and height]
  * @returns {Object} a width and height relative to thte browser.
  */

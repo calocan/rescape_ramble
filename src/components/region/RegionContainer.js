@@ -1,19 +1,29 @@
 const {connect} = require('react-redux');
-const R = require('ramda');
 const Region = require('./Region').default;
 const {actions} = require('redux/geojson/geojsonReducer');
+const {makeViewportsSelector, makeActiveUserAndRegionStateSelector, mapboxSettingsSelector} = require('helpers/reselectHelpers');
+const {createSelector} = require('reselect');
+const R = require('ramda');
 
-const mapStateToProps = module.exports.mapStateToProps = (state, props) => {
-  // props from the parent trump the overall state
-  return selector(R.merge(state, props));
-  return R.merge(
-    props,
-    {
-      settings: state.settings,
-      accessToken: props.region.mapbox.mapboxApiAccessToken
+const mapStateToProps = module.exports.mapStateToProps = module.exports.mapStateToProps =
+  createSelector(
+    [
+      makeActiveUserAndRegionStateSelector(),
+      mapboxSettingsSelector
+    ],
+    (selectedState, mapboxSettings) => {
+      const viewport = makeViewportsSelector()(selectedState);
+      return R.merge(selectedState, {
+        views: {
+          sankey: R.merge({
+              viewport
+            },
+            mapboxSettings
+          )
+        }
+      });
     }
   );
-};
 
 const mapDispatchToProps = (dispatch) => {
   return {
