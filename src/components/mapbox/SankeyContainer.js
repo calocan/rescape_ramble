@@ -15,31 +15,35 @@ const {actionCreators} = require('redux/geojson/geojsonReducer');
 const {onChangeViewport} = require('redux-map-gl');
 const Sankey = require('./Sankey').default;
 const R = require('ramda');
-const {toJS} = require('helpers/immutableHelpers');
+const {makeViewportsSelector, makeActiveUserAndRegionStateSelector, mapboxSettingsSelector} = require('helpers/reselectHelpers');
+const {createSelector} = require('reselect');
 const {hoverMarker, selectMarker} = actionCreators;
 
 /**
- * Raises viewport, mapboxApiAccessToken, geojson, and gtfs to top level
- * @param {Object} state The Redux state
- * @param {Region} region The Region object
- * @param {Object} style A style object with the width and height
+ * Limits the state to the current selections
+ * TODO does this need to be a Creator.
+ * TODO should this be moved up to a parent and just take incoming props as state
  * @returns {Object} The props
  */
-const mapStateToProps = module.exports.mapStateToProps = (state, {region, style}) => {
-    const mapbox = region.mapbox;
-    return {
-            region,
-            viewport: R.merge(
-                toJS(mapbox.viewport),
-                // viewport needs absolute width and height from parent
-                R.pick(['width', 'height'], style)),
-            mapboxApiAccessToken: mapbox.mapboxApiAccessToken,
-            iconAtlas: mapbox.iconAtlas,
-            // TODO showCluster should come in as bool
-            showCluster: mapbox.showCluster === 'true'
-    };
-};
-
+const mapStateToProps = module.exports.mapStateToProps =
+  createSelector(
+    [
+      makeActiveUserAndRegionStateSelector(),
+      mapboxSettingsSelector
+    ],
+    (activeState, mapboxSettings) => {
+      const viewport = makeViewportsSelector()(activeState);
+      return R.merge(activeState, {
+        views: {
+          mapGl: R.merge({
+              viewport
+            },
+            mapboxSettings
+          )
+        }
+      });
+    }
+  );
 
 const mapDispatchToProps = module.exports.mapDispatchToProps = (dispatch, ownProps) => {
     return bindActionCreators({

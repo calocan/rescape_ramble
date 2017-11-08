@@ -132,6 +132,7 @@
     "redux-responsive": "^4.3.3",
     "redux-router": "^2.1.2",
     "redux-thunk": "^2.2.0",
+    "reflexbox": "^3.0.0-0",
     "rescape-cycle": "^1.5.7",
     "rescape-ramda": "^1.2.5",
     "rescape-validate": "^1.2.3",

@@ -1,7 +1,7 @@
 const {connect} = require('react-redux');
 const Region = require('./Region').default;
 const {actions} = require('redux/geojson/geojsonReducer');
-const {makeViewportsSelector, makeActiveUserAndRegionStateSelector, mapboxSettingsSelector} = require('helpers/reselectHelpers');
+const {makeViewportsSelector, makeActiveUserAndRegionStateSelector, mapboxSettingsSelector, makeMergeDefaultStyleWithProps} = require('helpers/reselectHelpers');
 const {createSelector} = require('reselect');
 const R = require('ramda');
 
@@ -9,19 +9,24 @@ const mapStateToProps = module.exports.mapStateToProps = module.exports.mapState
   createSelector(
     [
       makeActiveUserAndRegionStateSelector(),
-      mapboxSettingsSelector
+      mapboxSettingsSelector,
+      makeMergeDefaultStyleWithProps()
     ],
-    (selectedState, mapboxSettings) => {
+    (selectedState, mapboxSettings, style) => {
       const viewport = makeViewportsSelector()(selectedState);
-      return R.merge(selectedState, {
-        views: {
-          sankey: R.merge({
-              viewport
-            },
-            mapboxSettings
-          )
+      return R.mergeAll([
+        selectedState,
+        style,
+        {
+          views: {
+            sankey: R.merge({
+                viewport
+              },
+              mapboxSettings
+            )
+          }
         }
-      });
+      ]);
     }
   );
 

@@ -10,7 +10,7 @@
  */
 
 const PropTypes = require('prop-types');
-const MapGL = require('react-map-gl');
+const MapGL = require('react-map-gl').default;
 const React = require('react');
 const createMapStops = require('components/mapStop/mapStops').default;
 const MapMarkers = require('components/mapMarker/MapMarkers').default;

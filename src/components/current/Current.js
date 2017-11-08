@@ -27,7 +27,6 @@ class Current extends React.Component {
     return Div(
       {className: 'current'},
       Region({
-          region: this.props.region,
           style: {
             width: this.props.style.width,
             height: this.props.style.height

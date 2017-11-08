@@ -14,7 +14,7 @@ const {
   ESTADO: {IS_ACTIVE, IS_SELECTED},
   makeActiveUserAndRegionStateSelector, createLengthEqualSelector, activeUserSelector, makeRegionSelector, makeFeaturesByTypeSelector,
   makeMarkersByTypeSelector, regionsSelector, makeViewportsSelector, mapboxSettingsSelector, browserDimensionsSelector,
-  makeBrowserProportionalDimensionsSelector, mergeStateAndProps
+  makeBrowserProportionalDimensionsSelector, mergeStateAndProps, makeMergeDefaultStyleWithProps, makeMergeContainerStyleProps
 } = require('./reselectHelpers');
 
 describe('reselectHelpers', () => {
@@ -46,15 +46,23 @@ describe('reselectHelpers', () => {
 
   test('createLengthEqualSelector', () => {
     let state = {foo: [1, 2, 3]};
+    // Mock function that simply returns foo
     const myMockFn = jest.fn()
-      .mockImplementation(state => state.foo);
+      .mockImplementation(state => {
+        return state.foo;
+      });
+    // createLengthEqualSelector should only track changes to foo's length, not its contents
     const selector = createLengthEqualSelector(
-      [
-        myMockFn
-      ],
+      [myMockFn],
       R.identity
     );
+    // Initial call to selector
     selector(state);
+    // Subsequent call to selector with length of lens target changed
+    state = R.set(R.lensPath(['foo', 3]), 11, state);
+    selector(state);
+    expect(myMockFn.mock.calls.length).toEqual(2);
+    // Subsequent call to selector with lens target changed but not length
     state = R.set(R.lensPath(['foo', 0]), 11, state);
     selector(state);
     expect(myMockFn.mock.calls.length).toEqual(2);
@@ -228,7 +236,7 @@ describe('reselectHelpers', () => {
     const props = {
       lindsay: {
         maeby: 3
-      },
+      }
     };
     expect(R.compose((state, props) => state, mergeStateAndProps)(state, props))
       .toEqual({
@@ -240,6 +248,50 @@ describe('reselectHelpers', () => {
           maeby: 3
         }
       });
+  });
+
+  test('makeMergeDefaultStyleWithProps', () => {
+    const state = {
+      styles: {
+        default: {
+          color: 'red',
+          margin: 2
+        }
+      }
+    };
+    const props = {
+      style: {
+        color: 'blue',
+        margin: R.multiply(2)
+      }
+    };
+    expect(makeMergeDefaultStyleWithProps()(state, props)).toEqual(
+      {
+        color: 'blue',
+        margin: 4
+      }
+    );
+  });
+
+  test('makeMergeContainerStyleProps', () => {
+    const containerProps = {
+      style: {
+        color: 'red',
+        margin: 2
+      }
+    };
+    const props = {
+      style: {
+        color: 'blue',
+        margin: R.multiply(2)
+      }
+    };
+    expect(makeMergeContainerStyleProps()(containerProps, props)).toEqual(
+      {
+        color: 'blue',
+        margin: 4
+      }
+    );
   });
 });
 

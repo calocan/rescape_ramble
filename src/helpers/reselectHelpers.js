@@ -26,6 +26,7 @@ const {mapped} = require('ramda-lens');
  * This is used for large datasets like geojson features where we assume no change unless the list size changes
  */
 const createLengthEqualSelector = module.exports.createLengthEqualSelector =
+  // Use propLensEqual as the equality check to defaultMemoize
   createSelectorCreator(
     defaultMemoize,
     propLensEqual(R.lensProp('length'))
@@ -217,3 +218,66 @@ module.exports.makeBrowserProportionalDimensionsSelector = () => (state, props) 
  * @param props
  */
 module.exports.mergeStateAndProps = (state, props) => mergeDeep(state, props);
+
+const defaultStyleSelector = (state, props) => reqPath(['styles', 'default'], state);
+
+const mergeDeepWith =  R.curry((fn, left, right) => R.mergeWith((l, r) => {
+  // If either (hopefully both) items are arrays or not both objects
+  // accept the right value
+  return ((l && l.concat && R.is(Array, l)) || (r && r.concat && R.is(Array, r))) || !(R.is(Object, l) && R.is(Object, r)) ?
+    fn(l, r) :
+    mergeDeepWith(fn, l, r); // tail recursive
+})(left, right));
+
+/**
+ * Merges two style objects, where the second can have functions to apply the values of the first.
+ * If matching key values are both primitives, the style value trumps
+ * @param {Object} parentStyle Simple object of styles
+ * @param {Object} style Styles including functions to transform the corresponding key of parentStyle
+ */
+const mergeStyles = (parentStyle, style) => mergeDeepWith(
+  (stateStyleValue, propStyleValue) =>
+    // If keys match, the propStyleValue trumps unless it is a function, in which case the stateStyleValue
+    // is passed to the propStyleValue function
+    R.when(
+      R.is(Function),
+      x => R.compose(x)(stateStyleValue)
+    )(propStyleValue),
+  parentStyle,
+  style
+);
+
+/**
+ * Returns a function that creates a selector to
+ * merge the defaultStyles in the state with the style object of the given props
+ * @param {Object} state The Redux state
+ * @param {Object} state.styles.default The default styles. These should be simple values
+ * @param {Object} [props] Optional The props
+ * @param {Object} [props.style] Optional The style object with simple values or
+ * unary functions to transform the values from the state (e.g. { margin: 2, color: 'red', border: scale(2) })
+ * where scale(2) returns a function that transforms the border property from the state
+ * @returns {Object} The merged object
+ */
+module.exports.makeMergeDefaultStyleWithProps = () => (state, props) => createSelector(
+  [defaultStyleSelector],
+  defaultStyle => mergeStyles(defaultStyle, R.propOr({}, 'style', props))
+)(state, props);
+
+/**
+ * Like makeMergeDefaultStyleWithProps but used to merge the container style props with the component style props
+ * @param {Object} containerProps The props coming from the container, which themselves were merged with the
+ * state styles and/or parent components
+ * @param {Object} containerProps.style The style object with simple values
+ * @param {Object} [props] Optional The props
+ * @param {Object} [props.style] Optional The style object with simple values or
+ * unary functions to transform the values from the containerProps (e.g. { margin: 2, color: 'red', border: scale(2) })
+ * where scale(2) returns a function that transforms the border property from the containerProps
+ * @returns {Object} The merged object
+ */
+module.exports.makeMergeContainerStyleProps = () => (containerProps, props) => createSelector(
+  [
+    containerProps => reqPath(['style'], containerProps),
+    (_, props) => R.propOr({}, 'style', props)
+  ],
+   mergeStyles
+)(containerProps, props);

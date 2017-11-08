@@ -16,6 +16,7 @@ const routeTypes = require('./routeTypes');
 const {DEFAULT_SERVICE, WEEKEND_SERVICE} = require('./services');
 const {mergeDeep} = require('rescape-ramda');
 const {users} = require('./defaultUsers');
+const {defaultStyles} = require('styles/styles');
 
 module.exports.defaultConfig = mergeDeep(environmentConfig, {
   regions: {
@@ -48,5 +49,10 @@ module.exports.defaultConfig = mergeDeep(environmentConfig, {
     }
   },
   // These are all just templates that can be merged with real users
-  users
+  users,
+  // Style data
+  styles: {
+    // Defaults can be merged with container props and props defined on the component
+    default: defaultStyles
+  }
 });

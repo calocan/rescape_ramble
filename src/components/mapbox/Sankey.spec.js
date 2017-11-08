@@ -11,13 +11,30 @@
 const sankey = require('d3-sankey');
 const R = require('ramda');
 const sample = require('src/data/sankey.sample');
-const {nodePosition, linkPosition} = require('./Sankey');
+const {mapStateToProps, mapDispatchToProps} = require('./MapboxContainer');
+const {propsFromSampleStateAndContainer} = require('helpers/jestHelpers');
+const mapGL = require('react-map-gl').default;
+const mapbox = require('./Mapbox').default;
+const {eMap} = require('helpers/componentHelpers');
+const [MapGL, Mapbox] = eMap([mapGL, mapbox]);
 
 describe('Sankey', () => {
-  test('Renders', () => {
-    const theSankey = sankey().nodeWidth(15).nodePadding(10).extent([[1, 1], [959, 494]]);
-    const theSample = theSankey(sample);
-    expect(R.length(theSample.nodes.map(nodePosition))).toEqual(1);
-    expect(R.length(theSample.links.map(linkPosition))).toEqual(1);
+  test('Can mount', () => {
+    const props = propsFromSampleStateAndContainer(
+      mapStateToProps,
+      mapDispatchToProps,
+      {
+        // style dimensions are normally from the parent
+        style: {
+          width: 500,
+          height: 500
+        }
+      }
+    );
+
+    const wrapper = shallow(
+      MapGL(props)
+    );
+    expect(wrapper).toMatchSnapshot();
   });
 });

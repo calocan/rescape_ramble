@@ -1,30 +1,27 @@
 const React = require('react');
 const {shallow} = require('enzyme');
 
-const {sampleConfig} = require('data/samples/sampleConfig');
-const initialState = require('data/initialState').default;
-const {reqPath} = require('rescape-ramda').throwing;
+const {propsFromSampleStateAndContainer} = require('helpers/jestHelpers');
 const region = require('./Region').default;
 const {eMap} = require('helpers/componentHelpers');
-const [Region] =
-  eMap([region]);
-const regionKey = 'oakland';
+const {mapStateToProps, mapDispatchToProps} = require('./RegionContainer');
+const [Region] = eMap([region]);
 
 describe('Region', () => {
-  const state = initialState(sampleConfig);
 
-  const props = {
-    region: reqPath(['regions', regionKey], state),
-    style: {
-      width: 500,
-      height: 500
-    },
-    settings: reqPath(['settings'], state),
-    onRegionIsChanged: () => {},
-    fetchMarkersData: () => {}
-  };
+  const props = propsFromSampleStateAndContainer(
+    mapStateToProps,
+    mapDispatchToProps,
+    {
+      // style dimensions are normally from the parent
+      style: {
+        width: 500,
+        height: 500
+      }
+    }
+  );
 
-  test('Region can mount', () => {
+  test('Can mount', () => {
     const wrapper = shallow(
       Region(props)
     );
