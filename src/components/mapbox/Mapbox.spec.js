@@ -12,7 +12,6 @@ const [MapGL, Mapbox] = eMap([mapGL, mapbox]);
 
 describe('Mapbox', () => {
   test('Can mount', () => {
-
     const props = propsFromSampleStateAndContainer(
       mapStateToProps,
       mapDispatchToProps,

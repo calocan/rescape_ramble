@@ -12,7 +12,7 @@ const mapStateToProps = module.exports.mapStateToProps = (state, props) =>
   createSelector(
     [
       (state, props) => {
-        return makeActiveUserAndRegionStateSelector()(mergeDeep(state, R.defaultTo({}, props)))
+        return makeActiveUserAndRegionStateSelector()(mergeDeep(state, R.defaultTo({}, props)));
       },
       makeBrowserProportionalDimensionsSelector()
     ],

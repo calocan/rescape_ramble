@@ -15,7 +15,7 @@ describe('currentConfig', () => {
   test('currentConfig', () => {
     expect(currentConfig('test')).toEqual(require('data/samples/sampleConfig').sampleConfig);
     expect(currentConfig('development')).toEqual(require('data/california/californiaConfig').californiaConfig);
-    expect(() => currentConfig('production')).toThrow()
-    expect(() => currentConfig('gobblygook')).toThrow()
+    expect(() => currentConfig('production')).toThrow();
+    expect(() => currentConfig('gobblygook')).toThrow();
   });
 });

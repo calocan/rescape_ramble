@@ -11,7 +11,7 @@
 
 const { userTemplateKeys: { REGION_MANAGER, REGION_USER, REGION_VISITOR } } = require('data/default');
 const {mapDefaultUsers} = require('data/configHelpers');
-const R = require('ramda')
+const R = require('ramda');
 
 // Create three users
 // rename the user templates to match our users

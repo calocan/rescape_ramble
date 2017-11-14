@@ -404,4 +404,4 @@ module.exports.default = {
       }
     }
   ]
-}
+};

@@ -23,7 +23,6 @@ const R = require('ramda');
 const {makeViewportsSelector} = require('helpers/reselectHelpers');
 
 class Mapbox extends React.Component {
-
   render() {
     const {iconAtlas, showCluster, hoverMarker, selectMarker} = this.props;
     const {node, way} = reqPath(['osmByType'], this.props) || {};
@@ -66,7 +65,7 @@ Mapbox.propTypes = {
   settings: PropTypes.shape({
     style: PropTypes.object.isRequired,
     iconAtlas: PropTypes.string.isRequired,
-    showCluster: PropTypes.bool.isRequired,
+    showCluster: PropTypes.bool.isRequired
   }).isRequired,
 
   data: PropTypes.shape({
@@ -78,9 +77,9 @@ Mapbox.propTypes = {
       }).isRequired,
       mapbox: PropTypes.shape({
         mapboxApiAccessToken: PropTypes.string.isRequired,
-        viewport: PropTypes.shape().isRequired,
+        viewport: PropTypes.shape().isRequired
       }).isRequired
-    }).isRequired,
+    }).isRequired
   }).isRequired,
 
   // Custom PropTypes function to expect one user key

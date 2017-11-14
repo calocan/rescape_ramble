@@ -8,31 +8,81 @@
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+const {styleMultiplier} = require('styles/styleHelpers');
 const mapbox = require('components/mapbox/MapboxContainer').default;
 const sankey = require('components/mapbox/SankeyContainer').default;
 const markerList = require('components/marker/MarkerListContainer').default;
-const styles = require('./Region.style').default;
-const R = require('ramda');
-const React = require('react');
-const {reqPath, findOne, onlyOne} = require('rescape-ramda');
 const PropTypes = require('prop-types');
 const {makeMergeContainerStyleProps} = require('helpers/reselectHelpers');
 const {eMap} = require('helpers/componentHelpers');
 const [Mapbox, Sankey, MarkerList, Div] = eMap([mapbox, sankey, markerList, 'div']);
+const {reqPath} = require('rescape-ramda').throwing;
+const R = require('ramda');
 
 /**
  * The View for a Region, such as California. Theoretically we could display multiple regions at once
  * if we had more than one, or we could have a zoomed in region of California like the Bay Area.
  */
-const Region = ({ ...props }) => {
-  makeMergeDefaultStyleWithProps()
+const Region = ({...props}) => {
 
-  const sx = R.merge(defaultStyles, {
+  const styles = makeMergeContainerStyleProps()(
+    {
+      style: {
+        // Map props.styles to the root element
+        root: reqPath(['style'], props),
+        // Just map width/height to mapbox. TODO this probably won't stand, but it's more of a test for now
+        mapbox: R.pick(['width', 'height'], reqPath(['style'], props))
+      }
+    },
+    {
+      root: {
+        position: 'absolute',
+        width: styleMultiplier(1),
+        height: styleMultiplier(1)
+      },
 
-  }
+      mapboxOuter: {},
 
-  return
+      mapbox: {
+        position: 'absolute',
+        width: styleMultiplier(.5),
+        height: styleMultiplier(1)
+      },
 
+      markers: {
+        position: 'absolute',
+        top: .02,
+        left: .55,
+        right: .05
+      }
+    });
+
+  return Div({
+      className: 'region',
+      style: styles.root
+    },
+    /* We additionally give Mapbox the container width and height so the map can track changes to these
+     We have to apply the width and height fractions of this container to them.
+     */
+    Div({
+        className: 'mapboxOuter',
+        style: styles.mapboxOuter
+      },
+      Sankey({
+        className: 'mapbox',
+        style: styles.mapbox
+      })
+    ),
+    Div({
+        className: 'markers',
+        style: styles.markers
+      },
+      MarkerList({})
+    )
+  );
+};
+
+/*
 class Region extends React.Component {
   componentWillReceiveProps(nextProps) {
     const getRegionId = R.compose(R.prop('id'), onlyOne, reqPath(['regions']));
@@ -49,48 +99,8 @@ class Region extends React.Component {
       this.props.fetchMarkersData({}, nextProps.region.id);
     }
   }
-
-  render() {
-    // Applies parent container width/height to mapboxContainer width/height
-    const multiplyByPercent = R.compose((percent, num) => num * parseFloat(percent) / 100.0);
-    const styleMultiplier = prop => R.apply(
-      // Multiply the fraction by the number, or
-      multiplyByPercent,
-      // Take the width or height of the stylesheet and the props style
-      // The container value must be a fraction
-      // this.props.style must be a number or undefined
-      R.map(
-        R.prop(prop),
-        [styles.mapboxContainer, this.props.style]
-      )
-    );
-    return Div({
-        className: 'region',
-        style: R.merge(this.props.style, styles.container)
-      },
-      /* We additionally give Mapbox the container width and height so the map can track changes to these
-       We have to apply the width and height fractions of this container to them.
-       */
-      Div({
-          className: 'mapboxContainer',
-          style: styles.mapboxContainer
-        },
-        Sankey({
-          style: {
-            width: styleMultiplier('width'),
-            height: styleMultiplier('height')
-          }
-        })
-      ),
-      Div({
-          className: 'markersContainer',
-          style: styles.markersContainer
-        },
-        MarkerList({})
-      )
-    );
-  }
 }
+*/
 
 /**
  * Expect the region

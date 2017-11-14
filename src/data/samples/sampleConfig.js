@@ -13,6 +13,7 @@ const R = require('ramda');
 const {oaklandSampleConfig} = require('./oakland-sample/oaklandSampleConfig');
 const {parisSampleConfig} = require('./paris-sample/parisSampleConfig');
 const {mergeDeepAll} = require('rescape-ramda');
+const {defaultConfig} = require('data/default/defaultConfig');
 
 // Get the first user so we can make it the active user for testing
 const firstUserLens = obj => R.lensPath(
@@ -30,6 +31,7 @@ const firstUserLens = obj => R.lensPath(
 
 // Merge the global and regional sampleConfigs
 module.exports.sampleConfig = mergeDeepAll([
+  defaultConfig,
   {
     // Browser settings
     browser: {

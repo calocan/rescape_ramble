@@ -16,7 +16,7 @@ const mapStateToProps = module.exports.mapStateToProps = module.exports.mapState
       const viewport = makeViewportsSelector()(selectedState);
       return R.mergeAll([
         selectedState,
-        style,
+        {style},
         {
           views: {
             sankey: R.merge({
@@ -30,7 +30,7 @@ const mapStateToProps = module.exports.mapStateToProps = module.exports.mapState
     }
   );
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps =  module.exports.mapDispatchToProps = (dispatch) => {
   return {
     onRegionIsChanged: (options, bounds) => {
       dispatch({
@@ -47,7 +47,7 @@ const RegionContainer = connect(
    * @param state
    * @returns {{}}
    */
-  mapStateToProps, mapDispatchToProps()
+  mapStateToProps, mapDispatchToProps
 )(Region);
 
 module.exports.default = RegionContainer;

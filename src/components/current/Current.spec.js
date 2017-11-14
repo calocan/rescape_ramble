@@ -14,8 +14,8 @@ describe('The current application', () => {
   const props = {
     // Style proportional to the browser size
     style: {
-      width: .5,
-      height: .5
+      width: 0.5,
+      height: 0.5
     }
   };
 

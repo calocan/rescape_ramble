@@ -12,7 +12,7 @@
 const R = require('ramda');
 const {filterWithKeys, mapPropValueAsIndex, mergeDeep} = require('rescape-ramda');
 
-/***
+/** *
  * Given the state and userSettings which map the shape of state,
  * and a lens that winnows in on a certain property that is a container (i.e. list or keyed objects)
  * Merge matching values of the state and userSettings for each value of the container

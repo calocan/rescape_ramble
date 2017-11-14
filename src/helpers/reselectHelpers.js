@@ -190,7 +190,7 @@ const browserDimensionsSelector = module.exports.browserDimensionsSelector = cre
   R.identity
 );
 
-/***
+/** *
  * Creates a selector that resolves the browser width and height from the state and multiplies each by the fraction
  * stored in the local props (which can either come from parent or from the component's style). If props
  * width or height is not defined they default to 1
@@ -221,7 +221,7 @@ module.exports.mergeStateAndProps = (state, props) => mergeDeep(state, props);
 
 const defaultStyleSelector = (state, props) => reqPath(['styles', 'default'], state);
 
-const mergeDeepWith =  R.curry((fn, left, right) => R.mergeWith((l, r) => {
+const mergeDeepWith = R.curry((fn, left, right) => R.mergeWith((l, r) => {
   // If either (hopefully both) items are arrays or not both objects
   // accept the right value
   return ((l && l.concat && R.is(Array, l)) || (r && r.concat && R.is(Array, r))) || !(R.is(Object, l) && R.is(Object, r)) ?
@@ -267,17 +267,16 @@ module.exports.makeMergeDefaultStyleWithProps = () => (state, props) => createSe
  * Like makeMergeDefaultStyleWithProps but used to merge the container style props with the component style props
  * @param {Object} containerProps The props coming from the container, which themselves were merged with the
  * state styles and/or parent components
- * @param {Object} containerProps.style The style object with simple values
- * @param {Object} [props] Optional The props
- * @param {Object} [props.style] Optional The style object with simple values or
+ * @param {Object} style The style object with simple values
+ * @param {Object} [props] Optional The props The style object with simple values or
  * unary functions to transform the values from the containerProps (e.g. { margin: 2, color: 'red', border: scale(2) })
  * where scale(2) returns a function that transforms the border property from the containerProps
  * @returns {Object} The merged object
  */
-module.exports.makeMergeContainerStyleProps = () => (containerProps, props) => createSelector(
+module.exports.makeMergeContainerStyleProps = () => (containerProps, style) => createSelector(
   [
     containerProps => reqPath(['style'], containerProps),
-    (_, props) => R.propOr({}, 'style', props)
+    (_, props) => R.defaultTo({}, props)
   ],
    mergeStyles
-)(containerProps, props);
+)(containerProps, style);

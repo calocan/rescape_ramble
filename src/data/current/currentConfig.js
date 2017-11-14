@@ -24,8 +24,12 @@ const currentConfig = module.exports.currentConfig = (env = environment) => R.co
   [
     [R.equals('test'), () => require('data/samples/sampleConfig').sampleConfig],
     [R.equals('development'), () => require('data/california/californiaConfig').californiaConfig],
-    [R.equals('production'), () => { throw new Error('No production environment is implemented')}],
-    [R.T, () => { throw new Error('No known environment was specified in env.json')}]
+    [R.equals('production'), () => {
+ throw new Error('No production environment is implemented');
+}],
+    [R.T, () => {
+ throw new Error('No known environment was specified in env.json');
+}]
   ]
 )(env);
 

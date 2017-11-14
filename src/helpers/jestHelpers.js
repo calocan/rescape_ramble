@@ -55,6 +55,13 @@ const makeSampleInitialState = module.exports.makeSampleInitialState = (sampleUs
   return store.getState();
 };
 
+/**
+ * Simulates complete props from a container component by combining mapStateToProps, mapDispatchToProps, and props
+ * that would normally passed from the container to a component
+ * @param mapStateToProps
+ * @param mapDispatchToProps
+ * @param parentProps
+ */
 module.exports.propsFromSampleStateAndContainer = (mapStateToProps, mapDispatchToProps = {}, parentProps = {}) =>
   R.compose(
     state => R.mergeAll(

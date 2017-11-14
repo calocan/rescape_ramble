@@ -213,8 +213,8 @@ describe('reselectHelpers', () => {
     };
     const props = {
       style: {
-        width: .5,
-        height: .1
+        width: 0.5,
+        height: 0.1
       }
     };
     const expected = {
@@ -280,13 +280,13 @@ describe('reselectHelpers', () => {
         margin: 2
       }
     };
-    const props = {
-      style: {
-        color: 'blue',
-        margin: R.multiply(2)
-      }
+
+    const style = {
+      color: 'blue',
+      margin: R.multiply(2)
     };
-    expect(makeMergeContainerStyleProps()(containerProps, props)).toEqual(
+
+    expect(makeMergeContainerStyleProps()(containerProps, style)).toEqual(
       {
         color: 'blue',
         margin: 4

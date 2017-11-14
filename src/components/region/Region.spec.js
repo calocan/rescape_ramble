@@ -8,7 +8,6 @@ const {mapStateToProps, mapDispatchToProps} = require('./RegionContainer');
 const [Region] = eMap([region]);
 
 describe('Region', () => {
-
   const props = propsFromSampleStateAndContainer(
     mapStateToProps,
     mapDispatchToProps,
