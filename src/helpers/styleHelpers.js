@@ -12,6 +12,16 @@
 const R = require('ramda');
 const PropTypes = require('prop-types');
 const {v} = require('rescape-validate');
+const {compact} = require('rescape-ramda');
+
+/**
+ * Creates a class name from a root name and a suffix
+ * @param {String} root The root of the name matching the React component
+ * @param {String} suffix The suffix matching the minor component (such as 'outer', 'inner' for divs).
+ * If null then the className will simply be the root
+ * @returns {String} root-suffix or root if suffix is not specified
+ */
+module.exports.classNamer = R.curry((root, suffix) => R.join('-', compact([root, suffix])));
 
 /** *
  * Creates a function that multiplies a numeric value of a style by a fraction
