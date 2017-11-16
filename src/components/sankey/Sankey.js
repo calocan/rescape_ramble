@@ -9,45 +9,75 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+const {renderSankeySvgPoints} = require('helpers/sankeyHelpers');
+const {makeMergeContainerStyleProps} = require('helpers/reselectHelpers');
 const PropTypes = require('prop-types');
 const React = require('react');
-const createMapStops = require('components/mapStop/mapStops').default;
+const createMapStops = require('components/mapStop/MapStops').default;
 const {reqPath} = require('rescape-ramda').throwing;
 const {geojsonByType} = require('helpers/geojsonHelpers');
 const R = require('ramda');
-const {resolveSvgPoints, resolveSvgReact} = require('helpers/svgHelpers');
-const styles = require('./Mapbox.style').default;
 const {sankey, sankeyLinkHorizontal} = require('d3-sankey');
 const {mapDefault} = require('rescape-ramda');
 const {deckGL, ScatterplotLayer, OrthographicViewport, COORDINATE_SYSTEM} = mapDefault('deckGl', require('deck.gl'));
 const {eMap} = require('helpers/componentHelpers');
-const sample = require('data/sankey.sample');
+const sample = require('src/data/sankey.sample');
 const [MapGL, DeckGL, Svg, G, Circle, Div] =
   eMap([require('react-map-gl'), deckGL, 'svg', 'g', 'circle', 'div']);
 const d3 = require('d3');
+const {resolveSvgPoints, resolveSvgReact} = require('helpers/svgHelpers');
+const {classNamer, styleMultiplier} = require('helpers/styleHelpers');
+const {makeMergeContainerStyleProps} = require('helpers/reselectHelpers');
 
-const DEGREE_TO_RADIAN = Math.PI / 180;
-const NUM_POINTS = 2000;
+const Sankey = ({...props}) => {
 
+  const nameClass = classNamer('sankey');
+  const styles = makeMergeContainerStyleProps()(
+    {
+      style: {
+        root: reqPath(['style'], props),
+      }
+    },
+    {
+      root: {
+        position: 'absolute',
+        width: '100%',
+        height: '100%',
+      }
+    });
+  const {viewport, mapboxApiAccessToken} = props;
+  const {width, height} = props.style;
+  const left = -Math.min(width, height) / 2;
+  const top = -Math.min(width, height) / 2;
+  const glViewport = new OrthographicViewport({width, height, left, top});
 
-const round = x => Math.round(x * 10) / 10;
+  const deck = width && height &&
+    Div({
+      className: nameClass('root'),
+      style: styles.root
+    }, [
+      Svg({
+          viewBox: `0 0 ${width} ${height}`
+        },
+        // TODO first argument needs to be opt from the SVGOverlay layer. See MapMarkers
+        renderSankeySvgPoints(null, props, sample, node)
+      )
+    ]);
 
-const nodePosition = module.exports.nodePositon = (node, point) => ({
-  x: round(point.x),
-  dx: round(node.x1 - node.x0),
-  y: round(point.y),
-  dy: round(node.y1 - node.y0)
-});
+  return MapGL(R.merge(viewport, {
+      mapboxApiAccessToken,
+      showZoomControls: true,
+      perspectiveEnabled: true,
+      // setting to `true` should cause the map to flicker because all sources
+      // and layers need to be reloaded without diffing enabled.
+      preventStyleDiffing: false,
+      onChangeViewport: this.props.onChangeViewport
+    }),
+    deck
+  );
+};
 
-const linkPosition = module.exports.linkPosition = link => ({
-  source: nodePosition(link.source),
-  target: nodePosition(link.target),
-  dy: round(link.width),
-  sy: round(link.y0 - link.source.y0 - link.width / 2),
-  ty: round(link.y1 - link.target.y0 - link.width / 2)
-});
-
-class Sankey extends React.Component {
+/*
   componentWillReceiveProps(nextProps) {
     const osmLens = R.lensPath(['region', 'geojson', 'osm', 'features', 'length']);
     const markersLens = R.lensPath(['region', 'geojson', 'markers']);
@@ -59,99 +89,9 @@ class Sankey extends React.Component {
       this.setState({markers: nextProps.region.geojson.markers});
     }
   }
-
-  _renderSVGPoints(opt) {
-    const theSankey = sankey().nodeWidth(15).nodePadding(10).extent([[1, 1], [this.props.style.width, this.props.style.height]]);
-    // Map sample nodes to sample features
-    const features = R.map(node =>
-      ({
-        type: 'Feature',
-          properties: {
-          '@id': 'node/27233097',
-          'STIF:zone': '3',
-          name: 'Asnières-sur-Seine',
-          official_name: 'ASNIERES SUR SEINE',
-          operator: 'SNCF',
-          railway: 'station',
-          'ref:SNCF': 'Transilien',
-          'ref:SNCF:Transilien': 'J;L',
-          source: 'survey',
-          uic_ref: '8738113',
-          wikipedia: 'fr:Gare d\'Asnières-sur-Seine',
-          '@timestamp': '2016-05-27T08:20:46Z',
-          '@version': '11',
-          '@changeset': '39597830',
-          '@user': 'overflorian',
-          '@uid': '125897'
-      },
-        geometry: {
-          type: 'Point',
-            coordinates: [
-            2.2834758,
-            48.905901
-          ]
-        },
-        id: 'node/27233097'
-      }), sample.nodes);
-    const points = resolveSvgPoints(opt, features);
-
-    const graph = theSankey(sample);
-    graph.nodes.map((node, i) => nodePosition(node, points[i]));
-
-    const svg = this.node;
-    svg.append('g')
-        .attr('fill', 'none')
-        .attr('stroke', '#000')
-        .attr('stroke-opacity', 0.2)
-      .selectAll('path')
-      .data(graph.links)
-      .enter().append('path')
-        .attr('d', d3.sankeyLinkHorizontal())
-        .attr('stroke-width', function (d) {
- return d.width;
-});
-    if (!this.props.geojson || !this.props.geojson.features) {
-      return null;
-    }
-    return resolveSvgReact(opt, this.props.geojson.features);
-  }
-
-  render() {
-    const { viewport, mapboxApiAccessToken} = this.props;
-
-    const {width, height} = this.props.style;
-    const left = -Math.min(width, height) / 2;
-    const top = -Math.min(width, height) / 2;
-    const glViewport = new OrthographicViewport({width, height, left, top});
-
-    const deck = width && height &&
-      Div({}, [
-        Svg({
-            ref: node => {
-this.node = node;
-},
-            viewBox: `0 0 ${width} ${height}`
-          },
-          this._renderSVGPoints()
-        )
-    ]);
-
-    return MapGL(R.merge(viewport, {
-        mapboxApiAccessToken,
-        showZoomControls: true,
-        perspectiveEnabled: true,
-        // setting to `true` should cause the map to flicker because all sources
-        // and layers need to be reloaded without diffing enabled.
-        preventStyleDiffing: false,
-        onChangeViewport: this.props.onChangeViewport
-      }),
-      deck
-    );
-  }
-}
+*/
 
 const {
-  number,
   string,
   object,
   bool,

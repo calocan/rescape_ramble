@@ -9,18 +9,42 @@
  * THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-const {expectTask, testState} = require('./jestHelpers');
+const {expectTask, testState, makeSampleInitialState, propsFromSampleStateAndContainer} = require('./jestHelpers');
 const Task = require('data.task');
+const R = require('ramda');
 
 describe('jestHelpers', () => {
-    test('expectTask', () => {
-        expectTask(new Task((reject, resolve) => resolve('apple'))).resolves.toEqual('apple');
-        expectTask(new Task((reject, resolve) => {
-            throw new Error('snapple');
-        })).rejects.toEqual(new Error('snapple'));
-    });
+  test('expectTask', () => {
+    expectTask(new Task((reject, resolve) => resolve('apple'))).resolves.toEqual('apple');
+    expectTask(new Task((reject, resolve) => {
+      throw new Error('snapple');
+    })).rejects.toEqual(new Error('snapple'));
+  });
 
-    test('testState', () =>
-        expect(testState()).toMatchSnapshot()
-    );
+  test('testState', () =>
+    expect(testState()).toMatchSnapshot()
+  );
+
+  test('propsFromSampleStateAndContainer', () => {
+    const initialState = makeSampleInitialState();
+
+    // propsFromSampleStateAndContainer should take a function that merges processes
+    // state and ownProps based on a container's
+    // mapStateToProps, mapDispatchToProps, and mergeProps.
+    // This function alweays uses makeSampleInitialState as the state and accepts
+    // sample ownProps from the test
+    expect(propsFromSampleStateAndContainer(
+      // Simply merge a fake dispatch result with the sampleOwnProps
+      (sampleInitialState, sampleOwnProps) => R.mergeAll([sampleInitialState, {someAction: R.identity}, sampleOwnProps]),
+      // our sample ownProps
+      {sample: 'own props'}))
+      .toEqual(
+        R.mergeAll([
+          {someAction: R.identity},
+          initialState,
+          {sample: 'own props'}
+        ])
+      );
+  });
 });
+

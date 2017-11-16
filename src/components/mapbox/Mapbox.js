@@ -10,55 +10,73 @@
  */
 
 const PropTypes = require('prop-types');
-const MapGL = require('react-map-gl').default;
+const mapGl = require('react-map-gl').default;
 const React = require('react');
 const createMapStops = require('components/mapStop/mapStops').default;
 const MapMarkers = require('components/mapMarker/MapMarkers').default;
 const {reqPath} = require('rescape-ramda').throwing;
-const Deck = require('./Deck').default;
-const styles = require('./Mapbox.style').default;
+const Deck = require('../deck/Deck').default;
 const MapStops = createMapStops(React);
-const e = React.createElement;
+const {eMap, liftAndExtractItems} = require('helpers/componentHelpers');
+const [Div, MapGl] = eMap(['div', mapGl]);
 const R = require('ramda');
-const {makeViewportsSelector} = require('helpers/reselectHelpers');
+const {makeViewportsSelector, makeMergeContainerStyleProps} = require('helpers/reselectHelpers');
+const {classNamer} = require('helpers/styleHelpers');
 
-class Mapbox extends React.Component {
-  render() {
-    const {iconAtlas, showCluster, hoverMarker, selectMarker} = this.props;
-    const {node, way} = reqPath(['osmByType'], this.props) || {};
-    const markers = {type: 'FeatureCollection', features: reqPath(['state', 'markers'], this) || []};
+const Mapbox = ({...props}) => {
 
-    // <MapStops geojson={node || {}} viewport={viewport}/>,
-    // <MapLines geojson={way || {}} viewport={viewport}/>,
-    /*
-    const mapMarkers = e(MapMarkers, {
-      geojson: markers,
-      viewport,
-      regionId: this.props.region.id
+  const nameClass = classNamer('mapbox');
+  const styles = makeMergeContainerStyleProps()(
+    {
+      style: {
+        root: reqPath(['style'], props)
+      }
+    },
+    {
+      root: {
+        position: 'absolute',
+        width: '100%',
+        height: '100%'
+      }
     });
-    */
-    const deck = e(Deck, this.props.views.deck);
-    /*
-      viewport,
-      geojson: markers,
-      iconAtlas,
-      showCluster,
-      onHover: hoverMarker,
-      onClick: selectMarker
-    });
-    */
 
-    return e(MapGL, this.props.views.mapGL);
-    /*
-        mapboxApiAccessToken,
+  //const {iconAtlas, showCluster, hoverMarker, selectMarker} = this.props;
+  //const {node, way} = reqPath(['osmByType'], this.props) || {};
+  //const markers = {type: 'FeatureCollection', features: reqPath(['state', 'markers'], this) || []};
 
-        onChangeViewport: this.props.onChangeViewport
-      }),
-      deck
-    );
-    */
-  }
-}
+  // <MapStops geojson={node || {}} viewport={viewport}/>,
+  // <MapLines geojson={way || {}} viewport={viewport}/>,
+  /*
+  const mapMarkers = e(MapMarkers, {
+    geojson: markers,
+    viewport,
+    regionId: this.props.region.id
+  });
+  */
+  /*
+  const deck = e(Deck, this.props.views.deck);
+    viewport,
+    geojson: markers,
+    iconAtlas,
+    showCluster,
+    onHover: hoverMarker,
+    onClick: selectMarker
+  */
+
+  return Div({className: nameClass('root')},
+    // Lift to operate on a functor and then extract the values
+    // Since mapGl is a functor we can support multiple instances of MapGl or possibly streams
+    liftAndExtractItems(MapGl, props.views.mapGl)
+  );
+
+  /*
+      mapboxApiAccessToken,
+
+      onChangeViewport: this.props.onChangeViewport
+    deck
+  );
+  */
+};
 
 Mapbox.propTypes = {
 
@@ -93,9 +111,7 @@ Mapbox.propTypes = {
         );
       }
     },
-    PropTypes.objectOf(PropTypes.shape({
-
-    }))
+    PropTypes.objectOf(PropTypes.shape({}))
   ).isRequired,
 
   actions: PropTypes.shape({

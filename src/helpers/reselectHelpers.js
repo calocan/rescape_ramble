@@ -32,8 +32,11 @@ const createLengthEqualSelector = module.exports.createLengthEqualSelector =
     propLensEqual(R.lensProp('length'))
   );
 
+/**
+ * Default settings selector, which passes all settings through
+ * @param state
+ */
 const settingsSelector = state => state.settings;
-
 
 /**
  * Object states
@@ -145,7 +148,7 @@ const regionsSelector = module.exports.regionsSelector = state => createStructur
 module.exports.makeActiveUserAndRegionStateSelector = () => createStructuredSelector({
   settings: settingsSelector,
   regions: regionsSelector,
-  users: activeUserSelector
+  users: activeUserSelector,
 });
 
 /**

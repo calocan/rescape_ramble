@@ -9,28 +9,30 @@ const mapStateToProps = module.exports.mapStateToProps = module.exports.mapState
   createSelector(
     [
       makeActiveUserAndRegionStateSelector(),
+      makeMergeDefaultStyleWithProps(),
       mapboxSettingsSelector,
-      makeMergeDefaultStyleWithProps()
     ],
-    (selectedState, mapboxSettings, style) => {
+    (selectedState, style, mapboxSettings) => {
       const viewport = makeViewportsSelector()(selectedState);
       return R.mergeAll([
         selectedState,
         {style},
         {
           views: {
-            sankey: R.merge({
-                viewport
-              },
-              mapboxSettings
-            )
+            // Since viewport it a Functor we map it and then merge it
+            // TODO find a cleaner way to represent this
+            mapbox: R.map(
+              viewport => R.merge(
+                mapboxSettings, {viewport}
+              ),
+              viewport)
           }
         }
       ]);
     }
   );
 
-const mapDispatchToProps =  module.exports.mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = module.exports.mapDispatchToProps = (dispatch) => {
   return {
     onRegionIsChanged: (options, bounds) => {
       dispatch({

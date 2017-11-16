@@ -8,9 +8,9 @@
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-const {styleMultiplier} = require('styles/styleHelpers');
+const {styleMultiplier} = require('helpers/styleHelpers');
 const mapbox = require('components/mapbox/MapboxContainer').default;
-const sankey = require('components/mapbox/SankeyContainer').default;
+const sankey = require('components/sankey/SankeyContainer').default;
 const markerList = require('components/marker/MarkerListContainer').default;
 const PropTypes = require('prop-types');
 const {makeMergeContainerStyleProps} = require('helpers/reselectHelpers');
@@ -18,6 +18,7 @@ const {eMap} = require('helpers/componentHelpers');
 const [Mapbox, Sankey, MarkerList, Div] = eMap([mapbox, sankey, markerList, 'div']);
 const {reqPath} = require('rescape-ramda').throwing;
 const R = require('ramda');
+const {classNamer} = require('helpers/styleHelpers');
 
 /**
  * The View for a Region, such as California. Theoretically we could display multiple regions at once
@@ -25,6 +26,7 @@ const R = require('ramda');
  */
 const Region = ({...props}) => {
 
+  const nameClass = classNamer('region');
   const styles = makeMergeContainerStyleProps()(
     {
       style: {
@@ -58,23 +60,25 @@ const Region = ({...props}) => {
     });
 
   return Div({
-      className: 'region',
+      className: nameClass('root'),
       style: styles.root
     },
     /* We additionally give Mapbox the container width and height so the map can track changes to these
      We have to apply the width and height fractions of this container to them.
      */
     Div({
-        className: 'mapboxOuter',
+        className: nameClass('mapbox-outer'),
         style: styles.mapboxOuter
       },
-      Sankey({
-        className: 'mapbox',
+      Mapbox({
         style: styles.mapbox
       })
+      //Sankey({
+      //  style: styles.mapbox
+      //})
     ),
     Div({
-        className: 'markers',
+        className: nameClass('markers-outer'),
         style: styles.markers
       },
       MarkerList({})
@@ -112,7 +116,7 @@ const {
 
 Region.propTypes = {
   settings: object.isRequired,
-  region: shape({
+  regions: shape({
     mapbox: shape({
       mapboxAccessToken: string.isRequired
     }).isRequired

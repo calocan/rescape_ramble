@@ -11,10 +11,10 @@
 const sankey = require('d3-sankey');
 const R = require('ramda');
 const sample = require('src/data/sankey.sample');
-const {mapStateToProps, mapDispatchToProps} = require('./MapboxContainer');
+const {mapStateToProps, mapDispatchToProps} = require('./SankeyContainer');
 const {propsFromSampleStateAndContainer} = require('helpers/jestHelpers');
 const mapGL = require('react-map-gl').default;
-const mapbox = require('./Mapbox').default;
+const mapbox = require('components/mapbox/Mapbox').default;
 const {eMap} = require('helpers/componentHelpers');
 const [MapGL, Mapbox] = eMap([mapGL, mapbox]);
 

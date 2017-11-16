@@ -11,7 +11,7 @@
 
 // const chroma = require('chroma-js');
 const R = require('ramda');
-const {createScaledPropertyGetter} = require('styles/styleHelpers');
+const {createScaledPropertyGetter} = require('helpers/styleHelpers');
 
 const white = '#fff';
 const black = '#111';

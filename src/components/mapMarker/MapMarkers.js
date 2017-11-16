@@ -145,7 +145,7 @@ class MapMarkers extends React.Component {
     }
 
     render() {
-        return e('SVGOverlay', R.merge(this.props.viewport, {
+        return e(SVGOverlay, R.merge(this.props.viewport, {
             className: 'map-markers',
             key: 'svg-overlay',
             redraw: this._redrawSVGOverlay.bind(this)

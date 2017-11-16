@@ -11,7 +11,7 @@
 
 const {connect} = require('react-redux');
 const {bindActionCreators} = require('redux');
-const {actionCreators} = require('redux/geojson/geojsonReducer');
+const {actionCreators} = require('src/redux/geojson/geojsonReducer');
 const {onChangeViewport} = require('redux-map-gl');
 const Mapbox = require('./Mapbox').default;
 const {hoverMarker, selectMarker} = actionCreators;

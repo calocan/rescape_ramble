@@ -11,7 +11,7 @@
 
 const {connect} = require('react-redux');
 const {bindActionCreators} = require('redux');
-const {actionCreators} = require('redux/geojson/geojsonReducer');
+const {actionCreators} = require('src/redux/geojson/geojsonReducer');
 const {onChangeViewport} = require('redux-map-gl');
 const Sankey = require('./Sankey').default;
 const R = require('ramda');
@@ -21,8 +21,6 @@ const {hoverMarker, selectMarker} = actionCreators;
 
 /**
  * Limits the state to the current selections
- * TODO does this need to be a Creator.
- * TODO should this be moved up to a parent and just take incoming props as state
  * @returns {Object} The props
  */
 const mapStateToProps = module.exports.mapStateToProps =
@@ -35,22 +33,24 @@ const mapStateToProps = module.exports.mapStateToProps =
       const viewport = makeViewportsSelector()(activeState);
       return R.merge(activeState, {
         views: {
-          mapGl: R.merge({
-              viewport
-            },
-            mapboxSettings
-          )
+          // The MapGl sub-component needs the viewport and mapboxSettings
+          // viewport is a functor so map it
+          mapGl: R.map(
+            viewport => R.merge(
+              mapboxSettings, {viewport}
+            ),
+            viewport)
         }
       });
     }
   );
 
 const mapDispatchToProps = module.exports.mapDispatchToProps = (dispatch, ownProps) => {
-    return bindActionCreators({
-        onChangeViewport,
-        hoverMarker,
-        selectMarker
-    }, dispatch);
+  return bindActionCreators({
+    onChangeViewport,
+    hoverMarker,
+    selectMarker
+  }, dispatch);
 };
 
 module.exports.default = connect(mapStateToProps, mapDispatchToProps)(Sankey);

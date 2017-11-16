@@ -2,24 +2,20 @@
 
 exports[`jestHelpers testState 1`] = `
 Object {
+  "browser": Object {
+    "height": 720,
+    "width": 1080,
+  },
   "regions": Object {
-    "california": Object {
+    "default": Object {
       "geojson": Object {
         "markers": Object {},
         "osm": Object {},
         "searches": Object {},
       },
-      "geospatial": Object {
-        "bounds": Array [
-          -122.720306,
-          37.005783,
-          -121.568275,
-          38.44466,
-        ],
-      },
       "gtfs": Object {
-        "calendar": Object {
-          "yearlong_everyday": Object {
+        "calendar": Array [
+          Object {
             "days": Array [
               "everyday",
             ],
@@ -31,7 +27,7 @@ Object {
             ],
             "startDate": undefined,
           },
-          "yearlong_weekend": Object {
+          Object {
             "days": Array [
               "weekend",
             ],
@@ -43,16 +39,1117 @@ Object {
             ],
             "startDate": null,
           },
-        },
+        ],
         "routeTypes": Object {
-          "103": Object {
+          "ADDITIONAL_RAIL_SERVICE": Object {
+            "description": "Additional Rail Service",
+            "id": "117",
+            "supported": false,
+          },
+          "AIRPORT_LINK_FERRY_SERVICE": Object {
+            "description": "Airport-Link Ferry Service",
+            "id": "1012",
+            "supported": false,
+          },
+          "AIRSHIP_SERVICE": Object {
+            "description": "Airship Service",
+            "id": "1113",
+            "supported": false,
+          },
+          "AIR_SERVICE": Object {
+            "description": "Air Service",
+            "id": "1100",
+            "supported": false,
+          },
+          "ALL_AIR_SERVICES": Object {
+            "description": "All Air Services",
+            "id": "1114",
+            "supported": false,
+          },
+          "ALL_BUS_SERVICES": Object {
+            "description": "All Bus Services",
+            "id": "716",
+            "supported": false,
+          },
+          "ALL_COACH_SERVICES": Object {
+            "description": "All Coach Services",
+            "id": "209",
+            "supported": false,
+          },
+          "ALL_FUNICULAR_SERVICE": Object {
+            "description": "All Funicular Service",
+            "id": "1402",
+            "supported": false,
+          },
+          "ALL_RAIL_SERVICES": Object {
+            "description": "All Rail Services",
+            "id": "113",
+            "supported": false,
+          },
+          "ALL_TAXI_SERVICES": Object {
+            "description": "All Taxi Services",
+            "id": "1507",
+            "supported": false,
+          },
+          "ALL_TELECABIN_SERVICES": Object {
+            "description": "All Telecabin Services",
+            "id": "1307",
+            "supported": false,
+          },
+          "ALL_TRAM_SERVICES": Object {
+            "description": "All Tram Services",
+            "id": "906",
+            "supported": false,
+          },
+          "ALL_URBAN_RAILWAY_SERVICES": Object {
+            "description": "All Urban Railway Services",
+            "id": "404",
+            "supported": false,
+          },
+          "ALL_WATER_TRANSPORT_SERVICES": Object {
+            "description": "All Water Transport Services",
+            "id": "1021",
+            "supported": false,
+          },
+          "BIKE_TAXI_SERVICE": Object {
+            "description": "Bike Taxi Service",
+            "id": "1504",
+            "supported": false,
+          },
+          "BUS_SERVICE": Object {
+            "description": "Bus Service",
+            "id": "700",
+            "supported": true,
+          },
+          "CABLE_CAR": Object {
+            "description": "Cable Car",
+            "id": "1701",
+            "supported": true,
+          },
+          "CABLE_CAR_SERVICE": Object {
+            "description": "Cable Car Service",
+            "id": "1302",
+            "supported": false,
+          },
+          "CABLE_DRAWN_BOAT_SERVICE": Object {
+            "description": "Cable-Drawn Boat Service",
+            "id": "1017",
+            "supported": false,
+          },
+          "CAR_HIGH_SPEED_FERRY_SERVICE": Object {
+            "description": "Car High-Speed Ferry Service",
+            "id": "1013",
+            "supported": false,
+          },
+          "CAR_TRANSPORT_RAIL_SERVICE": Object {
+            "description": "Car Transport Rail Service",
+            "id": "104",
+            "supported": false,
+          },
+          "CHAIR_LIFT_SERVICE": Object {
+            "description": "Chair Lift Service",
+            "id": "1304",
+            "supported": false,
+          },
+          "CITY_TRAM_SERVICE": Object {
+            "description": "City Tram Service",
+            "id": "901",
+            "supported": false,
+          },
+          "COACH_SERVICE": Object {
+            "description": "Coach Service",
+            "id": "200",
+            "supported": true,
+          },
+          "COMMUNAL_TAXI_SERVICE": Object {
+            "description": "Communal Taxi Service",
+            "id": "1501",
+            "supported": true,
+          },
+          "COMMUTER_COACH_SERVICE": Object {
+            "description": "Commuter Coach Service",
+            "id": "208",
+            "supported": true,
+          },
+          "CROSS_COUNTRY_RAIL_SERVICE": Object {
+            "description": "Cross-Country Rail Service",
+            "id": "114",
+            "supported": false,
+          },
+          "DEMAND_AND_RESPONSE_BUS_SERVICE": Object {
+            "description": "Demand and Response Bus Service",
+            "id": "715",
+            "supported": false,
+          },
+          "DOMESTIC_AIR_SERVICE": Object {
+            "description": "Domestic Air Service",
+            "id": "1102",
+            "supported": false,
+          },
+          "DOMESTIC_CHARTER_AIR_SERVICE": Object {
+            "description": "Domestic Charter Air Service",
+            "id": "1111",
+            "supported": false,
+          },
+          "DOMESTIC_SCHEDULED_AIR_SERVICE": Object {
+            "description": "Domestic Scheduled Air Service",
+            "id": "1104",
+            "supported": false,
+          },
+          "DRAG_LIFT_SERVICE": Object {
+            "description": "Drag Lift Service",
+            "id": "1305",
+            "supported": false,
+          },
+          "ELEVATOR_SERVICE": Object {
+            "description": "Elevator Service",
+            "id": "1303",
+            "supported": false,
+          },
+          "EXPRESS_BUS_SERVICE": Object {
+            "description": "Express Bus Service",
+            "id": "702",
+            "supported": true,
+          },
+          "FERRY_SERVICE": Object {
+            "description": "Ferry Service",
+            "id": "1200",
+            "supported": false,
+          },
+          "FUNICULAR_SERVICE": Object {
+            "description": "Funicular Service",
+            "id": "1400",
+            "supported": true,
+          },
+          "HELICOPTER_AIR_SERVICE": Object {
+            "description": "Helicopter Air Service",
+            "id": "1110",
+            "supported": false,
+          },
+          "HIGH_SPEED_RAIL_SERVICE": Object {
+            "description": "High Speed Rail Service",
+            "id": "101",
+            "supported": true,
+          },
+          "HIRE_CAR": Object {
+            "description": "Hire Car",
+            "id": "1601",
+            "supported": false,
+          },
+          "HIRE_CYCLE": Object {
+            "description": "Hire Cycle",
+            "id": "1604",
+            "supported": false,
+          },
+          "HIRE_MOTORBIKE": Object {
+            "description": "Hire Motorbike",
+            "id": "1603",
+            "supported": false,
+          },
+          "HIRE_VAN": Object {
+            "description": "Hire Van",
+            "id": "1602",
+            "supported": false,
+          },
+          "HORSE_DRAWN_CARRIAGE": Object {
+            "description": "Horse-drawn Carriage",
+            "id": "1702",
+            "supported": true,
+          },
+          "INTERCONTINENTAL_AIR_SERVICE": Object {
+            "description": "Intercontinental Air Service",
+            "id": "1103",
+            "supported": false,
+          },
+          "INTERCONTINENTAL_CHARTER_AIR_SERVICE": Object {
+            "description": "Intercontinental Charter Air Service",
+            "id": "1106",
+            "supported": false,
+          },
+          "INTERNATIONAL_AIR_SERVICE": Object {
+            "description": "International Air Service",
+            "id": "1101",
+            "supported": false,
+          },
+          "INTERNATIONAL_CAR_FERRY_SERVICE": Object {
+            "description": "International Car Ferry Service",
+            "id": "1001",
+            "supported": false,
+          },
+          "INTERNATIONAL_CHARTER_AIR_SERVICE": Object {
+            "description": "International Charter Air Service",
+            "id": "1107",
+            "supported": false,
+          },
+          "INTERNATIONAL_COACH_SERVICE": Object {
+            "description": "International Coach Service",
+            "id": "201",
+            "supported": true,
+          },
+          "INTERNATIONAL_PASSENGER_FERRY_SERVICE": Object {
+            "description": "International Passenger Ferry Service",
+            "id": "1005",
+            "supported": false,
+          },
+          "INTER_REGIONAL_RAIL_SERVICE": Object {
             "description": "Inter Regional Rail Service",
             "id": "103",
             "supported": true,
           },
+          "LICENSED_TAXI_SERVICE": Object {
+            "description": "Licensed Taxi Service",
+            "id": "1505",
+            "supported": false,
+          },
+          "LOCAL_BUS_SERVICE": Object {
+            "description": "Local Bus Service",
+            "id": "704",
+            "supported": true,
+          },
+          "LOCAL_CAR_FERRY_SERVICE": Object {
+            "description": "Local Car Ferry Service",
+            "id": "1004",
+            "supported": false,
+          },
+          "LOCAL_PASSENGER_FERRY_SERVICE": Object {
+            "description": "Local Passenger Ferry Service",
+            "id": "1008",
+            "supported": false,
+          },
+          "LOCAL_TRAM_SERVICE": Object {
+            "description": "Local Tram Service",
+            "id": "902",
+            "supported": false,
+          },
+          "LONG_DISTANCE_TRAINS": Object {
+            "description": "Long Distance Trains",
+            "id": "102",
+            "supported": true,
+          },
+          "LORRY_TRANSPORT_RAIL_SERVICE": Object {
+            "description": "Lorry Transport Rail Service",
+            "id": "112",
+            "supported": false,
+          },
+          "METRO_SERVICE": Object {
+            "description": "Metro Service",
+            "id": "401",
+            "supported": true,
+          },
+          "MISCELLANEOUS_SERVICE": Object {
+            "description": "Miscellaneous Service",
+            "id": "1700",
+            "supported": true,
+          },
+          "MOBILITY_BUS_FOR_REGISTERED_DISABLED": Object {
+            "description": "Mobility Bus for Registered Disabled",
+            "id": "709",
+            "supported": false,
+          },
+          "MOBILITY_BUS_SERVICE": Object {
+            "description": "Mobility Bus Service",
+            "id": "708",
+            "supported": false,
+          },
+          "MONORAIL": Object {
+            "description": "Monorail",
+            "id": "405",
+            "supported": true,
+          },
+          "NATIONAL_CAR_FERRY_SERVICE": Object {
+            "description": "National Car Ferry Service",
+            "id": "1002",
+            "supported": false,
+          },
+          "NATIONAL_COACH_SERVICE": Object {
+            "description": "National Coach Service",
+            "id": "202",
+            "supported": true,
+          },
+          "NATIONAL_PASSENGER_FERRY_SERVICE": Object {
+            "description": "National Passenger Ferry Service",
+            "id": "1006",
+            "supported": false,
+          },
+          "NIGHT_BUS_SERVICE": Object {
+            "description": "Night Bus Service",
+            "id": "705",
+            "supported": false,
+          },
+          "PASSENGER_HIGH_SPEED_FERRY_SERVICE": Object {
+            "description": "Passenger High-Speed Ferry Service",
+            "id": "1014",
+            "supported": false,
+          },
+          "POST_BOAT_SERVICE": Object {
+            "description": "Post Boat Service",
+            "id": "1009",
+            "supported": false,
+          },
+          "POST_BUS_SERVICE": Object {
+            "description": "Post Bus Service",
+            "id": "706",
+            "supported": false,
+          },
+          "PRIVATE_HIRE_SERVICE_VEHICLE": Object {
+            "description": "Private Hire Service Vehicle",
+            "id": "1506",
+            "supported": false,
+          },
+          "RACK_AND_PINION_RAILWAY": Object {
+            "description": "Rack and Pinion Railway",
+            "id": "116",
+            "supported": false,
+          },
+          "RAILWAY_SERVICE": Object {
+            "description": "Railway Service",
+            "id": "100",
+            "supported": true,
+          },
+          "RAIL_REPLACEMENT_BUS_SERVICE": Object {
+            "description": "Rail Replacement Bus Service",
+            "id": "714",
+            "supported": false,
+          },
+          "RAIL_SHUTTLE_WITHIN_COMPLEX": Object {
+            "description": "Rail Shuttle (Within Complex)",
+            "id": "108",
+            "supported": true,
+          },
+          "RAIL_TAXI_SERVICE": Object {
+            "description": "Rail Taxi Service",
+            "id": "1503",
+            "supported": false,
+          },
+          "REGIONAL_BUS_SERVICE": Object {
+            "description": "Regional Bus Service",
+            "id": "701",
+            "supported": true,
+          },
+          "REGIONAL_CAR_FERRY_SERVICE": Object {
+            "description": "Regional Car Ferry Service",
+            "id": "1003",
+            "supported": false,
+          },
+          "REGIONAL_COACH_SERVICE": Object {
+            "description": "Regional Coach Service",
+            "id": "204",
+            "supported": true,
+          },
+          "REGIONAL_PASSENGER_FERRY_SERVICE": Object {
+            "description": "Regional Passenger Ferry Service",
+            "id": "1007",
+            "supported": false,
+          },
+          "REGIONAL_RAIL_SERVICE": Object {
+            "description": "Regional Rail Service",
+            "id": "106",
+            "supported": true,
+          },
+          "REGIONAL_TRAM_SERVICE": Object {
+            "description": "Regional Tram Service",
+            "id": "903",
+            "supported": false,
+          },
+          "REPLACEMENT_RAIL_SERVICE": Object {
+            "description": "Replacement Rail Service",
+            "id": "110",
+            "supported": false,
+          },
+          "RIVER_BUS_SERVICE": Object {
+            "description": "River Bus Service",
+            "id": "1018",
+            "supported": false,
+          },
+          "ROAD_LINK_FERRY_SERVICE": Object {
+            "description": "Road-Link Ferry Service",
+            "id": "1011",
+            "supported": false,
+          },
+          "ROUND_TRIP_CHARTER_AIR_SERVICE": Object {
+            "description": "Round-Trip Charter Air Service",
+            "id": "1108",
+            "supported": false,
+          },
+          "SCHEDULED_FERRY_SERVICE": Object {
+            "description": "Scheduled Ferry Service",
+            "id": "1019",
+            "supported": false,
+          },
+          "SCHENGEN_AREA_AIR_SERVICE": Object {
+            "description": "Schengen-Area Air Service",
+            "id": "1112",
+            "supported": false,
+          },
+          "SCHOOL_AND_PUBLIC_SERVICE_BUS": Object {
+            "description": "School and Public Service Bus",
+            "id": "713",
+            "supported": false,
+          },
+          "SCHOOL_BOAT": Object {
+            "description": "School Boat",
+            "id": "1016",
+            "supported": false,
+          },
+          "SCHOOL_BUS": Object {
+            "description": "School Bus",
+            "id": "712",
+            "supported": false,
+          },
+          "SELF_DRIVE": Object {
+            "description": "Self Drive",
+            "id": "1600",
+            "supported": false,
+          },
+          "SHUTTLE_AIR_SERVICE": Object {
+            "description": "Shuttle Air Service",
+            "id": "1105",
+            "supported": false,
+          },
+          "SHUTTLE_BUS": Object {
+            "description": "Shuttle Bus",
+            "id": "711",
+            "supported": false,
+          },
+          "SHUTTLE_COACH_SERVICE": Object {
+            "description": "Shuttle Coach Service",
+            "id": "203",
+            "supported": false,
+          },
+          "SHUTTLE_FERRY_SERVICE": Object {
+            "description": "Shuttle Ferry Service",
+            "id": "1020",
+            "supported": false,
+          },
+          "SHUTTLE_TRAM_SERVICE": Object {
+            "description": "Shuttle Tram Service",
+            "id": "905",
+            "supported": false,
+          },
+          "SIGHTSEEING_AIR_SERVICE": Object {
+            "description": "Sightseeing Air Service",
+            "id": "1109",
+            "supported": false,
+          },
+          "SIGHTSEEING_BOAT_SERVICE": Object {
+            "description": "Sightseeing Boat Service",
+            "id": "1015",
+            "supported": false,
+          },
+          "SIGHTSEEING_BUS": Object {
+            "description": "Sightseeing Bus",
+            "id": "710",
+            "supported": false,
+          },
+          "SIGHTSEEING_COACH_SERVICE": Object {
+            "description": "Sightseeing Coach Service",
+            "id": "206",
+            "supported": false,
+          },
+          "SIGHTSEEING_TRAM_SERVICE": Object {
+            "description": "Sightseeing Tram Service",
+            "id": "904",
+            "supported": false,
+          },
+          "SLEEPER_RAIL_SERVICE": Object {
+            "description": "Sleeper Rail Service",
+            "id": "105",
+            "supported": true,
+          },
+          "SMALL_TELECABIN_SERVICE": Object {
+            "description": "Small Telecabin Service",
+            "id": "1306",
+            "supported": false,
+          },
+          "SPECIAL_COACH_SERVICE": Object {
+            "description": "Special Coach Service",
+            "id": "205",
+            "supported": false,
+          },
+          "SPECIAL_NEEDS_BUS": Object {
+            "description": "Special Needs Bus",
+            "id": "707",
+            "supported": false,
+          },
+          "SPECIAL_RAIL_SERVICE": Object {
+            "description": "Special Rail Service",
+            "id": "111",
+            "supported": false,
+          },
+          "STOPPING_BUS_SERVICE": Object {
+            "description": "Stopping Bus Service",
+            "id": "703",
+            "supported": false,
+          },
+          "SUBURBAN_RAILWAY": Object {
+            "description": "Suburban Railway",
+            "id": "109",
+            "supported": true,
+          },
+          "SUBURBAN_RAILWAY_SERVICE": Object {
+            "description": "Suburban Railway Service",
+            "id": "300",
+            "supported": false,
+          },
+          "TAXI_SERVICE": Object {
+            "description": "Taxi Service",
+            "id": "1500",
+            "supported": false,
+          },
+          "TELECABIN_SERVICE": Object {
+            "description": "Telecabin Service",
+            "id": "1300",
+            "supported": true,
+          },
+          "TOURIST_COACH_SERVICE": Object {
+            "description": "Tourist Coach Service",
+            "id": "207",
+            "supported": false,
+          },
+          "TOURIST_RAILWAY_SERVICE": Object {
+            "description": "Tourist Railway Service",
+            "id": "107",
+            "supported": true,
+          },
+          "TRAIN_FERRY_SERVICE": Object {
+            "description": "Train Ferry Service",
+            "id": "1010",
+            "supported": false,
+          },
+          "TRAM_SERVICE": Object {
+            "description": "Tram Service",
+            "id": "900",
+            "supported": true,
+          },
+          "TROLLEYBUS_SERVICE": Object {
+            "description": "Trolleybus Service",
+            "id": "800",
+            "supported": true,
+          },
+          "UNDERGROUND_SERVICE": Object {
+            "description": "Underground Service",
+            "id": "402",
+            "supported": true,
+          },
+          "URBAN_RAILWAY_SERVICE": Object {
+            "description": "Urban Railway Service",
+            "id": "400",
+            "supported": true,
+          },
+          "VEHICLE_TRANSPORT_RAIL_SERVICE": Object {
+            "description": "Vehicle Transport Rail Service",
+            "id": "115",
+            "supported": false,
+          },
+          "WATER_TAXI_SERVICE": Object {
+            "description": "Water Taxi Service",
+            "id": "1502",
+            "supported": false,
+          },
+          "WATER_TRANSPORT_SERVICE": Object {
+            "description": "Water Transport Service",
+            "id": "1000",
+            "supported": true,
+          },
         },
-        "routes": Object {
-          "SFC<->LAX": Object {
+      },
+      "mapbox": Object {
+        "iconAtlas": "data/location-icon-atlas.png",
+        "mapStyle": "mapbox://styles/mapbox/streets-v8",
+        "mapboxApiAccessToken": "pk.eyJ1IjoiY2Fsb2NhbiIsImEiOiJjaXl1aXkxZjkwMG15MndxbmkxMHczNG50In0.07Zu3XXYijL6GJMuxFtvQg",
+        "perspectiveEnabled": "true",
+        "preventStyleDiffing": "false",
+        "showCluster": "true",
+        "showZoomControls": "true",
+        "viewport": Immutable.Map {
+          "pitch": 40,
+          "bearing": 0,
+          "startDragLngLat": null,
+          "isDragging": false,
+          "latitude": 0,
+          "longitude": 0,
+          "zoom": 1,
+        },
+      },
+    },
+    "oakland": Object {
+      "geojson": Object {
+        "markers": Object {},
+        "osm": Object {
+          "copyright": "The data included in this document is from www.openstreetmap.org. The data is made available under ODbL.",
+          "features": Array [
+            Object {
+              "geometry": Object {
+                "coordinates": Array [
+                  Array [
+                    2.3372032,
+                    48.8404254,
+                  ],
+                  Array [
+                    2.3372715,
+                    48.8406677,
+                  ],
+                  Array [
+                    2.3373962,
+                    48.8410543,
+                  ],
+                  Array [
+                    2.3380024,
+                    48.8422009,
+                  ],
+                  Array [
+                    2.3385107,
+                    48.8431117,
+                  ],
+                  Array [
+                    2.3389787,
+                    48.8439785,
+                  ],
+                  Array [
+                    2.3392577,
+                    48.8444515,
+                  ],
+                  Array [
+                    2.3402917,
+                    48.8463852,
+                  ],
+                  Array [
+                    2.3405962,
+                    48.8469464,
+                  ],
+                  Array [
+                    2.3407859,
+                    48.8472594,
+                  ],
+                  Array [
+                    2.3411775,
+                    48.8479028,
+                  ],
+                  Array [
+                    2.3422987,
+                    48.8497393,
+                  ],
+                  Array [
+                    2.34276,
+                    48.8507232,
+                  ],
+                  Array [
+                    2.3429223,
+                    48.8510339,
+                  ],
+                  Array [
+                    2.3430309,
+                    48.8511954,
+                  ],
+                  Array [
+                    2.3432019,
+                    48.8514041,
+                  ],
+                  Array [
+                    2.3434513,
+                    48.851675,
+                  ],
+                  Array [
+                    2.3436619,
+                    48.851859,
+                  ],
+                  Array [
+                    2.3439871,
+                    48.8520933,
+                  ],
+                  Array [
+                    2.3443787,
+                    48.8523492,
+                  ],
+                  Array [
+                    2.3447636,
+                    48.8525821,
+                  ],
+                  Array [
+                    2.3454415,
+                    48.8529788,
+                  ],
+                  Array [
+                    2.3458338,
+                    48.8532131,
+                  ],
+                  Array [
+                    2.346153,
+                    48.8534072,
+                  ],
+                  Array [
+                    2.3465238,
+                    48.8536327,
+                  ],
+                  Array [
+                    2.3468805,
+                    48.8538939,
+                  ],
+                  Array [
+                    2.3472815,
+                    48.8542327,
+                  ],
+                  Array [
+                    2.3476597,
+                    48.8546377,
+                  ],
+                ],
+                "type": "LineString",
+              },
+              "id": "way/29735335",
+              "properties": Object {
+                "@changeset": "40980697",
+                "@id": "way/29735335",
+                "@timestamp": "2016-07-23T22:33:32Z",
+                "@uid": "158826",
+                "@user": "cquest",
+                "@version": "34",
+                "electrified": "contact_line",
+                "frequency": "0",
+                "gauge": "1435",
+                "importance": "regional",
+                "layer": "-5",
+                "name": "RER B",
+                "operator": "RATP",
+                "railway": "rail",
+                "source": "STIF",
+                "tunnel": "yes",
+                "usage": "main",
+                "voltage": "1500",
+              },
+              "type": "Feature",
+            },
+            Object {
+              "geometry": Object {
+                "coordinates": Array [
+                  Array [
+                    2.3580437,
+                    48.8489285,
+                  ],
+                  Array [
+                    2.3569883,
+                    48.8493417,
+                  ],
+                  Array [
+                    2.3566417,
+                    48.8494774,
+                  ],
+                  Array [
+                    2.3498091,
+                    48.8517476,
+                  ],
+                  Array [
+                    2.3481873,
+                    48.85241,
+                  ],
+                  Array [
+                    2.3468858,
+                    48.8530098,
+                  ],
+                  Array [
+                    2.3465228,
+                    48.8531476,
+                  ],
+                  Array [
+                    2.3454232,
+                    48.8534731,
+                  ],
+                ],
+                "type": "LineString",
+              },
+              "id": "way/334870919",
+              "properties": Object {
+                "@changeset": "34996941",
+                "@id": "way/334870919",
+                "@timestamp": "2015-10-31T17:43:46Z",
+                "@uid": "53964",
+                "@user": "_Mathieu_",
+                "@version": "4",
+                "electrified": "contact_line",
+                "frequency": "0",
+                "gauge": "1435",
+                "importance": "regional",
+                "layer": "-1",
+                "maxspeed": "60",
+                "name": "RER C - Ligne de Musée d'Orsay à Austerlitz",
+                "railway": "rail",
+                "tracks": "2",
+                "tunnel": "yes",
+                "usage": "main",
+                "voltage": "1500",
+              },
+              "type": "Feature",
+            },
+            Object {
+              "geometry": Object {
+                "coordinates": Array [
+                  Array [
+                    2.3454232,
+                    48.8534731,
+                  ],
+                  Array [
+                    2.344675,
+                    48.8536946,
+                  ],
+                  Array [
+                    2.3440745,
+                    48.8539094,
+                  ],
+                  Array [
+                    2.343693,
+                    48.8540843,
+                  ],
+                  Array [
+                    2.3431388,
+                    48.854372,
+                  ],
+                  Array [
+                    2.342491,
+                    48.8547437,
+                  ],
+                  Array [
+                    2.3402755,
+                    48.8563525,
+                  ],
+                  Array [
+                    2.3379956,
+                    48.8575207,
+                  ],
+                  Array [
+                    2.3329547,
+                    48.8584095,
+                  ],
+                  Array [
+                    2.3275778,
+                    48.8601289,
+                  ],
+                ],
+                "type": "LineString",
+              },
+              "id": "way/377746412",
+              "properties": Object {
+                "@changeset": "34996941",
+                "@id": "way/377746412",
+                "@timestamp": "2015-10-31T17:43:41Z",
+                "@uid": "53964",
+                "@user": "_Mathieu_",
+                "@version": "1",
+                "electrified": "contact_line",
+                "frequency": "0",
+                "gauge": "1435",
+                "importance": "regional",
+                "layer": "-1",
+                "maxspeed": "50",
+                "name": "RER C - Ligne de Musée d'Orsay à Austerlitz",
+                "railway": "rail",
+                "tracks": "2",
+                "tunnel": "yes",
+                "usage": "main",
+                "voltage": "1500",
+              },
+              "type": "Feature",
+            },
+            Object {
+              "geometry": Object {
+                "coordinates": Array [
+                  2.3454363,
+                  48.8534806,
+                ],
+                "type": "Point",
+              },
+              "id": "node/3572156993",
+              "properties": Object {
+                "@changeset": "42352341",
+                "@id": "node/3572156993",
+                "@timestamp": "2016-09-22T16:51:49Z",
+                "@uid": "1429581",
+                "@user": "Guillaume Mortier",
+                "@version": "3",
+                "STIF:zone": "1",
+                "name": "Saint-Michel Notre-Dame",
+                "official_name": "ST MICHEL NOTRE DAME",
+                "operator": "SNCF;RATP",
+                "railway": "station",
+                "ref": "RER B, C",
+                "ref:FR:RATP": "5604",
+                "ref:FR:uic8": "87547315;87785436",
+                "ref:SNCF": "RER",
+                "ref:SNCF:RER": "C",
+                "type:RATP": "rer",
+                "uic_ref": "8754731;8778543",
+                "wheelchair": "yes",
+                "wikipedia": "fr:Gare Saint-Michel - Notre-Dame",
+              },
+              "type": "Feature",
+            },
+            Object {
+              "geometry": Object {
+                "coordinates": Array [
+                  2.3402917,
+                  48.8463852,
+                ],
+                "type": "Point",
+              },
+              "id": "node/327432589",
+              "properties": Object {
+                "@changeset": "40980697",
+                "@id": "node/327432589",
+                "@timestamp": "2016-07-23T22:33:35Z",
+                "@uid": "158826",
+                "@user": "cquest",
+                "@version": "12",
+                "STIF:zone": "1",
+                "name": "Luxembourg",
+                "operator": "RATP",
+                "railway": "station",
+                "ref": "RER B",
+                "ref:FR:RATP": "1811",
+                "type:RATP": "rer",
+                "uic_ref": "8775861",
+                "wheelchair": "yes",
+                "wikipedia": "fr:Gare du Luxembourg",
+              },
+              "type": "Feature",
+            },
+            Object {
+              "geometry": Object {
+                "coordinates": Array [
+                  2.346153,
+                  48.8534072,
+                ],
+                "type": "Point",
+              },
+              "id": "node/270191809",
+              "properties": Object {
+                "@changeset": "42352341",
+                "@id": "node/270191809",
+                "@timestamp": "2016-09-22T16:51:50Z",
+                "@uid": "1429581",
+                "@user": "Guillaume Mortier",
+                "@version": "29",
+                "STIF:zone": "1",
+                "name": "Saint-Michel Notre-Dame",
+                "official_name": "ST MICHEL NOTRE DAME",
+                "operator": "SNCF;RATP",
+                "public_transport": "stop_position",
+                "railway": "stop",
+                "ref": "RER B, C",
+                "ref:FR:RATP": "5604",
+                "ref:FR:uic8": "87547315;87785436",
+                "ref:SNCF": "RER",
+                "ref:SNCF:RER": "C",
+                "type:RATP": "rer",
+                "uic_ref": "8754731;8778543",
+                "wheelchair": "yes",
+                "wikipedia": "fr:Gare Saint-Michel - Notre-Dame",
+              },
+              "type": "Feature",
+            },
+            Object {
+              "geometry": Object {
+                "coordinates": Array [
+                  2.3569883,
+                  48.8493417,
+                ],
+                "type": "Point",
+              },
+              "id": "node/3809893083",
+              "properties": Object {
+                "@changeset": "34971642",
+                "@id": "node/3809893083",
+                "@timestamp": "2015-10-30T12:46:44Z",
+                "@uid": "53964",
+                "@user": "_Mathieu_",
+                "@version": "1",
+                "highway": "crossing",
+              },
+              "type": "Feature",
+            },
+          ],
+          "generator": "overpass-turbo",
+          "timestamp": "2017-04-04T17:49:02Z",
+          "type": "FeatureCollection",
+        },
+        "searches": Object {},
+      },
+      "geospatial": Object {
+        "bounds": Array [
+          -122.720306,
+          37.005783,
+          -121.568275,
+          38.44466,
+        ],
+      },
+      "gtfs": Object {
+        "calendar": Array [
+          Object {
+            "days": Array [
+              "everyday",
+            ],
+            "endDate": undefined,
+            "id": "yearlong_everyday",
+            "label": "Everyday Yearlong",
+            "seasons": Array [
+              "yearlong",
+            ],
+            "startDate": undefined,
+          },
+          Object {
+            "days": Array [
+              "weekend",
+            ],
+            "endDate": null,
+            "id": "yearlong_weekend",
+            "label": "Weekend Yearlong",
+            "seasons": Array [
+              "yearlong",
+            ],
+            "startDate": null,
+          },
+        ],
+        "routeTypes": Array [
+          Object {
+            "description": "Inter Regional Rail Service",
+            "id": "103",
+            "supported": true,
+          },
+        ],
+        "routes": Array [
+          Object {
+            "id": "SFC<->REN",
+            "places": Object {
+              "from": Object {
+                "id": "SFC",
+                "label": "San Francisco",
+              },
+              "to": Object {
+                "id": "REN",
+                "label": "Reno",
+              },
+            },
+            "routeLongName": "San Francisco/Reno",
+            "routeShortName": "SFC<->REN",
+            "routeType": undefined,
+            "via": undefined,
+          },
+          Object {
+            "id": "SFC<->REN",
+            "places": Object {
+              "from": Object {
+                "id": "SFC",
+                "label": "San Francisco",
+              },
+              "to": Object {
+                "id": "REN",
+                "label": "Reno",
+              },
+            },
+            "routeLongName": "San Francisco/Reno",
+            "routeShortName": "SFC<->REN",
+            "routeType": undefined,
+            "via": undefined,
+          },
+          Object {
             "id": "SFC<->LAX",
             "places": Object {
               "from": Object {
@@ -69,43 +1166,9 @@ Object {
             "routeType": undefined,
             "via": undefined,
           },
-          "SFC<-Altamont->REN": Object {
-            "id": "SFC<-Altamont->REN",
-            "places": Object {
-              "from": Object {
-                "id": "SFC",
-                "label": "San Francisco",
-              },
-              "to": Object {
-                "id": "REN",
-                "label": "Reno",
-              },
-            },
-            "routeLongName": "San Francisco/Reno via Altamont",
-            "routeShortName": "SFC<-Altamont->REN via Altamont",
-            "routeType": undefined,
-            "via": "Altamont",
-          },
-          "SFC<-North-Bay->REN": Object {
-            "id": "SFC<-North-Bay->REN",
-            "places": Object {
-              "from": Object {
-                "id": "SFC",
-                "label": "San Francisco",
-              },
-              "to": Object {
-                "id": "REN",
-                "label": "Reno",
-              },
-            },
-            "routeLongName": "San Francisco/Reno via North-Bay",
-            "routeShortName": "SFC<-North-Bay->REN via North-Bay",
-            "routeType": undefined,
-            "via": "North-Bay",
-          },
-        },
-        "stops": Object {
-          "LAX-Union": Object {
+        ],
+        "stops": Array [
+          Object {
             "id": "LAX-Union",
             "location": Object {
               "lat": 34.056219,
@@ -118,7 +1181,7 @@ Object {
             "stopName": "Los Angeles Union Station",
             "which": "Union",
           },
-          "OAK-Central": Object {
+          Object {
             "id": "OAK-Central",
             "location": Object {
               "lat": 37.806624,
@@ -131,7 +1194,7 @@ Object {
             "stopName": "Oakland Central Station",
             "which": "Central",
           },
-          "OAK-Jack London Square": Object {
+          Object {
             "id": "OAK-Jack London Square",
             "location": Object {
               "lat": 37.793814,
@@ -144,7 +1207,7 @@ Object {
             "stopName": "Oakland Jack London Square Station",
             "which": "Jack London Square",
           },
-          "PLS-ACE": Object {
+          Object {
             "id": "PLS-ACE",
             "location": Object {
               "lat": 37.70165,
@@ -157,7 +1220,7 @@ Object {
             "stopName": "Pleasanton ACE Station",
             "which": "ACE",
           },
-          "REN-Amtrak": Object {
+          Object {
             "id": "REN-Amtrak",
             "location": Object {
               "lat": 38.243449,
@@ -170,7 +1233,7 @@ Object {
             "stopName": "Reno Amtrak Station",
             "which": "Amtrak",
           },
-          "SAC-Union": Object {
+          Object {
             "id": "SAC-Union",
             "location": Object {
               "lat": 38.584162,
@@ -183,7 +1246,7 @@ Object {
             "stopName": "Sacramento Union Station",
             "which": "Union",
           },
-          "SFC-Transbay": Object {
+          Object {
             "id": "SFC-Transbay",
             "location": Object {
               "lat": 37.789339,
@@ -196,7 +1259,7 @@ Object {
             "stopName": "San Francisco Transbay Terminal",
             "which": "Transbay",
           },
-          "SKN-Amtrak": Object {
+          Object {
             "id": "SKN-Amtrak",
             "location": Object {
               "lat": 37.945332,
@@ -209,7 +1272,7 @@ Object {
             "stopName": "Stockton Amtrak Station",
             "which": "Amtrak",
           },
-          "SUI-Amtrak": Object {
+          Object {
             "id": "SUI-Amtrak",
             "location": Object {
               "lat": 38.243449,
@@ -222,7 +1285,7 @@ Object {
             "stopName": "Suison-Fairfield Amtrak Station",
             "which": "Amtrak",
           },
-          "TRU-Amtrak": Object {
+          Object {
             "id": "TRU-Amtrak",
             "location": Object {
               "lat": 39.327493,
@@ -235,95 +1298,17 @@ Object {
             "stopName": "Truckee Amtrak Depot",
             "which": "Amtrak",
           },
-        },
-        "trips": Object {
-          "REN->(Altamont)->SFC Everyday Yearlong": Object {
-            "direction": Object {
-              "id": "1",
-              "resolveToStop": [Function],
-              "resolveTripSymbol": [Function],
-            },
-            "id": "REN->(Altamont)->SFC Everyday Yearlong",
-            "route": Object {
-              "id": "SFC<-Altamont->REN",
-              "places": Object {
-                "from": Object {
-                  "id": "SFC",
-                  "label": "San Francisco",
-                },
-                "to": Object {
-                  "id": "REN",
-                  "label": "Reno",
-                },
-              },
-              "routeLongName": "San Francisco/Reno via Altamont",
-              "routeShortName": "SFC<-Altamont->REN via Altamont",
-              "routeType": undefined,
-              "via": "Altamont",
-            },
-            "service": Object {
-              "days": Array [
-                "everyday",
-              ],
-              "endDate": undefined,
-              "id": "yearlong_everyday",
-              "label": "Everyday Yearlong",
-              "seasons": Array [
-                "yearlong",
-              ],
-              "startDate": undefined,
-            },
-            "stopTimes":  {},
-            "tripHeadsign": "San Francisco via Altamont",
-          },
-          "REN->(North-Bay)->SFC Everyday Yearlong": Object {
-            "direction": Object {
-              "id": "1",
-              "resolveToStop": [Function],
-              "resolveTripSymbol": [Function],
-            },
-            "id": "REN->(North-Bay)->SFC Everyday Yearlong",
-            "route": Object {
-              "id": "SFC<-North-Bay->REN",
-              "places": Object {
-                "from": Object {
-                  "id": "SFC",
-                  "label": "San Francisco",
-                },
-                "to": Object {
-                  "id": "REN",
-                  "label": "Reno",
-                },
-              },
-              "routeLongName": "San Francisco/Reno via North-Bay",
-              "routeShortName": "SFC<-North-Bay->REN via North-Bay",
-              "routeType": undefined,
-              "via": "North-Bay",
-            },
-            "service": Object {
-              "days": Array [
-                "everyday",
-              ],
-              "endDate": undefined,
-              "id": "yearlong_everyday",
-              "label": "Everyday Yearlong",
-              "seasons": Array [
-                "yearlong",
-              ],
-              "startDate": undefined,
-            },
-            "stopTimes":  {},
-            "tripHeadsign": "San Francisco via North-Bay",
-          },
-          "SFC->(Altamont)->REN Everyday Yearlong": Object {
+        ],
+        "trips": Array [
+          Object {
             "direction": Object {
               "id": "0",
               "resolveToStop": [Function],
               "resolveTripSymbol": [Function],
             },
-            "id": "SFC->(Altamont)->REN Everyday Yearlong",
+            "id": "SFC->REN Everyday Yearlong",
             "route": Object {
-              "id": "SFC<-Altamont->REN",
+              "id": "SFC<->REN",
               "places": Object {
                 "from": Object {
                   "id": "SFC",
@@ -334,10 +1319,10 @@ Object {
                   "label": "Reno",
                 },
               },
-              "routeLongName": "San Francisco/Reno via Altamont",
-              "routeShortName": "SFC<-Altamont->REN via Altamont",
+              "routeLongName": "San Francisco/Reno",
+              "routeShortName": "SFC<->REN",
               "routeType": undefined,
-              "via": "Altamont",
+              "via": undefined,
             },
             "service": Object {
               "days": Array [
@@ -352,17 +1337,56 @@ Object {
               "startDate": undefined,
             },
             "stopTimes":  {},
-            "tripHeadsign": "Reno via Altamont",
+            "tripHeadsign": "Reno",
           },
-          "SFC->(North-Bay)->REN Everyday Yearlong": Object {
+          Object {
+            "direction": Object {
+              "id": "1",
+              "resolveToStop": [Function],
+              "resolveTripSymbol": [Function],
+            },
+            "id": "REN->SFC Everyday Yearlong",
+            "route": Object {
+              "id": "SFC<->REN",
+              "places": Object {
+                "from": Object {
+                  "id": "SFC",
+                  "label": "San Francisco",
+                },
+                "to": Object {
+                  "id": "REN",
+                  "label": "Reno",
+                },
+              },
+              "routeLongName": "San Francisco/Reno",
+              "routeShortName": "SFC<->REN",
+              "routeType": undefined,
+              "via": undefined,
+            },
+            "service": Object {
+              "days": Array [
+                "everyday",
+              ],
+              "endDate": undefined,
+              "id": "yearlong_everyday",
+              "label": "Everyday Yearlong",
+              "seasons": Array [
+                "yearlong",
+              ],
+              "startDate": undefined,
+            },
+            "stopTimes":  {},
+            "tripHeadsign": "San Francisco",
+          },
+          Object {
             "direction": Object {
               "id": "0",
               "resolveToStop": [Function],
               "resolveTripSymbol": [Function],
             },
-            "id": "SFC->(North-Bay)->REN Everyday Yearlong",
+            "id": "SFC->REN Everyday Yearlong",
             "route": Object {
-              "id": "SFC<-North-Bay->REN",
+              "id": "SFC<->REN",
               "places": Object {
                 "from": Object {
                   "id": "SFC",
@@ -373,10 +1397,10 @@ Object {
                   "label": "Reno",
                 },
               },
-              "routeLongName": "San Francisco/Reno via North-Bay",
-              "routeShortName": "SFC<-North-Bay->REN via North-Bay",
+              "routeLongName": "San Francisco/Reno",
+              "routeShortName": "SFC<->REN",
               "routeType": undefined,
-              "via": "North-Bay",
+              "via": undefined,
             },
             "service": Object {
               "days": Array [
@@ -391,489 +1415,1114 @@ Object {
               "startDate": undefined,
             },
             "stopTimes":  {},
-            "tripHeadsign": "Reno via North-Bay",
+            "tripHeadsign": "Reno",
           },
-        },
+          Object {
+            "direction": Object {
+              "id": "1",
+              "resolveToStop": [Function],
+              "resolveTripSymbol": [Function],
+            },
+            "id": "REN->SFC Everyday Yearlong",
+            "route": Object {
+              "id": "SFC<->REN",
+              "places": Object {
+                "from": Object {
+                  "id": "SFC",
+                  "label": "San Francisco",
+                },
+                "to": Object {
+                  "id": "REN",
+                  "label": "Reno",
+                },
+              },
+              "routeLongName": "San Francisco/Reno",
+              "routeShortName": "SFC<->REN",
+              "routeType": undefined,
+              "via": undefined,
+            },
+            "service": Object {
+              "days": Array [
+                "everyday",
+              ],
+              "endDate": undefined,
+              "id": "yearlong_everyday",
+              "label": "Everyday Yearlong",
+              "seasons": Array [
+                "yearlong",
+              ],
+              "startDate": undefined,
+            },
+            "stopTimes":  {},
+            "tripHeadsign": "San Francisco",
+          },
+        ],
       },
-      "id": "california",
+      "id": "oakland",
       "mapbox": Object {
         "iconAtlas": "data/location-icon-atlas.png",
         "mapStyle": "mapbox://styles/mapbox/streets-v8",
         "mapboxApiAccessToken": "pk.eyJ1IjoiY2Fsb2NhbiIsImEiOiJjaXl1aXkxZjkwMG15MndxbmkxMHczNG50In0.07Zu3XXYijL6GJMuxFtvQg",
+        "perspectiveEnabled": "true",
+        "preventStyleDiffing": "false",
         "showCluster": "true",
+        "showZoomControls": "true",
         "viewport": Immutable.Map {
-          pitch: 40,
-          bearing: 0,
-          startDragLngLat: null,
-          isDragging: false,
-          latitude: 37,
-          longitude: -119,
-          zoom: 5,
-},
+          "pitch": 40,
+          "bearing": 0,
+          "startDragLngLat": null,
+          "isDragging": false,
+          "latitude": 37,
+          "longitude": -119,
+          "zoom": 5,
+        },
       },
       "travel": Object {
-        "journeys": [Function],
-        "locations": [Function],
+        "journeys": Object {
+          "current": "1487635143780",
+          "entries": Object {
+            "journeys": Array [
+              Object {
+                "label": "Trip from Oakland To Truckee via Stockton",
+                "locations": Object {
+                  "localEnd": "1487636978561",
+                  "localStart": "1487636046449",
+                  "stopEnd": "1487636659567",
+                  "stopStart": "1487636365510",
+                  "wayPoints": Array [
+                    "1487636173160",
+                  ],
+                },
+                "route": "1487637354681",
+              },
+              Object {
+                "label": "Trip from San Francisco to Los Angeles",
+                "locations": Object {
+                  "stopEnd": "1487639102048",
+                  "stopStart": "1487638573082",
+                },
+                "route": "1487637354681",
+              },
+            ],
+          },
+          "history": Array [
+            "1487635143780",
+          ],
+        },
+        "locations": Array [
+          Object {
+            "label": "Near Home",
+            "point": Object {
+              "lat": 37.808706,
+              "lon": -122.260369,
+            },
+            "resolvedAddress": "699 Bellevue Ave, Oakland, CA 94610",
+            "searchTerm": "Children's Fairyland",
+          },
+          Object {
+            "label": "Skiing",
+            "point": Object {
+              "lat": 39.274839,
+              "lon": -120.120605,
+            },
+            "resolvedAddress": "Northstar California Resort, Northstar Drive, Truckee, CA",
+            "searchTerm": "Northstar Resort",
+          },
+        ],
       },
     },
-    "currentKey": "california",
-    "paris-sample": Object {
+    "paris": Object {
       "geojson": Object {
-        "copyright": "The data included in this document is from www.openstreetmap.org. The data is made available under ODbL.",
-        "features": Array [
-          Object {
-            "geometry": Object {
-              "coordinates": Array [
-                Array [
-                  2.3372032,
-                  48.8404254,
+        "markers": Object {},
+        "osm": Object {
+          "copyright": "The data included in this document is from www.openstreetmap.org. The data is made available under ODbL.",
+          "features": Array [
+            Object {
+              "geometry": Object {
+                "coordinates": Array [
+                  Array [
+                    2.3372032,
+                    48.8404254,
+                  ],
+                  Array [
+                    2.3372715,
+                    48.8406677,
+                  ],
+                  Array [
+                    2.3373962,
+                    48.8410543,
+                  ],
+                  Array [
+                    2.3380024,
+                    48.8422009,
+                  ],
+                  Array [
+                    2.3385107,
+                    48.8431117,
+                  ],
+                  Array [
+                    2.3389787,
+                    48.8439785,
+                  ],
+                  Array [
+                    2.3392577,
+                    48.8444515,
+                  ],
+                  Array [
+                    2.3402917,
+                    48.8463852,
+                  ],
+                  Array [
+                    2.3405962,
+                    48.8469464,
+                  ],
+                  Array [
+                    2.3407859,
+                    48.8472594,
+                  ],
+                  Array [
+                    2.3411775,
+                    48.8479028,
+                  ],
+                  Array [
+                    2.3422987,
+                    48.8497393,
+                  ],
+                  Array [
+                    2.34276,
+                    48.8507232,
+                  ],
+                  Array [
+                    2.3429223,
+                    48.8510339,
+                  ],
+                  Array [
+                    2.3430309,
+                    48.8511954,
+                  ],
+                  Array [
+                    2.3432019,
+                    48.8514041,
+                  ],
+                  Array [
+                    2.3434513,
+                    48.851675,
+                  ],
+                  Array [
+                    2.3436619,
+                    48.851859,
+                  ],
+                  Array [
+                    2.3439871,
+                    48.8520933,
+                  ],
+                  Array [
+                    2.3443787,
+                    48.8523492,
+                  ],
+                  Array [
+                    2.3447636,
+                    48.8525821,
+                  ],
+                  Array [
+                    2.3454415,
+                    48.8529788,
+                  ],
+                  Array [
+                    2.3458338,
+                    48.8532131,
+                  ],
+                  Array [
+                    2.346153,
+                    48.8534072,
+                  ],
+                  Array [
+                    2.3465238,
+                    48.8536327,
+                  ],
+                  Array [
+                    2.3468805,
+                    48.8538939,
+                  ],
+                  Array [
+                    2.3472815,
+                    48.8542327,
+                  ],
+                  Array [
+                    2.3476597,
+                    48.8546377,
+                  ],
                 ],
-                Array [
-                  2.3372715,
-                  48.8406677,
+                "type": "LineString",
+              },
+              "id": "way/29735335",
+              "properties": Object {
+                "@changeset": "40980697",
+                "@id": "way/29735335",
+                "@timestamp": "2016-07-23T22:33:32Z",
+                "@uid": "158826",
+                "@user": "cquest",
+                "@version": "34",
+                "electrified": "contact_line",
+                "frequency": "0",
+                "gauge": "1435",
+                "importance": "regional",
+                "layer": "-5",
+                "name": "RER B",
+                "operator": "RATP",
+                "railway": "rail",
+                "source": "STIF",
+                "tunnel": "yes",
+                "usage": "main",
+                "voltage": "1500",
+              },
+              "type": "Feature",
+            },
+            Object {
+              "geometry": Object {
+                "coordinates": Array [
+                  Array [
+                    2.3580437,
+                    48.8489285,
+                  ],
+                  Array [
+                    2.3569883,
+                    48.8493417,
+                  ],
+                  Array [
+                    2.3566417,
+                    48.8494774,
+                  ],
+                  Array [
+                    2.3498091,
+                    48.8517476,
+                  ],
+                  Array [
+                    2.3481873,
+                    48.85241,
+                  ],
+                  Array [
+                    2.3468858,
+                    48.8530098,
+                  ],
+                  Array [
+                    2.3465228,
+                    48.8531476,
+                  ],
+                  Array [
+                    2.3454232,
+                    48.8534731,
+                  ],
                 ],
-                Array [
-                  2.3373962,
-                  48.8410543,
+                "type": "LineString",
+              },
+              "id": "way/334870919",
+              "properties": Object {
+                "@changeset": "34996941",
+                "@id": "way/334870919",
+                "@timestamp": "2015-10-31T17:43:46Z",
+                "@uid": "53964",
+                "@user": "_Mathieu_",
+                "@version": "4",
+                "electrified": "contact_line",
+                "frequency": "0",
+                "gauge": "1435",
+                "importance": "regional",
+                "layer": "-1",
+                "maxspeed": "60",
+                "name": "RER C - Ligne de Musée d'Orsay à Austerlitz",
+                "railway": "rail",
+                "tracks": "2",
+                "tunnel": "yes",
+                "usage": "main",
+                "voltage": "1500",
+              },
+              "type": "Feature",
+            },
+            Object {
+              "geometry": Object {
+                "coordinates": Array [
+                  Array [
+                    2.3454232,
+                    48.8534731,
+                  ],
+                  Array [
+                    2.344675,
+                    48.8536946,
+                  ],
+                  Array [
+                    2.3440745,
+                    48.8539094,
+                  ],
+                  Array [
+                    2.343693,
+                    48.8540843,
+                  ],
+                  Array [
+                    2.3431388,
+                    48.854372,
+                  ],
+                  Array [
+                    2.342491,
+                    48.8547437,
+                  ],
+                  Array [
+                    2.3402755,
+                    48.8563525,
+                  ],
+                  Array [
+                    2.3379956,
+                    48.8575207,
+                  ],
+                  Array [
+                    2.3329547,
+                    48.8584095,
+                  ],
+                  Array [
+                    2.3275778,
+                    48.8601289,
+                  ],
                 ],
-                Array [
-                  2.3380024,
-                  48.8422009,
+                "type": "LineString",
+              },
+              "id": "way/377746412",
+              "properties": Object {
+                "@changeset": "34996941",
+                "@id": "way/377746412",
+                "@timestamp": "2015-10-31T17:43:41Z",
+                "@uid": "53964",
+                "@user": "_Mathieu_",
+                "@version": "1",
+                "electrified": "contact_line",
+                "frequency": "0",
+                "gauge": "1435",
+                "importance": "regional",
+                "layer": "-1",
+                "maxspeed": "50",
+                "name": "RER C - Ligne de Musée d'Orsay à Austerlitz",
+                "railway": "rail",
+                "tracks": "2",
+                "tunnel": "yes",
+                "usage": "main",
+                "voltage": "1500",
+              },
+              "type": "Feature",
+            },
+            Object {
+              "geometry": Object {
+                "coordinates": Array [
+                  2.3454363,
+                  48.8534806,
                 ],
-                Array [
-                  2.3385107,
-                  48.8431117,
-                ],
-                Array [
-                  2.3389787,
-                  48.8439785,
-                ],
-                Array [
-                  2.3392577,
-                  48.8444515,
-                ],
-                Array [
+                "type": "Point",
+              },
+              "id": "node/3572156993",
+              "properties": Object {
+                "@changeset": "42352341",
+                "@id": "node/3572156993",
+                "@timestamp": "2016-09-22T16:51:49Z",
+                "@uid": "1429581",
+                "@user": "Guillaume Mortier",
+                "@version": "3",
+                "STIF:zone": "1",
+                "name": "Saint-Michel Notre-Dame",
+                "official_name": "ST MICHEL NOTRE DAME",
+                "operator": "SNCF;RATP",
+                "railway": "station",
+                "ref": "RER B, C",
+                "ref:FR:RATP": "5604",
+                "ref:FR:uic8": "87547315;87785436",
+                "ref:SNCF": "RER",
+                "ref:SNCF:RER": "C",
+                "type:RATP": "rer",
+                "uic_ref": "8754731;8778543",
+                "wheelchair": "yes",
+                "wikipedia": "fr:Gare Saint-Michel - Notre-Dame",
+              },
+              "type": "Feature",
+            },
+            Object {
+              "geometry": Object {
+                "coordinates": Array [
                   2.3402917,
                   48.8463852,
                 ],
-                Array [
-                  2.3405962,
-                  48.8469464,
-                ],
-                Array [
-                  2.3407859,
-                  48.8472594,
-                ],
-                Array [
-                  2.3411775,
-                  48.8479028,
-                ],
-                Array [
-                  2.3422987,
-                  48.8497393,
-                ],
-                Array [
-                  2.34276,
-                  48.8507232,
-                ],
-                Array [
-                  2.3429223,
-                  48.8510339,
-                ],
-                Array [
-                  2.3430309,
-                  48.8511954,
-                ],
-                Array [
-                  2.3432019,
-                  48.8514041,
-                ],
-                Array [
-                  2.3434513,
-                  48.851675,
-                ],
-                Array [
-                  2.3436619,
-                  48.851859,
-                ],
-                Array [
-                  2.3439871,
-                  48.8520933,
-                ],
-                Array [
-                  2.3443787,
-                  48.8523492,
-                ],
-                Array [
-                  2.3447636,
-                  48.8525821,
-                ],
-                Array [
-                  2.3454415,
-                  48.8529788,
-                ],
-                Array [
-                  2.3458338,
-                  48.8532131,
-                ],
-                Array [
+                "type": "Point",
+              },
+              "id": "node/327432589",
+              "properties": Object {
+                "@changeset": "40980697",
+                "@id": "node/327432589",
+                "@timestamp": "2016-07-23T22:33:35Z",
+                "@uid": "158826",
+                "@user": "cquest",
+                "@version": "12",
+                "STIF:zone": "1",
+                "name": "Luxembourg",
+                "operator": "RATP",
+                "railway": "station",
+                "ref": "RER B",
+                "ref:FR:RATP": "1811",
+                "type:RATP": "rer",
+                "uic_ref": "8775861",
+                "wheelchair": "yes",
+                "wikipedia": "fr:Gare du Luxembourg",
+              },
+              "type": "Feature",
+            },
+            Object {
+              "geometry": Object {
+                "coordinates": Array [
                   2.346153,
                   48.8534072,
                 ],
-                Array [
-                  2.3465238,
-                  48.8536327,
-                ],
-                Array [
-                  2.3468805,
-                  48.8538939,
-                ],
-                Array [
-                  2.3472815,
-                  48.8542327,
-                ],
-                Array [
-                  2.3476597,
-                  48.8546377,
-                ],
-              ],
-              "type": "LineString",
+                "type": "Point",
+              },
+              "id": "node/270191809",
+              "properties": Object {
+                "@changeset": "42352341",
+                "@id": "node/270191809",
+                "@timestamp": "2016-09-22T16:51:50Z",
+                "@uid": "1429581",
+                "@user": "Guillaume Mortier",
+                "@version": "29",
+                "STIF:zone": "1",
+                "name": "Saint-Michel Notre-Dame",
+                "official_name": "ST MICHEL NOTRE DAME",
+                "operator": "SNCF;RATP",
+                "public_transport": "stop_position",
+                "railway": "stop",
+                "ref": "RER B, C",
+                "ref:FR:RATP": "5604",
+                "ref:FR:uic8": "87547315;87785436",
+                "ref:SNCF": "RER",
+                "ref:SNCF:RER": "C",
+                "type:RATP": "rer",
+                "uic_ref": "8754731;8778543",
+                "wheelchair": "yes",
+                "wikipedia": "fr:Gare Saint-Michel - Notre-Dame",
+              },
+              "type": "Feature",
             },
-            "id": "way/29735335",
-            "properties": Object {
-              "@changeset": "40980697",
-              "@id": "way/29735335",
-              "@timestamp": "2016-07-23T22:33:32Z",
-              "@uid": "158826",
-              "@user": "cquest",
-              "@version": "34",
-              "electrified": "contact_line",
-              "frequency": "0",
-              "gauge": "1435",
-              "importance": "regional",
-              "layer": "-5",
-              "name": "RER B",
-              "operator": "RATP",
-              "railway": "rail",
-              "source": "STIF",
-              "tunnel": "yes",
-              "usage": "main",
-              "voltage": "1500",
-            },
-            "type": "Feature",
-          },
-          Object {
-            "geometry": Object {
-              "coordinates": Array [
-                Array [
-                  2.3580437,
-                  48.8489285,
-                ],
-                Array [
+            Object {
+              "geometry": Object {
+                "coordinates": Array [
                   2.3569883,
                   48.8493417,
                 ],
-                Array [
-                  2.3566417,
-                  48.8494774,
-                ],
-                Array [
-                  2.3498091,
-                  48.8517476,
-                ],
-                Array [
-                  2.3481873,
-                  48.85241,
-                ],
-                Array [
-                  2.3468858,
-                  48.8530098,
-                ],
-                Array [
-                  2.3465228,
-                  48.8531476,
-                ],
-                Array [
-                  2.3454232,
-                  48.8534731,
-                ],
-              ],
-              "type": "LineString",
+                "type": "Point",
+              },
+              "id": "node/3809893083",
+              "properties": Object {
+                "@changeset": "34971642",
+                "@id": "node/3809893083",
+                "@timestamp": "2015-10-30T12:46:44Z",
+                "@uid": "53964",
+                "@user": "_Mathieu_",
+                "@version": "1",
+                "highway": "crossing",
+              },
+              "type": "Feature",
             },
-            "id": "way/334870919",
-            "properties": Object {
-              "@changeset": "34996941",
-              "@id": "way/334870919",
-              "@timestamp": "2015-10-31T17:43:46Z",
-              "@uid": "53964",
-              "@user": "_Mathieu_",
-              "@version": "4",
-              "electrified": "contact_line",
-              "frequency": "0",
-              "gauge": "1435",
-              "importance": "regional",
-              "layer": "-1",
-              "maxspeed": "60",
-              "name": "RER C - Ligne de Musée d'Orsay à Austerlitz",
-              "railway": "rail",
-              "tracks": "2",
-              "tunnel": "yes",
-              "usage": "main",
-              "voltage": "1500",
-            },
-            "type": "Feature",
-          },
-          Object {
-            "geometry": Object {
-              "coordinates": Array [
-                Array [
-                  2.3454232,
-                  48.8534731,
-                ],
-                Array [
-                  2.344675,
-                  48.8536946,
-                ],
-                Array [
-                  2.3440745,
-                  48.8539094,
-                ],
-                Array [
-                  2.343693,
-                  48.8540843,
-                ],
-                Array [
-                  2.3431388,
-                  48.854372,
-                ],
-                Array [
-                  2.342491,
-                  48.8547437,
-                ],
-                Array [
-                  2.3402755,
-                  48.8563525,
-                ],
-                Array [
-                  2.3379956,
-                  48.8575207,
-                ],
-                Array [
-                  2.3329547,
-                  48.8584095,
-                ],
-                Array [
-                  2.3275778,
-                  48.8601289,
-                ],
-              ],
-              "type": "LineString",
-            },
-            "id": "way/377746412",
-            "properties": Object {
-              "@changeset": "34996941",
-              "@id": "way/377746412",
-              "@timestamp": "2015-10-31T17:43:41Z",
-              "@uid": "53964",
-              "@user": "_Mathieu_",
-              "@version": "1",
-              "electrified": "contact_line",
-              "frequency": "0",
-              "gauge": "1435",
-              "importance": "regional",
-              "layer": "-1",
-              "maxspeed": "50",
-              "name": "RER C - Ligne de Musée d'Orsay à Austerlitz",
-              "railway": "rail",
-              "tracks": "2",
-              "tunnel": "yes",
-              "usage": "main",
-              "voltage": "1500",
-            },
-            "type": "Feature",
-          },
-          Object {
-            "geometry": Object {
-              "coordinates": Array [
-                2.3454363,
-                48.8534806,
-              ],
-              "type": "Point",
-            },
-            "id": "node/3572156993",
-            "properties": Object {
-              "@changeset": "42352341",
-              "@id": "node/3572156993",
-              "@timestamp": "2016-09-22T16:51:49Z",
-              "@uid": "1429581",
-              "@user": "Guillaume Mortier",
-              "@version": "3",
-              "STIF:zone": "1",
-              "name": "Saint-Michel Notre-Dame",
-              "official_name": "ST MICHEL NOTRE DAME",
-              "operator": "SNCF;RATP",
-              "railway": "station",
-              "ref": "RER B, C",
-              "ref:FR:RATP": "5604",
-              "ref:FR:uic8": "87547315;87785436",
-              "ref:SNCF": "RER",
-              "ref:SNCF:RER": "C",
-              "type:RATP": "rer",
-              "uic_ref": "8754731;8778543",
-              "wheelchair": "yes",
-              "wikipedia": "fr:Gare Saint-Michel - Notre-Dame",
-            },
-            "type": "Feature",
-          },
-          Object {
-            "geometry": Object {
-              "coordinates": Array [
-                2.3402917,
-                48.8463852,
-              ],
-              "type": "Point",
-            },
-            "id": "node/327432589",
-            "properties": Object {
-              "@changeset": "40980697",
-              "@id": "node/327432589",
-              "@timestamp": "2016-07-23T22:33:35Z",
-              "@uid": "158826",
-              "@user": "cquest",
-              "@version": "12",
-              "STIF:zone": "1",
-              "name": "Luxembourg",
-              "operator": "RATP",
-              "railway": "station",
-              "ref": "RER B",
-              "ref:FR:RATP": "1811",
-              "type:RATP": "rer",
-              "uic_ref": "8775861",
-              "wheelchair": "yes",
-              "wikipedia": "fr:Gare du Luxembourg",
-            },
-            "type": "Feature",
-          },
-          Object {
-            "geometry": Object {
-              "coordinates": Array [
-                2.346153,
-                48.8534072,
-              ],
-              "type": "Point",
-            },
-            "id": "node/270191809",
-            "properties": Object {
-              "@changeset": "42352341",
-              "@id": "node/270191809",
-              "@timestamp": "2016-09-22T16:51:50Z",
-              "@uid": "1429581",
-              "@user": "Guillaume Mortier",
-              "@version": "29",
-              "STIF:zone": "1",
-              "name": "Saint-Michel Notre-Dame",
-              "official_name": "ST MICHEL NOTRE DAME",
-              "operator": "SNCF;RATP",
-              "public_transport": "stop_position",
-              "railway": "stop",
-              "ref": "RER B, C",
-              "ref:FR:RATP": "5604",
-              "ref:FR:uic8": "87547315;87785436",
-              "ref:SNCF": "RER",
-              "ref:SNCF:RER": "C",
-              "type:RATP": "rer",
-              "uic_ref": "8754731;8778543",
-              "wheelchair": "yes",
-              "wikipedia": "fr:Gare Saint-Michel - Notre-Dame",
-            },
-            "type": "Feature",
-          },
-          Object {
-            "geometry": Object {
-              "coordinates": Array [
-                2.3569883,
-                48.8493417,
-              ],
-              "type": "Point",
-            },
-            "id": "node/3809893083",
-            "properties": Object {
-              "@changeset": "34971642",
-              "@id": "node/3809893083",
-              "@timestamp": "2015-10-30T12:46:44Z",
-              "@uid": "53964",
-              "@user": "_Mathieu_",
-              "@version": "1",
-              "highway": "crossing",
-            },
-            "type": "Feature",
-          },
-        ],
-        "generator": "overpass-turbo",
-        "timestamp": "2017-04-04T17:49:02Z",
-        "type": "FeatureCollection",
+          ],
+          "generator": "overpass-turbo",
+          "timestamp": "2017-04-04T17:49:02Z",
+          "type": "FeatureCollection",
+        },
+        "searches": Object {},
       },
       "geospatial": Object {
-        "bound": Array [
-          2.252969741821289,
-          48.87894136251639,
-          2.313222885131836,
-          48.91172616674751,
+        "bounds": Array [
+          -122.720306,
+          37.005783,
+          -121.568275,
+          38.44466,
         ],
       },
       "gtfs": Object {
-        "routeTypes": Object {
-          "103": Object {
+        "calendar": Array [
+          Object {
+            "days": Array [
+              "everyday",
+            ],
+            "endDate": undefined,
+            "id": "yearlong_everyday",
+            "label": "Everyday Yearlong",
+            "seasons": Array [
+              "yearlong",
+            ],
+            "startDate": undefined,
+          },
+          Object {
+            "days": Array [
+              "weekend",
+            ],
+            "endDate": null,
+            "id": "yearlong_weekend",
+            "label": "Weekend Yearlong",
+            "seasons": Array [
+              "yearlong",
+            ],
+            "startDate": null,
+          },
+        ],
+        "routeTypes": Array [
+          Object {
             "description": "Inter Regional Rail Service",
             "id": "103",
             "supported": true,
           },
-        },
-        "routes": Object {},
-        "stops": Object {},
-        "trips": Object {},
+        ],
+        "routes": Array [
+          Object {
+            "id": "SFC<->REN",
+            "places": Object {
+              "from": Object {
+                "id": "SFC",
+                "label": "San Francisco",
+              },
+              "to": Object {
+                "id": "REN",
+                "label": "Reno",
+              },
+            },
+            "routeLongName": "San Francisco/Reno",
+            "routeShortName": "SFC<->REN",
+            "routeType": undefined,
+            "via": undefined,
+          },
+          Object {
+            "id": "SFC<->REN",
+            "places": Object {
+              "from": Object {
+                "id": "SFC",
+                "label": "San Francisco",
+              },
+              "to": Object {
+                "id": "REN",
+                "label": "Reno",
+              },
+            },
+            "routeLongName": "San Francisco/Reno",
+            "routeShortName": "SFC<->REN",
+            "routeType": undefined,
+            "via": undefined,
+          },
+          Object {
+            "id": "SFC<->LAX",
+            "places": Object {
+              "from": Object {
+                "id": "SFC",
+                "label": "San Francisco",
+              },
+              "to": Object {
+                "id": "LAX",
+                "label": "Los Angeles",
+              },
+            },
+            "routeLongName": "San Francisco/Los Angeles",
+            "routeShortName": "SFC<->LAX",
+            "routeType": undefined,
+            "via": undefined,
+          },
+        ],
+        "stops": Array [
+          Object {
+            "id": "LAX-Union",
+            "location": Object {
+              "lat": 34.056219,
+              "lon": -118.236502,
+            },
+            "place": Object {
+              "id": "LAX",
+              "label": "Los Angeles",
+            },
+            "stopName": "Los Angeles Union Station",
+            "which": "Union",
+          },
+          Object {
+            "id": "OAK-Central",
+            "location": Object {
+              "lat": 37.806624,
+              "lon": -122.277158,
+            },
+            "place": Object {
+              "id": "OAK",
+              "label": "Oakland",
+            },
+            "stopName": "Oakland Central Station",
+            "which": "Central",
+          },
+          Object {
+            "id": "OAK-Jack London Square",
+            "location": Object {
+              "lat": 37.793814,
+              "lon": -122.271522,
+            },
+            "place": Object {
+              "id": "OAK",
+              "label": "Oakland",
+            },
+            "stopName": "Oakland Jack London Square Station",
+            "which": "Jack London Square",
+          },
+          Object {
+            "id": "PLS-ACE",
+            "location": Object {
+              "lat": 37.70165,
+              "lon": -121.899181,
+            },
+            "place": Object {
+              "id": "PLS",
+              "label": "Pleasanton",
+            },
+            "stopName": "Pleasanton ACE Station",
+            "which": "ACE",
+          },
+          Object {
+            "id": "REN-Amtrak",
+            "location": Object {
+              "lat": 38.243449,
+              "lon": -122.041192,
+            },
+            "place": Object {
+              "id": "REN",
+              "label": "Reno",
+            },
+            "stopName": "Reno Amtrak Station",
+            "which": "Amtrak",
+          },
+          Object {
+            "id": "SAC-Union",
+            "location": Object {
+              "lat": 38.584162,
+              "lon": -121.500675,
+            },
+            "place": Object {
+              "id": "SAC",
+              "label": "Sacramento",
+            },
+            "stopName": "Sacramento Union Station",
+            "which": "Union",
+          },
+          Object {
+            "id": "SFC-Transbay",
+            "location": Object {
+              "lat": 37.789339,
+              "lon": -122.392481,
+            },
+            "place": Object {
+              "id": "SFC",
+              "label": "San Francisco",
+            },
+            "stopName": "San Francisco Transbay Terminal",
+            "which": "Transbay",
+          },
+          Object {
+            "id": "SKN-Amtrak",
+            "location": Object {
+              "lat": 37.945332,
+              "lon": -121.285602,
+            },
+            "place": Object {
+              "id": "SKN",
+              "label": "Stockton",
+            },
+            "stopName": "Stockton Amtrak Station",
+            "which": "Amtrak",
+          },
+          Object {
+            "id": "SUI-Amtrak",
+            "location": Object {
+              "lat": 38.243449,
+              "lon": -122.041192,
+            },
+            "place": Object {
+              "id": "SUI",
+              "label": "Suison-Fairfield",
+            },
+            "stopName": "Suison-Fairfield Amtrak Station",
+            "which": "Amtrak",
+          },
+          Object {
+            "id": "TRU-Amtrak",
+            "location": Object {
+              "lat": 39.327493,
+              "lon": -120.18562,
+            },
+            "place": Object {
+              "id": "TRU",
+              "label": "Truckee",
+            },
+            "stopName": "Truckee Amtrak Depot",
+            "which": "Amtrak",
+          },
+        ],
+        "trips": Array [
+          Object {
+            "direction": Object {
+              "id": "0",
+              "resolveToStop": [Function],
+              "resolveTripSymbol": [Function],
+            },
+            "id": "SFC->REN Everyday Yearlong",
+            "route": Object {
+              "id": "SFC<->REN",
+              "places": Object {
+                "from": Object {
+                  "id": "SFC",
+                  "label": "San Francisco",
+                },
+                "to": Object {
+                  "id": "REN",
+                  "label": "Reno",
+                },
+              },
+              "routeLongName": "San Francisco/Reno",
+              "routeShortName": "SFC<->REN",
+              "routeType": undefined,
+              "via": undefined,
+            },
+            "service": Object {
+              "days": Array [
+                "everyday",
+              ],
+              "endDate": undefined,
+              "id": "yearlong_everyday",
+              "label": "Everyday Yearlong",
+              "seasons": Array [
+                "yearlong",
+              ],
+              "startDate": undefined,
+            },
+            "stopTimes":  {},
+            "tripHeadsign": "Reno",
+          },
+          Object {
+            "direction": Object {
+              "id": "1",
+              "resolveToStop": [Function],
+              "resolveTripSymbol": [Function],
+            },
+            "id": "REN->SFC Everyday Yearlong",
+            "route": Object {
+              "id": "SFC<->REN",
+              "places": Object {
+                "from": Object {
+                  "id": "SFC",
+                  "label": "San Francisco",
+                },
+                "to": Object {
+                  "id": "REN",
+                  "label": "Reno",
+                },
+              },
+              "routeLongName": "San Francisco/Reno",
+              "routeShortName": "SFC<->REN",
+              "routeType": undefined,
+              "via": undefined,
+            },
+            "service": Object {
+              "days": Array [
+                "everyday",
+              ],
+              "endDate": undefined,
+              "id": "yearlong_everyday",
+              "label": "Everyday Yearlong",
+              "seasons": Array [
+                "yearlong",
+              ],
+              "startDate": undefined,
+            },
+            "stopTimes":  {},
+            "tripHeadsign": "San Francisco",
+          },
+          Object {
+            "direction": Object {
+              "id": "0",
+              "resolveToStop": [Function],
+              "resolveTripSymbol": [Function],
+            },
+            "id": "SFC->REN Everyday Yearlong",
+            "route": Object {
+              "id": "SFC<->REN",
+              "places": Object {
+                "from": Object {
+                  "id": "SFC",
+                  "label": "San Francisco",
+                },
+                "to": Object {
+                  "id": "REN",
+                  "label": "Reno",
+                },
+              },
+              "routeLongName": "San Francisco/Reno",
+              "routeShortName": "SFC<->REN",
+              "routeType": undefined,
+              "via": undefined,
+            },
+            "service": Object {
+              "days": Array [
+                "everyday",
+              ],
+              "endDate": undefined,
+              "id": "yearlong_everyday",
+              "label": "Everyday Yearlong",
+              "seasons": Array [
+                "yearlong",
+              ],
+              "startDate": undefined,
+            },
+            "stopTimes":  {},
+            "tripHeadsign": "Reno",
+          },
+          Object {
+            "direction": Object {
+              "id": "1",
+              "resolveToStop": [Function],
+              "resolveTripSymbol": [Function],
+            },
+            "id": "REN->SFC Everyday Yearlong",
+            "route": Object {
+              "id": "SFC<->REN",
+              "places": Object {
+                "from": Object {
+                  "id": "SFC",
+                  "label": "San Francisco",
+                },
+                "to": Object {
+                  "id": "REN",
+                  "label": "Reno",
+                },
+              },
+              "routeLongName": "San Francisco/Reno",
+              "routeShortName": "SFC<->REN",
+              "routeType": undefined,
+              "via": undefined,
+            },
+            "service": Object {
+              "days": Array [
+                "everyday",
+              ],
+              "endDate": undefined,
+              "id": "yearlong_everyday",
+              "label": "Everyday Yearlong",
+              "seasons": Array [
+                "yearlong",
+              ],
+              "startDate": undefined,
+            },
+            "stopTimes":  {},
+            "tripHeadsign": "San Francisco",
+          },
+        ],
       },
-      "id": "paris-sample",
+      "id": "paris",
       "mapbox": Object {
         "iconAtlas": "data/location-icon-atlas.png",
+        "mapStyle": "mapbox://styles/mapbox/streets-v8",
         "mapboxApiAccessToken": "pk.eyJ1IjoiY2Fsb2NhbiIsImEiOiJjaXl1aXkxZjkwMG15MndxbmkxMHczNG50In0.07Zu3XXYijL6GJMuxFtvQg",
+        "perspectiveEnabled": "true",
+        "preventStyleDiffing": "false",
         "showCluster": "true",
+        "showZoomControls": "true",
         "viewport": Immutable.Map {
-          latitude: 2.2834758,
-          longitude: 48.905901,
-          zoom: 5,
-},
+          "pitch": 40,
+          "bearing": 0,
+          "startDragLngLat": null,
+          "isDragging": false,
+          "latitude": 37,
+          "longitude": -119,
+          "zoom": 5,
+        },
       },
       "travel": Object {
-        "journeys": [Function],
-        "locations": [Function],
+        "journeys": Object {
+          "current": "1487635143780",
+          "entries": Object {
+            "journeys": Array [
+              Object {
+                "label": "Trip from Oakland To Truckee via Stockton",
+                "locations": Object {
+                  "localEnd": "1487636978561",
+                  "localStart": "1487636046449",
+                  "stopEnd": "1487636659567",
+                  "stopStart": "1487636365510",
+                  "wayPoints": Array [
+                    "1487636173160",
+                  ],
+                },
+                "route": "1487637354681",
+              },
+              Object {
+                "label": "Trip from San Francisco to Los Angeles",
+                "locations": Object {
+                  "stopEnd": "1487639102048",
+                  "stopStart": "1487638573082",
+                },
+                "route": "1487637354681",
+              },
+            ],
+          },
+          "history": Array [
+            "1487635143780",
+          ],
+        },
+        "locations": Array [
+          Object {
+            "label": "Near Home",
+            "point": Object {
+              "lat": 37.808706,
+              "lon": -122.260369,
+            },
+            "resolvedAddress": "699 Bellevue Ave, Oakland, CA 94610",
+            "searchTerm": "Children's Fairyland",
+          },
+          Object {
+            "label": "Skiing",
+            "point": Object {
+              "lat": 39.274839,
+              "lon": -120.120605,
+            },
+            "resolvedAddress": "Northstar California Resort, Northstar Drive, Truckee, CA",
+            "searchTerm": "Northstar Resort",
+          },
+        ],
       },
     },
   },
   "settings": Object {
-    "defaultRegion": "california",
-    "environments": Array [
-      Object {
-        "domain": "rescapes.net",
-        "id": "production",
+    "api": Object {
+      "host": "localhost",
+      "port": "3000",
+      "protocol": "http",
+      "root": "/graphql/",
+    },
+    "cycle": Object {
+      "drivers": Object {
+        "api": "HTTP",
       },
-    ],
+    },
+    "domain": "localhost",
     "mapbox": Object {
       "iconAtlas": "data/location-icon-atlas.png",
       "mapboxApiAccessToken": "pk.eyJ1IjoiY2Fsb2NhbiIsImEiOiJjaXl1aXkxZjkwMG15MndxbmkxMHczNG50In0.07Zu3XXYijL6GJMuxFtvQg",
+      "perspectiveEnabled": "true",
+      "preventStyleDiffing": "false",
       "showCluster": "true",
+      "showZoomControls": "true",
     },
     "markers": Object {},
     "overpass": Object {
       "cellSize": 100,
       "sleepBetweenCalls": 1000,
     },
-    "regions": Array [
-      Object {
-        "id": "california",
-        "label": "California",
+  },
+  "styles": Object {
+    "default": Object {
+      "MozAppearance": "none",
+      "WebkitAppearance": "none",
+      "backgroundColor": "blue",
+      "border": 0,
+      "color": "white",
+      "display": "inline-block",
+      "fontFamily": "inherit",
+      "fontSize": "inherit",
+      "fontWeight": "bold",
+      "margin": 0,
+      "paddingBottom": 8,
+      "paddingLeft": 16,
+      "paddingRight": 16,
+      "paddingTop": 8,
+      "textDecoration": "none",
+    },
+  },
+  "users": Object {
+    "app_admin": Object {
+      "permission": "administrate",
+      "regions": Object {
+        "ids": Object {},
       },
-    ],
+    },
+    "californiaManager": Object {
+      "id": "californiaManager",
+      "isActive": true,
+      "name": "Jerry Brown",
+      "permission": "manage",
+      "regions": Array [
+        Object {
+          "id": "oakland",
+          "isSelected": true,
+        },
+      ],
+    },
+    "californiaUser": Object {
+      "id": "californiaUser",
+      "name": "Nancy Pelosi",
+      "permission": "use",
+      "regions": Array [
+        Object {
+          "id": "oakland",
+          "isSelected": true,
+        },
+      ],
+    },
+    "californiaVisitor": Object {
+      "id": "californiaVisitor",
+      "name": "Angela Merkel",
+      "permission": "visit",
+      "regions": Array [
+        Object {
+          "id": "oakland",
+          "isSelected": true,
+        },
+      ],
+    },
+    "parisManager": Object {
+      "id": "parisManager",
+      "name": "Paris Manager",
+      "permission": "manage",
+      "regions": Array [
+        Object {
+          "id": "paris",
+          "isSelected": true,
+        },
+      ],
+    },
+    "parisUser": Object {
+      "id": "parisUser",
+      "name": "Paris User",
+      "permission": "use",
+      "regions": Array [
+        Object {
+          "id": "paris",
+          "isSelected": true,
+        },
+      ],
+    },
+    "parisVisitor": Object {
+      "id": "parisVisitor",
+      "name": "Paris Visitor",
+      "permission": "visit",
+      "regions": Array [
+        Object {
+          "id": "paris",
+          "isSelected": true,
+        },
+      ],
+    },
+    "region_manager": Object {
+      "permission": "manage",
+      "regions": Object {},
+    },
+    "region_user": Object {
+      "permission": "use",
+      "regions": Object {},
+    },
+    "region_visitor": Object {
+      "permission": "visit",
+      "regions": Object {},
+    },
   },
 }
 `;
