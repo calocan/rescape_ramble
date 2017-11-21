@@ -24,6 +24,6 @@ describe('geojson reducer', () => {
   test('should return the initial state', () => {
     expect(
       reducer(geojson)
-    ).toEqual(R.map(toObjectKeyedById, sampleConfig.geojson));
+    ).toEqual(R.map(toObjectKeyedById, geojson));
   });
 });

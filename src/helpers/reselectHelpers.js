@@ -177,11 +177,19 @@ module.exports.makeViewportsSelector = () => {
  * Each region contains a {geojson: ...}
  * @return {Object} An object keyed by region and valued by geojson
  */
-module.exports.makeGeojsonsSelector = () => state => {
+const makeGeojsonSelector = module.exports.makeGeojsonsSelector = () => state => {
   const regionsGeojsonLens = R.compose(mapped, R.lensPath(['geojson']));
   return createSelector(
     [makeRegionsSelector()],
     R.view(regionsGeojsonLens)
+  )(state);
+};
+
+module.exports.makeGeojsonLocationsSelector = () => state => {
+  const geojsonLocationLens = R.compose(mapped, R.lensPath(['locations']));
+  return createSelector(
+    [makeGeojsonSelector()],
+    R.view(geojsonLocationLens)
   )(state);
 };
 

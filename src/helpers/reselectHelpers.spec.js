@@ -15,7 +15,7 @@ const {
   makeActiveUserAndRegionStateSelector, createLengthEqualSelector, activeUserSelector, makeRegionSelector, makeFeaturesByTypeSelector,
   makeMarkersByTypeSelector, regionsSelector, makeViewportsSelector, mapboxSettingsSelector, browserDimensionsSelector,
   makeBrowserProportionalDimensionsSelector, mergeStateAndProps, makeMergeDefaultStyleWithProps, makeMergeContainerStyleProps,
-  makeGeojsonsSelector
+  makeGeojsonsSelector, makeGeojsonLocationsSelector
 } = require('./reselectHelpers');
 
 describe('reselectHelpers', () => {
@@ -144,59 +144,52 @@ describe('reselectHelpers', () => {
     expect(regionsSelector(state)).toEqual(expected);
   });
 
-  test('makeViewportsSelector', () => {
-    const state = {
-      regions: {
-        foo: {
-          mapbox: {
-            viewport: {some: 'thing'}
-          }
+  const regionsState = {
+    regions: {
+      foo: {
+        mapbox: {
+          viewport: {some: 'thing'}
         },
-        boo: {
-          mapbox: {
-            viewport: {what: 'ever'}
+        geojson: {
+          some: 'thing',
+          locations: {
+            someLocation: 'ok'
           }
         }
       },
-      users: {
-        blinky: {
-          [IS_ACTIVE]: true,
-          regions: {foo: {id: 'foo'}, boo: {id: 'boo', [IS_SELECTED]: true}}
+      boo: {
+        mapbox: {
+          viewport: {what: 'ever'}
+        },
+        geojson: {
+          what: 'ever',
+          locations: {
+            someLocation: 'sure'
+          }
         }
       }
-    };
+    },
+    users: {
+      blinky: {
+        [IS_ACTIVE]: true,
+        regions: {foo: {id: 'foo'}, boo: {id: 'boo', [IS_SELECTED]: true}}
+      }
+    }
+  };
+
+  test('makeViewportsSelector', () => {
     const expected = {
       boo: {
         what: 'ever'
       }
     };
     const viewportSelector = makeViewportsSelector();
-    expect(viewportSelector(state)).toEqual(expected);
+    expect(viewportSelector(regionsState)).toEqual(expected);
   });
 
   test('makeGeojsonsSelector', () => {
-    const state = {
-      regions: {
-        here: {
-          geojson: {
-            some: 'thing'
-          }
-        },
-        there: {
-          geojson: {
-            what: 'ever'
-          }
-        }
-      },
-      users: {
-        blinky: {
-          [IS_ACTIVE]: true,
-          regions: {here: {id: 'here'}, there: {id: 'there', [IS_SELECTED]: true}}
-        }
-      }
-    };
     const expected = {
-      there: {
+      boo: {
         what: 'ever',
         // These default derived properties are expected for each region
         osm: {
@@ -206,7 +199,17 @@ describe('reselectHelpers', () => {
       }
     };
     const viewportSelector = makeGeojsonsSelector();
-    expect(viewportSelector(state)).toEqual(expected);
+    expect(viewportSelector(regionsState)).toEqual(expected);
+  });
+
+  test('makeGeojsonLocationsSelector', () => {
+    const expected = {
+      boo: {
+        someLocation: 'sure'
+      }
+    };
+    const viewportSelector = makeGeojsonLocationsSelector();
+    expect(viewportSelector(regionsState)).toEqual(expected);
   });
 
   test('mapboxSettingSelector', () => {

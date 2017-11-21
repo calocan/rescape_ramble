@@ -74,17 +74,4 @@ const makeSampleInitialState = module.exports.makeSampleInitialState = (sampleUs
 module.exports.propsFromSampleStateAndContainer = (containerPropMaker, sampleOwnProps = {}) =>
   containerPropMaker(makeSampleInitialState(), sampleOwnProps);
 
-/**
- * Given an object of actionCreator functions and the scopeKeys expected by those actionCreators,
- * returns scoped actionCreator functions by generating fake values for the scope.
- * This is useful for testing actions and reducers when the actual scope values don't matter,
- * and we just want to trigger the actions and reducer
- * @param {Function} actionCreators A function expecting the scope and returning an object
- * keyed by action name and valued by action functions that expect the actual action
- * @param {[String]} scopeKeys A list of scope keys expected by the actionCreator function
- */
-module.exports.makeTestScopedActions = (actionCreators, scopeKeys) => {
-  // Make up scope values, 10, 100, 1000 etc
-  const scopeValues = R.fromPairs(R.addIndex(R.map)((k, i) => [k, Math.pow(10, i + 1)], scopeKeys));
-  return actionCreators(scopeValues);
-};
+
