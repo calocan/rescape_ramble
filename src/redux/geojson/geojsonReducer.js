@@ -13,19 +13,19 @@ const R = require('ramda');
 const {combineReducers} = require('redux');
 const {mapDefaultAndPrefixOthers} = require('rescape-ramda');
 
-const {markers, markerActions, markerActionCreators} = mapDefaultAndPrefixOthers('markers', 'marker', require('./locationReducer'));
+const {locations, locationActions, locationActionCreators} = mapDefaultAndPrefixOthers('locations', 'location', require('./locationReducer'));
 const {openStreetMaps, openStreetMapActions, openStreetMapActionCreators} = mapDefaultAndPrefixOthers('openStreetMaps', 'openStreetMap', require('./openStreetMapReducer'));
 const {searches, searchesActions, searchesActionCreators} = mapDefaultAndPrefixOthers('searches', 'search', require('redux/geojson/searchReducer'));
 
-module.exports.actions = R.mergeAll([markerActions, openStreetMapActions, searchesActions]);
-module.exports.actionCreators = R.mergeAll([markerActionCreators, openStreetMapActionCreators, searchesActionCreators]);
+module.exports.actions = R.mergeAll([locationActions, openStreetMapActions, searchesActions]);
+module.exports.actionCreators = R.mergeAll([locationActionCreators, openStreetMapActionCreators, searchesActionCreators]);
 
 /**
  @typedef Geojson
  @type {Object}
  @property {[Number]} bounds A four element array representing the bounds [min lon, min lat, max lon, max lat]
  @property {geojson} osm OpenStreetMap geojson data
- @property {geojson} markers Point data representing markers in geojson format
+ @property {geojson} locations Point data representing locations in geojson format
 */
 
 /**
@@ -33,7 +33,7 @@ module.exports.actionCreators = R.mergeAll([markerActionCreators, openStreetMapA
  */
 module.exports.default = combineReducers({
   osm: openStreetMaps,
-  markers: markers,
+  locations: locations,
   searches: searches
 });
 

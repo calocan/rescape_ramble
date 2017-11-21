@@ -153,7 +153,7 @@ module.exports.makeActiveUserAndRegionStateSelector = () => {
     regions: makeRegionSelector(),
     users: activeUserSelector,
   });
-}
+};
 
 /**
  * Makes a selector that expects a state containing regions, which each contain a Mapbox viewport

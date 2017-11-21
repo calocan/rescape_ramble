@@ -14,9 +14,7 @@ const xs = require('xstream').default;
 const {ACTION_CONFIGS, scopeKeys, actionCreators, locationCycleSources} = require('./locationActions');
 const {reqPath} = require('rescape-ramda').throwing;
 
-// Make up scope values, 10, 100, 1000 etc
-const scopeValues = R.fromPairs(R.addIndex(R.map)((k, i) => [k, Math.pow(10, i + 1)], scopeKeys));
-const actions = actionCreators(scopeValues);
+const actions = makeTestScopedActions(actionCreators, scopeKeys);
 
 const {sampleConfig} = require('data/samples/sampleConfig');
 const locations = reqPath(['regions', 'oaklandSample', 'travel', 'locations'], sampleConfig);
