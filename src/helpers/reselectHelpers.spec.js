@@ -14,7 +14,8 @@ const {
   ESTADO: {IS_ACTIVE, IS_SELECTED},
   makeActiveUserAndRegionStateSelector, createLengthEqualSelector, activeUserSelector, makeRegionSelector, makeFeaturesByTypeSelector,
   makeMarkersByTypeSelector, regionsSelector, makeViewportsSelector, mapboxSettingsSelector, browserDimensionsSelector,
-  makeBrowserProportionalDimensionsSelector, mergeStateAndProps, makeMergeDefaultStyleWithProps, makeMergeContainerStyleProps
+  makeBrowserProportionalDimensionsSelector, mergeStateAndProps, makeMergeDefaultStyleWithProps, makeMergeContainerStyleProps,
+  makeGeojsonsSelector
 } = require('./reselectHelpers');
 
 describe('reselectHelpers', () => {
@@ -44,6 +45,7 @@ describe('reselectHelpers', () => {
     );
   });
 
+  // TODO createLengthEqualSelector is not memoizing as expected
   test('createLengthEqualSelector', () => {
     let state = {foo: [1, 2, 3]};
     // Mock function that simply returns foo
@@ -171,6 +173,42 @@ describe('reselectHelpers', () => {
     const viewportSelector = makeViewportsSelector();
     expect(viewportSelector(state)).toEqual(expected);
   });
+
+  test('makeGeojsonsSelector', () => {
+    const state = {
+      regions: {
+        here: {
+          geojson: {
+            some: 'thing'
+          }
+        },
+        there: {
+          geojson: {
+            what: 'ever'
+          }
+        }
+      },
+      users: {
+        blinky: {
+          [IS_ACTIVE]: true,
+          regions: {here: {id: 'here'}, there: {id: 'there', [IS_SELECTED]: true}}
+        }
+      }
+    };
+    const expected = {
+      there: {
+        what: 'ever',
+        // These default derived properties are expected for each region
+        osm: {
+          featuresByType: {},
+          markersByType: {}
+        }
+      }
+    };
+    const viewportSelector = makeGeojsonsSelector();
+    expect(viewportSelector(state)).toEqual(expected);
+  });
+
   test('mapboxSettingSelector', () => {
     const state = {
       settings: {

@@ -28,7 +28,7 @@ const getResponse = (bounds) => responses.get(fromJS(bounds));
  * @param options.testBounds Required for testing
  * @return {Promise}
  */
-module.exports.default = (query, cb, options) => {
+module.exports = (query, cb, options) => {
     const response = getResponse(options.testBounds);
     process.nextTick(
         () => response ?

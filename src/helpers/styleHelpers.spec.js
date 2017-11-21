@@ -3,7 +3,7 @@ const {styleMultiplier, createScaledPropertyGetter} = require('./styleHelpers');
 
 describe('styles', () => {
   test('styleMultiplier', () => {
-    expect(styleMultiplier('width', {width: 100}, {width: 0.25})).toEqual(25);
+    expect(styleMultiplier(100, 0.25)).toEqual(25);
   });
 
   test('createScaledPropertyGetter', () => {

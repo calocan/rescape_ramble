@@ -37,22 +37,30 @@ module.exports.expectTaskRejected = task => expect(taskToPromise(task, true));
  * @returns {Object} The initial state
  */
 module.exports.testState = () => initialState(sampleConfig);
+
+/**
+ * Makes a sample store with an initial state
+ * @param {Object} sampleUserSettings Merges in sample local settings, like those from a browser cache
+ * @type {function()}
+ */
+const makeSampleStore = module.exports.makeSampleStore = (sampleUserSettings = {}) => {
+  const mockStore = configureStore(middlewares);
+  /**
+   * Creates a mock store that merges the initial state with local user settings.
+   */
+  return mockStore(R.merge(
+    initialState(sampleConfig),
+    sampleUserSettings
+  ));
+};
+
 /**
  * Like test state but initializes a mock store. This will probably be unneeded
  * unless the middleware is needed, such as cycle.js
  * @param {Object} sampleUserSettings Merges in sample local settings, like those from a browser cache
  */
 const makeSampleInitialState = module.exports.makeSampleInitialState = (sampleUserSettings = {}) => {
-  const mockStore = configureStore(middlewares);
-
-  /**
-   * Creates a mock store that merges the initial state with local user settings.
-   */
-  const store = mockStore(R.merge(
-    initialState(sampleConfig),
-    sampleUserSettings
-  ));
-  return store.getState();
+  return makeSampleStore(sampleUserSettings).getState();
 };
 
 /**

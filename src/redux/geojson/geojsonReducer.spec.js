@@ -10,21 +10,20 @@
  */
 const {Map} = require('immutable');
 const {sampleConfig} = require('data/samples/sampleConfig');
-const initialState = require('data/initialState').default;
-const {reqPath} = require('rescape-ramda').throwing;
-const {mapPropValueAsIndex} = require('rescape-ramda');
+const {default: initialState} = require('data/initialState');
+const {mapPropValueAsIndex, throwing: {reqPath}} = require('rescape-ramda');
 const R = require('ramda');
-const reducer = require('redux/geojson/geojsonReducer').default;
+const {makeGeojsonsSelector} = require('helpers/reselectHelpers');
+const {default: reducer} = require('redux/geojson/geojsonReducer');
 const toObjectKeyedById = mapPropValueAsIndex('id');
+const {makeSampleInitialState} = require('helpers/jestHelpers');
 
 describe('geojson reducer', () => {
-    const state = initialState(sampleConfig);
-    it('should return the initial state', () => {
-        expect(
-            Map(reducer()(
-                reqPath(['regions', state.regions.currentKey, 'geojson'], state),
-                {})
-            ).toJS()
-        ).toEqual(R.map(toObjectKeyedById, sampleConfig.geojson));
-    });
+  const state = makeSampleInitialState();
+  const geojsonContainer = makeGeojsonsSelector()(state);
+  test('should return the initial state', () => {
+    expect(
+      reducer(geojsonContainer)
+    ).toEqual(R.map(toObjectKeyedById, sampleConfig.geojson));
+  });
 });

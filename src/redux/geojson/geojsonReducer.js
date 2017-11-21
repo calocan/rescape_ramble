@@ -26,13 +26,14 @@ module.exports.actionCreators = R.mergeAll([markerActionCreators, openStreetMapA
  @property {[Number]} bounds A four element array representing the bounds [min lon, min lat, max lon, max lat]
  @property {geojson} osm OpenStreetMap geojson data
  @property {geojson} markers Point data representing markers in geojson format
- */
+*/
 
-module.exports.default = () => {
-    return combineReducers({
-        osm: openStreetMaps,
-        markers: markers,
-        searches: searches
-    });
-};
+/**
+ * A reducer for reducing geojson
+ */
+module.exports.default = combineReducers({
+  osm: openStreetMaps,
+  markers: markers,
+  searches: searches
+});
 

@@ -9,8 +9,6 @@
  * THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-const {sampleConfig} = require('data/samples/sampleConfig');
-const initialState = require('data/initialState').default;
 const {actionTypes} = require('redux/geojson/geojsonReducer');
 const {setState} = require('redux/fullStateReducer');
 const {expectTask} = require('helpers/jestHelpers');
@@ -20,7 +18,6 @@ const {ACTION_ROOT} = require('locationActions');
 const {asyncActionCreators} = require('redux/actionHelpers');
 const Task = require('data.task');
 const thunk = require('redux-thunk').default;
-const configureMockStore = require('redux-mock-store');
 const {LA_BOUNDS} = require('async/queryOverpass.sample');
 const middlewares = [ thunk ];
 const mockStore = configureMockStore(middlewares);
@@ -28,13 +25,11 @@ const mockStore = configureMockStore(middlewares);
 const {fetchLocationsData} = asyncActionCreators(ROOT, ACTION_ROOT, 'FETCH', () => Task.of(LA_SAMPLE));
 const {removeLocationsData} = asyncActionCreators(ROOT, ACTION_ROOT, 'REMOVE', () => Task.of(LA_SAMPLE));
 const {updateLocationsData} = asyncActionCreators(ROOT, ACTION_ROOT, 'UPDATE', () => Task.of(LA_SAMPLE));
+const {makeSampleStore} = require('helpers/jestHelpers');
 
 describe('locations reducer', () => {
-    const state = initialState(sampleConfig);
+    const store = makeSampleStore();
     test('should fetch locations', () => {
-        // We need a real store to test PouchDb
-        const store = mockStore();
-        store.dispatch(setState(initialState(sampleConfig)));
         const bounds = LA_BOUNDS;
         const expectedActions = [
             { type: actionTypes.FETCH_LOCATIONS_DATA },

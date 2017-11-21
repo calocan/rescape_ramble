@@ -6,7 +6,13 @@ const {makeActiveUserAndRegionStateSelector, makeBrowserProportionalDimensionsSe
 const {mergeDeep} = require('rescape-ramda');
 
 /**
- * Limits the state to the active user and region
+ * Combined selector that:
+ * Limits the state to the active user and region. This merges props with the state immediate, overriding the
+ * state with anything in props. It does not pass props on to sub selectors as a separate argument
+ * Limits the component dimensions to the browser. This ignores
+ * @param {Object} state The redux state
+ * @param {Object} [props] The optional props to override the state.
+ * @returns {Object} The state and own props mapped to props for the component
  */
 const mapStateToProps = module.exports.mapStateToProps = (state, props) =>
   createSelector(

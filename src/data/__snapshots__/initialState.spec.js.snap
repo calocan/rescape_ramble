@@ -2,11 +2,409 @@
 
 exports[`Initial State matches the current configuration 1`] = `
 Object {
+  "browser": Object {
+    "height": 720,
+    "width": 1080,
+  },
   "regions": Object {
     "oakland": Object {
       "geojson": Object {
         "markers": Object {},
-        "osm": Object {},
+        "osm": Object {
+          "copyright": "The data included in this document is from www.openstreetmap.org. The data is made available under ODbL.",
+          "features": Array [
+            Object {
+              "geometry": Object {
+                "coordinates": Array [
+                  Array [
+                    2.3372032,
+                    48.8404254,
+                  ],
+                  Array [
+                    2.3372715,
+                    48.8406677,
+                  ],
+                  Array [
+                    2.3373962,
+                    48.8410543,
+                  ],
+                  Array [
+                    2.3380024,
+                    48.8422009,
+                  ],
+                  Array [
+                    2.3385107,
+                    48.8431117,
+                  ],
+                  Array [
+                    2.3389787,
+                    48.8439785,
+                  ],
+                  Array [
+                    2.3392577,
+                    48.8444515,
+                  ],
+                  Array [
+                    2.3402917,
+                    48.8463852,
+                  ],
+                  Array [
+                    2.3405962,
+                    48.8469464,
+                  ],
+                  Array [
+                    2.3407859,
+                    48.8472594,
+                  ],
+                  Array [
+                    2.3411775,
+                    48.8479028,
+                  ],
+                  Array [
+                    2.3422987,
+                    48.8497393,
+                  ],
+                  Array [
+                    2.34276,
+                    48.8507232,
+                  ],
+                  Array [
+                    2.3429223,
+                    48.8510339,
+                  ],
+                  Array [
+                    2.3430309,
+                    48.8511954,
+                  ],
+                  Array [
+                    2.3432019,
+                    48.8514041,
+                  ],
+                  Array [
+                    2.3434513,
+                    48.851675,
+                  ],
+                  Array [
+                    2.3436619,
+                    48.851859,
+                  ],
+                  Array [
+                    2.3439871,
+                    48.8520933,
+                  ],
+                  Array [
+                    2.3443787,
+                    48.8523492,
+                  ],
+                  Array [
+                    2.3447636,
+                    48.8525821,
+                  ],
+                  Array [
+                    2.3454415,
+                    48.8529788,
+                  ],
+                  Array [
+                    2.3458338,
+                    48.8532131,
+                  ],
+                  Array [
+                    2.346153,
+                    48.8534072,
+                  ],
+                  Array [
+                    2.3465238,
+                    48.8536327,
+                  ],
+                  Array [
+                    2.3468805,
+                    48.8538939,
+                  ],
+                  Array [
+                    2.3472815,
+                    48.8542327,
+                  ],
+                  Array [
+                    2.3476597,
+                    48.8546377,
+                  ],
+                ],
+                "type": "LineString",
+              },
+              "id": "way/29735335",
+              "properties": Object {
+                "@changeset": "40980697",
+                "@id": "way/29735335",
+                "@timestamp": "2016-07-23T22:33:32Z",
+                "@uid": "158826",
+                "@user": "cquest",
+                "@version": "34",
+                "electrified": "contact_line",
+                "frequency": "0",
+                "gauge": "1435",
+                "importance": "regional",
+                "layer": "-5",
+                "name": "RER B",
+                "operator": "RATP",
+                "railway": "rail",
+                "source": "STIF",
+                "tunnel": "yes",
+                "usage": "main",
+                "voltage": "1500",
+              },
+              "type": "Feature",
+            },
+            Object {
+              "geometry": Object {
+                "coordinates": Array [
+                  Array [
+                    2.3580437,
+                    48.8489285,
+                  ],
+                  Array [
+                    2.3569883,
+                    48.8493417,
+                  ],
+                  Array [
+                    2.3566417,
+                    48.8494774,
+                  ],
+                  Array [
+                    2.3498091,
+                    48.8517476,
+                  ],
+                  Array [
+                    2.3481873,
+                    48.85241,
+                  ],
+                  Array [
+                    2.3468858,
+                    48.8530098,
+                  ],
+                  Array [
+                    2.3465228,
+                    48.8531476,
+                  ],
+                  Array [
+                    2.3454232,
+                    48.8534731,
+                  ],
+                ],
+                "type": "LineString",
+              },
+              "id": "way/334870919",
+              "properties": Object {
+                "@changeset": "34996941",
+                "@id": "way/334870919",
+                "@timestamp": "2015-10-31T17:43:46Z",
+                "@uid": "53964",
+                "@user": "_Mathieu_",
+                "@version": "4",
+                "electrified": "contact_line",
+                "frequency": "0",
+                "gauge": "1435",
+                "importance": "regional",
+                "layer": "-1",
+                "maxspeed": "60",
+                "name": "RER C - Ligne de Musée d'Orsay à Austerlitz",
+                "railway": "rail",
+                "tracks": "2",
+                "tunnel": "yes",
+                "usage": "main",
+                "voltage": "1500",
+              },
+              "type": "Feature",
+            },
+            Object {
+              "geometry": Object {
+                "coordinates": Array [
+                  Array [
+                    2.3454232,
+                    48.8534731,
+                  ],
+                  Array [
+                    2.344675,
+                    48.8536946,
+                  ],
+                  Array [
+                    2.3440745,
+                    48.8539094,
+                  ],
+                  Array [
+                    2.343693,
+                    48.8540843,
+                  ],
+                  Array [
+                    2.3431388,
+                    48.854372,
+                  ],
+                  Array [
+                    2.342491,
+                    48.8547437,
+                  ],
+                  Array [
+                    2.3402755,
+                    48.8563525,
+                  ],
+                  Array [
+                    2.3379956,
+                    48.8575207,
+                  ],
+                  Array [
+                    2.3329547,
+                    48.8584095,
+                  ],
+                  Array [
+                    2.3275778,
+                    48.8601289,
+                  ],
+                ],
+                "type": "LineString",
+              },
+              "id": "way/377746412",
+              "properties": Object {
+                "@changeset": "34996941",
+                "@id": "way/377746412",
+                "@timestamp": "2015-10-31T17:43:41Z",
+                "@uid": "53964",
+                "@user": "_Mathieu_",
+                "@version": "1",
+                "electrified": "contact_line",
+                "frequency": "0",
+                "gauge": "1435",
+                "importance": "regional",
+                "layer": "-1",
+                "maxspeed": "50",
+                "name": "RER C - Ligne de Musée d'Orsay à Austerlitz",
+                "railway": "rail",
+                "tracks": "2",
+                "tunnel": "yes",
+                "usage": "main",
+                "voltage": "1500",
+              },
+              "type": "Feature",
+            },
+            Object {
+              "geometry": Object {
+                "coordinates": Array [
+                  2.3454363,
+                  48.8534806,
+                ],
+                "type": "Point",
+              },
+              "id": "node/3572156993",
+              "properties": Object {
+                "@changeset": "42352341",
+                "@id": "node/3572156993",
+                "@timestamp": "2016-09-22T16:51:49Z",
+                "@uid": "1429581",
+                "@user": "Guillaume Mortier",
+                "@version": "3",
+                "STIF:zone": "1",
+                "name": "Saint-Michel Notre-Dame",
+                "official_name": "ST MICHEL NOTRE DAME",
+                "operator": "SNCF;RATP",
+                "railway": "station",
+                "ref": "RER B, C",
+                "ref:FR:RATP": "5604",
+                "ref:FR:uic8": "87547315;87785436",
+                "ref:SNCF": "RER",
+                "ref:SNCF:RER": "C",
+                "type:RATP": "rer",
+                "uic_ref": "8754731;8778543",
+                "wheelchair": "yes",
+                "wikipedia": "fr:Gare Saint-Michel - Notre-Dame",
+              },
+              "type": "Feature",
+            },
+            Object {
+              "geometry": Object {
+                "coordinates": Array [
+                  2.3402917,
+                  48.8463852,
+                ],
+                "type": "Point",
+              },
+              "id": "node/327432589",
+              "properties": Object {
+                "@changeset": "40980697",
+                "@id": "node/327432589",
+                "@timestamp": "2016-07-23T22:33:35Z",
+                "@uid": "158826",
+                "@user": "cquest",
+                "@version": "12",
+                "STIF:zone": "1",
+                "name": "Luxembourg",
+                "operator": "RATP",
+                "railway": "station",
+                "ref": "RER B",
+                "ref:FR:RATP": "1811",
+                "type:RATP": "rer",
+                "uic_ref": "8775861",
+                "wheelchair": "yes",
+                "wikipedia": "fr:Gare du Luxembourg",
+              },
+              "type": "Feature",
+            },
+            Object {
+              "geometry": Object {
+                "coordinates": Array [
+                  2.346153,
+                  48.8534072,
+                ],
+                "type": "Point",
+              },
+              "id": "node/270191809",
+              "properties": Object {
+                "@changeset": "42352341",
+                "@id": "node/270191809",
+                "@timestamp": "2016-09-22T16:51:50Z",
+                "@uid": "1429581",
+                "@user": "Guillaume Mortier",
+                "@version": "29",
+                "STIF:zone": "1",
+                "name": "Saint-Michel Notre-Dame",
+                "official_name": "ST MICHEL NOTRE DAME",
+                "operator": "SNCF;RATP",
+                "public_transport": "stop_position",
+                "railway": "stop",
+                "ref": "RER B, C",
+                "ref:FR:RATP": "5604",
+                "ref:FR:uic8": "87547315;87785436",
+                "ref:SNCF": "RER",
+                "ref:SNCF:RER": "C",
+                "type:RATP": "rer",
+                "uic_ref": "8754731;8778543",
+                "wheelchair": "yes",
+                "wikipedia": "fr:Gare Saint-Michel - Notre-Dame",
+              },
+              "type": "Feature",
+            },
+            Object {
+              "geometry": Object {
+                "coordinates": Array [
+                  2.3569883,
+                  48.8493417,
+                ],
+                "type": "Point",
+              },
+              "id": "node/3809893083",
+              "properties": Object {
+                "@changeset": "34971642",
+                "@id": "node/3809893083",
+                "@timestamp": "2015-10-30T12:46:44Z",
+                "@uid": "53964",
+                "@user": "_Mathieu_",
+                "@version": "1",
+                "highway": "crossing",
+              },
+              "type": "Feature",
+            },
+          ],
+          "generator": "overpass-turbo",
+          "timestamp": "2017-04-04T17:49:02Z",
+          "type": "FeatureCollection",
+        },
         "searches": Object {},
       },
       "geospatial": Object {
@@ -400,7 +798,10 @@ Object {
         "iconAtlas": "data/location-icon-atlas.png",
         "mapStyle": "mapbox://styles/mapbox/streets-v8",
         "mapboxApiAccessToken": "pk.eyJ1IjoiY2Fsb2NhbiIsImEiOiJjaXl1aXkxZjkwMG15MndxbmkxMHczNG50In0.07Zu3XXYijL6GJMuxFtvQg",
+        "perspectiveEnabled": "true",
+        "preventStyleDiffing": "false",
         "showCluster": "true",
+        "showZoomControls": "true",
         "viewport": Immutable.Map {
           "pitch": 40,
           "bearing": 0,
@@ -468,7 +869,401 @@ Object {
     "paris": Object {
       "geojson": Object {
         "markers": Object {},
-        "osm": Object {},
+        "osm": Object {
+          "copyright": "The data included in this document is from www.openstreetmap.org. The data is made available under ODbL.",
+          "features": Array [
+            Object {
+              "geometry": Object {
+                "coordinates": Array [
+                  Array [
+                    2.3372032,
+                    48.8404254,
+                  ],
+                  Array [
+                    2.3372715,
+                    48.8406677,
+                  ],
+                  Array [
+                    2.3373962,
+                    48.8410543,
+                  ],
+                  Array [
+                    2.3380024,
+                    48.8422009,
+                  ],
+                  Array [
+                    2.3385107,
+                    48.8431117,
+                  ],
+                  Array [
+                    2.3389787,
+                    48.8439785,
+                  ],
+                  Array [
+                    2.3392577,
+                    48.8444515,
+                  ],
+                  Array [
+                    2.3402917,
+                    48.8463852,
+                  ],
+                  Array [
+                    2.3405962,
+                    48.8469464,
+                  ],
+                  Array [
+                    2.3407859,
+                    48.8472594,
+                  ],
+                  Array [
+                    2.3411775,
+                    48.8479028,
+                  ],
+                  Array [
+                    2.3422987,
+                    48.8497393,
+                  ],
+                  Array [
+                    2.34276,
+                    48.8507232,
+                  ],
+                  Array [
+                    2.3429223,
+                    48.8510339,
+                  ],
+                  Array [
+                    2.3430309,
+                    48.8511954,
+                  ],
+                  Array [
+                    2.3432019,
+                    48.8514041,
+                  ],
+                  Array [
+                    2.3434513,
+                    48.851675,
+                  ],
+                  Array [
+                    2.3436619,
+                    48.851859,
+                  ],
+                  Array [
+                    2.3439871,
+                    48.8520933,
+                  ],
+                  Array [
+                    2.3443787,
+                    48.8523492,
+                  ],
+                  Array [
+                    2.3447636,
+                    48.8525821,
+                  ],
+                  Array [
+                    2.3454415,
+                    48.8529788,
+                  ],
+                  Array [
+                    2.3458338,
+                    48.8532131,
+                  ],
+                  Array [
+                    2.346153,
+                    48.8534072,
+                  ],
+                  Array [
+                    2.3465238,
+                    48.8536327,
+                  ],
+                  Array [
+                    2.3468805,
+                    48.8538939,
+                  ],
+                  Array [
+                    2.3472815,
+                    48.8542327,
+                  ],
+                  Array [
+                    2.3476597,
+                    48.8546377,
+                  ],
+                ],
+                "type": "LineString",
+              },
+              "id": "way/29735335",
+              "properties": Object {
+                "@changeset": "40980697",
+                "@id": "way/29735335",
+                "@timestamp": "2016-07-23T22:33:32Z",
+                "@uid": "158826",
+                "@user": "cquest",
+                "@version": "34",
+                "electrified": "contact_line",
+                "frequency": "0",
+                "gauge": "1435",
+                "importance": "regional",
+                "layer": "-5",
+                "name": "RER B",
+                "operator": "RATP",
+                "railway": "rail",
+                "source": "STIF",
+                "tunnel": "yes",
+                "usage": "main",
+                "voltage": "1500",
+              },
+              "type": "Feature",
+            },
+            Object {
+              "geometry": Object {
+                "coordinates": Array [
+                  Array [
+                    2.3580437,
+                    48.8489285,
+                  ],
+                  Array [
+                    2.3569883,
+                    48.8493417,
+                  ],
+                  Array [
+                    2.3566417,
+                    48.8494774,
+                  ],
+                  Array [
+                    2.3498091,
+                    48.8517476,
+                  ],
+                  Array [
+                    2.3481873,
+                    48.85241,
+                  ],
+                  Array [
+                    2.3468858,
+                    48.8530098,
+                  ],
+                  Array [
+                    2.3465228,
+                    48.8531476,
+                  ],
+                  Array [
+                    2.3454232,
+                    48.8534731,
+                  ],
+                ],
+                "type": "LineString",
+              },
+              "id": "way/334870919",
+              "properties": Object {
+                "@changeset": "34996941",
+                "@id": "way/334870919",
+                "@timestamp": "2015-10-31T17:43:46Z",
+                "@uid": "53964",
+                "@user": "_Mathieu_",
+                "@version": "4",
+                "electrified": "contact_line",
+                "frequency": "0",
+                "gauge": "1435",
+                "importance": "regional",
+                "layer": "-1",
+                "maxspeed": "60",
+                "name": "RER C - Ligne de Musée d'Orsay à Austerlitz",
+                "railway": "rail",
+                "tracks": "2",
+                "tunnel": "yes",
+                "usage": "main",
+                "voltage": "1500",
+              },
+              "type": "Feature",
+            },
+            Object {
+              "geometry": Object {
+                "coordinates": Array [
+                  Array [
+                    2.3454232,
+                    48.8534731,
+                  ],
+                  Array [
+                    2.344675,
+                    48.8536946,
+                  ],
+                  Array [
+                    2.3440745,
+                    48.8539094,
+                  ],
+                  Array [
+                    2.343693,
+                    48.8540843,
+                  ],
+                  Array [
+                    2.3431388,
+                    48.854372,
+                  ],
+                  Array [
+                    2.342491,
+                    48.8547437,
+                  ],
+                  Array [
+                    2.3402755,
+                    48.8563525,
+                  ],
+                  Array [
+                    2.3379956,
+                    48.8575207,
+                  ],
+                  Array [
+                    2.3329547,
+                    48.8584095,
+                  ],
+                  Array [
+                    2.3275778,
+                    48.8601289,
+                  ],
+                ],
+                "type": "LineString",
+              },
+              "id": "way/377746412",
+              "properties": Object {
+                "@changeset": "34996941",
+                "@id": "way/377746412",
+                "@timestamp": "2015-10-31T17:43:41Z",
+                "@uid": "53964",
+                "@user": "_Mathieu_",
+                "@version": "1",
+                "electrified": "contact_line",
+                "frequency": "0",
+                "gauge": "1435",
+                "importance": "regional",
+                "layer": "-1",
+                "maxspeed": "50",
+                "name": "RER C - Ligne de Musée d'Orsay à Austerlitz",
+                "railway": "rail",
+                "tracks": "2",
+                "tunnel": "yes",
+                "usage": "main",
+                "voltage": "1500",
+              },
+              "type": "Feature",
+            },
+            Object {
+              "geometry": Object {
+                "coordinates": Array [
+                  2.3454363,
+                  48.8534806,
+                ],
+                "type": "Point",
+              },
+              "id": "node/3572156993",
+              "properties": Object {
+                "@changeset": "42352341",
+                "@id": "node/3572156993",
+                "@timestamp": "2016-09-22T16:51:49Z",
+                "@uid": "1429581",
+                "@user": "Guillaume Mortier",
+                "@version": "3",
+                "STIF:zone": "1",
+                "name": "Saint-Michel Notre-Dame",
+                "official_name": "ST MICHEL NOTRE DAME",
+                "operator": "SNCF;RATP",
+                "railway": "station",
+                "ref": "RER B, C",
+                "ref:FR:RATP": "5604",
+                "ref:FR:uic8": "87547315;87785436",
+                "ref:SNCF": "RER",
+                "ref:SNCF:RER": "C",
+                "type:RATP": "rer",
+                "uic_ref": "8754731;8778543",
+                "wheelchair": "yes",
+                "wikipedia": "fr:Gare Saint-Michel - Notre-Dame",
+              },
+              "type": "Feature",
+            },
+            Object {
+              "geometry": Object {
+                "coordinates": Array [
+                  2.3402917,
+                  48.8463852,
+                ],
+                "type": "Point",
+              },
+              "id": "node/327432589",
+              "properties": Object {
+                "@changeset": "40980697",
+                "@id": "node/327432589",
+                "@timestamp": "2016-07-23T22:33:35Z",
+                "@uid": "158826",
+                "@user": "cquest",
+                "@version": "12",
+                "STIF:zone": "1",
+                "name": "Luxembourg",
+                "operator": "RATP",
+                "railway": "station",
+                "ref": "RER B",
+                "ref:FR:RATP": "1811",
+                "type:RATP": "rer",
+                "uic_ref": "8775861",
+                "wheelchair": "yes",
+                "wikipedia": "fr:Gare du Luxembourg",
+              },
+              "type": "Feature",
+            },
+            Object {
+              "geometry": Object {
+                "coordinates": Array [
+                  2.346153,
+                  48.8534072,
+                ],
+                "type": "Point",
+              },
+              "id": "node/270191809",
+              "properties": Object {
+                "@changeset": "42352341",
+                "@id": "node/270191809",
+                "@timestamp": "2016-09-22T16:51:50Z",
+                "@uid": "1429581",
+                "@user": "Guillaume Mortier",
+                "@version": "29",
+                "STIF:zone": "1",
+                "name": "Saint-Michel Notre-Dame",
+                "official_name": "ST MICHEL NOTRE DAME",
+                "operator": "SNCF;RATP",
+                "public_transport": "stop_position",
+                "railway": "stop",
+                "ref": "RER B, C",
+                "ref:FR:RATP": "5604",
+                "ref:FR:uic8": "87547315;87785436",
+                "ref:SNCF": "RER",
+                "ref:SNCF:RER": "C",
+                "type:RATP": "rer",
+                "uic_ref": "8754731;8778543",
+                "wheelchair": "yes",
+                "wikipedia": "fr:Gare Saint-Michel - Notre-Dame",
+              },
+              "type": "Feature",
+            },
+            Object {
+              "geometry": Object {
+                "coordinates": Array [
+                  2.3569883,
+                  48.8493417,
+                ],
+                "type": "Point",
+              },
+              "id": "node/3809893083",
+              "properties": Object {
+                "@changeset": "34971642",
+                "@id": "node/3809893083",
+                "@timestamp": "2015-10-30T12:46:44Z",
+                "@uid": "53964",
+                "@user": "_Mathieu_",
+                "@version": "1",
+                "highway": "crossing",
+              },
+              "type": "Feature",
+            },
+          ],
+          "generator": "overpass-turbo",
+          "timestamp": "2017-04-04T17:49:02Z",
+          "type": "FeatureCollection",
+        },
         "searches": Object {},
       },
       "geospatial": Object {
@@ -862,7 +1657,10 @@ Object {
         "iconAtlas": "data/location-icon-atlas.png",
         "mapStyle": "mapbox://styles/mapbox/streets-v8",
         "mapboxApiAccessToken": "pk.eyJ1IjoiY2Fsb2NhbiIsImEiOiJjaXl1aXkxZjkwMG15MndxbmkxMHczNG50In0.07Zu3XXYijL6GJMuxFtvQg",
+        "perspectiveEnabled": "true",
+        "preventStyleDiffing": "false",
         "showCluster": "true",
+        "showZoomControls": "true",
         "viewport": Immutable.Map {
           "pitch": 40,
           "bearing": 0,
@@ -944,12 +1742,103 @@ Object {
     "mapbox": Object {
       "iconAtlas": "data/location-icon-atlas.png",
       "mapboxApiAccessToken": "pk.eyJ1IjoiY2Fsb2NhbiIsImEiOiJjaXl1aXkxZjkwMG15MndxbmkxMHczNG50In0.07Zu3XXYijL6GJMuxFtvQg",
+      "perspectiveEnabled": "true",
+      "preventStyleDiffing": "false",
       "showCluster": "true",
+      "showZoomControls": "true",
     },
     "markers": Object {},
     "overpass": Object {
       "cellSize": 100,
       "sleepBetweenCalls": 1000,
+    },
+  },
+  "styles": Object {
+    "default": Object {
+      "MozAppearance": "none",
+      "WebkitAppearance": "none",
+      "backgroundColor": "blue",
+      "border": 0,
+      "color": "white",
+      "display": "inline-block",
+      "fontFamily": "inherit",
+      "fontSize": "inherit",
+      "fontWeight": "bold",
+      "margin": 0,
+      "paddingBottom": 8,
+      "paddingLeft": 16,
+      "paddingRight": 16,
+      "paddingTop": 8,
+      "textDecoration": "none",
+    },
+  },
+  "users": Object {
+    "californiaManager": Object {
+      "id": "californiaManager",
+      "isActive": true,
+      "name": "Jerry Brown",
+      "permission": "manage",
+      "regions": Array [
+        Object {
+          "id": "oakland",
+          "isSelected": true,
+        },
+      ],
+    },
+    "californiaUser": Object {
+      "id": "californiaUser",
+      "name": "Nancy Pelosi",
+      "permission": "use",
+      "regions": Array [
+        Object {
+          "id": "oakland",
+          "isSelected": true,
+        },
+      ],
+    },
+    "californiaVisitor": Object {
+      "id": "californiaVisitor",
+      "name": "Angela Merkel",
+      "permission": "visit",
+      "regions": Array [
+        Object {
+          "id": "oakland",
+          "isSelected": true,
+        },
+      ],
+    },
+    "parisManager": Object {
+      "id": "parisManager",
+      "name": "Paris Manager",
+      "permission": "manage",
+      "regions": Array [
+        Object {
+          "id": "paris",
+          "isSelected": true,
+        },
+      ],
+    },
+    "parisUser": Object {
+      "id": "parisUser",
+      "name": "Paris User",
+      "permission": "use",
+      "regions": Array [
+        Object {
+          "id": "paris",
+          "isSelected": true,
+        },
+      ],
+    },
+    "parisVisitor": Object {
+      "id": "parisVisitor",
+      "name": "Paris Visitor",
+      "permission": "visit",
+      "regions": Array [
+        Object {
+          "id": "paris",
+          "isSelected": true,
+        },
+      ],
     },
   },
 }

@@ -35,7 +35,7 @@ const regionReducerOnce = once();
 const regionReducer = regionName => regionReducerOnce(regionName)(() =>
     combineReducers(R.merge(
         {
-            geojson: geojsonReducer(),
+            geojson: geojsonReducer,
             mapbox: createViewportReducer()
         },
         // Implement reducers for these as/if needed
@@ -78,7 +78,7 @@ const regionReducer = regionName => regionReducerOnce(regionName)(() =>
  * @param {Object} action The action
  * @return {Object} The reduced state
  */
-const regionsReducer = (
+module.exports.default = regionsReducer = (
     state = {}, action = {}
 ) => {
     switch (action.type) {
@@ -100,6 +100,3 @@ const regionsReducer = (
             ) : state;
     }
 };
-
-
-module.exports.default = regionsReducer;

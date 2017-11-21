@@ -14,8 +14,8 @@ const Task = require('data.task');
 const R = require('ramda');
 const {mergeAllWithKey, removeDuplicateObjectsByProp} = require('rescape-ramda');
 const os = require('os');
-const squareGrid = require('@turf/square-grid').default;
-const bbox = require('@turf/bbox').default;
+const squareGrid = require('@turf/square-grid');
+const bbox = require('@turf/bbox');
 const {concatFeatures} = require('helpers/geojsonHelpers');
 
 /**

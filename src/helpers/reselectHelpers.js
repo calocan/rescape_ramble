@@ -102,7 +102,7 @@ const makeRegionSelector = module.exports.makeRegionSelector = () => region => c
     makeMarkersByTypeSelector()
   ],
   (featuresByType, markersByType) =>
-    R.merge(region, {
+    mergeDeep(region, {
       geojson: {
         osm: {
           featuresByType,
@@ -113,13 +113,15 @@ const makeRegionSelector = module.exports.makeRegionSelector = () => region => c
 )(region);
 
 /**
- * Selects regions that are associated with this user and currently selected by this user.
+ * Creates a selector that selects regions that are associated with this user and currently selected by this user.
  * @param {Object} state The redux state
  * @returns {Object} An object keyed by region id and valued by regions that have merged
  * in userSettings (e.g. isSelected) and derived data
  */
-const regionsSelector = module.exports.regionsSelector = state => createStructuredSelector(
+const makeRegionsSelector = module.exports.regionsSelector = () => state => createStructuredSelector(
   R.map(
+    // Each region needs to make its own regionSelector.
+    // TODO This should only happen once per region, so we need a memoize algorithm that caches on region id
     region => state => makeRegionSelector()(region),
     filterMergeByUserSettings(
       // Look for the regions container in the state and userSettings
@@ -145,26 +147,42 @@ const regionsSelector = module.exports.regionsSelector = state => createStructur
  * an object containing settings, regions, and users, where regions and users must limited to
  * one each
  */
-module.exports.makeActiveUserAndRegionStateSelector = () => createStructuredSelector({
-  settings: settingsSelector,
-  regions: regionsSelector,
-  users: activeUserSelector,
-});
+module.exports.makeActiveUserAndRegionStateSelector = () => {
+  createStructuredSelector({
+    settings: settingsSelector,
+    regions: makeRegionSelector(),
+    users: activeUserSelector,
+  });
+}
 
 /**
- * Makes a selector that expects a state containing regions,
- * which each contain a Mapbox viewport
+ * Makes a selector that expects a state containing regions, which each contain a Mapbox viewport
  * @param {Object} state The Redux state. This can be the full state or one modified for current selections
  * @param {Object} state.regions The regions object. Usually one region is expected
  * Each region contains a {mapbox: viewport: {...}}
- * @returns {Object} An object keyed by region and valued by viewport or that region's Mapbox
+ * @returns {Object} An object keyed by region and valued by viewport of that region's Mapbox
  */
 module.exports.makeViewportsSelector = () => {
   const regionsMapboxVieportLens = R.compose(mapped, R.lensPath(['mapbox', 'viewport']));
   return createSelector(
-    [regionsSelector],
+    [makeRegionsSelector()],
     R.view(regionsMapboxVieportLens)
   );
+};
+
+/**
+ * Makes a selector that expects a state containing regions, which each contain a geojson property
+ * @param {Object} state The Redux state. This can be the full state or one modified for current selections
+ * @param {Object} state.regions The regions object. Usually one region is expected
+ * Each region contains a {geojson: ...}
+ * @return {Object} An object keyed by region and valued by geojson
+ */
+module.exports.makeGeojsonsSelector = () => state => {
+  const regionsGeojsonLens = R.compose(mapped, R.lensPath(['geojson']));
+  return createSelector(
+    [makeRegionsSelector()],
+    R.view(regionsGeojsonLens)
+  )(state);
 };
 
 /**
