@@ -15,14 +15,13 @@ const {makeActionConfigLookup, actionConfig,
   VERBS: {FETCH, ADD, REMOVE, SELECT},
   overrideSourcesWithoutStreaming, makeActionCreators, makeActionTypesLookup} = require('rescape-cycle');
 const {defaultConfig} = require('data/default/defaultConfig');
-const {camelCase} = require('rescape-ramda');
+const {camelCase, mapToObjValue} = require('rescape-ramda');
 
 // Models are various manifestations of the locations
 // For now just define a generic LOCATION model
-const {LOCATIONS} = module.exports.MODELS =
-  R.mapObjIndexed((v, k) => camelCase(R.toLower(k)), {
-    LOCATIONS: ''
-  });
+const {LOCATIONS} = module.exports.MODELS = mapToObjValue(R.compose(camelCase, R.toLower),
+  ['LOCATIONS']
+);
 
 // Describes the fundamental data structure being transacted in these actions
 // Everything here is a geospatial data structure with a minimum set of properties such as lat, lon

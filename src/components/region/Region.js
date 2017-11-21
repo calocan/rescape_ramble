@@ -51,7 +51,7 @@ const Region = ({...props}) => {
         height: styleMultiplier(1)
       },
 
-      markers: {
+      locations: {
         position: 'absolute',
         top: .02,
         left: .55,

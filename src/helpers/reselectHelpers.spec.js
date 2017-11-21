@@ -36,7 +36,7 @@ describe('reselectHelpers', () => {
         regions: {
           pie: {
             id: 'pie',
-            geojson: {osm: {featuresByType: {}, markersByType: {}}},
+            geojson: {osm: {featuresByType: {}, locationsByType: {}}},
             [IS_SELECTED]: true
           }
         },
@@ -94,7 +94,7 @@ describe('reselectHelpers', () => {
             }
           ]
         },
-        markers: {
+        locations: {
           features: [
             {
               id: 'node/3572156993',
@@ -111,7 +111,7 @@ describe('reselectHelpers', () => {
         geojson: {
           osm: {
             featuresByType: makeFeaturesByTypeSelector()(region),
-            markersByType: makeMarkersByTypeSelector()(region)
+            locationsByType: makeMarkersByTypeSelector()(region)
           }
         }
       });
@@ -138,7 +138,7 @@ describe('reselectHelpers', () => {
         id: 'boo',
         [IS_SELECTED]: true,
         // These are created by the derived data selectors
-        geojson: {osm: {featuresByType: {}, markersByType: {}}}
+        geojson: {osm: {featuresByType: {}, locationsByType: {}}}
       }
     };
     expect(regionsSelector(state)).toEqual(expected);
@@ -194,7 +194,7 @@ describe('reselectHelpers', () => {
         // These default derived properties are expected for each region
         osm: {
           featuresByType: {},
-          markersByType: {}
+          locationsByType: {}
         }
       }
     };
@@ -203,6 +203,7 @@ describe('reselectHelpers', () => {
   });
 
   test('makeGeojsonLocationsSelector', () => {
+    // Exepect the contents of the geojson.locations of the active region
     const expected = {
       boo: {
         someLocation: 'sure'

@@ -29,7 +29,7 @@ module.exports.defaultConfig = mergeDeep(environmentConfig, {
         routeTypes: routeTypes
       },
       geojson: {
-        markers: {},
+        locations: {},
         osm: {},
         searches: {}
       },

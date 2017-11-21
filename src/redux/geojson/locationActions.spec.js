@@ -8,22 +8,21 @@
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRA/ACNTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-import {makeTestScopedActions} from 'helpers/jestHelpers';
-
 const R = require('ramda');
-const {makeScopeValues, assertSourcesSinks, testBodies, cycleRecords} = require('rescape-cycle');
+const {makeSampleInitialState} = require('helpers/jestHelpers');
+const {makeGeojsonLocationsSelector} = require('helpers/reselectHelpers');
+const {throwing: {onlyOneValue}} = require('rescape-ramda');
+const {makeScopeValues, makeTestScopedActions, assertSourcesSinks, testBodies, cycleRecords} = require('rescape-cycle');
 const xs = require('xstream').default;
 const {ACTION_CONFIGS, scopeKeys, actionCreators, locationCycleSources} = require('./locationActions');
-const {reqPath} = require('rescape-ramda').throwing;
 
 const scopeValues = makeScopeValues(scopeKeys);
 const actions = makeTestScopedActions(actionCreators, scopeValues);
-const {sampleConfig} = require('data/samples/sampleConfig');
-const locations = reqPath(['regions', 'oaklandSample', 'travel', 'locations'], sampleConfig);
-const geojson = R.compose(onlyOneValue, makeGeojsonsSelector())(state);
+const state = makeSampleInitialState();
+const locations = R.compose(onlyOneValue, makeGeojsonLocationsSelector())(state);
 // Create sample request and response bodies
 const {fetchLocationsRequestBody, addLocationsRequestBody, fetchLocationsSuccessBody, addLocationsSuccessBody} =
-  testBodies(sampleConfig, ACTION_CONFIGS, scopeValues, {locations});
+  testBodies(state, ACTION_CONFIGS, scopeValues, {locations});
 
 const newLocations = R.values(R.omit(['id'], locations));
 
