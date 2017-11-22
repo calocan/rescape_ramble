@@ -8,13 +8,10 @@
  *
  * THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+const {makeMockStore} = require('rescape-cycle');
 const {taskToPromise} = require('rescape-ramda');
-const configureStore = require('redux-mock-store').default;
 const {sampleConfig} = require('data/samples/sampleConfig');
-const initialState = require('data/initialState').default;
-const thunk = require('redux-thunk').default;
-const middlewares = [thunk];
-const R = require('ramda');
+const {default: initialState} = require('data/initialState');
 
 /**
  * Given a task, wraps it in promise and passes it to Jest's expect.
@@ -39,20 +36,12 @@ module.exports.expectTaskRejected = task => expect(taskToPromise(task, true));
 module.exports.testState = () => initialState(sampleConfig);
 
 /**
- * Makes a sample store with an initial state
+ * Creates a mock store from our sample data an our initialState function
  * @param {Object} sampleUserSettings Merges in sample local settings, like those from a browser cache
- * @type {function()}
+ * @type {function(*, *=)}
  */
-const makeSampleStore = module.exports.makeSampleStore = (sampleUserSettings = {}) => {
-  const mockStore = configureStore(middlewares);
-  /**
-   * Creates a mock store that merges the initial state with local user settings.
-   */
-  return mockStore(R.merge(
-    initialState(sampleConfig),
-    sampleUserSettings
-  ));
-};
+const makeSampleStore = module.exports.makeSampleStore = (sampleUserSettings = {}) =>
+  makeMockStore(initialState(sampleConfig), sampleUserSettings);
 
 /**
  * Like test state but initializes a mock store. This will probably be unneeded

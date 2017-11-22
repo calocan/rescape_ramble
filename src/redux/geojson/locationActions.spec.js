@@ -10,21 +10,22 @@
  */
 const R = require('ramda');
 const {makeSampleInitialState} = require('helpers/jestHelpers');
-const {makeGeojsonLocationsSelector} = require('helpers/reselectHelpers');
-const {throwing: {onlyOneValue}} = require('rescape-ramda');
-const {makeScopeValues, makeTestScopedActions, assertSourcesSinks, testBodies, cycleRecords} = require('rescape-cycle');
+const {throwing: {reqPath}} = require('rescape-ramda');
+const {assertSourcesSinks, cycleRecords} = require('rescape-cycle');
 const xs = require('xstream').default;
-const {ACTION_CONFIGS, scopeKeys, actionCreators, locationCycleSources} = require('./locationActions');
+const {
+  locationCycleSources,
+  makeSampleActionsAndResponses
+} = require('./locationActions');
 
-const scopeValues = makeScopeValues(scopeKeys);
-const actions = makeTestScopedActions(actionCreators, scopeValues);
 const state = makeSampleInitialState();
-const locations = R.compose(onlyOneValue, makeGeojsonLocationsSelector())(state);
 // Create sample request and response bodies
-const {fetchLocationsRequestBody, addLocationsRequestBody, fetchLocationsSuccessBody, addLocationsSuccessBody} =
-  testBodies(state, ACTION_CONFIGS, scopeValues, {locations});
-
-const newLocations = R.values(R.omit(['id'], locations));
+const {
+  responses: {fetchLocationsRequestBody, addLocationsRequestBody, fetchLocationsSuccessBody, addLocationsSuccessBody},
+  actions,
+  newObjs: {locations: newLocations},
+  savedObjs: {locations: savedLocations}
+} = makeSampleActionsAndResponses(state);
 
 describe('cycleRecords', () => {
   test('User can add and fetch locations', (done) => {
@@ -37,7 +38,7 @@ describe('cycleRecords', () => {
         // User intents to fetch locations
         ACTION: {
           a: actions.addLocationsRequest(newLocations),
-          c: actions.fetchLocationsRequest(locations)
+          c: actions.fetchLocationsRequest(savedLocations)
         },
         // Response to addLocationsRequest with addLocationsSuccessBody
         // Response to fetchLocationsRequest with fetchLocationsSuccessBody
@@ -59,8 +60,8 @@ describe('cycleRecords', () => {
       ACTION: {
         // In response to the HTTP sources return add and fetch response,
         // we expect to syn these action successes
-        m: actions.addLocationsSuccess({data: locations}),
-        n: actions.fetchLocationsSuccess({data: locations})
+        m: actions.addLocationsSuccess({data: savedLocations}),
+        n: actions.fetchLocationsSuccess({data: savedLocations})
       }
     };
 

@@ -17,6 +17,7 @@ const {applyDefaultRegion} = require('data/configHelpers');
 const trips = require('./parisTrips.sample').default;
 const stops = require('./parisStops.sample').default;
 const osm = require('./parisOsm.sample').default;
+const {throwing: {reqPath}} = require('rescape-ramda');
 
 // merge the default region template with our region(s)
 module.exports.default = applyDefaultRegion({
@@ -24,7 +25,9 @@ module.exports.default = applyDefaultRegion({
     id: 'paris',
 
     geojson: {
-      osm
+      osm,
+      // Make these the same as osm features for now
+      locations: reqPath(['features'], osm)
     },
 
     gtfs: {
